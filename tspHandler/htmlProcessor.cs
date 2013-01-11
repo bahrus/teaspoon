@@ -36,14 +36,16 @@ namespace tspHandler
             var scriptTags = doc.getElementsByTagName("script");
             var  serverFilePaths = new List<List<string>>();
             foreach(var scriptTag in scriptTags){
-                var handlerAttrib = scriptTag.Attributes["data-handler"];
-                var srcAttrib = scriptTag.Attributes["src"];
-                if(handlerAttrib.Value=="server"){
-                    string filePath = context.Request.MapPath(srcAttrib.Value);
+                //var handlerAttrib = scriptTag.Attributes["data-handler"];
+                var handlerAttribVal = scriptTag.getAttribute("data-handler");
+                var srcAttribVal = scriptTag.getAttribute("src");
+                if(handlerAttribVal == "server"){
+                    string filePath = context.Request.MapPath(srcAttribVal);
                     var filePaths = new List<string>();
                     this.GetListOfDependentFiles(filePath, filePaths);
                     filePaths.Reverse();
                     serverFilePaths.Add(filePaths);
+                    scriptTag.parentNode.removeChild(scriptTag);
                 }
             }
             
@@ -62,11 +64,13 @@ namespace tspHandler
             {
                 var esc = new EcmaScriptComponent();
                 esc.Globals.SetVariable("document", doc);
+                esc.Globals.SetVariable("window", "ignore");
                 esc.Clear();
                 esc.Source = script;
                 esc.Run();
-                //esc.RunFunction("test");
+                esc.RunFunction("onWindowLoad");
             }
+            context.Response.Write(doc.Content);
             #endregion
         }
 
