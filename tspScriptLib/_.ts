@@ -1,18 +1,18 @@
-///<reference path="ElX.ts" />
+
 
 module tsp._ {
-    //export interface IEnvironment {
-    //    environment: EnvironmentOptions;
-    //};
+    export interface IEnvironment {
+        environment: EnvironmentOptions;
+    };
 
-    //export enum EnvironmentOptions {
-    //    Browser,
-    //    WebServer
-    //};
+    export enum EnvironmentOptions {
+        Browser,
+        WebServer
+    };
     
-    //export var runtimeEnvironment: IEnvironment = {
-    //    environment: window ? EnvironmentOptions.Browser : EnvironmentOptions.WebServer,
-    //};
+    export var runtimeEnvironment: IEnvironment = {
+        environment: window.alert ? EnvironmentOptions.Browser : EnvironmentOptions.WebServer,
+    };
 
         
 
@@ -57,7 +57,7 @@ module tsp._ {
         elXID?: string;
     }
 
-    export interface ITopicEvent extends IListenForTopic {
+    export interface ITopicEvent extends tsp._.IListenForTopic {
         event: Event;
     }
 
@@ -146,7 +146,7 @@ module tsp._ {
         debugger;//TODO:  remove
     }
 
-    export function addWindowEventListener(settings: IListenForTopic) {
+    export function addWindowEventListener(settings: tsp._.IListenForTopic) {
         var evtName = settings.topicName;
         var listeners = windowEventListeners[evtName];
         if (!listeners) {

@@ -145,17 +145,17 @@ module tsp {
         constructor(public bindInfo: IInputLabelBinder) {
             super(bindInfo);
             bindInfo.tag = 'label';
-            this.for = bindInfo.forElX.ID;
+            this.forId = bindInfo.forElX.ID;
             delete bindInfo.forElX;
         }
 
         //private _forElXID: string;
 
-        get for(): string {
+        get forId(): string {
             return this.bindInfo.attributes['for'];
         }
 
-        set for(sVal: string) {
+        set forId(sVal: string) {
             if (sVal) {
                 this.bindInfo.attributes['for'] = sVal;
             }

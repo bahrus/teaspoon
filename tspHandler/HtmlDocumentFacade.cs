@@ -34,7 +34,7 @@ namespace tspHandler
             return new HtmlNodeFacade(node);
         }
 
-        private void searchForNode(Func<HtmlNode, bool> test, HtmlNode node, List<HtmlNodeFacade> nodes)
+        public static void searchForNode(Func<HtmlNode, bool> test, HtmlNode node, List<HtmlNodeFacade> nodes)
         {
             if (test(node))
             {
@@ -95,6 +95,17 @@ namespace tspHandler
             this._node.RemoveChild(childNode._node);
         }
 
-        
+        public List<HtmlNodeFacade> getElementsByTagName(string tag)
+        {
+            var docNode = this._node;
+            var list = new List<HtmlNodeFacade>();
+            Func<HtmlNode, bool> test = node =>
+            {
+                return node.Name == tag;
+
+            };
+            HtmlDocumentFacade.searchForNode(test, docNode, list);
+            return list;
+        }
     }
 }

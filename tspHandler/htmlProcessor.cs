@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using RemObjects.Script;
+using Noesis.Javascript;
 
 namespace tspHandler
 {
@@ -43,7 +43,7 @@ namespace tspHandler
                     string filePath = context.Request.MapPath(srcAttribVal);
                     var filePaths = new List<string>();
                     this.GetListOfDependentFiles(filePath, filePaths);
-                    filePaths.Reverse();
+                    //filePaths.Reverse();
                     serverFilePaths.Add(filePaths);
                     scriptTag.parentNode.removeChild(scriptTag);
                 }
@@ -62,24 +62,50 @@ namespace tspHandler
             string script = sbServerScript.ToString();
             if (script.Length > 0)
             {
-                var esc = new EcmaScriptComponent();
-                esc.Globals.SetVariable("document", doc);
-                esc.Globals.SetVariable("window", "ignore");
-                esc.Clear();
-                esc.Source = script;
-                esc.Run();
-                esc.RunFunction("onWindowLoad");
+                using (var jsContext = new JavascriptContext())
+                {
+
+                    // Setting the externals parameters of the context
+                    jsContext.SetParameter("document", doc);
+                    jsContext.SetParameter("window", "ignore");
+                    
+
+                    // Running the script
+                    jsContext.Run(script);
+
+                    // Getting a parameter
+                }
+                //var esc = new EcmaScriptComponent();
+                //esc.Globals.SetVariable("document", doc);
+                //esc.Globals.SetVariable("window", "ignore");
+                //esc.Clear();
+                //esc.Source = script;
+                //esc.Debug = true;
+                //esc.DebugException += esc_DebugException;
+                //try
+                //{
+                //    esc.Run();
+                //    esc.RunFunction("onWindowLoad");
+                //}
+                //catch
+                //{
+                //    int lineNo = esc.DebugLastPos.StartRow;
+                //}
+
             }
             context.Response.Write(doc.Content);
+            //context.Response.Close();
             #endregion
         }
+
+        
 
         
 
         public void GetListOfDependentFiles(string filePath, List<string> filePaths)
         {
             if (filePaths.Contains(filePath)) return;
-            filePaths.Add(filePath);
+            //filePaths.Add(filePath);
             string content = filePath.ReadFile();
             StringReader sr = new StringReader(content);
             while (sr.Peek() != -1)
@@ -116,7 +142,10 @@ namespace tspHandler
                 sl.Reverse();
                 path = string.Join("\\", sl.ToArray());
                 GetListOfDependentFiles(path, filePaths);
+                
             }
+            //filePaths.Remove(filePath);
+            filePaths.Add(filePath);
         }
         #endregion
     }

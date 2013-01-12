@@ -143,10 +143,10 @@ var tsp;
                 _super.call(this, bindInfo);
             this.bindInfo = bindInfo;
             bindInfo.tag = 'label';
-            this.for = bindInfo.forElX.ID;
+            this.forId = bindInfo.forElX.ID;
             delete bindInfo.forElX;
         }
-        Object.defineProperty(InputLabelElement.prototype, "for", {
+        Object.defineProperty(InputLabelElement.prototype, "forId", {
             get: function () {
                 return this.bindInfo.attributes['for'];
             },

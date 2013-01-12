@@ -1,5 +1,4 @@
 ///<reference path="_.ts" />
-///<reference path="InputElement.ts" />
 ///<reference path="ie9.ts" />
 
 module tsp {

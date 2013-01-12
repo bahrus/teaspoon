@@ -1,6 +1,19 @@
 var tsp;
 (function (tsp) {
     (function (_) {
+        ; ;
+        (function (EnvironmentOptions) {
+            EnvironmentOptions._map = [];
+            EnvironmentOptions._map[0] = "Browser";
+            EnvironmentOptions.Browser = 0;
+            EnvironmentOptions._map[1] = "WebServer";
+            EnvironmentOptions.WebServer = 1;
+        })(_.EnvironmentOptions || (_.EnvironmentOptions = {}));
+        var EnvironmentOptions = _.EnvironmentOptions;
+        ; ;
+        _.runtimeEnvironment = {
+            environment: window.alert ? EnvironmentOptions.Browser : EnvironmentOptions.WebServer
+        };
         _.objectLookup = {
         };
         var SVObjectChangeListeners = {
