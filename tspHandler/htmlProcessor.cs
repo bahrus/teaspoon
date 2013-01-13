@@ -90,6 +90,7 @@ namespace tspHandler
                 context.Response.Write(script);
                 return;
             }
+            bool isClientSideDebug = context.Request["tsp.debug"] == "true";
             string currentFilePath = context.Request.PhysicalPath;
             string content = currentFilePath.ReadFile();
             HtmlDocumentFacade doc = new HtmlDocumentFacade(content);
@@ -125,7 +126,7 @@ namespace tspHandler
                     if(header==null){
                         header = scriptTag.parentNode;
                     }
-                    if (!isServerNode && firstClientNode == null)
+                    if (!isServerNode && !isClientSideDebug && firstClientNode == null)
                     {
                         firstClientNode = scriptTag;
                     }
@@ -171,6 +172,7 @@ namespace tspHandler
             #endregion
             if (firstClientNode != null)
             {
+  
                 #region process client side script
                 #region check if date time stamp in memory, and matches current
                 string keyClientSideTS = "tcp.ClientSide.TimeStamps." + context.Request.Path;
@@ -189,17 +191,41 @@ namespace tspHandler
                     clientSideScript = context.Cache[keyClientSideContent] as string;
                 }
                 string path = context.Request.Path;
-                if(path.Contains("&")){
+                if (path.Contains("&"))
+                {
                     path += "&";
-                }else{
+                }
+                else
+                {
                     path += "?";
                 }
                 path += "tspResource=script";
-                string guid = Guid.NewGuid().ToString().Replace("-" , "_");
+                string guid = Guid.NewGuid().ToString().Replace("-", "_");
                 path += "&g=" + guid;
                 firstClientNode.setAttribute("src", path);
+                #endregion
+
+
             }
-            #endregion
+            else if (isClientSideDebug)
+            {
+                #region expand out all the script tags
+                string currDir = context.Request.MapPath(".");
+                foreach (var fileGroup in clientFilePaths)
+                {
+                    foreach (var filePath in fileGroup)
+                    {
+                        string relativePath = currDir.RelativeTo(filePath);
+                        relativePath = relativePath.ReplaceLast(".ts").With(".js");
+                        var scriptTag = doc.createElement("script");
+                        var textNode = doc.createTextNode(string.Empty);
+                        scriptTag.setAttribute("src", relativePath.Replace("\\", "/"));
+                        scriptTag.appendChild(textNode);
+                        header.appendChild(scriptTag);
+                    }
+                }
+                #endregion
+            }
             context.Response.Write(doc.Content);
             //context.Response.Flush();
             //context.Response.Close();

@@ -12,7 +12,7 @@ function doPropTests() {
     var propTest1 = new PropTests.Test1();
     propTest1.Prop1 = "Prop Val 1";
     setContent('PropTests.Test1.Result', propTest1.Prop1);
-    
+    debugger;
     var propTest2 = new PropTests.Test2({ 
         Prop1: 'iah',
         Prop2: 'Prop Val 2',

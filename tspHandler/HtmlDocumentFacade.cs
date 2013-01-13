@@ -55,6 +55,16 @@ namespace tspHandler
                 return sw.ToString();
             }
         }
+
+        public HtmlNodeFacade createElement(string tag)
+        {
+            return new HtmlNodeFacade( _htmlDoc.CreateElement(tag));
+        }
+
+        public HtmlNodeFacade createTextNode(string text)
+        {
+            return new HtmlNodeFacade(_htmlDoc.CreateTextNode(text));
+        }
     }
 
     public class HtmlNodeFacade
@@ -113,6 +123,10 @@ namespace tspHandler
             return list;
         }
 
+        public void appendChild(HtmlNodeFacade child)
+        {
+            this._node.AppendChild(child._node);
+        }
         
     }
 }
