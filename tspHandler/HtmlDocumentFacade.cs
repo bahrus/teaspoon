@@ -70,6 +70,11 @@ namespace tspHandler
             return _node.GetAttributeValue(key, "");
         }
 
+        public void setAttribute(string key, string val)
+        {
+            _node.SetAttributeValue(key, val);
+        }
+
         public string innerHTML
         {
             get
@@ -107,5 +112,7 @@ namespace tspHandler
             HtmlDocumentFacade.searchForNode(test, docNode, list);
             return list;
         }
+
+        
     }
 }
