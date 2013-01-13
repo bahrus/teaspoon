@@ -100,6 +100,104 @@ function doInputTests() {
         targetDomID: 'Input.Test3.Result'
     });
 }
+function doTwoWayBindingTests() {
+    var _ = tsp, Div = _.Div, Input = _.Input, Label = _.LabelForInput, Span = _.Span;
+    var json = {
+        Prop1: 'iah',
+        Prop2: 'Prop Val 2',
+        BinaryProp1: true
+    };
+    var propTest1 = new PropTests.Test2(json);
+    var d = Div({
+        textGet: function () {
+            return propTest1.Prop2;
+        }
+    });
+    var tw1 = Div({
+        kids: [
+            d, 
+            Input({
+                valueGet: function (ie) {
+                    return propTest1.Prop2;
+                },
+                type: 'text',
+                valueSet: function (ie, newVal) {
+                    propTest1.Prop2 = newVal;
+                }
+            }), 
+            
+        ]
+    });
+    _._.ListenForSVChange({
+        getter: propTest1.Prop2Getter,
+        obj: propTest1,
+        callback: function (newVal) {
+            d.notifyTextChange();
+        }
+    });
+    tw1.render({
+        targetDomID: 'TwoWayBinding.Test1.Result'
+    });
+    var d2 = Div({
+        textGet: function () {
+            return propTest1.BinaryProp1 ? 'yes' : 'no';
+        }
+    });
+    var txt2 = Input({
+        disabledGet: function (ie) {
+            return propTest1.BinaryProp1;
+        },
+        value: 'testing'
+    });
+    var s2 = Span({
+        text: 'i am here.',
+        dynamicClasses: {
+            'red': function (ie) {
+                return propTest1.BinaryProp1;
+            }
+        }
+    });
+    var ckbox = Input({
+        valueGet: function (ie) {
+            return propTest1.BinaryProp1 ? 'checked' : null;
+        },
+        type: 'checkbox',
+        valueSet: function (ie, newVal) {
+            propTest1.BinaryProp1 = newVal ? true : false;
+        }
+    });
+    var tw2 = Div({
+        kids: [
+            d2, 
+            Label({
+                forElX: ckbox,
+                text: 'chkBox label'
+            }), 
+            ckbox, 
+            txt2, 
+            s2, 
+            
+        ]
+    });
+    _._.ListenForBVChange({
+        getter: propTest1.BinaryProp1Getter,
+        obj: propTest1,
+        callback: function (newVal) {
+            s2.notifyClassChange('red');
+        }
+    });
+    _._.ListenForBVChange({
+        getter: propTest1.BinaryProp1Getter,
+        obj: propTest1,
+        callback: function (newVal) {
+            d2.notifyTextChange();
+            txt2.notifyDisabledChange();
+        }
+    });
+    tw2.render({
+        targetDomID: 'TwoWayBinding.Test2.Result'
+    });
+}
 if(tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
     onWindowLoad();
 } else {
@@ -107,9 +205,62 @@ if(tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) 
         onWindowLoad();
     };
 }
+function doStaticLists() {
+    var _ = tsp, UL = _.UL, LI = _.LI;
+    var ul1 = UL({
+        kids: [
+            LI({
+                text: 'list item 1',
+                kids: [
+                    UL({
+                        collapsed: true,
+                        toggleKidsOnParentClick: true,
+                        kids: [
+                            LI({
+                                text: 'sub 1.1'
+                            }), 
+                            LI({
+                                text: 'sub 1.2'
+                            }), 
+                            
+                        ]
+                    }), 
+                    
+                ]
+            }), 
+            LI({
+                text: 'list item 2'
+            }), 
+            
+        ]
+    });
+    ul1.render({
+        targetDomID: 'Lists.Test1.Result'
+    });
+    var jsSubject = DataExamples.GenerateBooks(3, 3);
+    var ul2 = UL({
+        kids: [
+            LI({
+                text: jsSubject.subject,
+                kids: [
+                    UL({
+                        toggleKidsOnParentClick: true,
+                        collapsed: true,
+                        kids: jsSubject.books.map(DataExamples.bookToLI)
+                    })
+                ]
+            })
+        ]
+    });
+    ul2.render({
+        targetDomID: 'Lists.Test2.Result'
+    });
+}
 function onWindowLoad() {
     doPropTests();
     doElxTests();
     doInputTests();
+    doTwoWayBindingTests();
+    doStaticLists();
 }
 //@ sourceMappingURL=app.js.map

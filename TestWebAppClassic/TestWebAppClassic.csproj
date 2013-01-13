@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.js" />
-    <Content Include="TestPage1.js.html" />
     <Content Include="TestPage1.tsp.html" />
     <Content Include="Web.config" />
   </ItemGroup>

@@ -22,6 +22,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="PropTests.min.js">
+      <DependentUpon>PropTests.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Books.ts" />
+    <Content Include="app.min.js">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <Content Include="Books.js">
+      <DependentUpon>Books.ts</DependentUpon>
+    </Content>
+    <Content Include="Books.min.js">
+      <DependentUpon>Books.ts</DependentUpon>
+    </Content>
     <Content Include="default.htm" />
     <Content Include="app.js">
       <DependentUpon>app.ts</DependentUpon>
@@ -33,6 +46,21 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.js.map">
+      <DependentUpon>app.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Books.js.map">
+      <DependentUpon>Books.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PropTests.js.map">
+      <DependentUpon>PropTests.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

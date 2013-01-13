@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script src="app.ts" data-handler="server"></script>
+    <!--<script src="app.ts" data-handler="browser"></script>-->
     <title></title>
 </head>
 <body>
@@ -34,13 +35,13 @@
                 <td>Input.Test1</td><td><input type="text" value="Default Text Value"/></td><td id="Input.Test1.Result"></td>
             </tr>
             <tr>
-                <td>Input.Label2</td><td>tbd</td><td id="Input.Label2.Result"></td>
+                <td>Input.Label2</td><td><label for="Input.Test2.Expected">label test</label></td><td id="Input.Label2.Result"></td>
             </tr>
             <tr>
-                <td>Input.Test2</td><td><input type="text" value="Prop Val 2"/></td><td id="Input.Test2.Result"></td>
+                <td>Input.Test2</td><td><input type="text" value="Prop Val 2" id="Input.Test2.Expected"/></td><td id="Input.Test2.Result"></td>
             </tr>
             <tr>
-                <td>Input.Test3</td><td></td><td id="Input.Test3.Result"></td>
+                <td>Input.Test3</td><td><span><label for="Input.Test3.Expected">Label for Checkbox</label><input id="Input.Test3.Expected" type="checkbox"/></span></td><td id="Input.Test3.Result"></td>
             </tr>
             <tr>
                 <td>TwoWayBinding.Test1</td><td>Div text should echo textbox</td><td id="TwoWayBinding.Test1.Result"></td>
@@ -49,10 +50,10 @@
                 <td>TwoWayBinding.Test2</td><td>Div text should echo checkbox</td><td id="TwoWayBinding.Test2.Result"></td>
             </tr>
             <tr>
-                <td>Lists.Test1</td><td>bbbb</td><td id="Lists.Test1.Result"></td>
+                <td>Lists.Test1</td><td><ul><li>list item 1<ul></ul></li><li>list item 2</li></ul></td><td id="Lists.Test1.Result"></td>
             </tr>
             <tr>
-                <td>Lists.Test2</td><td>bbbb</td><td id="Lists.Test2.Result"></td>
+                <td>Lists.Test2</td><td><ul><li>JavaScript<ul></ul></li></ul></td><td id="Lists.Test2.Result"></td>
             </tr>
             <tr>
                 <td>DynamicLists.Test1</td><td>cccc</td><td id="DynamicLists.Test1.Result"></td>

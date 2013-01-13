@@ -5,12 +5,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspHandler", "tspHandler\ts
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebAppClassic", "TestWebAppClassic\TestWebAppClassic.csproj", "{6BBAE0A7-5596-4351-A401-CD107FD4CCD7}"
 	ProjectSection(ProjectDependencies) = postProject
+		{FA938F2F-D2C0-404C-99F0-1DE3296616F0} = {FA938F2F-D2C0-404C-99F0-1DE3296616F0}
 		{1D7B5BF8-9000-4D69-B508-6C56110F998E} = {1D7B5BF8-9000-4D69-B508-6C56110F998E}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspScriptLib", "tspScriptLib\tspScriptLib.csproj", "{FA938F2F-D2C0-404C-99F0-1DE3296616F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptTestApp1", "TestWebAppClassic\TypeScriptTestApp1.csproj", "{1D7B5BF8-9000-4D69-B508-6C56110F998E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FA938F2F-D2C0-404C-99F0-1DE3296616F0} = {FA938F2F-D2C0-404C-99F0-1DE3296616F0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

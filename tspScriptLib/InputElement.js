@@ -5,6 +5,14 @@ var __extends = this.__extends || function (d, b) {
 };
 var tsp;
 (function (tsp) {
+    function Input(bindInfo) {
+        return new InputElement(bindInfo);
+    }
+    tsp.Input = Input;
+    function LabelForInput(bindInfo) {
+        return new InputLabelElement(bindInfo);
+    }
+    tsp.LabelForInput = LabelForInput;
     function InputElementChangeHandler(tEvent) {
         var ie = tEvent.elX;
         var newValue = (ie.type === InputElement.type_checkbox ? tEvent.event.target['checked'] : tEvent.event.target['value']);
@@ -34,7 +42,7 @@ var tsp;
                 }
             }
             if(bindInfo.valueSet) {
-                tsp._.addWindowEventListener({
+                tsp.addWindowEventListener({
                     elX: this,
                     callback: InputElementChangeHandler,
                     topicName: 'change'

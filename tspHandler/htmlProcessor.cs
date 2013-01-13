@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Noesis.Javascript;
+using RemObjects.Script;
 
 namespace tspHandler
 {
@@ -35,11 +36,13 @@ namespace tspHandler
             #region get all the script tags and read the files for the server based ones
             var scriptTags = doc.getElementsByTagName("script");
             var  serverFilePaths = new List<List<string>>();
+            var clientFilePaths = new List<List<string>>();
             foreach(var scriptTag in scriptTags){
                 //var handlerAttrib = scriptTag.Attributes["data-handler"];
                 var handlerAttribVal = scriptTag.getAttribute("data-handler");
                 var srcAttribVal = scriptTag.getAttribute("src");
-                if(handlerAttribVal == "server"){
+                //if (handlerAttribVal.StartsWith("server"))
+                {
                     string filePath = context.Request.MapPath(srcAttribVal);
                     var filePaths = new List<string>();
                     this.GetListOfDependentFiles(filePath, filePaths);
@@ -47,60 +50,136 @@ namespace tspHandler
                     serverFilePaths.Add(filePaths);
                     scriptTag.parentNode.removeChild(scriptTag);
                 }
+                //else
+                //{
+                    
+                //}
             }
-            
-            foreach (var fileGroup in serverFilePaths)
+
+            #region check if date time stamp in memory, and matches current
+            string keyTS = "tcp.TimeStamps." + context.Request.Path;
+            string keyContent = "tcp.Scripts." + context.Request.Path;
+            var oldFileStamps = context.Cache[keyTS] as List<long>;
+            var oldContent = context.Cache[keyContent] as string;
+            bool needToReadFiles = true;
+            if (oldFileStamps != null && oldContent != null)
             {
-                foreach (var filePath in fileGroup)
+                needToReadFiles = false;
+                //var fileStamps = new List<long>();
+                int i = 0;
+                foreach (var fileGroup in serverFilePaths)
                 {
-                    var jsContent = filePath.ReplaceLast(".ts").With(".js").ReadFile();
-                    sbServerScript.AppendLine(jsContent);
+                    foreach (var filePath in fileGroup)
+                    {
+                        if (oldFileStamps.Count < i + 1)
+                        {
+                            needToReadFiles = true;
+                            goto DoneChecking;
+                        }
+                        var fi = filePath.ReplaceLast(".ts").With(".min.js").GetFileInfo();
+                        var ts = fi.LastWriteTimeUtc.Ticks;
+                        if (oldFileStamps[i] != ts)
+                        {
+                            needToReadFiles = true;
+                            goto DoneChecking;
+                        }
+                        i++;
+                    }
                 }
+                if (i != oldFileStamps.Count)
+                {
+                    needToReadFiles = true;
+                }
+                
+
+            }
+            #endregion
+        DoneChecking:
+            string script = null;
+            if (needToReadFiles)
+            {
+                #region read file contents
+                int i = 0;
+                var newFileStamps = new List<long>();
+                context.Cache[keyTS] = newFileStamps;
+                foreach (var fileGroup in serverFilePaths)
+                {
+                    foreach (var filePath in fileGroup)
+                    {
+                        string MinifiedfilePath = filePath.ReplaceLast(".ts").With(".min.js");
+                        var ts = MinifiedfilePath.GetFileInfo().LastWriteTimeUtc.Ticks;
+                        newFileStamps.Add(ts);
+                        var jsContent = MinifiedfilePath.ReadFile();
+                        sbServerScript.AppendLine(jsContent);
+                        i++;
+                    }
+                }
+                script = sbServerScript.ToString();
+                context.Cache[keyContent] = script;
+                #endregion
+            }
+            else
+            {
+                script = oldContent;
             }
             #endregion
             #region run the server side javascipt
-            string script = sbServerScript.ToString();
+
             if (script.Length > 0)
             {
-                using (var jsContext = new JavascriptContext())
+                if (context.Request["tspHandler"] == "RemObjects")
                 {
-
-                    // Setting the externals parameters of the context
-                    jsContext.SetParameter("document", doc);
-                    jsContext.SetParameter("window", "ignore");
-                    
-
-                    // Running the script
-                    jsContext.Run(script);
-
-                    // Getting a parameter
+                    this.processWithRemObjectsScript(script, doc);
                 }
-                //var esc = new EcmaScriptComponent();
-                //esc.Globals.SetVariable("document", doc);
-                //esc.Globals.SetVariable("window", "ignore");
-                //esc.Clear();
-                //esc.Source = script;
-                //esc.Debug = true;
-                //esc.DebugException += esc_DebugException;
-                //try
-                //{
-                //    esc.Run();
-                //    esc.RunFunction("onWindowLoad");
-                //}
-                //catch
-                //{
-                //    int lineNo = esc.DebugLastPos.StartRow;
-                //}
+                else
+                {
+                    this.processWithNoesisJavascript(script, doc);
+                }
 
             }
             context.Response.Write(doc.Content);
+            //context.Response.Flush();
             //context.Response.Close();
             #endregion
         }
 
-        
 
-        
+        private void processWithNoesisJavascript(string script, HtmlDocumentFacade doc)
+        {
+            using (var jsContext = new JavascriptContext())
+            {
+
+                // Setting the externals parameters of the context
+                jsContext.SetParameter("document", doc);
+                jsContext.SetParameter("window", "ignore");
+
+
+                // Running the script
+                jsContext.Run(script);
+
+                // Getting a parameter
+            }
+        }
+
+        private void processWithRemObjectsScript(string script, HtmlDocumentFacade doc)
+        {
+            var esc = new EcmaScriptComponent();
+            esc.Globals.SetVariable("document", doc);
+            esc.Globals.SetVariable("window", "ignore");
+            esc.Clear();
+            esc.Source = script;
+            esc.Debug = true;
+            //esc.DebugException += esc_DebugException;
+            try
+            {
+                esc.Run();
+                esc.RunFunction("onWindowLoad");
+            }
+            catch
+            {
+                int lineNo = esc.DebugLastPos.StartRow;
+            }
+        }
 
         public void GetListOfDependentFiles(string filePath, List<string> filePaths)
         {
@@ -147,6 +226,14 @@ namespace tspHandler
             //filePaths.Remove(filePath);
             filePaths.Add(filePath);
         }
+
+        //public void GetListOfDependentUrls(string fileURL, List<string> fileURLs, HttpContext context)
+        //{
+        //}
+
+        //private string GetRelativePath(string currentPath, string linkedPath)
+        //{
+        //}
         #endregion
     }
 }

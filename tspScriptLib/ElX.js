@@ -1,5 +1,86 @@
 var tsp;
 (function (tsp) {
+    tsp.windowEventListeners = {
+    };
+    var selectionChangeListeners = {
+    };
+    var selectGroups = {
+    };
+    function notifySelectionChange(name) {
+        var scls = selectionChangeListeners[name];
+        if(!scls) {
+            return;
+        }
+        for(var i = 0, n = scls.length; i < n; i++) {
+            var scl = scls[i];
+            scl();
+        }
+    }
+    function getSelections(groupName) {
+        return selectGroups[groupName];
+    }
+    tsp.getSelections = getSelections;
+    function clearSelections(groupName, notify) {
+        var sel = selectGroups[groupName];
+        if(!sel) {
+            return;
+        }
+        for(var i = 0, n = sel.length; i < n; i++) {
+            var other = sel[i];
+            other.selected = false;
+        }
+        delete selectGroups[groupName];
+        if(notify) {
+            notifySelectionChange(groupName);
+        }
+    }
+    tsp.clearSelections = clearSelections;
+    function setSelection(groupName, elX) {
+        clearSelections(groupName, false);
+        addSelection(groupName, elX, true);
+    }
+    tsp.setSelection = setSelection;
+    function addSelection(groupName, elX, notify) {
+        var sel = selectGroups[groupName];
+        if(!sel) {
+            sel = [];
+            selectGroups[groupName] = sel;
+        }
+        elX.selected = true;
+        sel.push(elX);
+        if(notify) {
+            notifySelectionChange(groupName);
+        }
+    }
+    tsp.addSelection = addSelection;
+    function removeSelection(groupName, elX, notify) {
+        var sel = selectGroups[groupName];
+        if(!sel) {
+            return;
+        }
+        debugger;
+
+    }
+    tsp.removeSelection = removeSelection;
+    function getGlobalStorage() {
+        return {
+            objectLookup: tsp._.objectLookup,
+            objectListeners: tsp._.SVObjectChangeListeners,
+            windowEventListeners: tsp.windowEventListeners,
+            selectionChangeListeners: selectionChangeListeners,
+            selectGroups: selectGroups
+        };
+    }
+    tsp.getGlobalStorage = getGlobalStorage;
+    function addSelectionChangeListener(name, callBack) {
+        var listeners = selectionChangeListeners[name];
+        if(!listeners) {
+            listeners = [];
+            selectionChangeListeners[name] = listeners;
+        }
+        listeners.push(callBack);
+    }
+    tsp.addSelectionChangeListener = addSelectionChangeListener;
     function ParentElementToggleClickHandler(tEvent) {
         var elX = tEvent.elX;
         var kids = elX.kidElements;
@@ -24,6 +105,37 @@ var tsp;
             }
         }
     }
+    function windowEventListener(ev) {
+        var evtName = ev.type;
+        var topicListenersSettings = tsp.windowEventListeners[evtName];
+        if(!topicListenersSettings) {
+            return;
+        }
+        for(var i = 0, n = topicListenersSettings.length; i < n; i++) {
+            var settings = topicListenersSettings[i];
+            var condition = settings.conditionForNotification;
+            var el = (ev.target);
+            var topicEvent = settings;
+            topicEvent.event = ev;
+            if(!condition(topicEvent)) {
+                delete topicEvent.event;
+                continue;
+            }
+            var elX = tsp._.objectLookup[topicEvent.elXID];
+            if(!elX) {
+                delete topicEvent.event;
+                continue;
+            }
+            topicEvent.elX = elX;
+            topicEvent.callback(topicEvent);
+            delete topicEvent.elX;
+            delete topicEvent.event;
+        }
+    }
+    function ElementMatchesID(tEvent) {
+        var el = (tEvent.event.target);
+        return el.id === tEvent.elXID;
+    }
     function SelectElementClickHandler(tEvent) {
         var elX = tEvent.elX;
         var ss = elX.bindInfo.selectSettings;
@@ -32,11 +144,33 @@ var tsp;
         if(!ss) {
             return;
         }
-        tsp._.clearSelections(grp, false);
+        clearSelections(grp, false);
         if(newVal) {
-            tsp._.setSelection(grp, elX);
+            setSelection(grp, elX);
         }
     }
+    function addWindowEventListener(settings) {
+        if(tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
+            return;
+        }
+        var evtName = settings.topicName;
+        var listeners = tsp.windowEventListeners[evtName];
+        if(!listeners) {
+            listeners = [];
+            tsp.windowEventListeners[evtName] = listeners;
+        }
+        var condition = settings.conditionForNotification;
+        if(!condition) {
+            if(settings.elX) {
+                settings.elXID = settings.elX.ID;
+                delete settings.elX;
+            }
+            settings.conditionForNotification = ElementMatchesID;
+        }
+        listeners.push(settings);
+        window.addEventListener(evtName, windowEventListener);
+    }
+    tsp.addWindowEventListener = addWindowEventListener;
     var ElX = (function () {
         function ElX(bindInfo) {
             this.bindInfo = bindInfo;
@@ -151,7 +285,7 @@ var tsp;
             context.elements.push(this);
             var bI = this.bindInfo;
             if(bI.toggleKidsOnParentClick) {
-                tsp._.addWindowEventListener({
+                addWindowEventListener({
                     elX: this.parentElement,
                     topicName: 'click',
                     callback: ParentElementToggleClickHandler
@@ -159,7 +293,7 @@ var tsp;
             }
             var ss = bI.selectSettings;
             if(ss) {
-                tsp._.addWindowEventListener({
+                addWindowEventListener({
                     elX: this,
                     topicName: 'click',
                     callback: SelectElementClickHandler
@@ -482,14 +616,6 @@ var tsp;
         return new ElX(bindInfo);
     }
     tsp.LI = LI;
-    function Input(bindInfo) {
-        return new tsp.InputElement(bindInfo);
-    }
-    tsp.Input = Input;
-    function LabelForInput(bindInfo) {
-        return new tsp.InputLabelElement(bindInfo);
-    }
-    tsp.LabelForInput = LabelForInput;
     function THead(bindInfo) {
         bindInfo.tag = 'thead';
         return new ElX(bindInfo);

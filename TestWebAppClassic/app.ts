@@ -2,6 +2,7 @@
 ///<reference path="ts/lib/ElX.ts" />
 ///<reference path="ts/lib/InputElement.ts" />
 ///<reference path="PropTests.ts" />
+///<reference path="Books.ts" />
 
 var setContent = (ID: string, html: string) => {
     document.getElementById(ID).innerHTML = html;
@@ -67,9 +68,11 @@ function doInputTests() {
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
     };
+    //#region Test 1
     var in1 = Input({ value: "Default Text Value", type: 'text' });
 
     in1.render({ targetDomID: 'Input.Test1.Result' });
+    //#endregion
 
     var propTest1 = new PropTests.Test2(json);
 
@@ -92,6 +95,71 @@ function doInputTests() {
 
 }
 
+function doTwoWayBindingTests() {
+    var _ = tsp, Div = _.Div, Input = _.Input, Label = _.LabelForInput, Span = _.Span;
+    var json = {
+        Prop1: 'iah',
+        Prop2: 'Prop Val 2',
+        BinaryProp1 : true,
+    };
+    var propTest1 = new PropTests.Test2(json);
+    var d = Div({ textGet: () => propTest1.Prop2 });
+    //var n = d.notifyTextChange;
+    var tw1 = Div({
+        kids: [
+            d,
+            Input({ valueGet: (ie) => propTest1.Prop2, type: 'text', valueSet: (ie, newVal) => { propTest1.Prop2 = newVal; } }),
+        ]
+    });
+    _._.ListenForSVChange({
+        getter: propTest1.Prop2Getter,
+        obj: propTest1,
+        callback: newVal =>{
+            d.notifyTextChange();
+        },
+    });
+    tw1.render({ targetDomID: 'TwoWayBinding.Test1.Result' });
+
+    var d2 = Div({
+        textGet : () => propTest1.BinaryProp1 ? 'yes' : 'no',
+    });
+    var txt2 = Input({ disabledGet: (ie) => propTest1.BinaryProp1, value:'testing'});
+    var s2 = Span({ text: 'i am here.',
+        dynamicClasses: {
+            'red': (ie) => propTest1.BinaryProp1,
+        }
+     });
+    //s2.bindInfo.dynamicClasses['red'] = (ie) => propTest1.BinaryProp1;
+    var ckbox = Input({ valueGet: (ie) => propTest1.BinaryProp1 ? 'checked' : null, type: 'checkbox', valueSet: (ie, newVal) => { propTest1.BinaryProp1 = newVal ? true : false; } });
+    var tw2 = Div({
+        kids:[
+            d2,
+            Label({ forElX: ckbox, text: 'chkBox label' }),
+            ckbox,
+            txt2,
+            s2,
+        ],
+    });
+    _._.ListenForBVChange({
+        getter: propTest1.BinaryProp1Getter,
+        obj: propTest1,
+        callback: newVal =>{
+            //d2.notifyTextChange();
+            //txt2.notifyDisabledChange();
+            s2.notifyClassChange('red');
+        },
+    });
+    _._.ListenForBVChange({
+        getter: propTest1.BinaryProp1Getter,
+        obj: propTest1,
+        callback: newVal =>{
+            d2.notifyTextChange();
+            txt2.notifyDisabledChange();
+            //s2.notifyClassChange('red');
+        },
+    });
+    tw2.render({targetDomID: 'TwoWayBinding.Test2.Result'});
+}
 
 if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
     onWindowLoad();
@@ -101,9 +169,41 @@ if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer)
     };
 }
 
+function doStaticLists() {
+    var _ = tsp, UL = _.UL, LI = _.LI;
+    var ul1 = UL({
+        kids: [
+            LI({ text: 'list item 1',  kids: [
+                     UL({collapsed:true, toggleKidsOnParentClick:true, kids:[
+                         LI({ text: 'sub 1.1' }),
+                         LI({ text: 'sub 1.2' }),
+                     ],}),
+            ],}),
+            LI({ text: 'list item 2' }),
+        ],
+    });
+    ul1.render({ targetDomID: 'Lists.Test1.Result' });
+    
+    
+    var jsSubject = DataExamples.GenerateBooks(3, 3);
+    var ul2 = UL({
+        kids: 
+        [LI({ text: jsSubject.subject, 
+            kids: [UL({
+                toggleKidsOnParentClick:true,
+                collapsed:true,
+                kids: jsSubject.books.map(DataExamples.bookToLI),
+            })],
+        })],
+    });
+    ul2.render({ targetDomID: 'Lists.Test2.Result' });
+}
+
 
 function onWindowLoad() {
     doPropTests();
     doElxTests();
     doInputTests();
+    doTwoWayBindingTests();
+    doStaticLists();
 }

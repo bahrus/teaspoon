@@ -13,11 +13,19 @@ module tsp {
         checkedValueSet? (ie: InputElement, oldVal: string, newVal: string): void;
     }
 
+    export function Input(bindInfo: IInputBinder): InputElement {
+        return new InputElement(bindInfo);
+    }
+
+    export function LabelForInput(bindInfo: IInputLabelBinder): InputLabelElement {
+        return new InputLabelElement(bindInfo);
+    }
+
     export interface IInputLabelBinder extends IDOMBinder {
         forElX: ElX;
     }
 
-    function InputElementChangeHandler(tEvent: tsp._.ITopicEvent){
+    function InputElementChangeHandler(tEvent: ITopicEvent){
         var ie = <InputElement> tEvent.elX;
         var newValue = (ie.type === InputElement.type_checkbox ? tEvent.event.target['checked'] : tEvent.event.target['value']);
         
@@ -70,7 +78,7 @@ module tsp {
                 }
             }
             if (bindInfo.valueSet) {
-                tsp._.addWindowEventListener({
+                addWindowEventListener({
                     elX: this,
                     callback: InputElementChangeHandler,
                     topicName: 'change',

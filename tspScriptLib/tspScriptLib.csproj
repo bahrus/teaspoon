@@ -23,12 +23,24 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="default.htm" />
+    <Content Include="ie9.min.js">
+      <DependentUpon>ie9.ts</DependentUpon>
+    </Content>
+    <Content Include="InputElement.min.js">
+      <DependentUpon>InputElement.ts</DependentUpon>
+    </Content>
+    <Content Include="_.min.js">
+      <DependentUpon>_.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="ElX.ts" />
     <Content Include="ElX.js">
       <DependentUpon>ElX.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="InputElement.ts" />
     <TypeScriptCompile Include="ie9.ts" />
+    <Content Include="ElX.min.js">
+      <DependentUpon>ElX.ts</DependentUpon>
+    </Content>
     <Content Include="ie9.js">
       <DependentUpon>ie9.ts</DependentUpon>
     </Content>
@@ -39,6 +51,26 @@
       <DependentUpon>_.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="_.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ElX.js.map">
+      <DependentUpon>ElX.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="_.js.map">
+      <DependentUpon>_.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ie9.js.map">
+      <DependentUpon>ie9.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="InputElement.js.map">
+      <DependentUpon>InputElement.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -73,7 +105,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy $(ProjectDir)\*.js $(SolutionDir)\TestWebAppClassic\ts\lib
-copy $(ProjectDir)\*.ts $(SolutionDir)\TestWebAppClassic\ts\lib</PostBuildEvent>
+copy $(ProjectDir)\*.ts $(SolutionDir)\TestWebAppClassic\ts\lib
+copy $(ProjectDir)\*.map $(SolutionDir)\TestWebAppClassic\ts\lib</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <Message Text="Compiling TypeScript files" />

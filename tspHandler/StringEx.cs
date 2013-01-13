@@ -10,6 +10,12 @@ namespace tspHandler
             return File.ReadAllText(FilePath);
         }
 
+        public static FileInfo GetFileInfo(this string FilePath)
+        {
+            if (FilePath == null) return null;
+            return new FileInfo(FilePath);
+        }
+
         public static BetweenStringsSearch SubstringBetween(this string stringToSearch, string startsWith)
         {
             return new BetweenStringsSearch
