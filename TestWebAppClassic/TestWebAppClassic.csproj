@@ -84,7 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ts\lib\" />
+    <Folder Include="ts\lib\controls\" />
     <Folder Include="ts\TestApp1\" />
   </ItemGroup>
   <PropertyGroup>

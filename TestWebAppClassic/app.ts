@@ -1,8 +1,11 @@
 ///<reference path="ts/lib/_.ts" />
 ///<reference path="ts/lib/ElX.ts" />
 ///<reference path="ts/lib/InputElement.ts" />
+///<reference path="ts/lib/InputElement.ts" />
 ///<reference path="PropTests.ts" />
 ///<reference path="Books.ts" />
+///<reference path="ts/lib/controls/control.ts" />
+///<reference path="ts/lib/controls/srollBar.ts" />
 
 var setContent = (ID: string, html: string) => {
     document.getElementById(ID).innerHTML = html;
@@ -12,7 +15,6 @@ function doPropTests() {
     var propTest1 = new PropTests.Test1();
     propTest1.Prop1 = "Prop Val 1";
     setContent('PropTests.Test1.Result', propTest1.Prop1);
-    debugger;
     var propTest2 = new PropTests.Test2({ 
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
@@ -59,8 +61,6 @@ function doElxTests() {
 
     el3.render({targetDomID: 'Element.Test3.Result' });
 }
-
-
 
 function doInputTests() {
     var _ = tsp, Input = _.Input, Label = _.LabelForInput, Span = _.Span;
@@ -199,6 +199,57 @@ function doStaticLists() {
     ul2.render({ targetDomID: 'Lists.Test2.Result' });
 }
 
+var doDynamicLists_json : DataExamples.ISubject;
+function doDynamicLists() {
+    var _ = tsp, UL = _.UL, LI = _.LI;
+
+    var jsSubject = DataExamples.GenerateBooks(10, 10);
+    doDynamicLists_json = jsSubject;
+    
+
+    var ul1 = UL({
+        kids:
+            [LI({
+                text: jsSubject.subject,
+                kids: [UL({
+                    dataContext : jsSubject,
+                    toggleKidsOnParentClick:true,
+                    collapsed:true,
+                    kidsGet: DataExamples.bookGen,
+                })],
+                
+            })]
+        
+    });
+    tsp.addSelectionChangeListener('global', selectionChangeListener);
+
+    ul1.render({ targetDomID: 'DynamicLists.Test1.Result' });
+}
+
+function selectionChangeListener() {
+    var _ = tsp, UL = _.UL;
+    var selectedChapters: DataExamples.IChapter[] = [];
+    doDynamicLists_json.books.forEach(book => {
+        book.chapters.forEach(chapter => {
+            if (chapter.selected) {
+                selectedChapters.push(chapter);
+            }
+        });
+    });
+    
+    var ul2 = UL({
+        kids: selectedChapters.map(ch => DataExamples.chapterToLI2(ch, 0)),
+    });
+    ul2.render({ targetDomID: 'DynamicLists.Test1.Result.Detail' });
+}
+
+function doCustomInputTests() {
+    var vscroll1 = new tsp.controls.VScrollBarRange({
+        maxValue:20000,
+        height:150,
+    });
+    vscroll1.render({ targetDomID: 'VScrollbar.Test1.Result' });
+}
 
 function onWindowLoad() {
     doPropTests();
@@ -206,4 +257,6 @@ function onWindowLoad() {
     doInputTests();
     doTwoWayBindingTests();
     doStaticLists();
+    doDynamicLists();
+    doCustomInputTests();
 }
