@@ -124,6 +124,15 @@ module tsp.controls {
             var browser = 'ie';
             var settings = vsbr.VScrollBarSettings;
             switch (browserInfo.browser) {
+                case 'Chrome':
+                    switch (browserInfo.version) {
+                        case 26:
+                            vsbr.BrowserSpecificMaxValueWithoutScaling = 900000;
+                            vsbr.BrowserSpecificIncrement = 19;
+                            vsbr.HeightMultiplicationFactor = settings.height / 4;
+                            break;
+                    }
+                break;
                 case 'Explorer':
                     switch (browserInfo.version) {
                         case 10:

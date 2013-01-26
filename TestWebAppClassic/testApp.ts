@@ -258,7 +258,7 @@ function doCustomInputTests() {
     var _ = tsp, Span = _.Span, Div = _.Div;
     var json = new PropTests.Test2({
         BinaryProp1: true,
-        NumberProp1: 100,
+        NumberProp1: 0,
         Prop2: 'hello',
     });
     var vscroll1 = new tsp.controls.VScrollBarRange({

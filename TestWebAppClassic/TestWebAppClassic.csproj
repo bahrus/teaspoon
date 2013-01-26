@@ -73,13 +73,10 @@
       <DependentUpon>testApp.ts</DependentUpon>
     </Content>
     <Content Include="TestPage1.tsp.html" />
-    <Content Include="ts\lib\controls\control.min.js">
-      <DependentUpon>control.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="ts\lib\controls\control.ts" />
     <Content Include="ts\lib\controls\srollBar.js" />
     <Content Include="ts\lib\controls\srollBar.min.js" />
-    <Content Include="ts\lib\controls\srollBar.ts" />
+    <TypeScriptCompile Include="ts\lib\controls\srollBar.ts" />
     <Content Include="ts\lib\ElX.js" />
     <Content Include="ts\lib\ElX.min.js" />
     <Content Include="ts\lib\ElX.ts" />
