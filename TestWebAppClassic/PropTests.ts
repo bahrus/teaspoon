@@ -29,6 +29,7 @@ module PropTests {
     export interface ITest2 {
         Prop2: string;
         BinaryProp1?: bool;
+        NumberProp1?: number;
     }
 
     export class Test2{
@@ -65,6 +66,24 @@ module PropTests {
             return obj.BinaryProp1;
         }
 
+        public get NumberProp1(): number {
+            return this.Prop2Data.NumberProp1;
+        }
+
+        public NumberProp1Setter = (obj: Test2, v: number) => {
+            obj.Prop2Data.NumberProp1 = v;
+        };
+
+        public set NumberProp1(val: number) {
+            tsp._.setNV({ setter: this.NumberProp1Setter, getter: this.NumberProp1Getter, obj: this, val: val, });
+        }
+
+        public NumberProp1Getter = (obj: Test2): number => {
+            return obj.NumberProp1;
+        }
+
+        
+
         public set BinaryProp1(bVal: bool) {
             tsp._.setBV({ setter: this.BinaryProp1Setter, getter: this.BinaryProp1Getter, obj: this, val: bVal, });
         }
@@ -72,6 +91,8 @@ module PropTests {
         private BinaryProp1Setter = (obj: Test2, b: bool) => {
             obj.Prop2Data.BinaryProp1 = b;
         };
+
+        
 
     }
 

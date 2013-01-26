@@ -10,12 +10,13 @@
 var setContent = (ID: string, html: string) => {
     document.getElementById(ID).innerHTML = html;
 };
+var i = 5 ;   
 
 function doPropTests() {
     var propTest1 = new PropTests.Test1();
     propTest1.Prop1 = "Prop Val 1";
     setContent('PropTests.Test1.Result', propTest1.Prop1);
-    var propTest2 = new PropTests.Test2({ 
+    var propTest2 = new PropTests.Test2({
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
     });
@@ -27,19 +28,19 @@ function doPropTests() {
     };
 
     var propTest3 = new PropTests.Test2(json);
-  
-    
+
+
     tsp._.ListenForSVChange({
         getter: propTest3.Prop2Getter,
         obj: propTest3,
-        callback: newVal =>{
+        callback: newVal => {
             setContent('PropTests.Test3.Result', newVal);
         },
     });
 
     propTest3.Prop2 = 'new value';
-    
-    
+    console.log(propTest3);
+
 }
 
 function doElxTests() {
@@ -54,12 +55,13 @@ function doElxTests() {
     var el2 = _.Div({ text: "I am here" });
     el2.render({ targetDomID: 'Element.Test2.Result' });
 
-    var el3 = 
-    Div({text: 'Parent Div', kids:
-        [Div({ text: 'child div' })]
+    var el3 =
+    Div({
+        text: 'Parent Div', kids:
+            [Div({ text: 'child div' })]
     });
 
-    el3.render({targetDomID: 'Element.Test3.Result' });
+    el3.render({ targetDomID: 'Element.Test3.Result' });
 }
 
 function doInputTests() {
@@ -100,7 +102,7 @@ function doTwoWayBindingTests() {
     var json = {
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
-        BinaryProp1 : true,
+        BinaryProp1: true,
     };
     var propTest1 = new PropTests.Test2(json);
     var d = Div({ textGet: () => propTest1.Prop2 });
@@ -114,25 +116,26 @@ function doTwoWayBindingTests() {
     _._.ListenForSVChange({
         getter: propTest1.Prop2Getter,
         obj: propTest1,
-        callback: newVal =>{
+        callback: newVal => {
             d.notifyTextChange();
         },
     });
     tw1.render({ targetDomID: 'TwoWayBinding.Test1.Result' });
 
     var d2 = Div({
-        textGet : () => propTest1.BinaryProp1 ? 'yes' : 'no',
+        textGet: () => propTest1.BinaryProp1 ? 'yes' : 'no',
     });
-    var txt2 = Input({ disabledGet: (ie) => propTest1.BinaryProp1, value:'testing'});
-    var s2 = Span({ text: 'i am here.',
+    var txt2 = Input({ disabledGet: (ie) => propTest1.BinaryProp1, value: 'testing' });
+    var s2 = Span({
+        text: 'i am here.',
         dynamicClasses: {
             'red': (ie) => propTest1.BinaryProp1,
         }
-     });
+    });
     //s2.bindInfo.dynamicClasses['red'] = (ie) => propTest1.BinaryProp1;
     var ckbox = Input({ valueGet: (ie) => propTest1.BinaryProp1 ? 'checked' : null, type: 'checkbox', valueSet: (ie, newVal) => { propTest1.BinaryProp1 = newVal ? true : false; } });
     var tw2 = Div({
-        kids:[
+        kids: [
             d2,
             Label({ forElX: ckbox, text: 'chkBox label' }),
             ckbox,
@@ -143,7 +146,7 @@ function doTwoWayBindingTests() {
     _._.ListenForBVChange({
         getter: propTest1.BinaryProp1Getter,
         obj: propTest1,
-        callback: newVal =>{
+        callback: newVal => {
             //d2.notifyTextChange();
             //txt2.notifyDisabledChange();
             s2.notifyClassChange('red');
@@ -152,13 +155,13 @@ function doTwoWayBindingTests() {
     _._.ListenForBVChange({
         getter: propTest1.BinaryProp1Getter,
         obj: propTest1,
-        callback: newVal =>{
+        callback: newVal => {
             d2.notifyTextChange();
             txt2.notifyDisabledChange();
             //s2.notifyClassChange('red');
         },
     });
-    tw2.render({targetDomID: 'TwoWayBinding.Test2.Result'});
+    tw2.render({ targetDomID: 'TwoWayBinding.Test2.Result' });
 }
 
 if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
@@ -173,53 +176,60 @@ function doStaticLists() {
     var _ = tsp, UL = _.UL, LI = _.LI;
     var ul1 = UL({
         kids: [
-            LI({ text: 'list item 1',  kids: [
-                     UL({collapsed:true, toggleKidsOnParentClick:true, kids:[
-                         LI({ text: 'sub 1.1' }),
-                         LI({ text: 'sub 1.2' }),
-                     ],}),
-            ],}),
+            LI({
+                text: 'list item 1', kids: [
+                    UL({
+                        collapsed: true, toggleKidsOnParentClick: true, kids: [
+                        LI({ text: 'sub 1.1' }),
+                        LI({ text: 'sub 1.2' }),
+                        ],
+                    }),
+                ],
+            }),
             LI({ text: 'list item 2' }),
         ],
     });
     ul1.render({ targetDomID: 'Lists.Test1.Result' });
-    
-    
+
+
     var jsSubject = DataExamples.GenerateBooks(3, 3);
     var ul2 = UL({
-        kids: 
-        [LI({ text: jsSubject.subject, 
+        kids:
+        [LI({
+            text: jsSubject.subject,
             kids: [UL({
-                toggleKidsOnParentClick:true,
-                collapsed:true,
+                toggleKidsOnParentClick: true,
+                collapsed: true,
                 kids: jsSubject.books.map(DataExamples.bookToLI),
             })],
         })],
     });
     ul2.render({ targetDomID: 'Lists.Test2.Result' });
+
+    console.log(ul2);
 }
 
-var doDynamicLists_json : DataExamples.ISubject;
+var doDynamicLists_json: DataExamples.ISubject;
 function doDynamicLists() {
     var _ = tsp, UL = _.UL, LI = _.LI;
 
     var jsSubject = DataExamples.GenerateBooks(10, 10);
     doDynamicLists_json = jsSubject;
-    
+
 
     var ul1 = UL({
         kids:
             [LI({
                 text: jsSubject.subject,
                 kids: [UL({
-                    dataContext : jsSubject,
-                    toggleKidsOnParentClick:true,
-                    collapsed:true,
+                    dataContext: jsSubject,
+                    toggleKidsOnParentClick: true,
+                    collapsed: true,
                     kidsGet: DataExamples.bookGen,
                 })],
-                
+
             })]
-        
+
     });
     tsp.addSelectionChangeListener('global', selectionChangeListener);
 
@@ -236,27 +246,55 @@ function selectionChangeListener() {
             }
         });
     });
-    
+
     var ul2 = UL({
         kids: selectedChapters.map(ch => DataExamples.chapterToLI2(ch, 0)),
     });
     ul2.render({ targetDomID: 'DynamicLists.Test1.Result.Detail' });
+    console.log(ul2);
 }
 
 function doCustomInputTests() {
-    var vscroll1 = new tsp.controls.VScrollBarRange({
-        maxValue:20000,
-        height:150,
+    var _ = tsp, Span = _.Span, Div = _.Div;
+    var json = new PropTests.Test2({
+        BinaryProp1: true,
+        NumberProp1: 100,
+        Prop2: 'hello',
     });
-    vscroll1.render({ targetDomID: 'VScrollbar.Test1.Result' });
+    var vscroll1 = new tsp.controls.VScrollBarRange({
+        maxValue: 20000,
+        height: 150,
+        scrollValueSet: (ie, newVal) => {
+            json.NumberProp1 = newVal;
+        },
+    });
+    var span1 = Span({
+        textGet: () => 'v:' + json.NumberProp1,
+    });
+    var d = Div({
+        kids: [span1, vscroll1]
+    });
+    _._.ListenForNVChange({
+        getter: json.NumberProp1Getter,
+        obj: json,
+        callback: newVal => {
+            span1.notifyTextChange();
+            //s2.notifyClassChange('red');
+        },
+    });
+    d.render({
+        targetDomID: 'VScrollbar.Test1.Result',
+    });
+
+
 }
 
 function onWindowLoad() {
-    doPropTests();
-    doElxTests();
-    doInputTests();
-    doTwoWayBindingTests();
-    doStaticLists();
-    doDynamicLists();
+    //doPropTests();
+    //doElxTests();
+    //doInputTests();
+    //doTwoWayBindingTests();
+    //doStaticLists();
+    //doDynamicLists();   
     doCustomInputTests();
 }

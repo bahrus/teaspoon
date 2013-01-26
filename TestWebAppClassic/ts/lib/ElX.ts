@@ -1,55 +1,17 @@
 ///<reference path="_.ts" />
+///<reference path="Interface_ElX.ts" />
 ///<reference path="ie9.ts" />
 
 module tsp {
-    export interface IDOMBinder {
-
-        attributes?: { [name: string]: string; };
-        contentEditable?: bool;
-        dynamicAttributes?: { [name: string]: { (el: ElX): string; }; };
-        dynamicClasses?: { [name: string]: { (el: ElX): bool; }; };
-        dynamicStyles?: { [name: string]: { (el: ElX): string; }; };
-
-        classes?: string[];
-
-        id?: string;
-
-        kids?: ElX[];
-        kidsGet? (el: ElX): ElX[];
-
-        styles?: { [name: string]: string; };
-
-        tag?: string;
-        //Inner Content - used if textGet is null
-        text?: string;
-        //Dynamic Inner Content
-        textGet?(el: ElX): string;
-        //child elements - used if kidsGet is null
-        
-        toggleKidsOnParentClick?: bool;
-        collapsed?: bool;
-        dataContext?: any;
-        selectSettings?: ISelectBinder;
-    }
-
     
 
-    export interface ISelectBinder {
-        //static 
-        selected?: bool;
-        //dynamic
-        selectGet? (elX : ElX): bool;
-        selectSet? (elX : ElX, newVal: bool): void;
-        group?: string;
-        selClassName?: string;
-        partialSelClassName?: string;
-        unselClassName?: string;
-        conformWithParent?: bool;
-    }
-
     export var windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
+
+    //#region selection management
     var selectionChangeListeners : { [name: string]: { (); void; } []; } = { };
-    var selectGroups: { [name: string]: tsp.ElX[]; } = {};
+    var selectGroups: { [name: string]: IElX[]; } = {};
+
+
 
     function notifySelectionChange(name: string) {
         var scls = selectionChangeListeners[name];
@@ -60,13 +22,11 @@ module tsp {
         }
     }
 
-    
-
     export function getSelections(groupName: string) {
         return selectGroups[groupName];
     }
 
-        export function clearSelections(groupName: string, notify: bool) {
+    export function clearSelections(groupName: string, notify: bool) {
         var sel = selectGroups[groupName];
         if(!sel) return;
         for (var i = 0, n = sel.length; i < n; i++) {
@@ -80,12 +40,12 @@ module tsp {
         
     }
 
-    export function setSelection(groupName: string, elX: tsp.ElX) {
+    export function setSelection(groupName: string, elX: IElX) {
         clearSelections(groupName, false);
         addSelection(groupName, elX, true);
     }
 
-    export function addSelection(groupName: string, elX: tsp.ElX, notify: bool) {
+    export function addSelection(groupName: string, elX: IElX, notify: bool) {
         var sel = selectGroups[groupName];
         if (!sel) {sel = []; selectGroups[groupName] = sel;}
         elX.selected = true;
@@ -99,7 +59,16 @@ module tsp {
         debugger;//TODO:  remove
     }
 
-    
+    export function addSelectionChangeListener(name: string, callBack: () => void ) {
+        var listeners = selectionChangeListeners[name];
+        if (!listeners) {
+            listeners = [];
+            selectionChangeListeners[name] = listeners;
+        }
+        listeners.push(callBack);
+    }
+
+    //#endregion
 
     export function getGlobalStorage() {
         return {
@@ -109,15 +78,6 @@ module tsp {
             selectionChangeListeners: selectionChangeListeners,
             selectGroups: selectGroups,
         };
-    }
-
-    export function addSelectionChangeListener(name: string, callBack: () => void ) {
-        var listeners = selectionChangeListeners[name];
-        if (!listeners) {
-            listeners = [];
-            selectionChangeListeners[name] = listeners;
-        }
-        listeners.push(callBack);
     }
 
     function ParentElementToggleClickHandler(tEvent: ITopicEvent){
@@ -144,16 +104,18 @@ module tsp {
             }
         }
         
-    }
-
+    }  
+     
     function windowEventListener (ev: Event) {
         var evtName = ev.type;
         var topicListenersSettings = windowEventListeners[evtName];
+        console.log('windowEventListener.evtName=' + evtName);
         if(!topicListenersSettings) return;
         for (var i = 0, n = topicListenersSettings.length; i < n; i++) {
             var settings = topicListenersSettings[i];
             var condition = settings.conditionForNotification;
             var el = <HTMLElement>(ev.target);
+            console.log('ev.target.id = ' + el.id);
             var topicEvent: ITopicEvent = <ITopicEvent> settings;
             topicEvent.event = ev;
             if (!condition(topicEvent)) {
@@ -194,16 +156,28 @@ module tsp {
              
     }
 
-    export interface IListenForTopic {
-        topicName: string;
-        conditionForNotification?(tEvent: ITopicEvent): bool;
-        callback(tEvent: ITopicEvent): void;
-        elX?: ElX;
-        elXID?: string;
+    export function addLocalEventListener(settings: IListenForTopic) {
+        if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
+        if (!settings.elX._rendered) {
+            settings.elX.bindInfo.onNotifyAddedToDom = elX => {
+                elX.el.attributes['data-tsp-evt-' + settings.topicName] = settings;
+                elX.el.addEventListener(settings.topicName, localEventListener, false);
+            }
+        }
     }
 
-    export interface ITopicEvent extends IListenForTopic {
-        event: Event;
+    function localEventListener(ev: Event) {
+        var el = <HTMLElement>(ev.target);
+        var sTopic = ev.type;
+        var settings = <IListenForTopic> el.attributes['data-tsp-evt-' + sTopic];
+        var topicEvent: ITopicEvent = <ITopicEvent> settings;
+        topicEvent.event = ev;
+        topicEvent.elXID = el.id;
+        var elX = tsp._.objectLookup[topicEvent.elXID];
+        topicEvent.elX = elX;
+
+        topicEvent.callback(topicEvent);
+     
     }
 
     export function addWindowEventListener(settings: IListenForTopic) {
@@ -241,7 +215,7 @@ module tsp {
         //window.addEventListener(settings.topicName, listener);
     }
 
-    export class ElX {
+    export class ElX implements IElX {
 
         constructor (public bindInfo: IDOMBinder) {
             if (!bindInfo.attributes) {
@@ -550,6 +524,10 @@ module tsp {
                 delete this._kidIds;
             }
             delete this.parentElement;
+            if (bI.onNotifyAddedToDom) {
+                bI.onNotifyAddedToDom(this);
+                delete bI.onNotifyAddedToDom;
+            }
         }
 
         public getAttr(name: string): string {
@@ -644,12 +622,7 @@ module tsp {
     }
 
 
-    export interface IRenderContextProps {
-        targetDomID?: string;
-        targetDom?: HTMLElement;
-    }
-
-    export class RenderContext {
+    export class RenderContext implements IRenderContext{
         public output: string;
         public elements: ElX[];
         //public idStack: number[];
@@ -659,12 +632,10 @@ module tsp {
             this.output = "";
             this.elements = [];
             //this.idStack = []; 
-        }
-
-        
+        }  
     }
 
-    export function Div(bindInfo: IDOMBinder) : ElX {
+    export function Div(bindInfo: IDOMBinder): ElX {
         bindInfo.tag = 'div';
         return new ElX(bindInfo);
     }
@@ -674,17 +645,17 @@ module tsp {
         return new ElX(bindInfo);
     }
 
-    export function UL(bindInfo:IDOMBinder) : ElX {
+    export function UL(bindInfo: IDOMBinder): ElX {
         bindInfo.tag = 'ul';
         return new ElX(bindInfo);
     }
 
-    export function LI(bindInfo: IDOMBinder) : ElX {
+    export function LI(bindInfo: IDOMBinder): ElX {
         bindInfo.tag = 'li';
         return new ElX(bindInfo);
     }
-    
-    
+
+
 
     export function THead(bindInfo: IDOMBinder): ElX {
         bindInfo.tag = 'thead';

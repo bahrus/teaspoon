@@ -16,7 +16,9 @@ namespace tspHandler
         /// web and register it with IIS before being able to use it. For more information
         /// see the following link: http://go.microsoft.com/?linkid=8101007
         /// </summary>
-        #region IHttpHandler Members
+
+
+        public const string ReleaseMode = "tsp.ReleaseMode";
 
         public bool IsReusable
         {
@@ -81,8 +83,10 @@ namespace tspHandler
 
         public void ProcessRequest(HttpContext context)
         {
-            string test = context.Request["tspResource"];
-            if (test == "script")
+            string currentFilePath = context.Request.PhysicalPath;
+
+            string resourceType = context.Request["tspResource"];
+            if (resourceType == "script")
             {
                 context.Response.ContentType = "test/javascript";
                 string keyClientSideContent = "tcp.ClientSide.Scripts." + context.Request.Path;
@@ -90,9 +94,25 @@ namespace tspHandler
                 context.Response.Write(script);
                 return;
             }
-            bool isClientSideDebug = context.Request["tsp.debug"] == "true";
-            string currentFilePath = context.Request.PhysicalPath;
-            string content = currentFilePath.ReadFile();
+            bool isClientSideDebug = context.Request[ReleaseMode] == null;       //context.Request["tsp.debug"] == "true";
+            string content = null;
+            string usageQuery = context.Request["usage"];
+            if (usageQuery != null)
+            {
+                switch (usageQuery)
+                {
+                    case "html":
+                        StringBuilder sb = new StringBuilder();
+
+                        context.Response.ContentType = "test/html";
+                        context.Response.Write(sb.ToString());
+                        return;
+                }
+            }
+            else
+            {
+                content = currentFilePath.ReadFile();
+            }
             HtmlDocumentFacade doc = new HtmlDocumentFacade(content);
             StringBuilder sbServerScript = new StringBuilder();
             #region get all the script tags and read the files for the server based ones
@@ -241,7 +261,8 @@ namespace tspHandler
                 // Setting the externals parameters of the context
                 jsContext.SetParameter("document", doc);
                 jsContext.SetParameter("window", "ignore");
-
+                var deb = new Console();
+                jsContext.SetParameter("console", deb);
 
                 // Running the script
                 jsContext.Run(script);
@@ -323,6 +344,12 @@ namespace tspHandler
         //private string GetRelativePath(string currentPath, string linkedPath)
         //{
         //}
-        #endregion
+    }
+
+    public class Console
+    {
+        public void log(object obj)
+        {
+        }
     }
 }

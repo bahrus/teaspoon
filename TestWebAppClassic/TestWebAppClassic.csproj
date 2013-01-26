@@ -61,8 +61,35 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.js" />
+    <Content Include="Books.js" />
+    <Content Include="Books.ts" />
+    <Content Include="PropTests.js" />
+    <Content Include="PropTests.ts" />
+    <TypeScriptCompile Include="testApp.ts" />
+    <Content Include="testApp.js">
+      <DependentUpon>testApp.ts</DependentUpon>
+    </Content>
+    <Content Include="testApp.min.js">
+      <DependentUpon>testApp.ts</DependentUpon>
+    </Content>
     <Content Include="TestPage1.tsp.html" />
+    <Content Include="ts\lib\controls\control.min.js">
+      <DependentUpon>control.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="ts\lib\controls\control.ts" />
+    <Content Include="ts\lib\controls\srollBar.js" />
+    <Content Include="ts\lib\controls\srollBar.min.js" />
+    <Content Include="ts\lib\controls\srollBar.ts" />
+    <Content Include="ts\lib\ElX.js" />
+    <Content Include="ts\lib\ElX.min.js" />
+    <Content Include="ts\lib\ElX.ts" />
+    <TypeScriptCompile Include="ts\lib\Interface_ElX.ts" />
+    <Content Include="ts\lib\Interface_ElX.js">
+      <DependentUpon>Interface_ElX.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\_.js" />
+    <Content Include="ts\lib\_.min.js" />
+    <Content Include="ts\lib\_.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +97,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Books.js.map" />
+    <Content Include="PropTests.js.map" />
+    <Content Include="ts\lib\controls\srollBar.js.map" />
+    <Content Include="ts\lib\_.js.map" />
+    <Content Include="ts\lib\ElX.js.map" />
+    <Content Include="ts\lib\_.min.js.map">
+      <DependentUpon>_.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\ElX.min.js.map">
+      <DependentUpon>ElX.js</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -84,7 +122,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ts\lib\controls\" />
     <Folder Include="ts\TestApp1\" />
   </ItemGroup>
   <PropertyGroup>
@@ -94,6 +131,17 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
