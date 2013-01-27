@@ -6,6 +6,7 @@
 ///<reference path="Books.ts" />
 ///<reference path="ts/lib/controls/control.ts" />
 ///<reference path="ts/lib/controls/VScrollBar.ts" />
+///<reference path="ts/lib/controls/HScrollBar.ts" />
 
 var setContent = (ID: string, html: string) => {
     document.getElementById(ID).innerHTML = html;
@@ -259,6 +260,7 @@ function doCustomInputTests() {
     var json = new PropTests.Test2({
         BinaryProp1: true,
         NumberProp1: 0,
+        NumberProp2: 0,
         Prop2: 'hello',
     });
     var vscroll1 = new tsp.controls.VScrollBarRange({
@@ -272,7 +274,7 @@ function doCustomInputTests() {
         textGet: () => 'v:' + json.NumberProp1,
     });
     var d = Div({
-        kids: [span1, vscroll1]
+        kids: [span1, vscroll1],
     });
     _._.ListenForNVChange({
         getter: json.NumberProp1Getter,
@@ -286,7 +288,29 @@ function doCustomInputTests() {
         targetDomID: 'VScrollbar.Test1.Result',
     });
 
-
+    var hscroll1 = new tsp.controls.HScrollBarRange({
+        maxValue: 10000,
+        width: 200,
+        scrollValueSet: (ie, newVal) => {
+            json.NumberProp2 = newVal;
+        },
+    });
+    var span2 = Span({
+        textGet: () => 'h:' + json.NumberProp2,
+    });
+    var d2 = Div({
+        kids: [span2, hscroll1],
+    });
+    _._.ListenForNVChange({
+        getter: json.NumberProp2Getter,
+        obj: json,
+        callback: newVal => {
+            span2.notifyTextChange();
+        }
+    });
+    d2.render({
+        targetDomID: 'HScrollbar.Test1.Result',
+    });
 }
 
 function onWindowLoad() {

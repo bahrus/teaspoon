@@ -61,11 +61,21 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Books.js" />
-    <Content Include="Books.ts" />
     <TypeScriptCompile Include="testApp.ts" />
-    <Content Include="PropTests.js" />
-    <Content Include="PropTests.ts" />
+    <TypeScriptCompile Include="Books.ts" />
+    <Content Include="Books.js">
+      <DependentUpon>Books.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="PropTests.ts" />
+    <Content Include="Books.min.js">
+      <DependentUpon>Books.ts</DependentUpon>
+    </Content>
+    <Content Include="PropTests.js">
+      <DependentUpon>PropTests.ts</DependentUpon>
+    </Content>
+    <Content Include="PropTests.min.js">
+      <DependentUpon>PropTests.ts</DependentUpon>
+    </Content>
     <Content Include="testApp.js">
       <DependentUpon>testApp.ts</DependentUpon>
     </Content>
@@ -77,6 +87,13 @@
     <TypeScriptCompile Include="ts\lib\controls\control.ts" />
     <Content Include="ts\lib\controls\control.js">
       <DependentUpon>control.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="ts\lib\controls\HScrollBar.ts" />
+    <Content Include="ts\lib\controls\HScrollBar.js">
+      <DependentUpon>HScrollBar.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\HScrollBar.min.js">
+      <DependentUpon>HScrollBar.ts</DependentUpon>
     </Content>
     <Content Include="ts\lib\controls\VScrollBar.js">
       <DependentUpon>VScrollBar.ts</DependentUpon>
@@ -111,7 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Books.js.map" />
     <Content Include="ts\lib\ElX.min.js.map">
       <DependentUpon>ElX.js</DependentUpon>
     </Content>

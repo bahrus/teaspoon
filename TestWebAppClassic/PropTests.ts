@@ -10,11 +10,11 @@ module PropTests {
 
     export class Test1 implements ITest1 {
         // Constructor
-        constructor () {
+        constructor() {
         }
-        
 
-        private _prop1 : string;
+
+        private _prop1: string;
 
         get Prop1(): string {
             return this._prop1;
@@ -30,10 +30,11 @@ module PropTests {
         Prop2: string;
         BinaryProp1?: bool;
         NumberProp1?: number;
+        NumberProp2?: number;
     }
 
-    export class Test2{
-        constructor (private Prop2Data: ITest2) {
+    export class Test2 {
+        constructor(private Prop2Data: ITest2) {
             //this.counter = 0;
         }
 
@@ -45,7 +46,7 @@ module PropTests {
             this.counter++;
             return this.Prop2Data.Prop2;
         }
-        
+
         private Prop2Setter = (obj: Test2, s: string) => {
             obj.Prop2Data.Prop2 = s;
         };
@@ -58,6 +59,7 @@ module PropTests {
             tsp._.setSV({ setter: this.Prop2Setter, obj: this, val: val, getter: this.Prop2Getter, });
         }
 
+        //#region BinaryProp1
         public get BinaryProp1(): bool {
             return this.Prop2Data.BinaryProp1;
         }
@@ -66,6 +68,16 @@ module PropTests {
             return obj.BinaryProp1;
         }
 
+        public set BinaryProp1(bVal: bool) {
+            tsp._.setBV({ setter: this.BinaryProp1Setter, getter: this.BinaryProp1Getter, obj: this, val: bVal, });
+        }
+
+        private BinaryProp1Setter = (obj: Test2, b: bool) => {
+            obj.Prop2Data.BinaryProp1 = b;
+        };
+        //#endregion
+
+        //#region NumberPrp1
         public get NumberProp1(): number {
             return this.Prop2Data.NumberProp1;
         }
@@ -82,17 +94,28 @@ module PropTests {
             return obj.NumberProp1;
         }
 
-        
+        //#endregion
 
-        public set BinaryProp1(bVal: bool) {
-            tsp._.setBV({ setter: this.BinaryProp1Setter, getter: this.BinaryProp1Getter, obj: this, val: bVal, });
+        
+         //#region NumberProp2
+        public get NumberProp2(): number {
+            return this.Prop2Data.NumberProp2;
         }
 
-        private BinaryProp1Setter = (obj: Test2, b: bool) => {
-            obj.Prop2Data.BinaryProp1 = b;
+        public NumberProp2Setter = (obj: Test2, v: number) => {
+            obj.Prop2Data.NumberProp2 = v;
         };
 
-        
+        public set NumberProp2(val: number) {
+            tsp._.setNV({ setter: this.NumberProp2Setter, getter: this.NumberProp2Getter, obj: this, val: val, });
+        }
+
+        public NumberProp2Getter = (obj: Test2): number => {
+            return obj.NumberProp2;
+        }
+
+        //#endregion
+
 
     }
 
