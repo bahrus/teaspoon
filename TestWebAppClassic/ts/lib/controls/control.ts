@@ -2,7 +2,7 @@
 ///<reference path="../ElX.ts" />
 
 module tsp.controls {
-    
+
     export interface IControlEvent {
         callback(ctl: Control);
     }
@@ -10,7 +10,7 @@ module tsp.controls {
     export interface IControlSettings {
         onAfterInit?: IControlEvent[];
         onAfterAttachToDocument?: IControlEvent[];
-        generateRootElement?(ctl: Control): tsp.ElX;
+        generateRootElement? (ctl: Control): tsp.ElX;
         id?: string;
     }
 
@@ -18,11 +18,11 @@ module tsp.controls {
 
         parentElement: IRenderable;
         constructor(public settings: IControlSettings) {
-            
+
         }
         private _initialized = false;
         init(): void {
-            if(this._initialized) return;
+            if (this._initialized) return;
             this.rootElement = this.settings.generateRootElement(this);
             var initCallBacks = this.settings.onAfterInit;
             if (initCallBacks) {
@@ -37,7 +37,7 @@ module tsp.controls {
         public doRender(context: RenderContext) {
             this.init();
             this.rootElement.doRender(context);
-        } 
+        }
         public render(settings: tsp.IRenderContextProps) {
             this.init();
             this.rootElement.render(settings);

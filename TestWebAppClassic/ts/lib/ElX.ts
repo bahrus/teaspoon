@@ -3,19 +3,19 @@
 ///<reference path="ie9.ts" />
 
 module tsp {
-    
+
 
     export var windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
 
     //#region selection management
-    var selectionChangeListeners : { [name: string]: { (); void; } []; } = { };
+    var selectionChangeListeners: { [name: string]: { (); void; }[]; } = {};
     var selectGroups: { [name: string]: IElX[]; } = {};
 
 
 
     function notifySelectionChange(name: string) {
         var scls = selectionChangeListeners[name];
-        if(!scls) return;
+        if (!scls) return;
         for (var i = 0, n = scls.length; i < n; i++) {
             var scl = scls[i];
             scl();
@@ -28,7 +28,7 @@ module tsp {
 
     export function clearSelections(groupName: string, notify: bool) {
         var sel = selectGroups[groupName];
-        if(!sel) return;
+        if (!sel) return;
         for (var i = 0, n = sel.length; i < n; i++) {
             var other = sel[i];
             other.selected = false;
@@ -37,7 +37,7 @@ module tsp {
         if (notify) {
             notifySelectionChange(groupName);
         }
-        
+
     }
 
     export function setSelection(groupName: string, elX: IElX) {
@@ -47,7 +47,7 @@ module tsp {
 
     export function addSelection(groupName: string, elX: IElX, notify: bool) {
         var sel = selectGroups[groupName];
-        if (!sel) {sel = []; selectGroups[groupName] = sel;}
+        if (!sel) { sel = []; selectGroups[groupName] = sel; }
         elX.selected = true;
         sel.push(elX);
         if (notify) notifySelectionChange(groupName);
@@ -55,7 +55,7 @@ module tsp {
 
     export function removeSelection(groupName: string, elX: tsp.ElX, notify: bool) {
         var sel = selectGroups[groupName];
-        if(!sel) return;
+        if (!sel) return;
         debugger;//TODO:  remove
     }
 
@@ -80,11 +80,11 @@ module tsp {
         };
     }
 
-    function ParentElementToggleClickHandler(tEvent: ITopicEvent){
+    function ParentElementToggleClickHandler(tEvent: ITopicEvent) {
         var elX = tEvent.elX;
         //var target = <HTMLElement>tEvent.event.target;
         var kids = elX.kidElements;
-        if(!kids) return;
+        if (!kids) return;
         for (var i = 0, n = kids.length; i < n; i++) {
             var kid = kids[i];
             //var target = kid.el;
@@ -96,21 +96,21 @@ module tsp {
                     targetDom: target,
                 });
                 kid.removeClass('collapsed');
-                
-            } else if(bI.toggleKidsOnParentClick) {
+
+            } else if (bI.toggleKidsOnParentClick) {
                 bI.collapsed = true;
                 kid.ensureClass('collapsed');
                 //target.className = 'collapsed';
             }
         }
-        
-    }  
-     
-    function windowEventListener (ev: Event) {
+
+    }
+
+    function windowEventListener(ev: Event) {
         var evtName = ev.type;
         var topicListenersSettings = windowEventListeners[evtName];
         console.log('windowEventListener.evtName=' + evtName);
-        if(!topicListenersSettings) return;
+        if (!topicListenersSettings) return;
         for (var i = 0, n = topicListenersSettings.length; i < n; i++) {
             var settings = topicListenersSettings[i];
             var condition = settings.conditionForNotification;
@@ -128,7 +128,7 @@ module tsp {
                 continue; //todo:  remove topic handler
             }
             topicEvent.elX = elX;
-            
+
             topicEvent.callback(topicEvent);
             delete topicEvent.elX;
             delete topicEvent.event;
@@ -146,14 +146,14 @@ module tsp {
         //var ssss = ss.selectSet;
         var newVal = !elX.selected;
         var grp = ss.group ? ss.group : 'global';
-        if(!ss) return;
+        if (!ss) return;
         //if(ssss) ssss(newVal);
-            
+
         clearSelections(grp, false);
         //tsp._.selectGroups[grp] = prevSelected;
         //elX.selected = newVal;
-        if (newVal) { setSelection(grp, elX)}
-             
+        if (newVal) { setSelection(grp, elX) }
+
     }
 
     export function addLocalEventListener(settings: IListenForTopic) {
@@ -177,11 +177,11 @@ module tsp {
         topicEvent.elX = elX;
 
         topicEvent.callback(topicEvent);
-     
+
     }
 
     export function addWindowEventListener(settings: IListenForTopic) {
-        if(tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
+        if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
         var evtName = settings.topicName;
         var listeners = windowEventListeners[evtName];
         if (!listeners) {
@@ -189,7 +189,7 @@ module tsp {
             windowEventListeners[evtName] = listeners;
         }
         var condition = settings.conditionForNotification;
-        
+
         if (!condition) {
             if (settings.elX) {
                 settings.elXID = settings.elX.ID;
@@ -217,7 +217,7 @@ module tsp {
 
     export class ElX implements IElX {
 
-        constructor (public bindInfo: IDOMBinder) {
+        constructor(public bindInfo: IDOMBinder) {
             if (!bindInfo.attributes) {
                 bindInfo.attributes = {};
             }
@@ -226,7 +226,7 @@ module tsp {
                 id = tsp._.getUID();
             }
             this.bindInfo.attributes['ID'] = id;
-            
+
             tsp._.objectLookup[id] = this;
 
             var da = bindInfo.dynamicAttributes;
@@ -261,7 +261,7 @@ module tsp {
                     styles[styleName] = dynS(this);
                 }
             }
-            
+
             if (styles) {
                 var style = '';
                 for (var prop in styles) {
@@ -270,23 +270,23 @@ module tsp {
                 bindInfo.attributes['style'] = style;
                 delete bindInfo.styles;
             }
-            
+
 
         }
 
-        public ensureClass(className: string){
+        public ensureClass(className: string) {
             var bI = this.bindInfo;
             if (!this._rendered) {
                 //TODO: untested code
                 if (!bI.classes) bI.classes = [];
                 var c = bI.classes;
-                if(c.indexOf(className) != -1) return;
+                if (c.indexOf(className) != -1) return;
                 c.push(className);
                 return;
             }
             var el = this.el, cl = el.classList;
             if (cl) { cl.add(className); return; } else { backwardsComp.ensureClass(el, className); }
-            
+
         }
 
         public hasClass(className: string): bool {
@@ -302,14 +302,14 @@ module tsp {
             return cl.contains(className);
         }
 
-        public removeClass(className: string){
+        public removeClass(className: string) {
             var bI = this.bindInfo;
             if (!this._rendered) {
                 //TODO: untested code
                 if (!bI.classes) return;
                 var c = bI.classes;
                 var i = c.indexOf(className);
-                if(i == -1) return;
+                if (i == -1) return;
                 c.splice(i, 1);
                 return;
             }
@@ -335,7 +335,7 @@ module tsp {
             if (ss) {
                 addWindowEventListener({
                     elX: this,
-                    topicName:'click',
+                    topicName: 'click',
                     callback: SelectElementClickHandler,
                 });
                 if (ss.selected) {
@@ -371,9 +371,9 @@ module tsp {
             context.output += '</' + bI.tag + '>';
         }
 
-        public doInnerRender(context: RenderContext){
+        public doInnerRender(context: RenderContext) {
             var bI = this.bindInfo;
-            
+
             var children = bI.kidsGet ? bI.kidsGet(this) : bI.kids;
             if (children) {
                 if (!this._kidIds) this._kidIds = [];
@@ -398,10 +398,10 @@ module tsp {
             }
             tsp._.cleanUp(target);
             this.doRender(renderContext);
-            
+
             //clean up
-            
-            
+
+
             target.innerHTML = renderContext.output;
             var els = renderContext.elements;
             for (var i = els.length - 1; i > -1; i--) {
@@ -413,13 +413,13 @@ module tsp {
             delete s.targetDom;
         }
 
-        public innerRender(settings: IRenderContextProps){
-            if(this._innerRendered) return;
+        public innerRender(settings: IRenderContextProps) {
+            if (this._innerRendered) return;
             var renderContext = new RenderContext(settings);
-            
+
             this.doInnerRender(renderContext);
             var target = this.el;
-            
+
             target.innerHTML = renderContext.output;
             var els = renderContext.elements;
             for (var i = els.length - 1; i > -1; i--) {
@@ -432,7 +432,7 @@ module tsp {
         private _id: string;
 
         public get ID(): string {
-            if(!this._rendered) return this.bindInfo.attributes['ID'];
+            if (!this._rendered) return this.bindInfo.attributes['ID'];
             return this._id;
         }
 
@@ -455,7 +455,7 @@ module tsp {
                 return pd ? tsp._.objectLookup[pd.id] : null;
             };
             return tsp._.objectLookup[this._parentId];
-        }  
+        }
 
         public set parentElement(elem: ElX) {
             this._parentId = elem.ID;
@@ -477,7 +477,7 @@ module tsp {
                     var childEl = tsp._.objectLookup[childDom['id']];
                     if (childEl) returnObj.push(childEl);
                 }
-            } else if(this._kidIds) {
+            } else if (this._kidIds) {
                 for (var i = 0, n = this._kidIds.length; i < n; i++) {
                     var kidId = this._kidIds[i];
                     returnObj.push(tsp._.objectLookup[kidId]);
@@ -508,7 +508,7 @@ module tsp {
                 this.removeClass(s);
             }
             var ssss = ss.selectSet;
-            if(ssss) ssss(this, newVal);
+            if (ssss) ssss(this, newVal);
         }
 
         public _rendered: bool;
@@ -555,23 +555,23 @@ module tsp {
                 delete attribs['checked'];
             }
         }
-       
+
 
         public notifyTextChange(/*getter: tsp._.ISVGetter*/) {
-            if(!this._rendered) return;
+            if (!this._rendered) return;
             var bI = this.bindInfo;
-            if(!bI.textGet) return;
+            if (!bI.textGet) return;
             var newVal = bI.textGet(this);
-            var h : HTMLElement = this.el;
-            if(h.innerHTML===newVal) return;
+            var h: HTMLElement = this.el;
+            if (h.innerHTML === newVal) return;
             h.innerHTML = newVal;
         }
 
         public notifyClassChange(className: string) {
-            if(!this._rendered) return;
+            if (!this._rendered) return;
             var bI = this.bindInfo;
             var dynamicClass = bI.dynamicClasses[className];
-            if(!dynamicClass) return;
+            if (!dynamicClass) return;
             var newVal = dynamicClass(this);
             if (!newVal) {
                 this.removeClass(className);
@@ -581,19 +581,19 @@ module tsp {
         }
 
         public notifyStyleChange(styleName: string) {
-            if(!this._rendered) return;
+            if (!this._rendered) return;
             var bI = this.bindInfo;
             var dynamicStyle = bI.dynamicStyles[styleName];
-            if(!dynamicStyle) return;
+            if (!dynamicStyle) return;
             var newVal = dynamicStyle(this);
             this.el.style[styleName] = newVal;
         }
 
         public notifyAttributeChange(attribName: string) {
-            if(!this._rendered) return;
+            if (!this._rendered) return;
             var bI = this.bindInfo;
             var dynamicAttrib = bI.dynamicAttributes[attribName];
-            if(!dynamicAttrib) return;
+            if (!dynamicAttrib) return;
             var newVal = dynamicAttrib(this);
             this.el.setAttribute(attribName, newVal);
         }
@@ -622,17 +622,17 @@ module tsp {
     }
 
 
-    export class RenderContext implements IRenderContext{
+    export class RenderContext implements IRenderContext {
         public output: string;
         public elements: ElX[];
         //public idStack: number[];
-        
-        constructor (public settings: IRenderContextProps) {
+
+        constructor(public settings: IRenderContextProps) {
             //this.elemStack.push(settings.rootElement);
             this.output = "";
             this.elements = [];
             //this.idStack = []; 
-        }  
+        }
     }
 
     export function Div(bindInfo: IDOMBinder): ElX {

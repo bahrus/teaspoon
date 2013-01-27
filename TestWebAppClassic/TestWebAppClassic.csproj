@@ -63,9 +63,9 @@
   <ItemGroup>
     <Content Include="Books.js" />
     <Content Include="Books.ts" />
+    <TypeScriptCompile Include="testApp.ts" />
     <Content Include="PropTests.js" />
     <Content Include="PropTests.ts" />
-    <TypeScriptCompile Include="testApp.ts" />
     <Content Include="testApp.js">
       <DependentUpon>testApp.ts</DependentUpon>
     </Content>
@@ -73,20 +73,37 @@
       <DependentUpon>testApp.ts</DependentUpon>
     </Content>
     <Content Include="TestPage1.tsp.html" />
+    <TypeScriptCompile Include="ts\lib\controls\VScrollBar.ts" />
     <TypeScriptCompile Include="ts\lib\controls\control.ts" />
-    <Content Include="ts\lib\controls\srollBar.js" />
-    <Content Include="ts\lib\controls\srollBar.min.js" />
-    <TypeScriptCompile Include="ts\lib\controls\srollBar.ts" />
-    <Content Include="ts\lib\ElX.js" />
-    <Content Include="ts\lib\ElX.min.js" />
-    <Content Include="ts\lib\ElX.ts" />
+    <Content Include="ts\lib\controls\control.js">
+      <DependentUpon>control.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\VScrollBar.js">
+      <DependentUpon>VScrollBar.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\ElX.js">
+      <DependentUpon>ElX.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="ts\lib\Interface_ElX.ts" />
+    <TypeScriptCompile Include="ts\lib\ElX.ts" />
+    <Content Include="ts\lib\ElX.min.js">
+      <DependentUpon>ElX.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="ts\lib\ie9.ts" />
+    <Content Include="ts\lib\ie9.js">
+      <DependentUpon>ie9.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="ts\lib\InputElement.ts" />
+    <Content Include="ts\lib\InputElement.js">
+      <DependentUpon>InputElement.ts</DependentUpon>
+    </Content>
     <Content Include="ts\lib\Interface_ElX.js">
       <DependentUpon>Interface_ElX.ts</DependentUpon>
     </Content>
-    <Content Include="ts\lib\_.js" />
-    <Content Include="ts\lib\_.min.js" />
-    <Content Include="ts\lib\_.ts" />
+    <TypeScriptCompile Include="ts\lib\_.ts" />
+    <Content Include="ts\lib\_.js">
+      <DependentUpon>_.ts</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -95,13 +112,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Books.js.map" />
-    <Content Include="PropTests.js.map" />
-    <Content Include="ts\lib\controls\srollBar.js.map" />
-    <Content Include="ts\lib\_.js.map" />
-    <Content Include="ts\lib\ElX.js.map" />
-    <Content Include="ts\lib\_.min.js.map">
-      <DependentUpon>_.js</DependentUpon>
-    </Content>
     <Content Include="ts\lib\ElX.min.js.map">
       <DependentUpon>ElX.js</DependentUpon>
     </Content>

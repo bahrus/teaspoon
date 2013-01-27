@@ -1,17 +1,17 @@
 ///<reference path="../ElX.ts" />
 ///<reference path="control.ts" />
- 
+
 module tsp.controls {
     export interface IVScrollBarRangeSettings extends tsp.controls.IControlSettings {
         maxValue: number;
-        maxValueGetter?(): number;
+        maxValueGetter? (): number;
         maxRemainder?: number;
         height: number;
         scrollValueGet? (v: VScrollBarRange): number;
         scrollValueSet? (v: VScrollBarRange, val: number): number;
     }
 
-    function VScrollBarScrollHandler(tEvent: ITopicEvent){
+    function VScrollBarScrollHandler(tEvent: ITopicEvent) {
         var outerDivElX = tEvent.elX;
         var vsbr = <VScrollBarRange> outerDivElX.bindInfo.container;
         var scrollTop: number = outerDivElX.el.scrollTop;
@@ -116,7 +116,7 @@ module tsp.controls {
             if (!VScrollBarSettings.generateRootElement) {
                 VScrollBarSettings.generateRootElement = VScrollBarRange.generateElement;
             }
-            
+
         }
 
         static generateElement(vsbr: VScrollBarRange): tsp.ElX {
@@ -132,7 +132,7 @@ module tsp.controls {
                             vsbr.HeightMultiplicationFactor = settings.height / 4;
                             break;
                     }
-                break;
+                    break;
                 case 'Explorer':
                     switch (browserInfo.version) {
                         case 10:
@@ -169,7 +169,7 @@ module tsp.controls {
 
 
             var rootEl = Div({
-                container:vsbr,
+                container: vsbr,
                 kids: [
                     Div({
                         styles: { 'height': innerDivHeight + 'px' }
@@ -202,9 +202,9 @@ module tsp.controls {
         private PreviousScrollTop: number;
         //public InnerDiv: DOM.ElX;
 
-        
 
-        
-        
+
+
+
     }
 }

@@ -5,7 +5,7 @@
 ///<reference path="PropTests.ts" />
 ///<reference path="Books.ts" />
 ///<reference path="ts/lib/controls/control.ts" />
-///<reference path="ts/lib/controls/srollBar.ts" />
+///<reference path="ts/lib/controls/VScrollBar.ts" />
 
 var setContent = (ID: string, html: string) => {
     document.getElementById(ID).innerHTML = html;

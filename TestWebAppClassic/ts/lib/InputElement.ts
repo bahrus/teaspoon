@@ -2,7 +2,7 @@
 ///<reference path="ElX.ts" />
 
 module tsp {
-        export interface IInputBinder extends IDOMBinder{
+    export interface IInputBinder extends IDOMBinder {
         disabled?: bool;
         disabledGet? (ie: InputElement): bool;
 
@@ -25,16 +25,16 @@ module tsp {
         forElX: ElX;
     }
 
-    function InputElementChangeHandler(tEvent: ITopicEvent){
+    function InputElementChangeHandler(tEvent: ITopicEvent) {
         var ie = <InputElement> tEvent.elX;
         var newValue = (ie.type === InputElement.type_checkbox ? tEvent.event.target['checked'] : tEvent.event.target['value']);
-        
-        if( newValue===null || !ie) return;
+
+        if (newValue === null || !ie) return;
         ie.bindInfo.valueSet(ie, newValue);
     }
 
     export class InputElement extends ElX {
-        
+
         public static type_button: string = 'button';
         public static type_checkbox: string = 'checkbox';
         public static type_color: string = 'color';
@@ -58,9 +58,9 @@ module tsp {
         public static type_time: string = 'time';
         public static type_url: string = 'url';
         public static type_week: string = 'week';
-        
 
-        constructor (public bindInfo: IInputBinder) {
+
+        constructor(public bindInfo: IInputBinder) {
             super(bindInfo);
             bindInfo.tag = "input";
             this.type = bindInfo.type ? bindInfo.type : InputElement.type_text;
@@ -84,30 +84,30 @@ module tsp {
                     topicName: 'change',
                 });
             }
-            
+
         }
 
         public notifyDisabledChange() {
-            if(!this._rendered) return;
+            if (!this._rendered) return;
             var bI = this.bindInfo;
-            if(!bI.disabledGet) return;
+            if (!bI.disabledGet) return;
             var newVal = bI.disabledGet(this);
-            var h : HTMLElement = this.el;
-            if(h.disabled===newVal) return;
+            var h: HTMLElement = this.el;
+            if (h.disabled === newVal) return;
             h.disabled = newVal;
         }
-        
+
 
         get value(): string {
             return this.bindInfo.attributes['value'];
         }
 
         set value(val: string) {
-            var bI = this.bindInfo; 
+            var bI = this.bindInfo;
             if (this.type === InputElement.type_checkbox) {
                 if (val) {
                     this.setAttr('checked', 'checked');
-                } else{
+                } else {
                     this.removeAttr('checked');
                 }
             } else {
@@ -124,7 +124,7 @@ module tsp {
                 return el.disabled;
             }
             var s = this.getAttr('disabled');
-            return s!=null && s.length>0;
+            return s != null && s.length > 0;
         }
 
         set disabled(val: bool) {
@@ -135,7 +135,7 @@ module tsp {
             }
             if (val) {
                 this.setAttr('disabled', 'disabled');
-            }else {
+            } else {
                 this.removeAttr('disabled');
             }
         }

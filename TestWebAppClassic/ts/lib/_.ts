@@ -7,11 +7,11 @@ module tsp._ {
         Browser,
         WebServer
     };
-    
+
     export var runtimeEnvironment: IEnvironment = {
         environment: window.alert ? EnvironmentOptions.Browser : EnvironmentOptions.WebServer,
     };
-     
+
     export interface IBrowserInfo {
         browser?: string;
         version?: string;
@@ -19,15 +19,15 @@ module tsp._ {
         dataBrowser: IBrowserType[];
         init(): void;
     };
-    
+
     export interface IBrowserType {
         string?: string;
         subString?: string;
         identity: string;
         versionSearch?: string;
     }
-        
-    export var BrowserDetect : IBrowserInfo = {
+
+    export var BrowserDetect: IBrowserInfo = {
         init: function () {
             this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
             this.version = this.searchVersion(navigator.userAgent)
@@ -35,7 +35,7 @@ module tsp._ {
                 || "an unknown version";
             this.OS = this.searchString(this.dataOS) || "an unknown OS";
         },
-        searchString: function (data : IBrowserType[]) {
+        searchString: function (data: IBrowserType[]) {
             for (var i = 0; i < data.length; i++) {
                 var dataString = data[i].string;
                 var dataProp = data[i]['prop'];
@@ -148,7 +148,7 @@ module tsp._ {
     };
     BrowserDetect.init();
 
-    
+
 
     export interface ISetBoolValue extends IBVGetter {
         setter(obj: any, val: bool): void;
@@ -157,7 +157,7 @@ module tsp._ {
         val: bool;
     }
 
-    export interface ISetStringValue extends ISVGetter{
+    export interface ISetStringValue extends ISVGetter {
         setter(obj: any, val: string): void;
         getter(obj: any): string;
         obj: any;
@@ -171,13 +171,13 @@ module tsp._ {
         val: number;
     }
 
-    export interface IListenForStringValueChange extends ISVGetter{
+    export interface IListenForStringValueChange extends ISVGetter {
         //getter(obj: any): string;
         obj: any;
         callback(newVal: string): void;
     }
 
-    export interface IListenForBoolValueChange extends IBVGetter{
+    export interface IListenForBoolValueChange extends IBVGetter {
         //getter(obj: any): string;
         obj: any;
         callback(newVal: bool): void;
@@ -206,13 +206,13 @@ module tsp._ {
     export interface INVGetter {
         getter(obj: any): number;
     }
-    
+
     export var objectLookup: { [name: string]: any; } = {};
-    export var SVObjectChangeListeners: { [name: string]: { (newVal: string): void; }[]; } = {}; 
+    export var SVObjectChangeListeners: { [name: string]: { (newVal: string): void; }[]; } = {};
     export var BVObjectChangeListeners: { [name: string]: { (newVal: bool): void; }[]; } = {};
     export var NVObjectChangeListeners: { [name: string]: { (newVal: number): void; }[]; } = {};
-    
-    export function getUID() : string {
+
+    export function getUID(): string {
         counter++;
         return "Dh_" + counter;
     }
@@ -229,9 +229,9 @@ module tsp._ {
     }
 
     export function cleanUp(d: HTMLElement) {
-        var all : any = d.all;
+        var all: any = d.all;
         if (!all) all = d.getElementsByTagName('*');
-        
+
         for (var i = 0, n = all.length; i < n; i++) {
             var elT = <HTMLElement> all[i];
             var elX = objectLookup[elT.id];
@@ -240,7 +240,7 @@ module tsp._ {
         }
     }
 
-    export function ListenForSVChange(listener : IListenForStringValueChange){
+    export function ListenForSVChange(listener: IListenForStringValueChange) {
         var obj = listener.obj;
         var objId = GUID(obj);
         //next two lines repeat in setSV - common func?
@@ -250,36 +250,36 @@ module tsp._ {
         SVObjectChangeListeners[lID].push(listener.callback);
     }
 
-    export function ListenForBVChange(listener : IListenForBoolValueChange){
+    export function ListenForBVChange(listener: IListenForBoolValueChange) {
         var obj = listener.obj;
         var objId = GUID(obj);
         //next two lines repeat in setSV - common func?
         var propName = getBoolPropName(listener.getter);
         var lID = objId + "." + propName;
         if (!BVObjectChangeListeners[lID]) BVObjectChangeListeners[lID] = [];
-        
+
         BVObjectChangeListeners[lID].push(listener.callback);
     }
 
-    export function ListenForNVChange(listener : IListenForNumericValueChange){
+    export function ListenForNVChange(listener: IListenForNumericValueChange) {
         var obj = listener.obj;
         var objId = GUID(obj);
         //next two lines repeat in setSV - common func?
         var propName = getNumericPropName(listener.getter);
         var lID = objId + "." + propName;
         if (!NVObjectChangeListeners[lID]) NVObjectChangeListeners[lID] = [];
-        
+
         NVObjectChangeListeners[lID].push(listener.callback);
     }
 
     export function setBV(BVSetter: ISetBoolValue) {
         var obj = BVSetter.obj;
         BVSetter.setter(obj, BVSetter.val);
-        if(obj.DhID){
+        if (obj.DhID) {
             var propName = getBoolPropName(BVSetter.getter);
             var lID = obj.DhID + "." + propName;
             var listeners = BVObjectChangeListeners[lID];
-            if(listeners){
+            if (listeners) {
                 for (var i = 0, n = listeners.length; i < n; i++) {
                     var callback = listeners[i];
                     callback(BVSetter.val);
@@ -291,28 +291,28 @@ module tsp._ {
     export function setSV(SVSetter: ISetStringValue) {
         var obj = SVSetter.obj;
         SVSetter.setter(obj, SVSetter.val);
-        if(obj.DhID){
+        if (obj.DhID) {
             var propName = getStringPropName(SVSetter.getter);
             var lID = obj.DhID + "." + propName;
             var listeners = SVObjectChangeListeners[lID];
-            if(listeners){
+            if (listeners) {
                 for (var i = 0, n = listeners.length; i < n; i++) {
                     var callback = listeners[i];
                     callback(SVSetter.val);
                 }
             }
         }
-        
+
     }
 
     export function setNV(NVSetter: ISetNumValue) {
         var obj = NVSetter.obj;
         NVSetter.setter(obj, NVSetter.val);
-        if(obj.DhID){
+        if (obj.DhID) {
             var propName = getNumericPropName(NVSetter.getter);
             var lID = obj.DhID + "." + propName;
             var listeners = NVObjectChangeListeners[lID];
-            if(listeners){
+            if (listeners) {
                 for (var i = 0, n = listeners.length; i < n; i++) {
                     var callback = listeners[i];
                     callback(NVSetter.val);
@@ -320,9 +320,9 @@ module tsp._ {
             }
         }
     }
-      
+
     export class betweenString {
-        constructor (private val: string, private searchStart: string) {}
+        constructor(private val: string, private searchStart: string) { }
 
         public and(searchEnd: string): string {
             var posOfStart = this.val.indexOf(this.searchStart);
@@ -335,19 +335,19 @@ module tsp._ {
 
     //export function update(
 
-    export function getStringPropName(getter: { (newVal: any): string; }) : string {
+    export function getStringPropName(getter: { (newVal: any): string; }): string {
         var s = getter.toString();
         var s2 = new _.betweenString(s, '.').and(';');
         return s2;
     }
 
-    export function getBoolPropName(getter: { (newVal: any): bool; }) : string {
+    export function getBoolPropName(getter: { (newVal: any): bool; }): string {
         var s = getter.toString();
         var s2 = new _.betweenString(s, '.').and(';');
         return s2;
     }
 
-    export function getNumericPropName(getter: { (newVal: any): number; }) : string {
+    export function getNumericPropName(getter: { (newVal: any): number; }): string {
         var s = getter.toString();
         var s2 = new _.betweenString(s, '.').and(';');
         return s2;

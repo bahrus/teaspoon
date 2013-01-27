@@ -15,7 +15,7 @@ module backwardsComp {
         el.className = classes.join(' ');
     }
 
-    function getClassList(el: HTMLElement) : string[] {
+    function getClassList(el: HTMLElement): string[] {
         return el.className.split(' ');
     }
 }
