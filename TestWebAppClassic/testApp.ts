@@ -190,8 +190,9 @@ function doStaticLists() {
             LI({ text: 'list item 2' }),
         ],
     });
+    console.log('iah1');
     ul1.render({ targetDomID: 'Lists.Test1.Result' });
-
+    console.log('iah2');
 
     var jsSubject = DataExamples.GenerateBooks(3, 3);
     var ul2 = UL({
@@ -207,7 +208,7 @@ function doStaticLists() {
     });
     ul2.render({ targetDomID: 'Lists.Test2.Result' });
 
-    console.log(ul2);
+    console.log('iah3');
 }
 
 var doDynamicLists_json: DataExamples.ISubject;
@@ -252,7 +253,7 @@ function selectionChangeListener() {
         kids: selectedChapters.map(ch => DataExamples.chapterToLI2(ch, 0)),
     });
     ul2.render({ targetDomID: 'DynamicLists.Test1.Result.Detail' });
-    console.log(ul2);
+    //console.log(ul2);
 }
 
 function doCustomInputTests() {
@@ -263,6 +264,7 @@ function doCustomInputTests() {
         NumberProp2: 0,
         Prop2: 'hello',
     });
+    console.log("doCustomInputTests.1");
     var vscroll1 = new tsp.controls.VScrollBarRange({
         maxValue: 20000,
         height: 150,
@@ -270,12 +272,14 @@ function doCustomInputTests() {
             json.NumberProp1 = newVal;
         },
     });
+    console.log("doCustomInputTests.2");
     var span1 = Span({
         textGet: () => 'v:' + json.NumberProp1,
     });
     var d = Div({
         kids: [span1, vscroll1],
     });
+    console.log("doCustomInputTests.3");
     _._.ListenForNVChange({
         getter: json.NumberProp1Getter,
         obj: json,
@@ -284,6 +288,7 @@ function doCustomInputTests() {
             //s2.notifyClassChange('red');
         },
     });
+    console.log("doCustomInputTests.4");
     d.render({
         targetDomID: 'VScrollbar.Test1.Result',
     });
@@ -314,11 +319,11 @@ function doCustomInputTests() {
 }
 
 function onWindowLoad() {
-    //doPropTests();
-    //doElxTests();
-    //doInputTests();
-    //doTwoWayBindingTests();
-    //doStaticLists();
-    //doDynamicLists();   
+    doPropTests();
+    doElxTests();
+    doInputTests();
+    doTwoWayBindingTests();
+    doStaticLists();
+    doDynamicLists();   
     doCustomInputTests();
 }

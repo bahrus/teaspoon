@@ -9,6 +9,7 @@ namespace tspHandler
         public static string ReadFile(this string FilePath)
         {
             if (FilePath == null) return null;
+            if (!File.Exists(FilePath)) return null;
             return File.ReadAllText(FilePath);
         }
 
@@ -82,6 +83,14 @@ namespace tspHandler
             relativePath.Append(relDirs[relDirs.Length - 1]);
   
             return relativePath.ToString();
+        }
+
+        public static string SubstringAfter(this string stringToSearch, string searchString)
+        {
+            if (stringToSearch == null) return null;
+            int iPos = stringToSearch.IndexOf(searchString);
+            if (iPos == -1) return string.Empty;
+            return stringToSearch.Substring(iPos);
         }
     }
 

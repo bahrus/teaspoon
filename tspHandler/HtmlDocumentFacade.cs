@@ -29,6 +29,7 @@ namespace tspHandler
 
         public HtmlNodeFacade getElementById(string id)
         {
+            if (id == null) return null;
             var node = this._htmlDoc.GetElementbyId(id);
             if (node == null) return null;
             return new HtmlNodeFacade(node);

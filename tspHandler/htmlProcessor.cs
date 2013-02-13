@@ -261,6 +261,7 @@ namespace tspHandler
                 // Setting the externals parameters of the context
                 jsContext.SetParameter("document", doc);
                 jsContext.SetParameter("window", "ignore");
+                jsContext.SetParameter("navigator", new Navigator());
                 var deb = new Console();
                 jsContext.SetParameter("console", deb);
 
@@ -350,6 +351,23 @@ namespace tspHandler
     {
         public void log(object obj)
         {
+        }
+    }
+
+    public class Navigator
+    {
+        public string userAgent
+        {
+            get
+            {
+                return HttpContext.Current.Request.UserAgent;
+            }
+        }
+
+        public string appVersion {
+            get{
+                return this.userAgent.SubstringAfter("/");
+            }
         }
     }
 }

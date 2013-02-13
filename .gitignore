@@ -6,3 +6,7 @@ packages/*
 
 *.js
 *.map
+/CurlyBraceParser/TestResults/*.mdf
+/CurlyBraceParser/TestResults/*.ldf
+/TestWebAppClassic/Web.Debug.config
+/TestWebAppClassic/Web.Release.config

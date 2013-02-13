@@ -89,6 +89,9 @@
       <DependentUpon>control.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="ts\lib\controls\HScrollBar.ts" />
+    <Content Include="ts\lib\controls\control.min.js">
+      <DependentUpon>control.ts</DependentUpon>
+    </Content>
     <Content Include="ts\lib\controls\HScrollBar.js">
       <DependentUpon>HScrollBar.ts</DependentUpon>
     </Content>
@@ -96,6 +99,9 @@
       <DependentUpon>HScrollBar.ts</DependentUpon>
     </Content>
     <Content Include="ts\lib\controls\VScrollBar.js">
+      <DependentUpon>VScrollBar.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\VScrollBar.min.js">
       <DependentUpon>VScrollBar.ts</DependentUpon>
     </Content>
     <Content Include="ts\lib\ElX.js">
@@ -111,7 +117,13 @@
       <DependentUpon>ie9.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="ts\lib\InputElement.ts" />
+    <Content Include="ts\lib\ie9.min.js">
+      <DependentUpon>ie9.ts</DependentUpon>
+    </Content>
     <Content Include="ts\lib\InputElement.js">
+      <DependentUpon>InputElement.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\InputElement.min.js">
       <DependentUpon>InputElement.ts</DependentUpon>
     </Content>
     <Content Include="ts\lib\Interface_ElX.js">
@@ -119,6 +131,9 @@
     </Content>
     <TypeScriptCompile Include="ts\lib\_.ts" />
     <Content Include="ts\lib\_.js">
+      <DependentUpon>_.ts</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\_.min.js">
       <DependentUpon>_.ts</DependentUpon>
     </Content>
     <Content Include="Web.config" />
@@ -130,6 +145,33 @@
     <Content Include="packages.config" />
     <Content Include="ts\lib\ElX.min.js.map">
       <DependentUpon>ElX.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\_.min.js.map">
+      <DependentUpon>_.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\ie9.min.js.map">
+      <DependentUpon>ie9.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\InputElement.min.js.map">
+      <DependentUpon>InputElement.js</DependentUpon>
+    </Content>
+    <Content Include="Books.min.js.map">
+      <DependentUpon>Books.js</DependentUpon>
+    </Content>
+    <Content Include="testApp.min.js.map">
+      <DependentUpon>testApp.js</DependentUpon>
+    </Content>
+    <Content Include="PropTests.min.js.map">
+      <DependentUpon>PropTests.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\control.min.js.map">
+      <DependentUpon>control.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\VScrollBar.min.js.map">
+      <DependentUpon>VScrollBar.js</DependentUpon>
+    </Content>
+    <Content Include="ts\lib\controls\HScrollBar.min.js.map">
+      <DependentUpon>HScrollBar.js</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
