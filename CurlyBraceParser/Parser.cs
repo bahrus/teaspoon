@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CurlyBraceParser
 {
-    public class TypeStrictParser
+    public class Parser
     {
         //Dictionary<char, OpenCloseRule> GroupingPairs;
 
-        public TypeStrictParser()
+        public Parser()
         {
             //this.GroupingPairs = new Dictionary<char, OpenCloseRule>
             //{
@@ -156,7 +156,7 @@ namespace CurlyBraceParser
                                                 }
                                                 else
                                                 {
-                                                    var test3 = openStatement as OpenBraceStatment;
+                                                    var test3 = openStatement as OpenBraceStatement;
                                                     if (test3 != null)
                                                     {
                                                         expecting = "}";
@@ -325,7 +325,7 @@ namespace CurlyBraceParser
                                 baseLine = new OpenBracketStatement();
                                 break;
                             case '{':
-                                baseLine = new OpenBraceStatment();
+                                baseLine = new OpenBraceStatement();
                                 break;
                         }
                         #endregion
@@ -348,7 +348,7 @@ namespace CurlyBraceParser
                 {
                     var charArray = liveStatement.ToArray();
                     string s = new string(charArray);
-                    statement.BalancedStatement = s;
+                    statement.LiveStatement = s;
                 }
                 lineNo++;
             }
@@ -372,20 +372,7 @@ namespace CurlyBraceParser
         }
     }
 
-    public class Statement : Line
-    {
-        /// <summary>
-        /// Balanced means no dangling brace or other symbol
-        /// </summary>
-        public string BalancedStatement { get; set; }
-        public override string Content
-        {
-            get
-            {
-                return this.BalancedStatement + this.Comment;
-            }
-        }
-    }
+    
 
     public abstract class OpenStatement : Statement
     {
@@ -410,7 +397,7 @@ namespace CurlyBraceParser
         }
     }
 
-    public class OpenBraceStatment : OpenStatement{}
+    public class OpenBraceStatement : OpenStatement{}
 
     public class OpenParenOpenBraceStatement : OpenStatement{}
 

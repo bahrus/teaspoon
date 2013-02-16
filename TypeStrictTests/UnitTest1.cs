@@ -19,9 +19,11 @@ namespace TypeStrictTests
             using (var sr = new StreamReader(filePath))
             {
                 string content = sr.ReadToEnd();
-                var tsp = new TypeStrictParser();
+                var tsp = new Parser();
                 var list = tsp.Parse(content);
+                var outline = list.GetOutline();
             }
+            
         }
     }
 }
