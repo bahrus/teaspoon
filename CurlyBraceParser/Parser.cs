@@ -21,7 +21,7 @@ namespace CurlyBraceParser
             //};
         }
 
-        public List<Line> Parse(string TypeStrict)
+        public static List<Line> Parse(string TypeStrict)
         {
             #region Break Down Text into Lines
             var sr = new StringReader(TypeStrict);
@@ -80,21 +80,20 @@ namespace CurlyBraceParser
                         #region check if comment is beginning
                         if (c == '/' && !insideString)
                         {
-                            if (charNo < len - 1 && chars[charNo + 1] == '*')
+                            if (charNo < len - 1)
                             {
-                                insideComment = true;
-                                charNo++;
-                                continue;
+                                switch(chars[charNo + 1]){
+                                    case '*':
+                                        insideComment = true;
+                                        charNo++;
+                                        continue;
+                                    case '/':
+                                        insideFinalComment = true;
+                                        charNo++;
+                                        continue;
+                                }
+                                
                             }
-                        }
-                        else if (c == '/' && !insideString)
-                        {
-                            if (charNo < len - 1 && chars[charNo + 1] == '/')
-                            {
-                                insideFinalComment = true;
-                                charNo++;
-                                continue;
-                            }   
                         }
                         #endregion
                     }
@@ -145,14 +144,14 @@ namespace CurlyBraceParser
                                             var test1 = openStatement as OpenParenOpenBraceStatement;
                                             if (test1 != null)
                                             {
-                                                expecting = ")}";
+                                                expecting = "})";
                                             }
                                             else
                                             {
                                                 var test2 = openStatement as OpenParenOpenBracketStatement;
                                                 if (test2 != null)
                                                 {
-                                                    expecting = ")]";
+                                                    expecting = "])";
                                                 }
                                                 else
                                                 {
@@ -292,9 +291,9 @@ namespace CurlyBraceParser
                     if (openChars.Count == 2)
                     {
                         #region two char open
-                        if (openChars.ElementAt(0) == '(')
+                        if (openChars.ElementAt(1) == '(')
                         {
-                            var lastOpenChar = openChars.ElementAt(1);
+                            var lastOpenChar = openChars.ElementAt(0);
                             switch (lastOpenChar)
                             {
                                 case '(':
@@ -343,6 +342,10 @@ namespace CurlyBraceParser
                     }
                     stack.Push(baseLine as OpenStatement);
                 }
+                if (commentChars != null)
+                {
+                    baseLine.Comment = new string(commentChars.ToArray());
+                }
                 var statement = baseLine as Statement;
                 if (statement != null)
                 {
@@ -355,7 +358,41 @@ namespace CurlyBraceParser
             return returnObj;
         }
 
+        public static Dictionary<string, ProcessedFile> ParseFile(string FilePath)
+        {
+            var files = new Dictionary<string, ProcessedFile>();
+            ProcessFile(files, FilePath);
+            return files;
+        }
 
+        private static void ProcessFile(Dictionary<string, ProcessedFile> files, string FilePath)
+        {
+            if (files.ContainsKey(FilePath)) return;
+
+            var fileInfo = new FileInfo(FilePath);
+            if (!fileInfo.Exists)
+            {
+                throw new Exception(FilePath + " not found.");
+            }
+            var pf = new ProcessedFile
+            {
+                FilePath = FilePath,
+            };
+            files[FilePath] = pf;
+            List<Line> list = null;
+            using (var sr = new StreamReader(FilePath))
+            {
+                string content = sr.ReadToEnd();
+                list = Parse(content);
+            }
+            var outline = list.GetOutline(pf);
+            pf.Lines = outline;
+            foreach (var referenceLine in pf.References)
+            {
+                string newPath = FilePath.GetRelativeFilePath(referenceLine.Value.Reference);
+                ProcessFile(files, newPath);
+            }
+        }
          
     }
 
@@ -405,5 +442,23 @@ namespace CurlyBraceParser
 
     public class OpenParenOpenBracketStatement : OpenStatement { }
 
+    public class ProcessedFile
+    {
+        public ProcessedFile()
+        {
+            this.Interfaces = new Dictionary<string, InterfaceStatement>();
+            this.Modules = new Dictionary<string, ModuleStatement>();
+            this.References = new Dictionary<string, ReferenceStatement>();
+        }
+        public string FilePath { get; set; }
+
+        public List<Line> Lines { get; set; }
+
+        public Dictionary<string, InterfaceStatement> Interfaces { get; set; }
+
+        public Dictionary<string, ModuleStatement> Modules { get; set; }
+
+        public Dictionary<string, ReferenceStatement> References { get; set; }
+    }
     
 }

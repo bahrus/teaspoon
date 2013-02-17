@@ -15,14 +15,11 @@ namespace TypeStrictTests
             var dirInfo = new DirectoryInfo(currDir);
             dirInfo = dirInfo.Parent;
             dirInfo = dirInfo.Parent;
-            string filePath = dirInfo.FullName + "\\Interface_ElX.ts";
-            using (var sr = new StreamReader(filePath))
-            {
-                string content = sr.ReadToEnd();
-                var tsp = new Parser();
-                var list = tsp.Parse(content);
-                var outline = list.GetOutline();
-            }
+            string filePath = dirInfo.FullName + "\\ElX.ts";
+            var output = Parser.ParseFile(filePath);
+            
+            //var output = tsp.
+            
             
         }
     }

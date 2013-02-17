@@ -23,10 +23,13 @@ namespace CurlyBraceParser
         {
             get
             {
-                return this.LiveStatement + this.Comment;
+                return this.LiveStatement + " //" + this.Comment;
             }
         }
-
+        public override string ToString()
+        {
+            return this.LiveStatement;
+        }
         
     }
 }

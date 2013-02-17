@@ -60,7 +60,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ElX.ts" />
+    <Content Include="ie9.ts" />
+    <Content Include="InputElement.ts" />
     <Content Include="Interface_ElX.ts" />
+    <Content Include="_.ts" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

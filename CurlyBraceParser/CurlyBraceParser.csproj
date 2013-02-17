@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InterfaceStatement.cs" />
     <Compile Include="ModuleStatement.cs" />
+    <Compile Include="ReferenceStatement.cs" />
     <Compile Include="Statement.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
