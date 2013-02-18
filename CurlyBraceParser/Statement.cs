@@ -30,6 +30,11 @@ namespace CurlyBraceParser
         {
             return this.LiveStatement;
         }
-        
+
+        public void CopyStatementPropsTo(Statement To)
+        {
+            this.CopyLinePropsTo(To);
+            To.LiveStatement = this.LiveStatement;
+        }
     }
 }

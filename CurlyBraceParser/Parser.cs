@@ -398,41 +398,11 @@ namespace CurlyBraceParser
 
     
 
-    public class Line {
-        public int LineNumber { get; set; }
-        public bool IncludeNextLine { get; set; }
-        public OpenStatement Parent { get; set; }
-        public string Comment { get; set; }
-        public virtual string Content
-        {
-            get { return Comment; }
-        }
-    }
+    
 
     
 
-    public abstract class OpenStatement : Statement
-    {
-        public List<Line> Children { get; set; }
-        public string ClosingLineComment { get; set; }
-        public string OptionalLineSeparator { get; set; }
-        public string ClosingLine { get; set; }
-
-        public override string Content
-        {
-            get
-            {
-                StringWriter sw = new StringWriter();
-                sw.WriteLine(base.Content);
-                foreach (var child in Children)
-                {
-                    sw.WriteLine(child.Content);
-                }
-                sw.WriteLine(this.ClosingLine + this.OptionalLineSeparator + this.ClosingLineComment);
-                return sw.ToString();
-            }
-        }
-    }
+    
 
     public class OpenBraceStatement : OpenStatement{}
 
@@ -442,23 +412,6 @@ namespace CurlyBraceParser
 
     public class OpenParenOpenBracketStatement : OpenStatement { }
 
-    public class ProcessedFile
-    {
-        public ProcessedFile()
-        {
-            this.Interfaces = new Dictionary<string, InterfaceStatement>();
-            this.Modules = new Dictionary<string, ModuleStatement>();
-            this.References = new Dictionary<string, ReferenceStatement>();
-        }
-        public string FilePath { get; set; }
-
-        public List<Line> Lines { get; set; }
-
-        public Dictionary<string, InterfaceStatement> Interfaces { get; set; }
-
-        public Dictionary<string, ModuleStatement> Modules { get; set; }
-
-        public Dictionary<string, ReferenceStatement> References { get; set; }
-    }
+    
     
 }

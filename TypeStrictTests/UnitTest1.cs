@@ -15,7 +15,8 @@ namespace TypeStrictTests
             var dirInfo = new DirectoryInfo(currDir);
             dirInfo = dirInfo.Parent;
             dirInfo = dirInfo.Parent;
-            string filePath = dirInfo.FullName + "\\ElX.ts";
+            //string filePath = dirInfo.FullName + "\\ElX.ts";
+            string filePath = dirInfo.FullName + "\\Interface_ElX.ts";
             var output = Parser.ParseFile(filePath);
             
             //var output = tsp.
