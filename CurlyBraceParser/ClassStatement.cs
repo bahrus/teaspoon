@@ -20,44 +20,20 @@ namespace CurlyBraceParser
         public static bool IsClass(this Statement statement)
         {
             if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
-            if (statement.FrontTrimmedLiveStatement.StartsWith(ClassKeyword))
-            {
-                return true;
-            }
-            if (statement.FrontTrimmedLiveStatement.StartsWith(TypeStrictInterpreter.PublicKeyword))
-            {
-                string start = statement.FrontTrimmedLiveStatement.Substring(TypeStrictInterpreter.PublicKeyword.Length);
-                if (start.TrimStart().StartsWith(ClassKeyword)) return true;
-            }
-            return false;
+            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.LiveStatement;
+            return statementWithoutPublicKeyword.StartsWith(ClassKeyword);
         }
 
         public static ClassStatement ToClass(this OpenBraceStatement statement)
         {
-            string first = statement.FrontTrimmedLiveStatement.SubstringBefore(' ', '{');
-            bool isPublic = false;
-            string name = null;
-            if (first == TypeStrictInterpreter.PublicKeyword)
-            {
-                isPublic = true;
-                name = statement.FrontTrimmedLiveStatement.Substring(TypeStrictInterpreter.PublicKeyword.Length).TrimStart();
-                name = name.Substring(ClassKeyword.Length).TrimStart();
-                name = name.SubstringBefore(' ', '{');
-            }
+            string name = statement.GetStatementWithoutPublicKeyWord().Substring(ClassKeyword.Length + 1).TrimStart();
+            name = name.SubstringBefore(' ', '{');
             var classStatement = new ClassStatement
             {
                 Name = name,
-                Public = isPublic,
-                Children = statement.Children,
-                ClosingLine = statement.ClosingLine,
-                ClosingLineComment = statement.ClosingLineComment,
-                Comment = statement.Comment,
-                IncludeNextLine = statement.IncludeNextLine,
-                LineNumber = statement.LineNumber,
-                LiveStatement = statement.LiveStatement,
-                OptionalLineSeparator = statement.OptionalLineSeparator,
-                Parent = statement.Parent,
+                Public = statement.GetStatementIsPublic(),
             };
+            statement.CopyOpenStatementTo(classStatement);
             return classStatement;
 
         }

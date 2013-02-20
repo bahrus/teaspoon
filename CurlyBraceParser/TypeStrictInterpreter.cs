@@ -12,8 +12,6 @@ namespace CurlyBraceParser
 
         public const string PublicKeyword = "export";
 
-        
-
         #region variable
         public const string VariableKeyword = "var";
         /// <summary>
@@ -29,7 +27,6 @@ namespace CurlyBraceParser
 
         //public static VariableOpenBraceStatement To
         #endregion
-
 
         public static List<Line> GetOutline(this List<Line> lines, ProcessedFile pf)
         {
@@ -68,6 +65,11 @@ namespace CurlyBraceParser
                 statement = interfaceStatement;
                 recurse = false;
             }
+            else if (statement.IsFunction())
+            {
+                var functionStatement = statement.ToFunction();
+                pf.Functions[functionStatement.FullName] = statement.ToFunction(); 
+            }
             else if (statement.IsClass())
             {
                 var classStatement = statement.ToClass();
@@ -92,6 +94,7 @@ namespace CurlyBraceParser
                 statement.Children = newc;
             }
         }
+
     }
 #endif
 }

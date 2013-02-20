@@ -32,7 +32,7 @@ namespace CurlyBraceParser
 
         public static InterfaceStatement ToInterface(this OpenBraceStatement statement)
         {
-            string name = statement.GetStatementWithoutPublicKeyWord().Substring(InterfaceKeyword.Length + 1);
+            string name = statement.GetStatementWithoutPublicKeyWord().Substring(InterfaceKeyword.Length + 1).TrimStart();
             name = name.SubstringBefore(' ', '{');
             var interfaceSt = new InterfaceStatement
             {

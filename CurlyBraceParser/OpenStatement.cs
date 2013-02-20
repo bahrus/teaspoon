@@ -30,6 +30,13 @@ namespace CurlyBraceParser
             this.CopyLinePropsTo(To);
             this.CopyStatementPropsTo(To);
             To.Children = this.Children;
+            if (To.Children != null)
+            {
+                foreach (var child in To.Children)
+                {
+                    child.Parent = To;
+                }
+            }
             To.ClosingLine = this.ClosingLine;
             To.ClosingLineComment = this.ClosingLineComment;
             To.OptionalLineSeparator = this.OptionalLineSeparator;

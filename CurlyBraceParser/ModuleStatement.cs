@@ -30,17 +30,9 @@ namespace CurlyBraceParser
             moduleName = moduleName.TrimStart().SubstringBefore(' ', '{');
             var ms = new ModuleStatement
             {
-                Children = statement.Children,
-                ClosingLine = statement.ClosingLine,
-                ClosingLineComment = statement.ClosingLineComment,
-                Comment = statement.Comment,
                 FullName = moduleName,
-                IncludeNextLine = statement.IncludeNextLine,
-                LineNumber = statement.LineNumber,
-                LiveStatement = statement.LiveStatement,
-                OptionalLineSeparator = statement.OptionalLineSeparator,
-                Parent = statement.Parent,
             };
+            statement.CopyOpenStatementTo(ms);
             return ms;
         }
         #endregion

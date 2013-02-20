@@ -9,17 +9,7 @@ namespace CurlyBraceParser
 {
     public class Parser
     {
-        //Dictionary<char, OpenCloseRule> GroupingPairs;
 
-        public Parser()
-        {
-            //this.GroupingPairs = new Dictionary<char, OpenCloseRule>
-            //{
-            //    {'{',   OpenCloseRule.Create('{',     '}'           )},
-            //    {'[',   OpenCloseRule.Create('[',     ']'           )},
-            //    {'(',   OpenCloseRule.Create('(',     ')'           )},
-            //};
-        }
 
         public static List<Line> Parse(string TypeStrict)
         {
@@ -36,6 +26,7 @@ namespace CurlyBraceParser
             int lineNo = 1;
             foreach (string line in lines)
             {
+                #region each line
                 bool insideString = false;
                 bool insideComment = false;
                 bool insideFinalComment = false;
@@ -277,6 +268,7 @@ namespace CurlyBraceParser
                         {
                             var op = stack.Peek();
                             if (op.Children == null) op.Children = new List<Line>();
+                            baseLine.Parent = op;
                             op.Children.Add(baseLine);
                         }
                     }
@@ -338,6 +330,7 @@ namespace CurlyBraceParser
                     {
                         var op = stack.Peek();
                         if (op.Children == null) op.Children = new List<Line>();
+                        baseLine.Parent = op;
                         op.Children.Add(baseLine);
                     }
                     stack.Push(baseLine as OpenStatement);
@@ -353,6 +346,7 @@ namespace CurlyBraceParser
                     string s = new string(charArray);
                     statement.LiveStatement = s;
                 }
+                #endregion
                 lineNo++;
             }
             return returnObj;

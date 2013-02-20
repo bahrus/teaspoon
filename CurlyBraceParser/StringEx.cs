@@ -4,6 +4,15 @@ namespace CurlyBraceParser
 {
     public static class StringEx
     {
+
+        public static string SubstringAfter(this string value, string search)
+        {
+            if (value == null) return null;
+            int posOfSearch = value.IndexOf(search);
+            if (posOfSearch == -1) return string.Empty;
+            return value.Substring(posOfSearch + search.Length);
+        }
+
         public static string SubstringBefore(this string value, string search)
         {
             if (value == null) return null;
