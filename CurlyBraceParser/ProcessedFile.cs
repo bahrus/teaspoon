@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace CurlyBraceParser
 {
@@ -25,5 +26,20 @@ namespace CurlyBraceParser
         public Dictionary<string, ReferenceStatement> References { get; set; }
 
         public Dictionary<string, ClassStatement> Classes { get; set; }
+
+        //public string ToCSharp()
+        //{
+        //    var sb = new StringBuilder();
+        //    foreach (var line in Lines)
+        //    {
+        //        line.ToCSharp(sb);
+        //    }
+        //    return sb.ToString();
+        //}
+    }
+
+    public class ProcessedFiles : Dictionary<string, ProcessedFile>
+    {
+
     }
 }

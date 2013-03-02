@@ -352,14 +352,14 @@ namespace CurlyBraceParser
             return returnObj;
         }
 
-        public static Dictionary<string, ProcessedFile> ParseFile(string FilePath)
+        public static ProcessedFiles ParseFile(string FilePath)
         {
-            var files = new Dictionary<string, ProcessedFile>();
+            var files = new ProcessedFiles();
             ProcessFile(files, FilePath);
             return files;
         }
 
-        private static void ProcessFile(Dictionary<string, ProcessedFile> files, string FilePath)
+        private static void ProcessFile(ProcessedFiles files, string FilePath)
         {
             if (files.ContainsKey(FilePath)) return;
 
@@ -383,7 +383,7 @@ namespace CurlyBraceParser
             pf.Lines = outline;
             foreach (var referenceLine in pf.References)
             {
-                string newPath = FilePath.GetRelativeFilePath(referenceLine.Value.Reference);
+                string newPath = FilePath.GetRelativeFilePath(referenceLine.Value.ClientSideReference);
                 ProcessFile(files, newPath);
             }
         }

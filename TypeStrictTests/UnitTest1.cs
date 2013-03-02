@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CurlyBraceParser;
+using CurlyBraceParser.CSharp;
 using System.IO;
+
 
 namespace TypeStrictTests
 {
@@ -15,13 +17,13 @@ namespace TypeStrictTests
             var dirInfo = new DirectoryInfo(currDir);
             dirInfo = dirInfo.Parent;
             dirInfo = dirInfo.Parent;
-            string filePath = dirInfo.FullName + "\\ElX.ts";
-            //string filePath = dirInfo.FullName + "\\Interface_ElX.ts";
+            //string filePath = dirInfo.FullName + "\\ElX.ts";
+            string filePath = dirInfo.FullName + "\\Interface_ElX.ts";
             var output = Parser.ParseFile(filePath);
-            
+            var cs = output.ToCSharpVSProject();
             //var output = tsp.
-            
-            
+
+            string csharp = cs.CSFiles[0].Content;
         }
     }
 }

@@ -8,11 +8,14 @@ namespace CurlyBraceParser
 {
     public class ReferenceStatement : Line
     {
-        public string Reference { get; set; }
+        public string ClientSideReference { get; set; }
 
+        //public string ReferencePath { get; set; }
 
-        
-
+        //public override void ToCSharp(StringBuilder sb)
+        //{
+        //    sb.AppendLine("//Client Side Reference : " + this.ClientSideReference);
+        //}
     }
 
     #if TypeStrict
@@ -35,11 +38,15 @@ namespace CurlyBraceParser
             path = path.Trim().Replace("\"", "").Replace("'", "");
             var refStatement = new ReferenceStatement
             {
-                Reference = path,
+                ClientSideReference = path,
             };
             return refStatement;
         }
         #endregion
+
+        
     }
+
+    
     #endif
 }

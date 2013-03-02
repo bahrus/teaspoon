@@ -9,6 +9,13 @@ namespace CurlyBraceParser
     public class ModuleStatement : OpenBraceStatement
     {
         public string FullName { get; set; }
+
+        //public override void ToCSharp(StringBuilder sb)
+        //{
+        //    if (this.FullName.Contains("."))
+        //    {
+        //    }
+        //}
     }
 
 #if TypeStrict

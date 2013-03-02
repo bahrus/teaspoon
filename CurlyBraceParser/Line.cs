@@ -1,4 +1,5 @@
 ﻿
+using System.Text;
 namespace CurlyBraceParser
 {
     public class Line
@@ -12,6 +13,8 @@ namespace CurlyBraceParser
             get { return Comment; }
         }
 
+        
+
         public void CopyLinePropsTo(Line To)
         {
             To.LineNumber = this.LineNumber;
@@ -19,7 +22,25 @@ namespace CurlyBraceParser
             To.Parent = this.Parent;
             To.Comment = this.Comment;
         }
+
+        //#region CSharp
+
+
+        //public virtual void ToCSharp(StringBuilder sb)
+        //{
+        //    sb.AppendLine(this.Comment);
+        //}
+        //#endregion
+
     }
+
+    //public static class LineEx
+    //{
+    //    public static void ToCSharp(this Line statement, StringBuilder sb)
+    //    {
+    //        sb.AppendLine(statement.Comment);
+    //    }
+    //}
 
     
 }

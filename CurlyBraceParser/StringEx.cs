@@ -1,5 +1,6 @@
-﻿
+﻿using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 namespace CurlyBraceParser
 {
     public static class StringEx
@@ -13,10 +14,26 @@ namespace CurlyBraceParser
             return value.Substring(posOfSearch + search.Length);
         }
 
+        public static string SubstringAfterLast(this string value, string search)
+        {
+            if (value == null) return null;
+            int iPos = value.LastIndexOf(search);
+            if (iPos == -1) return string.Empty;
+            return value.Substring(iPos + search.Length);
+        }
+
         public static string SubstringBefore(this string value, string search)
         {
             if (value == null) return null;
             int iPos = value.IndexOf(search);
+            if (iPos == -1) return value;
+            return value.Substring(0, iPos);
+        }
+
+        public static string SubstringBeforeLast(this string value, string search)
+        {
+            if (value == null) return null;
+            int iPos = value.LastIndexOf(search);
             if (iPos == -1) return value;
             return value.Substring(0, iPos);
         }
@@ -76,6 +93,50 @@ namespace CurlyBraceParser
             sl.Reverse();
             string path = string.Join("\\", sl.ToArray());
             return path;
+        }
+
+        /// <summary>
+        /// Splits the string passed in by the delimiters passed in.
+        /// Quoted sections are not split, and all tokens have whitespace
+        /// trimmed from the start and end.
+        public static List<string> SplitOutsideQuotesAndTrim(this string stringToSplit, params char[] delimiters)
+        {
+            List<string> results = new List<string>();
+
+            bool inQuote = false;
+            StringBuilder currentToken = new StringBuilder();
+            for (int index = 0; index < stringToSplit.Length; ++index)
+            {
+                char currentCharacter = stringToSplit[index];
+                if (currentCharacter == '"')
+                {
+                    // When we see a ", we need to decide whether we are
+                    // at the start or send of a quoted section...
+                    inQuote = !inQuote;
+                }
+                else if (delimiters.Contains(currentCharacter) && inQuote == false)
+                {
+                    // We've come to the end of a token, so we find the token,
+                    // trim it and add it to the collection of results...
+                    string result = currentToken.ToString().Trim();
+                    if (result != "") results.Add(result);
+
+                    // We start a new token...
+                    currentToken = new StringBuilder();
+                }
+                else
+                {
+                    // We've got a 'normal' character, so we add it to
+                    // the curent token...
+                    currentToken.Append(currentCharacter);
+                }
+            }
+
+            // We've come to the end of the string, so we add the last token...
+            string lastResult = currentToken.ToString().Trim();
+            if (lastResult != "") results.Add(lastResult);
+
+            return results;
         }
     }
 

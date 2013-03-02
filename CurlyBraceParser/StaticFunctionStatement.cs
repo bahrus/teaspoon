@@ -69,57 +69,7 @@ namespace CurlyBraceParser
             foreach (string arg in functionArgs)
             {
                 if(string.IsNullOrEmpty(arg)) continue;
-                string defVal = arg.Contains("=") ? arg.SubstringAfter("=").Trim() : null;
-                string type = null;
-                string paramName = arg.SubstringBefore(':', '=').Trim();
-                if (!arg.Contains(":"))
-                {
-                    #region insist that default value is specified and simple
-                    if (string.IsNullOrEmpty(defVal))
-                    {
-                        throw new Exception("Error in " + statement.LineNumber + " : no type specified, no default value");
-                    }
-                    switch (defVal)
-                    {
-                        case "null":
-                            throw new Exception("Error in " + statement.LineNumber + " : no type specified, unable to determine type from default value");
-                        case "true":
-                        case "false":
-                            type = "bool";
-                            break;
-                    }
-                    if (type == null)
-                    {
-                        if (defVal.StartsWith("\"") && defVal.EndsWith("\""))
-                        {
-                            type = "string";
-                        }
-                        else
-                        {
-                            float f = 0;
-                            bool isFloat = float.TryParse(defVal, out f);
-                            if (isFloat)
-                            {
-                                type = "number";
-                            }
-                            else
-                            {
-                                throw new Exception("Error in " + statement.LineNumber + " : no type specified, unable to determine type from default value");
-                            }
-                        }
-                    }
-                    #endregion
-                }
-                else
-                {
-                    type = arg.SubstringAfter(":").TrimStart().SubstringBefore(' ', '=').TrimStart();
-                }
-                var p = new Parameter
-                {
-                    Name = paramName,
-                    InitialValue = defVal,
-                    Type = type
-                };
+                var p = arg.ToParameter(statement);
                 parameterList.Add(p);
             }
             //string fullName = name;
