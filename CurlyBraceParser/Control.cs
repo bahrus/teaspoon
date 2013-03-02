@@ -27,18 +27,19 @@ namespace CurlyBraceParser
 
         private string _OpenBlockText;
 
+       
+
         public Block(string Text)
         {
             if (string.IsNullOrEmpty(Text)) return;
             if (_sb == null) _sb = new StringBuilder();
-            this.AppendTabs();
+            Block.AppendTabs();
             _sb.AppendLine(Text + "{");
             _level++;
             this._OpenBlockText = Text;
         }
 
-
-        private void AppendTabs()
+        private static void AppendTabs()
         {
             for (int i = 0; i < _level; i++)
             {
@@ -51,7 +52,7 @@ namespace CurlyBraceParser
             if (_sb == null) return;
             if (string.IsNullOrEmpty(_OpenBlockText)) return;
             _level--;
-            this.AppendTabs();
+            Block.AppendTabs();
             _sb.AppendLine("}");
         }
 
@@ -73,6 +74,13 @@ namespace CurlyBraceParser
                 }
                 return null;
             }
+        }
+
+        public static void AppendStatement(string Text)
+        {
+            if (_sb == null) _sb = new StringBuilder();
+            Block.AppendTabs();
+            _sb.AppendLine(Text + ";");
         }
     }
 }

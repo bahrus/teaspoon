@@ -23,7 +23,7 @@ namespace CurlyBraceParser
         {
             get
             {
-                return this.LiveStatement + " //" + this.Comment;
+                return this.LiveStatement + (string.IsNullOrEmpty(this.Comment)  ? string.Empty :  " //" + this.Comment);
             }
         }
         public override string ToString()

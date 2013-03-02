@@ -16,8 +16,24 @@ namespace CurlyBraceParser.CSharp
                 string InterfaceDeclaration = (IF.Public ? "public " : "") + "interface " + IF.Name;
                 using (new Block(InterfaceDeclaration))
                 {
+                    if (IF.Children != null)
+                    {
+                        foreach (var line in IF.Children)
+                        {
+                            TranspileInterfaceLine(line);
+                        }
+                    }
                 }
             }
+        }
+
+        private static void TranspileInterfaceLine(Line line)
+        {
+            if (string.IsNullOrEmpty(line.Content)) return;
+            if (!line.Content.Contains(':')) return;
+            string MemberName = line.Content.SubstringBefore(":").Trim().SubstringBefore("?");
+            string TypeInfo = line.Content.SubstringAfter(":").Trim().TrimEnd(';');
+            Block.AppendStatement(TypeInfo + " " + MemberName);
         }
     }
 }
