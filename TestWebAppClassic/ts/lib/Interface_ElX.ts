@@ -83,7 +83,7 @@ module tsp {
     }
 
     export interface ITopicEvent extends IListenForTopic {
-        event: Event;
+        topicEvent: Event;
     }
 
     export interface IRenderContextProps {

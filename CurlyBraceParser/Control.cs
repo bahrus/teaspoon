@@ -76,11 +76,24 @@ namespace CurlyBraceParser
             }
         }
 
+        public static void AppendClosingStatement(string Text)
+        {
+            if (_sb == null) _sb = new StringBuilder();
+            Block.AppendTabs();
+            _sb.AppendLine(Text);
+        }
+
         public static void AppendStatement(string Text)
         {
             if (_sb == null) _sb = new StringBuilder();
             Block.AppendTabs();
             _sb.AppendLine(Text + ";");
+        }
+
+        public static void AppendBlankLine()
+        {
+            if (_sb == null) _sb = new StringBuilder();
+            _sb.AppendLine(string.Empty);
         }
     }
 }

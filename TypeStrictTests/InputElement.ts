@@ -27,7 +27,7 @@ module tsp {
 
     function InputElementChangeHandler(tEvent: ITopicEvent) {
         var ie = <InputElement> tEvent.elX;
-        var newValue = (ie.type === InputElement.type_checkbox ? tEvent.event.target['checked'] : tEvent.event.target['value']);
+        var newValue = (ie.type === InputElement.type_checkbox ? tEvent.topicEvent.target['checked'] : tEvent.topicEvent.target['value']);
 
         if (newValue === null || !ie) return;
         ie.bindInfo.valueSet(ie, newValue);

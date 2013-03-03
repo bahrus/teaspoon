@@ -47,7 +47,7 @@ namespace CurlyBraceParser.CSharp
                     //string TypeInfo = ls.SubstringAfter(":").Trim().TrimEnd(';');
                     string Specification = ls.Substring(search.PosFound + 1).Trim().TrimEnd(';');
                     var tst = TypeStrictType.ParseFieldType(Specification);
-                    Block.AppendStatement(tst.CSharpTypeString + " " + MemberName);
+                    Block.AppendClosingStatement(tst.CSharpTypeString + " " + MemberName + " {get;set;}");
                     break;
                 case ';':
                     Block.AppendStatement("object " + MemberName);

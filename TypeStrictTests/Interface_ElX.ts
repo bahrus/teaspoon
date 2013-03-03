@@ -7,13 +7,13 @@ module tsp {
         dynamicAttributes?: { [name: string]: { (el: IElX): string; }; };
         dynamicClasses?: { [name: string]: { (el: IElX): bool; }; };
         dynamicStyles?: { [name: string]: { (el: IElX): string; }; };
-        b;
+
         classes?: string[];
 
         id?: string;
 
         kids?: IRenderable[];
-        kidsGet?: (el: IElX)=> IElX[];
+        kidsGet? (el: IElX): IElX[];
 
         styles?: { [name: string]: string; };
 
@@ -29,7 +29,7 @@ module tsp {
         dataContext?: any;
         selectSettings?: ISelectBinder;
         container?: any;
-        onNotifyAddedToDom?: (el: IElX) => any;
+        onNotifyAddedToDom? (el: IElX): any;
     }
 
     export interface IRenderable {
@@ -44,7 +44,6 @@ module tsp {
         //doRender(context: IRenderContext);
         //ID: string;
         el: HTMLElement;
-        
         kidElements: IElX[];
         selected: bool;
         _rendered: bool;
@@ -84,7 +83,7 @@ module tsp {
     }
 
     export interface ITopicEvent extends IListenForTopic {
-        event: Event;
+        topicEvent: Event;
     }
 
     export interface IRenderContextProps {

@@ -117,26 +117,26 @@ module tsp {
             var el = <HTMLElement>(ev.target);
             console.log('ev.target.id = ' + el.id);
             var topicEvent: ITopicEvent = <ITopicEvent> settings;
-            topicEvent.event = ev;
+            topicEvent.topicEvent = ev;
             if (!condition(topicEvent)) {
-                delete topicEvent.event;
+                delete topicEvent.topicEvent;
                 continue;
             }
             var elX = tsp._.objectLookup[topicEvent.elXID];
             if (!elX) {
-                delete topicEvent.event;
+                delete topicEvent.topicEvent;
                 continue; //todo:  remove topic handler
             }
             topicEvent.elX = elX;
 
             topicEvent.callback(topicEvent);
             delete topicEvent.elX;
-            delete topicEvent.event;
+            delete topicEvent.topicEvent;
         }
     }
 
     function ElementMatchesID(tEvent: ITopicEvent) {
-        var el = <HTMLElement>(tEvent.event.target);
+        var el = <HTMLElement>(tEvent.topicEvent.target);
         return el.id === tEvent.elXID;
     }
 
@@ -171,7 +171,7 @@ module tsp {
         var sTopic = ev.type;
         var settings = <IListenForTopic> el.attributes['data-tsp-evt-' + sTopic];
         var topicEvent: ITopicEvent = <ITopicEvent> settings;
-        topicEvent.event = ev;
+        topicEvent.topicEvent = ev;
         topicEvent.elXID = el.id;
         var elX = tsp._.objectLookup[topicEvent.elXID];
         topicEvent.elX = elX;
