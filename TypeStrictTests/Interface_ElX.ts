@@ -13,7 +13,7 @@ module tsp {
         id?: string;
 
         kids?: IRenderable[];
-        kidsGet? (el: IElX): IElX[];
+        kidsGet?: (el: IElX)=> IElX[];
 
         styles?: { [name: string]: string; };
 

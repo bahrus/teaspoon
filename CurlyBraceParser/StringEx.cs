@@ -138,6 +138,70 @@ namespace CurlyBraceParser
 
             return results;
         }
+
+        public static List<string> SplitOutsideGroupings(this string stringToSplit, char[] openGroupChars, char[] closedGroupChars, params char[] delimiters)
+        {
+            if(stringToSplit==null) return null;
+            //int ithChar = 0;
+            int len = stringToSplit.Length;
+            int openGroupCount = 0;
+            List<string> returnObj = new List<string>();
+            StringBuilder sb = new StringBuilder();
+            for (int ithChar = 0; ithChar < len; ithChar++)
+            {
+                char c = stringToSplit[ithChar];
+                if (delimiters.Contains(c) && openGroupCount == 0)
+                {
+                    returnObj.Add(sb.ToString());
+                    sb = new StringBuilder();
+                    continue;
+                }
+                sb.Append(c);
+                if (openGroupChars.Contains(c))
+                {
+                    openGroupCount++;
+                }
+                else if (closedGroupChars.Contains(c))
+                {
+                    openGroupCount--;
+                }
+            }
+            returnObj.Add(sb.ToString());
+            return returnObj;
+        }
+
+        public static List<string> SplitOutsideGroupings(this string stringToSplit, char[] openGroupChars, char[] closedGroupChars, string delimiter)
+        {
+            if (stringToSplit == null) return null;
+            //int ithChar = 0;
+            int len = stringToSplit.Length;
+            int openGroupCount = 0;
+            List<string> returnObj = new List<string>();
+            StringBuilder sb = new StringBuilder();
+            for (int ithChar = 0; ithChar < len; ithChar++)
+            {
+                char c = stringToSplit[ithChar];
+                sb.Append(c);
+                //if (delimiters.Contains(c) && openGroupCount == 0)
+                if(sb.ToString().EndsWith(delimiter) && openGroupCount ==0) //TODO:  Improve performance, this grows as n squared maybe
+                {
+                    returnObj.Add(sb.ToString().SubstringBeforeLast(delimiter));
+                    sb = new StringBuilder();
+                    continue;
+                }
+                
+                if (openGroupChars.Contains(c))
+                {
+                    openGroupCount++;
+                }
+                else if (closedGroupChars.Contains(c))
+                {
+                    openGroupCount--;
+                }
+            }
+            returnObj.Add(sb.ToString());
+            return returnObj;
+        }
     }
 
     public class BetweenStringsSearch
@@ -165,6 +229,16 @@ namespace CurlyBraceParser
 
         public string And(string endsWith)
         {
+            return And(endsWith, false);
+        }
+
+        public string AndLast(string endsWith)
+        {
+            return And(endsWith, true);
+        }
+
+        private string And(string endsWith, bool last)
+        {
             this.EndsWith = endsWith;
             if (StringBeingSearched == null) return null;
             string StringBeingSearchedLC = this._CaseSensitive ? StringBeingSearched.ToLower() : StringBeingSearched;
@@ -173,7 +247,7 @@ namespace CurlyBraceParser
             iPosOfStart = StringBeingSearchedLC.IndexOf(StartsWithLC);
             if (iPosOfStart == -1) return string.Empty;
             if (!_Inclusive) iPosOfStart += StartsWithLC.Length;
-            iPosOfEnd = StringBeingSearchedLC.IndexOf(EndsWithLC, iPosOfStart);
+            iPosOfEnd = last ? StringBeingSearchedLC.LastIndexOf(EndsWithLC, iPosOfStart) : StringBeingSearchedLC.IndexOf(EndsWithLC, iPosOfStart);
             if (iPosOfEnd == -1) return StringBeingSearched.Substring(iPosOfStart);
             if (_Inclusive) iPosOfEnd += EndsWith.Length;
             return StringBeingSearched.Substring(iPosOfStart, iPosOfEnd - iPosOfStart);
