@@ -56,7 +56,7 @@ namespace CurlyBraceParser.CSharp
                     string Signature = ls.Substring(search.PosFound).Trim().TrimEnd(';');
                     var argsPlusReturn = Signature.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ':');
                     string returnType = "object";
-                    string unparsedArgs = null;
+                    //string unparsedArgs = null;
 
                     if (argsPlusReturn.Count == 2)
                     {
@@ -136,7 +136,7 @@ namespace CurlyBraceParser.CSharp
                     RetArg = RetArg.SubstringBeforeLast(";");
                 }
                 Args = Args.SubstringBetween("(").AndLast(")");
-                Args = Args.Substring(0, Args.Length - 1);
+                //Args = Args.Substring(0, Args.Length - 1);
                 var splitArgs = Args.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ',');
                 var tsArgs = new List<TypeStrictType>();
                 splitArgs.ForEach(s => {

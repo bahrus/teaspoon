@@ -267,10 +267,11 @@ namespace CurlyBraceParser
             iPosOfStart = StringBeingSearchedLC.IndexOf(StartsWithLC);
             if (iPosOfStart == -1) return string.Empty;
             if (!_Inclusive) iPosOfStart += StartsWithLC.Length;
-            iPosOfEnd = last ? StringBeingSearchedLC.LastIndexOf(EndsWithLC, iPosOfStart) : StringBeingSearchedLC.IndexOf(EndsWithLC, iPosOfStart);
+            iPosOfEnd = last ? StringBeingSearchedLC.LastIndexOf(EndsWithLC) : StringBeingSearchedLC.IndexOf(EndsWithLC, iPosOfStart);
             if (iPosOfEnd == -1) return StringBeingSearched.Substring(iPosOfStart);
+            if (iPosOfEnd < iPosOfStart) return StringBeingSearched.Substring(iPosOfStart);
             if (_Inclusive) iPosOfEnd += EndsWith.Length;
-            return StringBeingSearched.Substring(iPosOfStart, iPosOfEnd - iPosOfStart);
+            return StringBeingSearched.Substring(iPosOfStart, iPosOfEnd - iPosOfStart );
         }
 
 

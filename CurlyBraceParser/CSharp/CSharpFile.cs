@@ -16,6 +16,8 @@ namespace CurlyBraceParser.CSharp
         {
             get
             {
+                Block.AppendStatement("using System");
+                Block.AppendStatement("using System.Collections.Generic");
                 using (new Block(this.NameSpace == null ? null : "namespace " + this.NameSpace))
                 {
                     using (new Block(this.OuterStaticClassName == null ? null : "public static partial class " + this.OuterStaticClassName))
