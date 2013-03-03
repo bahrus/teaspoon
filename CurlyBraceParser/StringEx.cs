@@ -202,6 +202,26 @@ namespace CurlyBraceParser
             returnObj.Add(sb.ToString());
             return returnObj;
         }
+
+        public static CharSearchResult FindChars(this string stringToSearch, params char[] searchCars)
+        {
+            if (stringToSearch == null) return null;
+            var len = stringToSearch.Length;
+            for (int i = 0; i < len; i++)
+            {
+                var c = stringToSearch[i];
+                if (searchCars.Contains(c))
+                {
+                    return new CharSearchResult
+                    {
+                        CharFound = c,
+                        PosFound = i,
+                        StringBeforeChar = stringToSearch.Substring(0, i),
+                    };
+                }
+            }
+            return null;
+        }
     }
 
     public class BetweenStringsSearch
@@ -267,5 +287,12 @@ namespace CurlyBraceParser
             if (posOfString == -1) return StringToSearch;
             return StringToSearch.Substring(0, posOfString) + replacementString + StringToSearch.Substring(posOfString + SearchString.Length);
         }
+    }
+
+    public class CharSearchResult
+    {
+        public char CharFound;
+        public int PosFound;
+        public string StringBeforeChar;
     }
 }

@@ -9,7 +9,8 @@ namespace CurlyBraceParser
 {
     public class Parser
     {
-
+        public static char[] OpenChars   = new char[] { '(', '{', '[', '<' };
+        public static char[] ClosedChars = new char[] { ')', '}', ']', '>' };
 
         public static List<Line> Parse(string TypeStrict)
         {
@@ -24,11 +25,11 @@ namespace CurlyBraceParser
             var returnObj = new List<Line>();
             var stack = new Stack<OpenStatement>();
             int lineNo = 1;
+            bool insideComment = false;
             foreach (string line in lines)
             {
                 #region each line
                 bool insideString = false;
-                bool insideComment = false;
                 bool insideFinalComment = false;
                 Stack<char> openChars = null;
                 var chars = line.ToCharArray();

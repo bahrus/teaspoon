@@ -20,22 +20,75 @@ namespace CurlyBraceParser.CSharp
                     {
                         foreach (var line in IF.Children)
                         {
-                            TranspileInterfaceLine(line);
+                            line.IfType<Statement>(s => TranspileInterfaceStatement(s));
+                            //TranspileInterfaceStatement(line);
                         }
                     }
                 }
             }
         }
 
-        private static void TranspileInterfaceLine(Line line)
+        private static void TranspileInterfaceStatement(Statement st)
         {
-            if (string.IsNullOrEmpty(line.Content)) return;
-            if (!line.Content.Contains(':')) return;
-            string MemberName = line.Content.SubstringBefore(":").Trim().SubstringBefore("?");
-            string TypeInfo = line.Content.SubstringAfter(":").Trim().TrimEnd(';');
-            var tst = TypeStrictType.Parse(TypeInfo);
-            Block.AppendStatement(tst.CSharpTypeString + " " + MemberName);
+            var ls = st.LiveStatement.Trim();
+            if (string.IsNullOrEmpty(ls)) return;
+            //if (!ls.Contains(':')) return;
+            var search = ls.FindChars(':', '(', ';');
+            if (search == null)
+            {
+                throw new Exception("??"); //TODO
+            }
+            string MemberName = search.StringBeforeChar.Trim().SubstringBefore("?");
+            
+            switch (search.CharFound)
+            {
+                case ':':
+                    //string MemberName = ls.SubstringBefore(":").Trim().SubstringBefore("?");
+                    //string TypeInfo = ls.SubstringAfter(":").Trim().TrimEnd(';');
+                    string Specification = ls.Substring(search.PosFound + 1).Trim().TrimEnd(';');
+                    var tst = TypeStrictType.ParseFieldType(Specification);
+                    Block.AppendStatement(tst.CSharpTypeString + " " + MemberName);
+                    break;
+                case ';':
+                    Block.AppendStatement("object " + MemberName);
+                    break;
+                case '(':
+                    string Signature = ls.Substring(search.PosFound).Trim().TrimEnd(';');
+                    var argsPlusReturn = Signature.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ':');
+                    string returnType = "object";
+                    string unparsedArgs = null;
+
+                    if (argsPlusReturn.Count == 2)
+                    {
+                        var ret = TypeStrictType.ParseFieldType(argsPlusReturn[1].Trim());
+                        returnType = ret.CSharpTypeString;
+                    }
+                    string args = argsPlusReturn[0].SubstringBetween("(").AndLast(")");
+                    var argArr = args.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ',');
+                    var tsArgs = new Dictionary<string, TypeStrictType>();
+                    argArr.ForEach(s =>
+                    {
+                        var sWithoutName = s.SubstringAfter(":");
+                        var sName = s.SubstringBefore(":");
+                        tsArgs[sName] = TypeStrictType.ParseFieldType(sWithoutName);
+                    });
+                    var sbMethod = new StringBuilder();
+                    sbMethod.Append(returnType + " " + MemberName + "(");
+                    var argsL = new List<string>();
+                    foreach (var kvp in tsArgs)
+                    {
+                        //sbMethod.Append(kvp.Value.CSharpTypeString + " "
+                        argsL.Add(kvp.Value.CSharpTypeString + " " + kvp.Key);
+                    }
+                    sbMethod.Append(string.Join(", ", argsL.ToArray()));
+                    sbMethod.Append(")");
+                    Block.AppendStatement(sbMethod.ToString());
+                    break;
+            }
+            
         }
+
+        
 
     }
 
@@ -43,7 +96,7 @@ namespace CurlyBraceParser.CSharp
     {
 
 
-        public static TypeStrictType Parse(string type)
+        public static TypeStrictType ParseFieldType(string type)
         {
             string canonicalType = type.Replace(" ", "");
             TypeStrictType returnObj = null;
@@ -56,7 +109,7 @@ namespace CurlyBraceParser.CSharp
  
                 returnObj = new AssociativeArrayTypeStrictType
                 {
-                    ValueType = Parse(ValType),
+                    ValueType = ParseFieldType(ValType),
                 };
                 return returnObj;
             }
@@ -68,9 +121,9 @@ namespace CurlyBraceParser.CSharp
                     canonicalType = canonicalType.SubstringBetween("{").AndLast("}");
                 }
                 var splitBySemiColon = DictionaryFunctionLookup ?
-                    canonicalType.SplitOutsideGroupings(new char[] { '(', '{', '[', '<' }, new char[] { ')', '}', ']', '>' }, ':')
+                    canonicalType.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ':')
                     :
-                    canonicalType.SplitOutsideGroupings(new char[] { '(', '{', '[', '<' }, new char[] { ')', '}', ']', '>' }, "=>")
+                    canonicalType.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, "=>")
                 ;
                 if (splitBySemiColon.Count != 2)
                 {
@@ -78,22 +131,26 @@ namespace CurlyBraceParser.CSharp
                 }
                 var Args = splitBySemiColon.ElementAt(0);
                 var RetArg = splitBySemiColon.ElementAt(1);
+                if (DictionaryFunctionLookup)
+                {
+                    RetArg = RetArg.SubstringBeforeLast(";");
+                }
                 Args = Args.SubstringBetween("(").AndLast(")");
                 Args = Args.Substring(0, Args.Length - 1);
-                var splitArgs = Args.SplitOutsideGroupings(new char[] { '(', '{', '[', '<' }, new char[] { ')', '}', ']', '>' }, ',');
+                var splitArgs = Args.SplitOutsideGroupings(Parser.OpenChars, Parser.ClosedChars, ',');
                 var tsArgs = new List<TypeStrictType>();
                 splitArgs.ForEach(s => {
                     var sWithoutName = s.SubstringAfter(":");
-                    if (DictionaryFunctionLookup)
-                    {
-                        sWithoutName = sWithoutName.SubstringBeforeLast(";");
-                    }
-                    tsArgs.Add(TypeStrictType.Parse(sWithoutName));
+                    //if (DictionaryFunctionLookup)
+                    //{
+                    //    sWithoutName = sWithoutName.SubstringBeforeLast(";");
+                    //}
+                    tsArgs.Add(TypeStrictType.ParseFieldType(sWithoutName));
                 });
                 returnObj = new FuncTypeStrictType
                 {
                     Args = tsArgs,
-                    ReturnType = TypeStrictType.Parse(RetArg),
+                    ReturnType = TypeStrictType.ParseFieldType(RetArg),
                 };
             }
             else
@@ -168,9 +225,16 @@ namespace CurlyBraceParser.CSharp
     {
         public string StrictTypeName { get; set; }
 
+        private static Dictionary<string, string> TypeTransations = new Dictionary<string, string>
+        {
+            {"any", "object"},
+        };
+
         public override string CSharpTypeString
         {
-            get { return StrictTypeName; }
+            get { 
+                return TypeTransations.ContainsKey(StrictTypeName) ? TypeTransations[StrictTypeName] : StrictTypeName; 
+            }
         }
     }
 
