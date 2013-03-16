@@ -25,5 +25,15 @@ namespace CurlyBraceParser
             if (Obj == null) return null; //avoid extra function call
             return IfType<T>(Obj, Do);
         }
+
+        public static string ToCharpValue(this object Obj)
+        {
+            if (Obj == null) return "null";
+            if (Obj is string)
+            {
+                return "\"" + Obj + "\"";
+            }
+            return Obj.ToString();
+        }
     }
 }

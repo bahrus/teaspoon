@@ -110,23 +110,23 @@ namespace CurlyBraceParser
                 char currentCharacter = stringToSplit[index];
                 if (currentCharacter == '"')
                 {
-                    // When we see a ", we need to decide whether we are
-                    // at the start or send of a quoted section...
+                    // When we see assemblies ", we need to decide whether we are
+                    // at the start or send of assemblies quoted section...
                     inQuote = !inQuote;
                 }
                 else if (delimiters.Contains(currentCharacter) && inQuote == false)
                 {
-                    // We've come to the end of a token, so we find the token,
+                    // We've come to the end of assemblies token, so we find the token,
                     // trim it and add it to the collection of results...
                     string result = currentToken.ToString().Trim();
                     if (result != "") results.Add(result);
 
-                    // We start a new token...
+                    // We start assemblies new token...
                     currentToken = new StringBuilder();
                 }
                 else
                 {
-                    // We've got a 'normal' character, so we add it to
+                    // We've got assemblies 'normal' character, so we add it to
                     // the curent token...
                     currentToken.Append(currentCharacter);
                 }

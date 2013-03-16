@@ -50,9 +50,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\InterfaceTestLibrary\bin\Debug\InterfaceTestLibrary.defaultImpl.cs">
+      <Link>InterfaceTestLibrary.defaultImpl.cs</Link>
+    </Compile>
     <Compile Include="Interface_ElX.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interface_ElX_c.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,6 +65,10 @@
       <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
       <Name>CurlyBraceParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\InterfaceTestLibrary\InterfaceTestLibrary.csproj">
+      <Project>{e43b0ad6-06a6-4b03-af67-735c28756848}</Project>
+      <Name>InterfaceTestLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ElX.ts" />
@@ -68,6 +76,9 @@
     <Content Include="InputElement.ts" />
     <Content Include="Interface_ElX.ts" />
     <Content Include="_.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
@@ -89,6 +100,9 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)AutoGen\bin\debug\autogen.exe $(SolutionDir)InterfaceTestLibrary\bin\debug\</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

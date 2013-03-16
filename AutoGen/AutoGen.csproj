@@ -4,24 +4,26 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04CF9C5C-172C-4A5A-8629-627F703F8D5E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{EA0F7AD0-9E3A-4356-AD2C-5123ED7AD973}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CurlyBraceParser</RootNamespace>
-    <AssemblyName>CurlyBraceParser</AssemblyName>
+    <RootNamespace>AutoGen</RootNamespace>
+    <AssemblyName>AutoGen</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TypeStrict</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,11 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,37 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassStatement.cs" />
-    <Compile Include="Control.cs" />
-    <Compile Include="CSharp\CSharpFile.cs" />
-    <Compile Include="CSharp\Interface2ClassBuilder.cs" />
-    <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
-    <Compile Include="CSharp\PropertyInfoEx.cs" />
-    <Compile Include="CSharp\RequiredAttribute.cs" />
-    <Compile Include="CSharp\TypeInfoEx.cs" />
-    <Compile Include="CSharp\TypeStrict2CSharpTranspiler.cs" />
-    <Compile Include="CSharp\VSProject.cs" />
-    <Compile Include="DOM\HtmlDocumentFacade.cs" />
-    <Compile Include="ICanBePublicStatement.cs" />
-    <Compile Include="InterfaceStatement.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="ModuleStatement.cs" />
-    <Compile Include="OpenStatement.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="ProcessedFile.cs" />
-    <Compile Include="ReferenceStatement.cs" />
-    <Compile Include="Statement.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticFunctionStatement.cs" />
-    <Compile Include="StaticMethodStatement.cs" />
-    <Compile Include="StringEx.cs" />
-    <Compile Include="TypeMatch.cs" />
-    <Compile Include="TypeStrictInterpreter.cs" />
-    <Compile Include="VariableOpenStatement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CurlyBraceParser\CurlyBraceParser.csproj">
+      <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
+      <Name>CurlyBraceParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

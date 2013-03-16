@@ -29,7 +29,7 @@ public static partial class tsp
     public interface IRenderable
     {
         IRenderable parentElement { get; set; }
-        object doRender(IRenderContext context);
+        object doRender(IRenderContext context  = null);
         string ID { get; set; }
     }
     public interface IElX

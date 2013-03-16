@@ -45,4 +45,16 @@ namespace CurlyBraceParser
         #endregion
     }
 #endif
+
+    //public class InterfaceMember
+    //{
+    //    public string Name { get; set; }
+    //}
+
+    //public class DataPropertyInterfaceMember : InterfaceMember
+    //{
+    //    public string Name { get; set; }
+    //}
+
+    
 }

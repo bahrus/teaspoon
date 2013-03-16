@@ -6,12 +6,33 @@ using System.Threading.Tasks;
 
 namespace CurlyBraceParser
 {
-    public class Parameter
+    public interface ISignatureElement
     {
-        public string Name { get; set; }
-
-        public string Type { get; set; }
-
-        public string InitialValue { get; set; }
+        string Type { get; set; }
     }
+
+    public interface IDataElement : ISignatureElement
+    {
+        string Name { get; set; }
+        
+    }
+
+    public interface IParameter : IDataElement
+    {
+        string InitialValue { get; set; }
+    }
+
+    public class Parameter : IDataElement
+    {
+        public string InitialValue { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
+
+    public interface IMethodElement : IDataElement
+    {
+        
+    }
+
+    
 }
