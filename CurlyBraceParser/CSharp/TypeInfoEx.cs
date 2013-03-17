@@ -11,5 +11,7 @@ namespace CurlyBraceParser.CSharp
         public Type Type { get; set; }
 
         public IEnumerable<PropertyInfoEx> Props { get; set; }
+
+        public Type TypeToImplement { get; set; }
     }
 }

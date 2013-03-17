@@ -23,8 +23,9 @@ namespace AutoGen
                 var fileAssembly = Assembly.LoadFile(file.FullName);
                 assemblyList.Add(fileAssembly);
             }
-            var outp = assemblyList.ToDefaultImplClasses();
-            foreach (var outi in outp)
+            #region Default Impl Classes
+            var defaultImplClasses = assemblyList.ToDefaultImplClasses();
+            foreach (var outi in defaultImplClasses)
             {
                 string filePath = currentDir + "\\" + outi.Key.SubstringBefore(",") + ".defaultImpl.cs";
                 var fi = new FileInfo(filePath);
@@ -42,24 +43,28 @@ namespace AutoGen
                     sw.Close();
                 }
             }
-            //foreach (var implClass in defaultImplCasses)
-            //    {
-            //        string filePath = d + "\\" + implClass.Key + ".defaultImpl.cs";
-            //        var fi = new FileInfo(filePath);
-            //        if (fi.Exists)
-            //        {
-            //            var rs = fi.OpenText();
-            //            string content = rs.ReadToEnd();
-            //            rs.Close();
-            //            if (content == implClass.Value) continue;
-            //        }
-            //        fi.Delete();
-            //        using (var sw = new StreamWriter(filePath))
-            //        {
-            //            sw.Write(implClass.Value);
-            //            sw.Close();
-            //        }
-            //}
+            #endregion
+            #region Interface Implementation Classes
+            var implementingClasses = assemblyList.ImplementingInterfacePartialClasses();
+            foreach (var outi in implementingClasses)
+            {
+                string filePath = currentDir + "\\" + outi.Key.SubstringBefore(",") + ".implementingClasses.cs";
+                var fi = new FileInfo(filePath);
+                if (fi.Exists)
+                {
+                    var rs = fi.OpenText();
+                    string content = rs.ReadToEnd();
+                    rs.Close();
+                    if (content == outi.Value) continue;
+                }
+                fi.Delete();
+                using (var sw = new StreamWriter(filePath))
+                {
+                    sw.Write(outi.Value);
+                    sw.Close();
+                }
+            }
+            #endregion
         }
     }
 }

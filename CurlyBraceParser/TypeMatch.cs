@@ -35,5 +35,14 @@ namespace CurlyBraceParser
             }
             return Obj.ToString();
         }
+
+        public static string ToDefaultCSharpValue(this Type type)
+        {
+            if (type == typeof(int))
+            {
+                return "0";
+            }
+            return "null";
+        }
     }
 }

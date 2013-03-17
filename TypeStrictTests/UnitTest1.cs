@@ -48,18 +48,23 @@ namespace TypeStrictTests
         {
             var b = new DoNothing();
             //var assemblies = this.GetType().Assembly.GetReferencedAssemblies().ToList();
-            //var d = new Dictionary<string, string>();
+            //var assemblyToClasses = new Dictionary<string, string>();
             //this.GetType().Assembly.GetReferencedAssemblies().ToList().ForEach(assemblyName =>
             //{
             //    var assembly = Assembly.Load(assemblyName);
             //    var generatedCodeAttribute =  assembly.GetCustomAttribute<GeneratedCodeAttribute>();
             //    if (generatedCodeAttribute == null) return;
             //    if (generatedCodeAttribute.Tool != "tsp") return;
-            //    d[assemblyName.Name] = assembly.ToConstructorClasses();
+            //    assemblyToClasses[assemblyName.Name] = assembly.InterfacesToConstructorClasses();
             //});
-            //var c = new InterfaceTestLibrary.InterfaceA_defaultImpl(
-            //    StringProp2 : "Hello"
-            //);
+            var c = new InterfaceTestLibrary.InterfaceA_defaultImpl(
+                StringProp2: "Hello",
+                StringProp3: "World"
+            );
+            var ggg = new InterfaceTestLibrary.ClassA
+            {
+                StringProp1 = "hi",
+            };
             var defaultImplCasses = this.GetType().Assembly.ToDefaultImplClasses();
             var d = System.Environment.CurrentDirectory;
             foreach (var implClass in defaultImplCasses)
