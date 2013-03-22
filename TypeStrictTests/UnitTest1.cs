@@ -65,29 +65,29 @@ namespace TypeStrictTests
             {
                 StringProp1 = "hi",
             };
-            var defaultImplCasses = this.GetType().Assembly.ToDefaultImplClasses();
-            var d = System.Environment.CurrentDirectory;
-            foreach (var implClass in defaultImplCasses)
-            {
-                string filePath = d + "\\" + implClass.Key + ".defaultImpl.cs";
-                var fi = new FileInfo(filePath);
-                if (fi.Exists)
-                {
-                    var rs = fi.OpenText();
-                    string content = rs.ReadToEnd();
-                    rs.Close();
-                    if (content == implClass.Value) continue;
-                }
-                fi.Delete();
-                using (var sw = new StreamWriter(filePath))
-                {
-                    sw.Write(implClass.Value);
-                    sw.Close();
-                }
+            //var defaultImplCasses = this.GetType().Assembly.ToDefaultImplClasses();
+            //var d = System.Environment.CurrentDirectory;
+            //foreach (var implClass in defaultImplCasses)
+            //{
+            //    string filePath = d + "\\" + implClass.Key + ".defaultImpl.cs";
+            //    var fi = new FileInfo(filePath);
+            //    if (fi.Exists)
+            //    {
+            //        var rs = fi.OpenText();
+            //        string content = rs.ReadToEnd();
+            //        rs.Close();
+            //        if (content == implClass.Value) continue;
+            //    }
+            //    fi.Delete();
+            //    using (var sw = new StreamWriter(filePath))
+            //    {
+            //        sw.Write(implClass.Value);
+            //        sw.Close();
+            //    }
                         
                     
                 
-            }
+            //}
         }
 
         

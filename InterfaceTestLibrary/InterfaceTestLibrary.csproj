@@ -41,8 +41,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bin\Debug\InterfaceTestLibrary.implementingClasses.cs" />
+    <Compile Include="DoNithing.cs" />
+    <Compile Include="Ext\A\ExtA.cs" />
+    <Compile Include="Ext\B\ExtB.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="B\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CurlyBraceParser\CurlyBraceParser.csproj">
+      <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
+      <Name>CurlyBraceParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

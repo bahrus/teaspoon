@@ -3,14 +3,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices.WindowsRuntime;
 
+
 namespace InterfaceTestLibrary
 {
 
-    public class DoNothing 
-    {
-
- 
-    }
+    
     public static partial class LibA
     {
         
@@ -36,6 +33,11 @@ namespace InterfaceTestLibrary
             string StringProp6 { get; set; }
 
             string StringProp7 { get; set; }
+
+            InterfaceTestLibrary.Ext.A.ExtensionLib ExtA { get; set; }
+
+            InterfaceTestLibrary.Ext.B.ExtensionLib ExtB { get; set; }
+            
         }
 
         

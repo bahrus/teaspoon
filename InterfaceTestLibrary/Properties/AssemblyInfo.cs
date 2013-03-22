@@ -1,4 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿using CurlyBraceParser.CSharp;
+using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: GeneratedCodeAttribute("tsp", "1")]
+[assembly: AssemblyProcessor]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

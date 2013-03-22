@@ -45,9 +45,13 @@
   <ItemGroup>
     <Compile Include="ClassStatement.cs" />
     <Compile Include="Control.cs" />
+    <Compile Include="CSharp\ClassExtenderToImplementInterface.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
+    <Compile Include="CSharp\ExtensionClassBuilder.cs" />
+    <Compile Include="CSharp\ExtensionClassToExtensionMethods.cs" />
     <Compile Include="CSharp\Interface2ClassBuilder.cs" />
     <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
+    <Compile Include="CSharp\ProcessorAttributes.cs" />
     <Compile Include="CSharp\PropertyInfoEx.cs" />
     <Compile Include="CSharp\RequiredAttribute.cs" />
     <Compile Include="CSharp\TypeInfoEx.cs" />
