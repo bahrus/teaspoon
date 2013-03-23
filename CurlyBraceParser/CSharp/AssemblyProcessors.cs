@@ -22,7 +22,8 @@ namespace CurlyBraceParser.CSharp
         public string FileName { get; set; }
         public string FileContent { get; set; }
     }
-    
+
+    #region Interface -> Class
     public class AssemblyProcessorToBuildClassFromInterface : IProcessAssembly
     {
         public string ProcessToString(Assembly assembly)
@@ -115,13 +116,15 @@ namespace CurlyBraceParser.CSharp
             var interf = new AssemblyProcessorOutput
             {
                 FileContent = interfaces,
-                FileName = assembly.FullName.SubstringBefore(","),
+                FileName = assembly.FullName.SubstringBefore(",") + ".defaultImpl.cs",
             };
             ret.Add(interf);
             return ret;
         }
     }
+    #endregion
 
+    #region Base Class + Interface -> Extended Class
     public class AssemblyProcessorToExtendClassFromInterface : IProcessAssembly
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
@@ -189,7 +192,7 @@ namespace CurlyBraceParser.CSharp
             var assemblyOutput = new AssemblyProcessorOutput
             {
                 FileContent = content,
-                FileName = assembly.FullName.SubstringBefore(","),
+                FileName = assembly.FullName.SubstringBefore(",") + ".implementingClasses.cs",
             };
             var returnObj = new List<AssemblyProcessorOutput>
             {
@@ -198,4 +201,6 @@ namespace CurlyBraceParser.CSharp
             return returnObj;
         }
     }
+    #endregion
+
 }

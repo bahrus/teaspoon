@@ -46,9 +46,6 @@
     <Compile Include="ClassStatement.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="CSharp\AssemblyProcessors.cs" />
-    <Compile Include="CSharp\ClassExtenderToImplementInterface.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="CSharp\CSharpFile.cs" />
     <Compile Include="CSharp\ExtensionClassBuilder.cs" />
     <Compile Include="CSharp\ExtensionClassToExtensionMethods.cs" />
