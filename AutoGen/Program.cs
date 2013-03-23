@@ -24,47 +24,10 @@ namespace AutoGen
                 assemblyList.Add(fileAssembly);
             }
             #region Default Impl Classes
-            var defaultImplClasses = assemblyList.ProcessAssemblies();
-            //foreach (var outi in defaultImplClasses)
-            //{
-            //    string filePath = currentDir + "\\" + outi.Key.SubstringBefore(",") + ".defaultImpl.cs";
-            //    var fi = new FileInfo(filePath);
-            //    if (fi.Exists)
-            //    {
-            //        var rs = fi.OpenText();
-            //        string content = rs.ReadToEnd();
-            //        rs.Close();
-            //        if (content == outi.Value) continue;
-            //    }
-            //    fi.Delete();
-            //    using (var sw = new StreamWriter(filePath))
-            //    {
-            //        sw.Write(outi.Value);
-            //        sw.Close();
-            //    }
-            //}
+            var processedAssemblies = assemblyList.ProcessAssemblies();
+            
             #endregion
-            //#region Interface Implementation Classes
-            //var implementingClasses = assemblyList.ImplementingInterfacePartialClasses();
-            //foreach (var outi in implementingClasses)
-            //{
-            //    string filePath = currentDir + "\\" + outi.Key.SubstringBefore(",") + ".implementingClasses.cs";
-            //    var fi = new FileInfo(filePath);
-            //    if (fi.Exists)
-            //    {
-            //        var rs = fi.OpenText();
-            //        string content = rs.ReadToEnd();
-            //        rs.Close();
-            //        if (content == outi.Value) continue;
-            //    }
-            //    fi.Delete();
-            //    using (var sw = new StreamWriter(filePath))
-            //    {
-            //        sw.Write(outi.Value);
-            //        sw.Close();
-            //    }
-            //}
-            //#endregion
+            
         }
     }
 }

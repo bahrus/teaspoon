@@ -25,25 +25,13 @@ namespace CurlyBraceParser.CSharp
                 SubProcessors = new List<IProcessAssembly>
                 {
                     new AssemblyProcessorToBuildClassFromInterface(),
-                    new AssemblyProcessorToBuildClassFromInterface(),
+                    new AssemblyProcessorToExtendClassFromInterface(),
                 }
             };
         }
     }
 
-    //[AttributeUsage(AttributeTargets.Interface)]
-    //public class InterfaceProcessorAttribute : BaseProcessorAttribute
-    //{
-    //}
-
-    //[AttributeUsage(AttributeTargets.Interface)]
-    //public class Interface2DefaultClassAttribute : InterfaceProcessorAttribute
-    //{
-    //    public Interface2DefaultClassAttribute()
-    //    {
-    //        this.ProcessorType = typeof(AssemblyProcessorToBuildClassFromInterface);
-    //    }
-    //}
+    
     public class AssemblySubProcessor : IProcessAssembly
     {
 
