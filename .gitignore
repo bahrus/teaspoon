@@ -2,7 +2,7 @@
 *.user
 bin/
 obj/
-packages/*
+packages/
 
 *.js
 *.map
