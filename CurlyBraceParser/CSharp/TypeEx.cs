@@ -9,21 +9,9 @@ using System.Reflection;
 
 namespace CurlyBraceParser.CSharp
 {
-    public static class Interface2ClassBuilder
+    public static class TypeEx
     {
 
-        //private static AssemblyProcessorToBuildClassFromInterface _processor;
-        //static Interface2ClassBuilder()
-        //{
-        //    _processor = new AssemblyProcessorToBuildClassFromInterface();
-        //}
-
-        //public static List<AssemblyProcessorOutput> InterfacesToConstructorClasses(this Assembly assembly)
-        //{
-        //    return _processor.Process(assembly);
-        //}
-
-       
 
         public static PropertyInfo[] GetPublicProperties(this Type type)
         {

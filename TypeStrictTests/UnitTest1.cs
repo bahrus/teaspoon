@@ -57,7 +57,7 @@ namespace TypeStrictTests
             //    if (generatedCodeAttribute.Tool != "tsp") return;
             //    assemblyToClasses[assemblyName.Name] = assembly.InterfacesToConstructorClasses();
             //});
-            var c = new InterfaceTestLibrary.InterfaceA_defaultImpl(
+            var c = new InterfaceTestLibrary.InterfaceA_LibA_defaultImpl(
                 StringProp2: "Hello",
                 StringProp3: "World"
             );

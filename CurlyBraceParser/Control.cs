@@ -27,7 +27,15 @@ namespace CurlyBraceParser
 
         private string _OpenBlockText;
 
-       
+        public static void IncrementLevel()
+        {
+            _level++;
+        }
+
+        public static void DecrementLevel()
+        {
+            _level--;
+        }
 
         public Block(string Text)
         {
@@ -94,6 +102,12 @@ namespace CurlyBraceParser
         {
             if (_sb == null) _sb = new StringBuilder();
             _sb.AppendLine(string.Empty);
+        }
+
+        public static void AppendBlock(string Text)
+        {
+            if (_sb == null) _sb = new StringBuilder();
+            _sb.Append(Text);
         }
     }
 }

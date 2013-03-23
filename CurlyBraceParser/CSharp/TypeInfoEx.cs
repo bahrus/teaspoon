@@ -13,5 +13,11 @@ namespace CurlyBraceParser.CSharp
         public IEnumerable<PropertyInfoEx> Props { get; set; }
 
         public Type TypeToImplement { get; set; }
+
+        public BaseTypeProcessorAttribute ProcessorAttribute { get; set; }
+
+        public string OutputNamespace { get; set; }
+
+        public string OutputContent { get; set; }
     }
 }

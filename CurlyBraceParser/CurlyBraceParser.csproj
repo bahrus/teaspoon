@@ -47,14 +47,13 @@
     <Compile Include="Control.cs" />
     <Compile Include="CSharp\AssemblyProcessors.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
-    <Compile Include="CSharp\ExtensionClassBuilder.cs" />
-    <Compile Include="CSharp\ExtensionClassToExtensionMethods.cs" />
-    <Compile Include="CSharp\Interface2ClassBuilder.cs" />
+    <Compile Include="CSharp\TypeEx.cs" />
     <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
     <Compile Include="CSharp\ProcessorAttributes.cs" />
     <Compile Include="CSharp\PropertyInfoEx.cs" />
     <Compile Include="CSharp\RequiredAttribute.cs" />
     <Compile Include="CSharp\TypeInfoEx.cs" />
+    <Compile Include="CSharp\TypeProcessors.cs" />
     <Compile Include="CSharp\TypeStrict2CSharpTranspiler.cs" />
     <Compile Include="CSharp\VSProject.cs" />
     <Compile Include="DOM\HtmlDocumentFacade.cs" />

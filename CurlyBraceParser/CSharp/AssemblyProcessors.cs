@@ -1,13 +1,10 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CurlyBraceParser.CSharp
 {
@@ -28,84 +25,112 @@ namespace CurlyBraceParser.CSharp
     {
         public string ProcessToString(Assembly assembly)
         {
-            var typesEx =
-                assembly.GetTypes()
-                .Where(type => type.IsInterface && type.GetCustomAttribute<GeneratedCodeAttribute>() != null)
+            var typesEx = assembly.GetTypes()
+                .Where(type => type.GetCustomAttribute<BaseTypeProcessorAttribute>() != null)
                 .Select(type => new TypeInfoEx
                 {
                     Type = type,
-                    Props = type.GetPublicProperties().Select(prop =>
-                        new PropertyInfoEx
-                        {
-                            PropertyInfo = prop,
-                            DefaultValue = prop.GetCustomAttribute<DefaultValueAttribute>(),
-                            Required = prop.GetCustomAttribute<RequiredAttribute>(),
-                        }
-                    ),
+                    Props = type.GetPublicProperties().Select(prop => new PropertyInfoEx{
+                        PropertyInfo = prop,
+                        DefaultValue = prop.GetCustomAttribute<DefaultValueAttribute>(),
+                        Required = prop.GetCustomAttribute<RequiredAttribute>(),
+                    }),
+                    ProcessorAttribute = type.GetCustomAttribute<BaseTypeProcessorAttribute>(),
                 })
-                .GroupBy(tEx => tEx.Type.Namespace);
-
-
-            var typeStrings = typesEx.Select(grp =>
+            ;
+            var typeStrings = typesEx.Select(typeEx =>
             {
-                //#region namespace
+                var processor = typeEx.ProcessorAttribute.Processor ?? Activator.CreateInstance(typeEx.ProcessorAttribute.ProcessorType) as IProcessType;
+                processor.Process(typeEx);
+                return typeEx;
+            })
+            .GroupBy(typeEx => typeEx.OutputNamespace)
+            .Select(grp =>
+            {
                 using (new Block("namespace " + grp.Key))
                 {
-                    #region namespace
-                    var types = grp.GroupBy(typeEx => typeEx.Type.DeclaringType.Name).ToDictionary(g => g.Key, gs => gs.ToList());
-
-                    foreach (var typeEx in types)
-                    {
-                        foreach (var tsss in typeEx.Value)
-                        {
-                            string className = tsss.Type.Name + "_defaultImpl";
-                            using (new Block("public partial class " + className + " : " + typeEx.Key + "." + tsss.Type.Name))
-                            {
-                                #region public partial class
-                                var allProperties = tsss.Props.ToList();
-                                var propertiesWithDefaultValues = new List<PropertyInfoEx>();
-                                var requiredProperties = new List<PropertyInfoEx>();
-                                var optionalPropertiesWithNoDefaultValues = new List<PropertyInfoEx>();
-                                foreach (var prop in allProperties)
-                                {
-                                    #region public property
-                                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
-                                    if (prop.DefaultValue != null)
-                                    {
-                                        propertiesWithDefaultValues.Add(prop);
-                                    }
-                                    else if (prop.Required != null)
-                                    {
-                                        requiredProperties.Add(prop);
-                                    }
-                                    else
-                                    {
-                                        optionalPropertiesWithNoDefaultValues.Add(prop);
-                                    }
-                                    #endregion
-                                }
-
-                                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name);
-                                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
-                                    p.DefaultValue.Value.ToCharpValue());
-                                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
-                                    p.PropertyInfo.PropertyType.ToDefaultCSharpValue());
-                                var allParams = reqParams.Union(defParams).Union(optionalParams);
-                                using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))
-                                {
-                                    foreach (var prop in allProperties)
-                                    {
-                                        Block.AppendClosingStatement("this." + prop.PropertyInfo.Name + " = " + prop.PropertyInfo.Name + ";");
-                                    }
-                                }
-                                #endregion
-                            }
-                        }
-                    }
-                    #endregion
+                    grp.ToList().ForEach(typeInfoEx => Block.AppendBlock(typeInfoEx.OutputContent));
                 }
                 return Block.Text;
             });
+            //var typesEx =
+            //    assembly.GetTypes()
+            //    .Where(type => type.IsInterface && type.GetCustomAttribute<GeneratedCodeAttribute>() != null)
+            //    .Select(type => new TypeInfoEx
+            //    {
+            //        Type = type,
+            //        Props = type.GetPublicProperties().Select(prop =>
+            //            new PropertyInfoEx
+            //            {
+            //                PropertyInfo = prop,
+            //                DefaultValue = prop.GetCustomAttribute<DefaultValueAttribute>(),
+            //                Required = prop.GetCustomAttribute<RequiredAttribute>(),
+            //            }
+            //        ),
+            //    })
+            //    .GroupBy(tEx => tEx.Type.Namespace);
+
+
+            //var typeStrings = typesEx.Select(grp =>
+            //{
+            //    //#region namespace
+            //    using (new Block("namespace " + grp.Key))
+            //    {
+            //        #region namespace
+            //        var types = grp.GroupBy(typeEx => typeEx.Type.DeclaringType.Name).ToDictionary(g => g.Key, gs => gs.ToList());
+
+            //        foreach (var typeEx in types)
+            //        {
+            //            foreach (var tsss in typeEx.Value)
+            //            {
+            //                string className = tsss.Type.Name + "_defaultImpl";
+            //                using (new Block("public partial class " + className + " : " + typeEx.Key + "." + tsss.Type.Name))
+            //                {
+            //                    #region public partial class
+            //                    var allProperties = tsss.Props.ToList();
+            //                    var propertiesWithDefaultValues = new List<PropertyInfoEx>();
+            //                    var requiredProperties = new List<PropertyInfoEx>();
+            //                    var optionalPropertiesWithNoDefaultValues = new List<PropertyInfoEx>();
+            //                    foreach (var prop in allProperties)
+            //                    {
+            //                        #region public property
+            //                        Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
+            //                        if (prop.DefaultValue != null)
+            //                        {
+            //                            propertiesWithDefaultValues.Add(prop);
+            //                        }
+            //                        else if (prop.Required != null)
+            //                        {
+            //                            requiredProperties.Add(prop);
+            //                        }
+            //                        else
+            //                        {
+            //                            optionalPropertiesWithNoDefaultValues.Add(prop);
+            //                        }
+            //                        #endregion
+            //                    }
+
+            //                    var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name);
+            //                    var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
+            //                        p.DefaultValue.Value.ToCharpValue());
+            //                    var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
+            //                        p.PropertyInfo.PropertyType.ToDefaultCSharpValue());
+            //                    var allParams = reqParams.Union(defParams).Union(optionalParams);
+            //                    using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))
+            //                    {
+            //                        foreach (var prop in allProperties)
+            //                        {
+            //                            Block.AppendClosingStatement("this." + prop.PropertyInfo.Name + " = " + prop.PropertyInfo.Name + ";");
+            //                        }
+            //                    }
+            //                    #endregion
+            //                }
+            //            }
+            //        }
+            //        #endregion
+            //    }
+            //    return Block.Text;
+            //});
             return string.Join("\r\n", typeStrings.ToArray());
         }
 
@@ -202,5 +227,6 @@ namespace CurlyBraceParser.CSharp
         }
     }
     #endregion
+
 
 }
