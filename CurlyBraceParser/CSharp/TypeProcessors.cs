@@ -64,4 +64,30 @@ namespace CurlyBraceParser.CSharp
             typeInfoEx.OutputContent = Block.Text;
         }
     }
+
+    public class PropertiesFromInterfaceImplementor : IProcessType
+    {
+        public void Process(TypeInfoEx typeInfoEx)
+        {
+            string className = typeInfoEx.Type.Name;
+            Block.IncrementLevel();
+            var typeToImplement = (typeInfoEx.ProcessorAttribute as AutoGeneratePropertiesFromInterfaceAttribute).InterfaceTypeToImplement;
+            using (new Block("public partial class " + className + " : " + typeToImplement.FullName.Replace("+", ".")))
+            {
+                #region public partial class
+                var allProperties = typeInfoEx.Props.ToList();
+                foreach (var prop in allProperties)
+                {
+                    #region public property
+                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
+                    #endregion
+                }
+
+                #endregion
+            }
+            Block.DecrementLevel();
+            typeInfoEx.OutputNamespace = typeInfoEx.Type.Namespace;
+            typeInfoEx.OutputContent = Block.Text;
+        }
+    }
 }

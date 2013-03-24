@@ -44,7 +44,7 @@ namespace InterfaceTestLibrary
         
     }
 
-    [InterfaceImplementedInVersion(typeof(LibA.InterfaceA), 0, 0, 0, 0)]
+    [AutoGeneratePropertiesFromInterface(InterfaceTypeToImplement =  typeof(LibA.InterfaceA))]
     public partial class ClassA
     {
         public string StringPropX { get; set; }

@@ -86,5 +86,16 @@ namespace CurlyBraceParser.CSharp
         }
     }
 
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    public class AutoGeneratePropertiesFromInterfaceAttribute : BaseTypeProcessorAttribute
+    {
+        public Type InterfaceTypeToImplement { get; set; }
+
+        public AutoGeneratePropertiesFromInterfaceAttribute()
+        {
+            this.Processor = new PropertiesFromInterfaceImplementor();
+        }
+    }
+
     #endregion
 }
