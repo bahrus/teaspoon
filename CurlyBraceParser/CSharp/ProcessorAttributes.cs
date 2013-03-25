@@ -27,6 +27,7 @@ namespace CurlyBraceParser.CSharp
                 {
                     new AssemblyProcessorToBuildClassFromInterface(),
                     new AssemblyProcessorToExtendClassFromInterface(),
+                    new AssemblyProcessorToCreateExtensionLibraryFromTypes(),
                 }
             };
         }
@@ -50,23 +51,7 @@ namespace CurlyBraceParser.CSharp
     }
     #endregion
 
-    public static class PublicEntryPoint
-    {
-        public static List<AssemblyProcessorOutput> ProcessAssemblies(this List<Assembly> Assemblies)
-        {
-            var returnObj = new List<AssemblyProcessorOutput>();
-            foreach (var assembly in Assemblies)
-            {
-                var processor = assembly.GetCustomAttribute<BaseAssemblyProcessorAttribute>();
-                if (processor != null)
-                {
-                    var processed = processor.Processor.Process(assembly);
-                    returnObj.AddRange(processed);
-                }
-            }
-            return returnObj;
-        }
-    }
+    
 
     #region Type Processors
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited=true)]
@@ -94,6 +79,15 @@ namespace CurlyBraceParser.CSharp
         public AutoGeneratePropertiesFromInterfaceAttribute()
         {
             this.Processor = new PropertiesFromInterfaceImplementor();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited=true)]
+    public class AutoGenerateExtensionMethodsFromTypeAttribute : BaseTypeProcessorAttribute
+    {
+        public AutoGenerateExtensionMethodsFromTypeAttribute()
+        {
+            this.Processor = new ExtensionMethodsImplementor();
         }
     }
 

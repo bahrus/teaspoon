@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bin\Debug\InterfaceTestLibrary.extensionLibs.cs" />
     <Compile Include="bin\Debug\InterfaceTestLibrary.implementingClasses.cs" />
     <Compile Include="DoNithing.cs" />
     <Compile Include="Ext\A\ExtA.cs" />
@@ -47,9 +48,7 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="B\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\CurlyBraceParser\CurlyBraceParser.csproj">
       <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>

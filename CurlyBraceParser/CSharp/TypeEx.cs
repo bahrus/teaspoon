@@ -52,6 +52,16 @@ namespace CurlyBraceParser.CSharp
                 | BindingFlags.Public | BindingFlags.Instance);
         }
 
+        public static string FullQName(this Type type)
+        {
+            var fn = type.FullName.Replace('+', '.');
+            switch (fn)
+            {
+                case "System.Void":
+                    return "void";
+                default: return fn;
+            }
+        }
     }
 
     

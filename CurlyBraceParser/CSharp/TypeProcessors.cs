@@ -18,7 +18,7 @@ namespace CurlyBraceParser.CSharp
             string declaringTypeName = typeInfoEx.Type.DeclaringType != null ? typeInfoEx.Type.DeclaringType.Name : null;
             string className = typeInfoEx.Type.Name + (declaringTypeName == null ? string.Empty : "_" + declaringTypeName) + "_defaultImpl";
             Block.IncrementLevel();
-            using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullName.Replace("+", ".")))
+            using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQName()))
             {
                 #region public partial class
                 var allProperties = typeInfoEx.Props.ToList();
@@ -72,7 +72,7 @@ namespace CurlyBraceParser.CSharp
             string className = typeInfoEx.Type.Name;
             Block.IncrementLevel();
             var typeToImplement = (typeInfoEx.ProcessorAttribute as AutoGeneratePropertiesFromInterfaceAttribute).InterfaceTypeToImplement;
-            using (new Block("public partial class " + className + " : " + typeToImplement.FullName.Replace("+", ".")))
+            using (new Block("public partial class " + className + " : " + typeToImplement.FullQName()))
             {
                 #region public partial class
                 var allProperties = typeInfoEx.Props.ToList();
@@ -84,6 +84,57 @@ namespace CurlyBraceParser.CSharp
                 }
 
                 #endregion
+            }
+            Block.DecrementLevel();
+            typeInfoEx.OutputNamespace = typeInfoEx.Type.Namespace;
+            typeInfoEx.OutputContent = Block.Text;
+        }
+    }
+
+    public class ExtensionMethodsImplementor : IProcessType
+    {
+        public void Process(TypeInfoEx typeInfoEx)
+        {
+            
+            string className = typeInfoEx.Type.Name + "_ext";
+            Block.IncrementLevel();
+            using (new Block("public static class " + className))
+            {
+                Block.AppendStatement("private static " + typeInfoEx.Type.Name + " _this");
+                using (new Block("static " + className + "()"))
+                {
+                    Block.AppendStatement("_this = new " + typeInfoEx.Type.Name + "()");
+                }
+                var methods = typeInfoEx.Type.GetMethods().Where(method =>{
+                    switch(method.Name){
+                        case "ToString":
+                        case "Equals":
+                        case "GetHashCode":
+                        case "GetType":
+                            return false;
+                        default:
+                            return true;
+                    }
+
+                });
+                foreach (var method in methods)
+                {
+                    var incomingArgs = method.GetParameters()
+                        .Select(pi => pi.ParameterType.FullQName() + " " + pi.Name +
+                            (pi.HasDefaultValue ? "=" + pi.DefaultValue : null))
+                        .ToList();
+                    if (incomingArgs.Count > 0)
+                    {
+                        incomingArgs[0] = "this " + incomingArgs[0];
+                    }
+                    var callingArgs = method.GetParameters()
+                        .Select(pi => pi.Name)
+                        .ToList();
+                    using (new Block("public static " + method.ReturnType.FullQName() + " " + method.Name + "(" + string.Join(", ", incomingArgs) + ")"))
+                    {
+                        Block.AppendStatement("_this." + method.Name + "(" + string.Join(", ", callingArgs) + ")");
+                    }
+                }
             }
             Block.DecrementLevel();
             typeInfoEx.OutputNamespace = typeInfoEx.Type.Namespace;

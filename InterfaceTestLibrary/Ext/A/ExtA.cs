@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CurlyBraceParser.CSharp;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,7 @@ namespace InterfaceTestLibrary.Ext.A
         {
             ExtensionLib = new ExtensionLib();
         }
-        public static void DoA(this LibA.InterfaceA iA)
-        {
-            if (iA == null) return;
-            ExtensionLib.DoA(iA);
-        }
+        
 
         public static void DoB(this LibA.InterfaceA iA)
         {
@@ -42,7 +39,7 @@ namespace InterfaceTestLibrary.Ext.A
 
     }
 
-    [GeneratedCodeAttribute("tsp", "1")]
+    [AutoGenerateExtensionMethodsFromType]
     public class ExtensionLib
     {
         public void DoA(LibA.InterfaceA iA)
