@@ -27,23 +27,19 @@ namespace InterfaceTestLibrary.Ext.A
         {
         }
 
-        public static Expression<Action<LibA.InterfaceA>> eA = ia => ia.DoA();
+        //public static Expression<Action<LibA.InterfaceA>> eA = ia => ia.DoA();
         public static Expression<Action<LibA.InterfaceA>> eB = ia => ia.DoB();
         public static Expression<Action<LibA.InterfaceA>> eC = ia => ia.DoC();
 
-        public static List<Expression> Inherit1 = new List<Expression>{
-            eA, eB
-        };
+        //public static List<Expression> Inherit1 = new List<Expression>{
+        //    eA, eB
+        //};
 
         
 
     }
 
-    [AutoGenerateExtensionMethodsFromType]
-    public class ExtensionLib
-    {
-        public void DoA(LibA.InterfaceA iA)
-        {
-        }
-    }
+
+
+   
 }

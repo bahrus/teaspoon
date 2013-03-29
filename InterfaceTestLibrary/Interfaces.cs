@@ -35,18 +35,57 @@ namespace InterfaceTestLibrary
 
             string StringProp7 { get; set; }
 
-            InterfaceTestLibrary.Ext.A.ExtensionLib ExtA { get; set; }
+            //InterfaceTestLibrary.Ext.A.ExtensionLib ExtA { get; set; }
 
-            InterfaceTestLibrary.Ext.B.ExtensionLib ExtB { get; set; }
+            //InterfaceTestLibrary.Ext.B.ExtensionLib ExtB { get; set; }
+
+            
             
         }
 
         
     }
 
-    [AutoGeneratePropertiesFromInterface(InterfaceTypeToImplement =  typeof(LibA.InterfaceA))]
+    [AutoGenerateProperties(AssociatedType =  typeof(LibA.InterfaceA))]
     public partial class ClassA
     {
         public string StringPropX { get; set; }
+    }
+
+    [AutoGenerateNamingClass]
+    public class NamesOfElements
+    {
+
+        public const string Canvas = "canvas";
+
+        public const string Div = "div";
+    }
+
+    [AutoGenerateExtensionMethods(AssociatedType = typeof(LibA.InterfaceA))]
+    public class ExtensionLib
+    {
+        public virtual void DoA(LibA.InterfaceA iA)
+        {
+            
+        }
+
+        public void Create(LibA.InterfaceA iA, Elements.DivString Div)
+        {
+        }
+
+        public void Create(LibA.InterfaceA iA, Elements.CanvasString Canvas)
+        {
+        }
+
+
+    }
+
+    [AutoGenerateExtensionMethods(AssociatedType = typeof(LibA.InterfaceA))]
+    public class ExtensionLib2 : ExtensionLib
+    {
+        public override void DoA(LibA.InterfaceA iA)
+        {
+            base.DoA(iA);
+        }
     }
 }

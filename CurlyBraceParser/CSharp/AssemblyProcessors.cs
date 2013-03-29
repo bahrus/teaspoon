@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 
 namespace CurlyBraceParser.CSharp
 {
@@ -39,19 +40,39 @@ namespace CurlyBraceParser.CSharp
             {
                 var processor = typeEx.ProcessorAttribute.Processor ?? Activator.CreateInstance(typeEx.ProcessorAttribute.ProcessorType) as IProcessType;
                 processor.Process(typeEx);
+                if (typeEx.ProcessorAttribute.SubProcessors != null)
+                {
+                    
+                }
                 return typeEx;
             })
             .GroupBy(typeEx => typeEx.OutputNamespace)
             .Select(grp =>
             {
+                
                 using (new Block("namespace " + grp.Key))
                 {
-                    grp.ToList().ForEach(typeInfoEx => Block.AppendBlock(typeInfoEx.OutputContent));
+                    grp.ToList().ForEach(typeInfoEx => {
+                        Block.AppendBlock(typeInfoEx.OutputContent);
+                    });
+                    
                 }
                 return Block.Text;
             });
-
-            return string.Join("\r\n", typeStrings.ToArray());
+            //var sbSubProcessorsContent = new StringBuilder();
+            var typeSubString = typesEx
+                .Where(typeEx => typeEx.ProcessorAttribute.SubProcessors != null)
+                .Select(typeEx =>
+            {
+                
+                typeEx.ProcessorAttribute.SubProcessors.ForEach(subprocessor =>
+                {
+                    subprocessor.Process(typeEx);
+                });
+                return typeEx.SubProcessorContent;
+            });
+            var typeAndTypeSubStrings = typeStrings.Union(typeSubString);
+            return string.Join("\r\n", typeAndTypeSubStrings.ToArray());
         } 
     }
 
@@ -78,7 +99,7 @@ namespace CurlyBraceParser.CSharp
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
         {
-            string interfaces = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute <AutoGeneratePropertiesFromInterfaceAttribute>() != null);
+            string interfaces = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute <AutoGeneratePropertiesAttribute>() != null);
             var ret = new List<AssemblyProcessorOutput>();
             var interf = new AssemblyProcessorOutput
             {
@@ -96,12 +117,30 @@ namespace CurlyBraceParser.CSharp
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
         {
-            string interfaces = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute<AutoGenerateExtensionMethodsFromTypeAttribute>() != null);
+            string extensionClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute<AutoGenerateExtensionMethodsAttribute>() != null);
             var ret = new List<AssemblyProcessorOutput>();
             var interf = new AssemblyProcessorOutput
             {
-                FileContent = interfaces,
+                FileContent = extensionClasses,
                 FileName = assembly.FullName.SubstringBefore(",") + ".extensionLibs.cs",
+            };
+            ret.Add(interf);
+            return ret;
+        }
+    }
+    #endregion
+
+    #region NamingClass -> NameClass
+    public class AssemblyProcessorToCreateNamingClasses : IProcessAssembly
+    {
+        public List<AssemblyProcessorOutput> Process(Assembly assembly)
+        {
+            string namingClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute<AutoGenerateNamingClassAttribute>() != null);
+            var ret = new List<AssemblyProcessorOutput>();
+            var interf = new AssemblyProcessorOutput
+            {
+                FileContent = namingClasses,
+                FileName = assembly.FullName.SubstringBefore(",") + ".namingClasses.cs",
             };
             ret.Add(interf);
             return ret;

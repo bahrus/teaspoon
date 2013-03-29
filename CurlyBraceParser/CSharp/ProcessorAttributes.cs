@@ -28,6 +28,7 @@ namespace CurlyBraceParser.CSharp
                     new AssemblyProcessorToBuildClassFromInterface(),
                     new AssemblyProcessorToExtendClassFromInterface(),
                     new AssemblyProcessorToCreateExtensionLibraryFromTypes(),
+                    new AssemblyProcessorToCreateNamingClasses()
                 }
             };
         }
@@ -59,7 +60,11 @@ namespace CurlyBraceParser.CSharp
     {
         public Type ProcessorType { get; set; }
 
+        public Type AssociatedType { get; set; }
+
         public IProcessType Processor { get; set; }
+
+        public List<IProcessType> SubProcessors { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Interface, Inherited = true)]
@@ -72,22 +77,35 @@ namespace CurlyBraceParser.CSharp
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = true)]
-    public class AutoGeneratePropertiesFromInterfaceAttribute : BaseTypeProcessorAttribute
+    public class AutoGeneratePropertiesAttribute : BaseTypeProcessorAttribute
     {
-        public Type InterfaceTypeToImplement { get; set; }
+        
 
-        public AutoGeneratePropertiesFromInterfaceAttribute()
+        public AutoGeneratePropertiesAttribute()
         {
             this.Processor = new PropertiesFromInterfaceImplementor();
         }
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited=true)]
-    public class AutoGenerateExtensionMethodsFromTypeAttribute : BaseTypeProcessorAttribute
+    public class AutoGenerateExtensionMethodsAttribute : BaseTypeProcessorAttribute
     {
-        public AutoGenerateExtensionMethodsFromTypeAttribute()
+        public AutoGenerateExtensionMethodsAttribute()
         {
             this.Processor = new ExtensionMethodsImplementor();
+            this.SubProcessors = new List<IProcessType>
+            {
+                new ExtensionMethodsReferencer(),
+            };
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
+    public class AutoGenerateNamingClassAttribute : BaseTypeProcessorAttribute
+    {
+        public AutoGenerateNamingClassAttribute()
+        {
+            this.Processor = new AutoGenerateNames();
         }
     }
 

@@ -10,6 +10,8 @@ namespace CurlyBraceParser.CSharp
     {
         public Type Type { get; set; }
 
+        public Type AssociatedType { get; set; }
+
         public IEnumerable<PropertyInfoEx> Props { get; set; }
 
         //public Type TypeToImplement { get; set; }
@@ -19,5 +21,7 @@ namespace CurlyBraceParser.CSharp
         public string OutputNamespace { get; set; }
 
         public string OutputContent { get; set; }
+
+        public string SubProcessorContent { get; set; }
     }
 }

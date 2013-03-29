@@ -47,43 +47,17 @@ namespace TypeStrictTests
         public void TestInterfaceToClassConstructor()
         {
             var b = new DoNothing();
-            //var assemblies = this.GetType().Assembly.GetReferencedAssemblies().ToList();
-            //var assemblyToClasses = new Dictionary<string, string>();
-            //this.GetType().Assembly.GetReferencedAssemblies().ToList().ForEach(assemblyName =>
-            //{
-            //    var assembly = Assembly.Load(assemblyName);
-            //    var generatedCodeAttribute =  assembly.GetCustomAttribute<GeneratedCodeAttribute>();
-            //    if (generatedCodeAttribute == null) return;
-            //    if (generatedCodeAttribute.Tool != "tsp") return;
-            //    assemblyToClasses[assemblyName.Name] = assembly.InterfacesToConstructorClasses();
-            //});
+            
             var c = new InterfaceTestLibrary.InterfaceA_LibA_defaultImpl(
                 StringProp2: "Hello",
                 StringProp3: "World"
             );
+            ///InterfaceTestLibrary.
             var ggg = new InterfaceTestLibrary.ClassA
             {
                 StringProp1 = "hi",
             };
-            //var defaultImplCasses = this.GetType().Assembly.ToDefaultImplClasses();
-            //var d = System.Environment.CurrentDirectory;
-            //foreach (var implClass in defaultImplCasses)
-            //{
-            //    string filePath = d + "\\" + implClass.Key + ".defaultImpl.cs";
-            //    var fi = new FileInfo(filePath);
-            //    if (fi.Exists)
-            //    {
-            //        var rs = fi.OpenText();
-            //        string content = rs.ReadToEnd();
-            //        rs.Close();
-            //        if (content == implClass.Value) continue;
-            //    }
-            //    fi.Delete();
-            //    using (var sw = new StreamWriter(filePath))
-            //    {
-            //        sw.Write(implClass.Value);
-            //        sw.Close();
-            //    }
+            
                         
                     
                 

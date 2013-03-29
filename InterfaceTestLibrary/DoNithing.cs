@@ -11,7 +11,7 @@ namespace InterfaceTestLibrary
     {
         public void DoSomething(LibA.InterfaceA a)
         {
-            a.ExtA = new ExtensionLib();
+            //a.cre = new ExtensionLib();
         }
 
         

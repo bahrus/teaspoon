@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -52,15 +53,51 @@ namespace CurlyBraceParser.CSharp
                 | BindingFlags.Public | BindingFlags.Instance);
         }
 
-        public static string FullQName(this Type type)
+        public static string FullQName(this Type type, string rootNS)
         {
             var fn = type.FullName.Replace('+', '.');
+            string rootNSDot = rootNS + ".";
+            if (fn.StartsWith(rootNSDot)) fn = fn.SubstringAfter(rootNSDot);
             switch (fn)
             {
                 case "System.Void":
                     return "void";
                 default: return fn;
             }
+        }
+
+
+        /// <SUMMARY>
+        /// This method will return all the constants from a particular
+        /// type including the constants from all the base types.  from http://weblogs.asp.net/whaggard/archive/2003/02/20/2708.aspx
+        /// </SUMMARY>
+        /// <PARAM NAME="TYPE">type to get the constants for</PARAM>
+        /// <RETURNS>array of FieldInfos for all the constants</RETURNS>
+        public static  FieldInfo[] GetConstants(this Type type)
+        {
+            ArrayList constants = new ArrayList();
+
+            FieldInfo[] fieldInfos = type.GetFields(
+                // Gets all public and static fields
+
+                BindingFlags.Public | BindingFlags.Static |
+                // This tells it to get the fields from all base types as well
+
+                BindingFlags.FlattenHierarchy);
+
+            // Go through the list and only pick out the constants
+            foreach (FieldInfo fi in fieldInfos)
+                // IsLiteral determines if its value is written at 
+                //   compile time and not changeable
+                // IsInitOnly determine if the field can be set 
+                //   in the body of the constructor
+                // for C# a field which is readonly keyword would have both true 
+                //   but a const field would have only IsLiteral equal to true
+                if (fi.IsLiteral && !fi.IsInitOnly)
+                    constants.Add(fi);
+
+            // Return an array of FieldInfos
+            return (FieldInfo[])constants.ToArray(typeof(FieldInfo));
         }
     }
 
