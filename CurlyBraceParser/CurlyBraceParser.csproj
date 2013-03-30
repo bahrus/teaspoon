@@ -47,6 +47,7 @@
     <Compile Include="Control.cs" />
     <Compile Include="CSharp\AssemblyProcessors.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
+    <Compile Include="CSharp\ListEx.cs" />
     <Compile Include="CSharp\NameTypes.cs" />
     <Compile Include="CSharp\PublicEntryPoint.cs" />
     <Compile Include="CSharp\TypeEx.cs" />

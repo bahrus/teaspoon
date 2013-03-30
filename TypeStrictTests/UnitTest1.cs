@@ -8,6 +8,7 @@ using System.Reflection;
 using System.CodeDom.Compiler;
 using InterfaceTestLibrary;
 using System.Collections.Generic;
+using InterfaceTestLibrary.ExtensionLib_extns;
 
 
 namespace TypeStrictTests
@@ -48,12 +49,14 @@ namespace TypeStrictTests
         {
             var b = new DoNothing();
             
-            var c = new InterfaceTestLibrary.InterfaceA_LibA_defaultImpl(
+            var c = new InterfaceA_LibA_defaultImpl(
                 StringProp2: "Hello",
                 StringProp3: "World"
             );
+            
+            c.Create(Elements.Canvas);
             ///InterfaceTestLibrary.
-            var ggg = new InterfaceTestLibrary.ClassA
+            var ggg = new ClassA
             {
                 StringProp1 = "hi",
             };

@@ -1,5 +1,6 @@
 ﻿using CurlyBraceParser.CSharp;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -77,7 +78,12 @@ namespace InterfaceTestLibrary
         {
         }
 
+        public List<LibA.InterfaceA> CreateMultiple(string name, LibA.InterfaceA iA)
+        {
+            return null;
+        }
 
+        public void IgnoreThis(string name, object test) { }
     }
 
     [AutoGenerateExtensionMethods(AssociatedType = typeof(LibA.InterfaceA))]

@@ -55,9 +55,24 @@ namespace CurlyBraceParser.CSharp
 
         public static string FullQName(this Type type, string rootNS)
         {
+            if (type.IsGenericType)
+            {
+                string genericBase = type.FullName.SubstringBefore("`");
+                if (rootNS != null)
+                {
+                    string rootNSDot = rootNS + ".";
+                    if (genericBase.StartsWith(rootNSDot)) genericBase = genericBase.SubstringAfter(rootNSDot);
+                    
+                }
+                var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQName(rootNS));
+                return genericBase + "<" + String.Join(", ", args.ToArray()) + ">";
+            }
             var fn = type.FullName.Replace('+', '.');
-            string rootNSDot = rootNS + ".";
-            if (fn.StartsWith(rootNSDot)) fn = fn.SubstringAfter(rootNSDot);
+            if (rootNS != null)
+            {
+                string rootNSDot = rootNS + ".";
+                if (fn.StartsWith(rootNSDot)) fn = fn.SubstringAfter(rootNSDot);
+            }
             switch (fn)
             {
                 case "System.Void":

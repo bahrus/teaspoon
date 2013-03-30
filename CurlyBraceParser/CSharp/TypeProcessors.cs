@@ -138,20 +138,33 @@ namespace CurlyBraceParser.CSharp
                 });
                 foreach (var method in methods)
                 {
-                    var incomingArgs = method.GetParameters()
+                    var methodParams = method.GetParameters(); 
+                    var incomingArgs =methodParams
                         .Select(pi => pi.ParameterType.FullQName(ns) + " " + pi.Name +
                             (pi.HasDefaultValue ? "=" + pi.DefaultValue : null))
                         .ToList();
+                    
+                    var callingArgs = method.GetParameters()
+                        .Select(pi => pi.Name)
+                        .ToList();
+                    int indxOfTargetType = methodParams.Select(pi => pi.ParameterType).ToList().FindIndex(t => t == typeInfoEx.ProcessorAttribute.AssociatedType);
+                    if (indxOfTargetType > 0)
+                    {
+                        incomingArgs.MoveItem(indxOfTargetType, 0);
+                        //callingArgs.MoveItem(indxOfTargetType, 0);
+                    }
+                    else if (indxOfTargetType < 0)
+                    {
+                        continue;
+                    }
                     if (incomingArgs.Count > 0)
                     {
                         incomingArgs[0] = "this " + incomingArgs[0];
                     }
-                    var callingArgs = method.GetParameters()
-                        .Select(pi => pi.Name)
-                        .ToList();
-                    using (new Block("public static " + method.ReturnType.FullQName(ns) + " " + method.Name + "(" + string.Join(", ", incomingArgs) + ")"))
+                    string returnTypeString = method.ReturnType.FullQName(ns);
+                    using (new Block("public static " + returnTypeString + " " + method.Name + "(" + string.Join(", ", incomingArgs) + ")"))
                     {
-                        Block.AppendStatement("_this." + method.Name + "(" + string.Join(", ", callingArgs) + ")");
+                        Block.AppendStatement((returnTypeString == "void" ? string.Empty : "return ") +  "_this." + method.Name + "(" + string.Join(", ", callingArgs) + ")");
                     }
                 }
                 #endregion
