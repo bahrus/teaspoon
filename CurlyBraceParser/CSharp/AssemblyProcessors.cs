@@ -140,7 +140,7 @@ namespace CurlyBraceParser.CSharp
             var interf = new AssemblyProcessorOutput
             {
                 FileContent = namingClasses,
-                FileName = assembly.FullName.SubstringBefore(",") + ".namingClasses.cs",
+                FileName = assembly.FullName.SubstringBefore(",") + ".extensionLibs.cs",  //".namingClasses.cs",
             };
             ret.Add(interf);
             return ret;

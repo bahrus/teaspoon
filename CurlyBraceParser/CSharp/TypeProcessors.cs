@@ -90,7 +90,6 @@ namespace CurlyBraceParser.CSharp
             typeInfoEx.OutputContent = Block.Text;
         }
     }
-
     
     public class ExtensionMethodsImplementor : IProcessType
     {

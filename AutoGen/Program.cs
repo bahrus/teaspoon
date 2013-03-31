@@ -21,25 +21,49 @@ namespace AutoGen
             var assemblyList = files.Select(file => Assembly.LoadFile(file.FullName)).ToList();
 
             var processedAssemblies = assemblyList.ProcessAssemblies();
-
-            foreach (var procOutput in processedAssemblies)
+            var fileGroupings = processedAssemblies.GroupBy(apo => apo.FileName);
+            foreach (var fileGrouping in fileGroupings)
             {
-                string filePath = dirIno.FullName + "\\" + procOutput.FileName;
+                var sb = new StringBuilder();
+                foreach (var apo in fileGrouping)
+                {
+                    sb.AppendLine(apo.FileContent);
+                }
+                string SrcContent = sb.ToString();
+                string filePath = dirIno.FullName + "\\" + fileGrouping.Key;
                 var fi = new FileInfo(filePath);
                 if (fi.Exists)
                 {
                     var rs = fi.OpenText();
                     string content = rs.ReadToEnd();
                     rs.Close();
-                    if (content == procOutput.FileContent) continue;
+                    if (content == SrcContent) continue;
                 }
                 fi.Delete();
                 using (var sw = new StreamWriter(filePath))
                 {
-                    sw.Write(procOutput.FileContent);
+                    sw.Write(SrcContent);
                     sw.Close();
                 }
             }
+            //foreach (var procOutput in processedAssemblies)
+            //{
+            //    string filePath = dirIno.FullName + "\\" + procOutput.FileName;
+            //    var fi = new FileInfo(filePath);
+            //    if (fi.Exists)
+            //    {
+            //        var rs = fi.OpenText();
+            //        string content = rs.ReadToEnd();
+            //        rs.Close();
+            //        if (content == procOutput.FileContent) continue;
+            //    }
+            //    fi.Delete();
+            //    using (var sw = new StreamWriter(filePath))
+            //    {
+            //        sw.Write(procOutput.FileContent);
+            //        sw.Close();
+            //    }
+            //}
             
         }
     }

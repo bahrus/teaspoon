@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="bin\Debug\InterfaceTestLibrary.extensionLibs.cs" />
     <Compile Include="bin\Debug\InterfaceTestLibrary.implementingClasses.cs" />
-    <Compile Include="bin\Debug\InterfaceTestLibrary.namingClasses.cs" />
     <Compile Include="DoNithing.cs" />
     <Compile Include="Ext\A\ExtA.cs" />
     <Compile Include="Ext\B\ExtB.cs" />
