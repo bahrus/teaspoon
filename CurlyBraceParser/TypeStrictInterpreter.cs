@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClassGenMacros;
 
 namespace CurlyBraceParser
 {
@@ -28,9 +29,9 @@ namespace CurlyBraceParser
         //public static VariableOpenBraceStatement To
         #endregion
 
-        public static List<Line> GetOutline(this List<Line> lines, ProcessedFile pf)
+        public static List<ILine> GetOutline(this List<ILine> lines, ProcessedFile pf)
         {
-            var returnObj = new List<Line>();
+            var returnObj = new List<ILine>();
             foreach (var line in lines)
             {
                 GetOutline(line, returnObj, pf);
@@ -39,15 +40,15 @@ namespace CurlyBraceParser
             return returnObj;
         }
 
-        private static void GetOutline(Line line, List<Line> OutputLines, ProcessedFile pf)
+        private static void GetOutline(ILine line, List<ILine> OutputLines, ProcessedFile pf)
         {
             
-            var statement = line as OpenBraceStatement;
+            var statement = line as IOpenBraceStatement;
             if (statement == null)
             {
                 if (line.IsReference())
                 {
-                    var refStatement = line.ToReferenceStatement();
+                    var refStatement = new ReferenceStatement(line);
                     pf.References[refStatement.ClientSideReference] = refStatement;
                     OutputLines.Add(refStatement);
                 }
@@ -60,25 +61,28 @@ namespace CurlyBraceParser
             bool recurse = true;
             if (statement.IsInterface())
             {
-                var interfaceStatement = statement.ToInterface();
+                //var interfaceStatement = statement.ToInterface();
+                var interfaceStatement = new InterfaceStatement(statement);
                 pf.Interfaces[interfaceStatement.Name] = interfaceStatement;
-                statement = interfaceStatement;
+                statement = interfaceStatement as IOpenBraceStatement;
                 recurse = false;
             }
             else if (statement.IsFunction())
             {
-                var functionStatement = statement.ToFunction();
-                pf.Functions[functionStatement.FullName] = statement.ToFunction(); 
+                //var functionStatement = statement.ToFunction();
+                var functionStatement = new StaticFunctionStatement(statement);
+                pf.Functions[functionStatement.GetFullName()] = functionStatement; 
             }
             else if (statement.IsClass())
             {
-                var classStatement = statement.ToClass();
+                var classStatement = new ClassStatement(statement);
                 pf.Classes[classStatement.Name] = classStatement;
                 statement = classStatement;
             }
             else if (statement.IsModule())
             {
-                var moduleStatement = statement.ToModule();
+                //var moduleStatement = statement.ToModule();
+                var moduleStatement = new ModuleStatement(statement);
                 pf.Modules[moduleStatement.FullName] = moduleStatement;
                 statement = moduleStatement;
             }
@@ -86,7 +90,7 @@ namespace CurlyBraceParser
             OutputLines.Add(statement);
             if (statement.Children != null && recurse)
             {
-                var newc = new List<Line>();
+                var newc = new List<ILine>();
                 foreach (var childLine in statement.Children)
                 {
                     GetOutline(childLine, newc, pf);
@@ -95,7 +99,7 @@ namespace CurlyBraceParser
             }
         }
 
-        public static Parameter ToParameter(this String arg, Statement statement)
+        public static Parameter ToParameter(this String arg, IHaveLiveStatement statement)
         {
             string defVal = arg.Contains("=") ? arg.SubstringAfter("=").Trim() : null;
             string type = null;

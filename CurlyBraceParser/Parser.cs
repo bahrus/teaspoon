@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClassGenMacros;
 
 namespace CurlyBraceParser
 {
@@ -12,7 +13,7 @@ namespace CurlyBraceParser
         public static char[] OpenChars   = new char[] { '(', '{', '[', '<' };
         public static char[] ClosedChars = new char[] { ')', '}', ']', '>' };
 
-        public static List<Line> Parse(string TypeStrict)
+        public static List<ILine> Parse(string TypeStrict)
         {
             #region Break Down Text into Lines
             var sr = new StringReader(TypeStrict);
@@ -22,8 +23,8 @@ namespace CurlyBraceParser
                 lines.Add(sr.ReadLine());
             }
             #endregion
-            var returnObj = new List<Line>();
-            var stack = new Stack<OpenStatement>();
+            var returnObj = new List<ILine>();
+            var stack = new Stack<IOpenStatement>();
             int lineNo = 1;
             bool insideComment = false;
             foreach (string line in lines)
@@ -242,17 +243,21 @@ namespace CurlyBraceParser
                     #endregion
 
                 }
-                Line baseLine = null;
+                ILine baseLine = null;
                 if (openChars == null || openChars.Count == 0)
                 {
                     #region Simple Statment
+                    var newline = new Line
+                    {
+                        LineNumber = lineNo
+                    };
                     if (liveStatement.Count == 0)
                     {
-                        baseLine = new Line();
+                        baseLine = newline;
                     }
                     else
                     {
-                        baseLine = new Statement();
+                        baseLine = new Statement(newline);
                     }
                     #endregion
                     if (stack == null)
@@ -268,7 +273,7 @@ namespace CurlyBraceParser
                         else
                         {
                             var op = stack.Peek();
-                            if (op.Children == null) op.Children = new List<Line>();
+                            if (op.Children == null) op.Children = new List<ILine>();
                             baseLine.Parent = op;
                             op.Children.Add(baseLine);
                         }
@@ -287,15 +292,20 @@ namespace CurlyBraceParser
                         if (openChars.ElementAt(1) == '(')
                         {
                             var lastOpenChar = openChars.ElementAt(0);
+                            var newline = new Line
+                            {
+                                LineNumber = lineNo,
+                            };
+                            var baseStatement = new Statement(newline);
                             switch (lastOpenChar)
                             {
                                 case '(':
                                     throw new Exception("Error in Line No " + lineNo + ": If two open chars in one line, they can't both be (");
                                 case '[':
-                                    baseLine = new OpenParenOpenBracketStatement();
+                                    baseLine = new OpenParenOpenBracketStatement(baseStatement);
                                     break;
                                 case '{':
-                                    baseLine = new OpenParenOpenBraceStatement();
+                                    baseLine = new OpenParenOpenBraceStatement(baseStatement);
                                     break;
                             }
                         }
@@ -309,15 +319,20 @@ namespace CurlyBraceParser
                     {
                         #region one char open
                         char openChar = openChars.ElementAt(0);
+                        var newline = new Line
+                        {
+                            LineNumber = lineNo,
+                        };
+                        var baseStatement = new Statement(newline);
                         switch (openChar)
                         {
                             case '(':
                                 throw new Exception("Error in Line No " + lineNo + ": Can't end with (");
                             case '[':
-                                baseLine = new OpenBracketStatement();
+                                baseLine = new OpenBracketStatement(baseStatement);
                                 break;
                             case '{':
-                                baseLine = new OpenBraceStatement();
+                                baseLine = new OpenBraceStatement(baseStatement);
                                 break;
                         }
                         #endregion
@@ -330,17 +345,17 @@ namespace CurlyBraceParser
                     else
                     {
                         var op = stack.Peek();
-                        if (op.Children == null) op.Children = new List<Line>();
+                        if (op.Children == null) op.Children = new List<ILine>();
                         baseLine.Parent = op;
                         op.Children.Add(baseLine);
                     }
-                    stack.Push(baseLine as OpenStatement);
+                    stack.Push(baseLine as IOpenStatement);
                 }
                 if (commentChars != null)
                 {
                     baseLine.Comment = new string(commentChars.ToArray());
                 }
-                var statement = baseLine as Statement;
+                var statement = baseLine as IHaveLiveStatement;
                 if (statement != null)
                 {
                     var charArray = liveStatement.ToArray();
@@ -374,7 +389,7 @@ namespace CurlyBraceParser
                 FilePath = FilePath,
             };
             files[FilePath] = pf;
-            List<Line> list = null;
+            List<ILine> list = null;
             using (var sr = new StreamReader(FilePath))
             {
                 string content = sr.ReadToEnd();
@@ -399,14 +414,178 @@ namespace CurlyBraceParser
 
     
 
-    public class OpenBraceStatement : OpenStatement{}
+    public partial class OpenBraceStatement : IOpenBraceStatement{
 
-    public class OpenParenOpenBraceStatement : OpenStatement{}
+        public ILine Line { get; set; }
+        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public OpenBraceStatement(IHaveLiveStatement liveStatement)
+        {
+            this.LiveStatementBase = liveStatement;
+            this.Line = liveStatement.Line;
+        }
 
-    public class OpenBracketStatement : OpenStatement{}
+        public List<ILine> Children { get; set; }
 
-    public class OpenParenOpenBracketStatement : OpenStatement { }
+        public string ClosingLineComment { get; set; }
 
+        public string OptionalLineSeparator { get; set; }
+
+        public string ClosingLine { get; set; }
+    }
+
+    public partial class OpenBraceStatement : ILine
+    {
+
+        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+
+        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
+
+
+        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+
+
+        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+
+        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
+    }
+
+    public partial class OpenBraceStatement : IHaveLiveStatement
+    {
+        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+
+        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+
+    }
+
+    public partial class OpenParenOpenBraceStatement : IOpenStatement{
     
+        public ILine Line { get; set; }
+        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public OpenParenOpenBraceStatement (IHaveLiveStatement liveStatement)
+        {
+            this.LiveStatementBase = liveStatement;
+            this.Line = liveStatement.Line;
+        }
+
+        public List<ILine> Children { get; set; }
+
+        public string ClosingLineComment { get; set; }
+
+        public string OptionalLineSeparator { get; set; }
+
+        public string ClosingLine { get; set; }
+    }
+
+    public partial class OpenParenOpenBraceStatement : IOpenStatement
+    {
+        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+
+        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
+
+
+        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+
+
+        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+
+        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
+    }
+
+    public partial class OpenParenOpenBraceStatement : IHaveLiveStatement
+    {
+        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+
+        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+
+    }
+
+
+
+    public partial class OpenBracketStatement : IOpenStatement{
+        public ILine Line { get; set; }
+        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public OpenBracketStatement (IHaveLiveStatement liveStatement)
+        {
+            this.LiveStatementBase = liveStatement;
+            this.Line = liveStatement.Line;
+        }
+
+        //public OpenBraceStatement(){
+        //    this.LiveStatementBase = new Statement();
+        //}
+
+        public List<ILine> Children { get; set; }
+
+        public string ClosingLineComment { get; set; }
+
+        public string OptionalLineSeparator { get; set; }
+
+        public string ClosingLine { get; set; }
+    }
+
+    public partial class OpenBracketStatement : IOpenStatement
+    {
+        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+
+        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
+
+
+        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+
+
+        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+
+        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     
+    }
+
+    public partial class OpenBracketStatement : IHaveLiveStatement
+    {
+        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+
+        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+
+    }
+
+    public partial class OpenParenOpenBracketStatement : IOpenStatement { 
+        public ILine Line { get; set; }
+        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public OpenParenOpenBracketStatement(IHaveLiveStatement liveStatement)
+        {
+            this.LiveStatementBase = liveStatement;
+            this.Line = liveStatement.Line;
+        }
+
+        public List<ILine> Children { get; set; }
+
+        public string ClosingLineComment { get; set; }
+
+        public string OptionalLineSeparator { get; set; }
+
+        public string ClosingLine { get; set; }
+    
+    }
+
+    public partial class OpenParenOpenBracketStatement : IOpenStatement
+    {
+        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+
+        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
+
+
+        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+
+
+        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+
+        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
+    }
+
+    public partial class OpenParenOpenBracketStatement : IHaveLiveStatement
+    {
+        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+
+        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+
+    }
 }

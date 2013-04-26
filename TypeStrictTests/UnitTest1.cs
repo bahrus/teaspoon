@@ -88,9 +88,9 @@ namespace InterfaceTestLibrary
             return new InterfaceA_LibA_defaultImpl(StringProp2, StringProp3, StringProp1, StringProp4, StringProp5, StringProp6, StringProp7);
         }
 
-        public static CurlyBraceParser.InterfaceStatement Create<T>(this CurlyBraceParser.ICanBePublicStatement _this, System.String StringProp2, System.String StringProp3, System.String StringProp1 = "Hello", System.String StringProp4 = null, System.String StringProp5 = null, System.String StringProp6 = null, System.String StringProp7 = null) where T : CurlyBraceParser.ICanBePublicStatement
-        {
-            return new CurlyBraceParser.InterfaceStatement();
-        }
+        //public static CurlyBraceParser.InterfaceStatement Create<T>(this CurlyBraceParser.ICanBePublicStatement _this, System.String StringProp2, System.String StringProp3, System.String StringProp1 = "Hello", System.String StringProp4 = null, System.String StringProp5 = null, System.String StringProp6 = null, System.String StringProp7 = null) where T : CurlyBraceParser.ICanBePublicStatement
+        //{
+        //    return new CurlyBraceParser.InterfaceStatement();
+        //}
     }
 }

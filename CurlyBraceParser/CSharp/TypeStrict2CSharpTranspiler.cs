@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClassGenMacros;
 
 namespace CurlyBraceParser.CSharp
 {
@@ -99,6 +100,6 @@ namespace CurlyBraceParser.CSharp
         public VSProject Project { get; set; }
         public ProcessedFile CurrentTypeStrictFile { get; set; }
         public CSharpFile CurrentCSharpOutputFile { get; set; }
-        public Line CurrentLine{get;set;}
+        public ILine CurrentLine{get;set;}
     }
 }

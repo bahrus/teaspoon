@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
-namespace CurlyBraceParser.CSharp
+namespace ClassGenMacros
 {
 
     public interface IProcessAssembly

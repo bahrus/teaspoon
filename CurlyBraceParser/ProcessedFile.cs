@@ -15,7 +15,7 @@ namespace CurlyBraceParser
         }
         public string FilePath { get; set; }
 
-        public List<Line> Lines { get; set; }
+        public List<ILine> Lines { get; set; }
 
         public Dictionary<string, InterfaceStatement> Interfaces { get; set; }
 

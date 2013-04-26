@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurlyBraceParser
+namespace ClassGenMacros
 {
     public static class TypeMatch
     {
@@ -19,6 +19,8 @@ namespace CurlyBraceParser
             Do(objT);
             return null;
         }
+
+         
 
         public static object ElseIfType<T>(this object Obj, Action<T> Do) where T : class
         {

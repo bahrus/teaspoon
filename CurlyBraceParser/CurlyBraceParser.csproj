@@ -43,24 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bin\Debug\CurlyBraceParser.defaultImpl.cs" />
     <Compile Include="ClassStatement.cs" />
-    <Compile Include="Control.cs" />
-    <Compile Include="CSharp\AssemblyProcessors.cs" />
+    <Compile Include="CSharp\ContentGenerator.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
-    <Compile Include="CSharp\ListEx.cs" />
     <Compile Include="CSharp\NameTypes.cs" />
-    <Compile Include="CSharp\PublicEntryPoint.cs" />
-    <Compile Include="CSharp\TypeEx.cs" />
     <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
-    <Compile Include="CSharp\ProcessorAttributes.cs" />
-    <Compile Include="CSharp\PropertyInfoEx.cs" />
-    <Compile Include="CSharp\RequiredAttribute.cs" />
-    <Compile Include="CSharp\TypeInfoEx.cs" />
-    <Compile Include="CSharp\TypeProcessors.cs" />
     <Compile Include="CSharp\TypeStrict2CSharpTranspiler.cs" />
     <Compile Include="CSharp\VSProject.cs" />
     <Compile Include="DOM\HtmlDocumentFacade.cs" />
     <Compile Include="ICanBePublicStatement.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="InterfaceStatement.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="ModuleStatement.cs" />
@@ -73,15 +66,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticFunctionStatement.cs" />
     <Compile Include="StaticMethodStatement.cs" />
-    <Compile Include="StringEx.cs" />
-    <Compile Include="TypeMatch.cs" />
     <Compile Include="TypeStrictInterpreter.cs" />
     <Compile Include="VariableOpenStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ClassGenMacros\ClassGenMacros.csproj">
+      <Project>{acade0c9-f545-4648-8359-506f3d5fa416}</Project>
+      <Name>ClassGenMacros</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

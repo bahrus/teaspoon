@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurlyBraceParser.CSharp
+namespace ClassGenMacros
 {
     public static class ListEx
     {

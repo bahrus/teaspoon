@@ -48,11 +48,10 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\CurlyBraceParser\CurlyBraceParser.csproj">
-      <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
-      <Name>CurlyBraceParser</Name>
+    <ProjectReference Include="..\ClassGenMacros\ClassGenMacros.csproj">
+      <Project>{acade0c9-f545-4648-8359-506f3d5fa416}</Project>
+      <Name>ClassGenMacros</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

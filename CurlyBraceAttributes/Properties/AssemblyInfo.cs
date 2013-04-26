@@ -1,27 +1,26 @@
-﻿using ClassGenMacros;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CurlyBraceParser")]
+[assembly: AssemblyTitle("CurlyBraceAttributes")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CurlyBraceParser")]
+[assembly: AssemblyProduct("CurlyBraceAttributes")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyProcessor]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access assemblies type in this assembly from 
+// to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d76472ce-51f4-45eb-9bf0-68acf2073d03")]
+[assembly: Guid("bdfcde2e-87f0-4ef5-8dde-3e7ba2b2f9fc")]
 
 // Version information for an assembly consists of the following four values:
 //

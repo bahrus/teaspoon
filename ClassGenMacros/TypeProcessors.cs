@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurlyBraceParser.CSharp
+namespace ClassGenMacros
 {
     public interface IProcessType
     {
@@ -16,7 +16,15 @@ namespace CurlyBraceParser.CSharp
         public void Process(TypeInfoEx typeInfoEx)
         {
             string declaringTypeName = typeInfoEx.Type.DeclaringType != null ? typeInfoEx.Type.DeclaringType.Name : null;
-            string className = typeInfoEx.Type.Name + (declaringTypeName == null ? string.Empty : "_" + declaringTypeName) + "_defaultImpl";
+            string originalInterfaceName = typeInfoEx.Type.Name;
+            bool isStandardInterfaceName = originalInterfaceName.StartsWith("I")
+                && originalInterfaceName.Length > 1
+                && originalInterfaceName.Substring(1, 1) == originalInterfaceName.Substring(1, 1).ToUpper();
+            string shortClassName = isStandardInterfaceName ? originalInterfaceName.Substring(1) : originalInterfaceName;
+            string className = typeInfoEx.ProcessorAttribute.ClassImplementorName ??
+                shortClassName + (declaringTypeName == null ?
+                    string.Empty : "_" + declaringTypeName);
+            if(!isStandardInterfaceName) className += "_defaultImpl";
             Block.IncrementLevel();
             using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQName(typeInfoEx.Type.Namespace)))
             {

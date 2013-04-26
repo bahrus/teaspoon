@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 
 
-namespace CurlyBraceParser.CSharp
+namespace ClassGenMacros
 {
     public static class TypeEx
     {

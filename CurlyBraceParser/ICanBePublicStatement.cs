@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 namespace CurlyBraceParser
 {
-    public interface ICanBePublicStatement  
-    {
-        bool Public { get; set; }
-    }
+    //public interface ICanBePublicStatement  
+    //{
+    //    bool Public { get; set; }
+    //}
 
     public static class CanBePublicStatementCode
     {
@@ -22,19 +22,21 @@ namespace CurlyBraceParser
           _stateTable = new ConditionalWeakTable<Statement, State>();
 
         // to access the state:
-        public static string GetStatementWithoutPublicKeyWord(this Statement self)
+        public static string GetStatementWithoutPublicKeyWord(this IHaveLiveStatement self)
         {
-            return _stateTable.GetOrCreateValue(self).StatementWithoutPublicKeyWord;
+            return _stateTable.GetOrCreateValue(self as Statement).StatementWithoutPublicKeyWord;
         }
-        public static void SetStatementWithoutPublicKeyWord(this Statement self, string value)
+        public static void SetStatementWithoutPublicKeyWord(this IHaveLiveStatement self, string value)
         {
-            _stateTable.GetOrCreateValue(self).StatementWithoutPublicKeyWord = value;
+            _stateTable.GetOrCreateValue(self as Statement).StatementWithoutPublicKeyWord = value;
         }
 
-        public static bool GetStatementIsPublic(this Statement self)
+        public static bool GetStatementIsPublic(this IHaveLiveStatement self)
         {
+            //var ls = self as IHaveLiveStatement;
+            //var statement = self as Statement;
             if (self == null || string.IsNullOrEmpty(self.LiveStatement)) return false;
-            if (_stateTable.GetOrCreateValue(self).IsPublic == null)
+            if (_stateTable.GetOrCreateValue(self as Statement).IsPublic == null)
             {
                 if (self.FrontTrimmedLiveStatement.StartsWith(TypeStrictInterpreter.PublicKeyword))
                 {
@@ -48,12 +50,12 @@ namespace CurlyBraceParser
                     self.SetStatementIsPublic(false);
                 }
             }
-            return (bool)_stateTable.GetOrCreateValue(self).IsPublic;
+            return (bool)_stateTable.GetOrCreateValue(self as Statement).IsPublic;
         }
 
-        public static void SetStatementIsPublic(this Statement self, bool value)
+        public static void SetStatementIsPublic(this IHaveLiveStatement self, bool value)
         {
-            _stateTable.GetOrCreateValue(self).IsPublic = value;
+            _stateTable.GetOrCreateValue(self as Statement).IsPublic = value;
         }
     }
 }

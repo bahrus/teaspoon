@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurlyBraceParser.CSharp
+namespace ClassGenMacros
 {
     #region Assembly Processors
     [AttributeUsage(AttributeTargets.Assembly, Inherited=true)]
@@ -65,6 +65,8 @@ namespace CurlyBraceParser.CSharp
         public IProcessType Processor { get; set; }
 
         public List<IProcessType> SubProcessors { get; set; }
+
+        public string ClassImplementorName { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Interface, Inherited = true)]
@@ -74,6 +76,8 @@ namespace CurlyBraceParser.CSharp
         {
             this.Processor = new DefaultClassImplementor(); 
         }
+
+        
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = true)]
