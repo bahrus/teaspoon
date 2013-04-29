@@ -52,8 +52,6 @@ namespace ClassGenMacros
     }
     #endregion
 
-    
-
     #region Type Processors
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited=true)]
     public class BaseTypeProcessorAttribute : Attribute
@@ -113,5 +111,11 @@ namespace ClassGenMacros
         }
     }
 
+    #endregion
+
+    #region PropertyAttributes
+    public class PassThroughComponentAttribute : Attribute
+    {
+    }
     #endregion
 }

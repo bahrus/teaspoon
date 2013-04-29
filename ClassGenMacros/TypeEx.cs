@@ -81,6 +81,15 @@ namespace ClassGenMacros
             }
         }
 
+        public static string ToCharpValue(this object Obj)
+        {
+            if (Obj == null) return "null";
+            if (Obj is string)
+            {
+                return "\"" + Obj + "\"";
+            }
+            return Obj.ToString();
+        }
 
         /// <SUMMARY>
         /// This method will return all the constants from a particular

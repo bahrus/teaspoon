@@ -11,67 +11,7 @@ namespace ClassGenMacros
         void Process(TypeInfoEx typeInfoEx);
     }
 
-    public class DefaultClassImplementor : IProcessType
-    {
-        public void Process(TypeInfoEx typeInfoEx)
-        {
-            string declaringTypeName = typeInfoEx.Type.DeclaringType != null ? typeInfoEx.Type.DeclaringType.Name : null;
-            string originalInterfaceName = typeInfoEx.Type.Name;
-            bool isStandardInterfaceName = originalInterfaceName.StartsWith("I")
-                && originalInterfaceName.Length > 1
-                && originalInterfaceName.Substring(1, 1) == originalInterfaceName.Substring(1, 1).ToUpper();
-            string shortClassName = isStandardInterfaceName ? originalInterfaceName.Substring(1) : originalInterfaceName;
-            string className = typeInfoEx.ProcessorAttribute.ClassImplementorName ??
-                shortClassName + (declaringTypeName == null ?
-                    string.Empty : "_" + declaringTypeName);
-            if(!isStandardInterfaceName) className += "_defaultImpl";
-            Block.IncrementLevel();
-            using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQName(typeInfoEx.Type.Namespace)))
-            {
-                #region public partial class
-                var allProperties = typeInfoEx.Props.ToList();
-                var propertiesWithDefaultValues = new List<PropertyInfoEx>();
-                var requiredProperties = new List<PropertyInfoEx>();
-                var optionalPropertiesWithNoDefaultValues = new List<PropertyInfoEx>();
-                foreach (var prop in allProperties)
-                {
-                    #region public property
-                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
-                    if (prop.DefaultValue != null)
-                    {
-                        propertiesWithDefaultValues.Add(prop);
-                    }
-                    else if (prop.Required != null)
-                    {
-                        requiredProperties.Add(prop);
-                    }
-                    else
-                    {
-                        optionalPropertiesWithNoDefaultValues.Add(prop);
-                    }
-                    #endregion
-                }
-
-                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name);
-                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
-                    p.DefaultValue.Value.ToCharpValue());
-                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
-                    p.PropertyInfo.PropertyType.ToDefaultCSharpValue());
-                var allParams = reqParams.Union(defParams).Union(optionalParams);
-                using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))
-                {
-                    foreach (var prop in allProperties)
-                    {
-                        Block.AppendClosingStatement("this." + prop.PropertyInfo.Name + " = " + prop.PropertyInfo.Name + ";");
-                    }
-                }
-                #endregion
-            }
-            Block.DecrementLevel();
-            typeInfoEx.OutputNamespace = typeInfoEx.Type.Namespace;
-            typeInfoEx.OutputContent = Block.Text;
-        }
-    }
+    
 
     public class PropertiesFromInterfaceImplementor : IProcessType
     {

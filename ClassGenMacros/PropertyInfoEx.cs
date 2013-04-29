@@ -12,6 +12,7 @@ namespace ClassGenMacros
 
         public RequiredAttribute Required { get; set; }
 
-
     }
+
+
 }

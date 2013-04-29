@@ -28,21 +28,17 @@ namespace ClassGenMacros
             return IfType<T>(Obj, Do);
         }
 
-        public static string ToCharpValue(this object Obj)
-        {
-            if (Obj == null) return "null";
-            if (Obj is string)
-            {
-                return "\"" + Obj + "\"";
-            }
-            return Obj.ToString();
-        }
+        
 
         public static string ToDefaultCSharpValue(this Type type)
         {
             if (type == typeof(int))
             {
                 return "0";
+            }
+            else if (type == typeof(bool))
+            {
+                return "false";
             }
             return "null";
         }

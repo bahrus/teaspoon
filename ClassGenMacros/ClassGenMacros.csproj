@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="AssemblyProcessors.cs" />
     <Compile Include="Control.cs" />
+    <Compile Include="DefaultClassImplementor.cs" />
     <Compile Include="ListEx.cs" />
     <Compile Include="ProcessorAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
