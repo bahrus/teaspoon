@@ -18,25 +18,25 @@ namespace CurlyBraceParser
             public string StatementWithoutPublicKeyWord;
             public bool? IsPublic;
         }
-        private static readonly ConditionalWeakTable<Statement, State>
-          _stateTable = new ConditionalWeakTable<Statement, State>();
+        private static readonly ConditionalWeakTable<LiveStatement, State>
+          _stateTable = new ConditionalWeakTable<LiveStatement, State>();
 
         // to access the state:
-        public static string GetStatementWithoutPublicKeyWord(this IHaveLiveStatement self)
+        public static string GetStatementWithoutPublicKeyWord(this ILiveStatement self)
         {
-            return _stateTable.GetOrCreateValue(self as Statement).StatementWithoutPublicKeyWord;
+            return _stateTable.GetOrCreateValue(self as LiveStatement).StatementWithoutPublicKeyWord;
         }
-        public static void SetStatementWithoutPublicKeyWord(this IHaveLiveStatement self, string value)
+        public static void SetStatementWithoutPublicKeyWord(this ILiveStatement self, string value)
         {
-            _stateTable.GetOrCreateValue(self as Statement).StatementWithoutPublicKeyWord = value;
+            _stateTable.GetOrCreateValue(self as LiveStatement).StatementWithoutPublicKeyWord = value;
         }
 
-        public static bool GetStatementIsPublic(this IHaveLiveStatement self)
+        public static bool GetStatementIsPublic(this ILiveStatement self)
         {
-            //var ls = self as IHaveLiveStatement;
+            //var ls = self as ILiveStatement;
             //var statement = self as Statement;
-            if (self == null || string.IsNullOrEmpty(self.LiveStatement)) return false;
-            if (_stateTable.GetOrCreateValue(self as Statement).IsPublic == null)
+            if (self == null || string.IsNullOrEmpty(self.Statement)) return false;
+            if (_stateTable.GetOrCreateValue(self as LiveStatement).IsPublic == null)
             {
                 if (self.FrontTrimmedLiveStatement.StartsWith(TypeStrictInterpreter.PublicKeyword))
                 {
@@ -50,12 +50,12 @@ namespace CurlyBraceParser
                     self.SetStatementIsPublic(false);
                 }
             }
-            return (bool)_stateTable.GetOrCreateValue(self as Statement).IsPublic;
+            return (bool)_stateTable.GetOrCreateValue(self as LiveStatement).IsPublic;
         }
 
-        public static void SetStatementIsPublic(this IHaveLiveStatement self, bool value)
+        public static void SetStatementIsPublic(this ILiveStatement self, bool value)
         {
-            _stateTable.GetOrCreateValue(self as Statement).IsPublic = value;
+            _stateTable.GetOrCreateValue(self as LiveStatement).IsPublic = value;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace CurlyBraceParser
     public partial class ModuleStatement
     {
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
         public ModuleStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -35,8 +35,8 @@ namespace CurlyBraceParser
         public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
     }
 
-    public partial class ModuleStatement : IHaveLiveStatement {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+    public partial class ModuleStatement : ILiveStatement {
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
@@ -66,7 +66,7 @@ namespace CurlyBraceParser
         
         public static bool IsModule(this IOpenBraceStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
             return statement.LiveStatementBase.FrontTrimmedLiveStatement.StartsWith(ModuleKeyword);
         }
 

@@ -11,7 +11,7 @@ namespace CurlyBraceParser
     public partial class VariableOpenBraceStatement
     {
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
         public VariableOpenBraceStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -37,9 +37,9 @@ namespace CurlyBraceParser
         public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
     }
 
-    public partial class VariableOpenBraceStatement : IHaveLiveStatement
+    public partial class VariableOpenBraceStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 
@@ -63,19 +63,19 @@ namespace CurlyBraceParser
 
     public partial class VariableStatement
     {
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
-        public VariableStatement(IHaveLiveStatement baseLiveStatement)
+        public VariableStatement(ILiveStatement baseLiveStatement)
         {
             this.LiveStatementBase = baseLiveStatement;
             this.Line = baseLiveStatement.Line;
         }
     }
 
-    public partial class VariableStatement  : IHaveLiveStatement
+    public partial class VariableStatement  : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 
@@ -104,10 +104,10 @@ namespace CurlyBraceParser
     {
         public const string VariableKeyword = "var";
 
-        public static bool IsVariable(this Statement statement)
+        public static bool IsVariable(this LiveStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
-            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.LiveStatement;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
+            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
             return statementWithoutPublicKeyword.StartsWith(VariableKeyword);
         }
 

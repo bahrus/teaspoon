@@ -12,6 +12,8 @@ namespace ClassGenMacros
 
         public RequiredAttribute Required { get; set; }
 
+        public DoNotAutoGenerateAttribute Ignore { get; set; }
+
     }
 
 

@@ -41,7 +41,7 @@ namespace CurlyBraceParser
         public const string referenceLink = "/<reference path=";
         public static bool IsReference(this ILine line)
         {
-            var statement = line as IHaveLiveStatement;
+            var statement = line as ILiveStatement;
             if (statement != null) return false;
             if (string.IsNullOrEmpty(line.Comment)) return false;
             return line.Comment.StartsWith(referenceLink);

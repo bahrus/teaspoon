@@ -56,12 +56,11 @@
     <Compile Include="Interfaces.cs" />
     <Compile Include="InterfaceStatement.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="LiveStatement.cs" />
     <Compile Include="ModuleStatement.cs" />
-    <Compile Include="OpenStatement.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="ProcessedFile.cs" />
     <Compile Include="ReferenceStatement.cs" />
-    <Compile Include="Statement.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticFunctionStatement.cs" />

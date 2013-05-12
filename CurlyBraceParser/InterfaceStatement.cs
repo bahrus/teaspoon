@@ -10,7 +10,7 @@ namespace CurlyBraceParser
     public partial class InterfaceStatement
     {
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
         public InterfaceStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -40,9 +40,9 @@ namespace CurlyBraceParser
         public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
     }
 
-    public partial class InterfaceStatement : IHaveLiveStatement
+    public partial class InterfaceStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
     }
@@ -70,11 +70,11 @@ namespace CurlyBraceParser
         #region Interface
         public const string InterfaceKeyword = "interface";
 
-        public static bool IsInterface(this IHaveLiveStatement statement)
+        public static bool IsInterface(this ILiveStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
             var am = statement as IHaveAccessModifier;
-            string statementWithoutPublicKeyword = (am!= null && am.Public) ? statement.GetStatementWithoutPublicKeyWord() : statement.LiveStatement;
+            string statementWithoutPublicKeyword = (am!= null && am.Public) ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
             return statementWithoutPublicKeyword.StartsWith(InterfaceKeyword);
         }
 

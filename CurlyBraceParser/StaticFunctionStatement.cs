@@ -9,7 +9,7 @@ namespace CurlyBraceParser
     public partial class StaticFunctionStatement
     {
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
         
         public StaticFunctionStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -56,8 +56,8 @@ namespace CurlyBraceParser
         public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
     }
 
-    public partial class StaticFunctionStatement : IHaveLiveStatement {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+    public partial class StaticFunctionStatement : ILiveStatement {
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
     }
@@ -97,10 +97,10 @@ namespace CurlyBraceParser
             }
         }
 
-        public static bool IsFunction(this IHaveLiveStatement statement)
+        public static bool IsFunction(this ILiveStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
-            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.LiveStatement;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
+            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
             return statementWithoutPublicKeyword.StartsWith(FunctionKeyword);
         }
 

@@ -117,5 +117,11 @@ namespace ClassGenMacros
     public class PassThroughComponentAttribute : Attribute
     {
     }
+
+    public class DoNotAutoGenerateAttribute : Attribute
+    {
+    }
     #endregion
+
+    
 }

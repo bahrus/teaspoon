@@ -46,6 +46,7 @@ namespace ClassGenMacros
                 var propertiesWithDefaultValues = new List<PropertyInfoEx>();
                 var requiredProperties = new List<PropertyInfoEx>();
                 var optionalPropertiesWithNoDefaultValues = new List<PropertyInfoEx>();
+                var optionalOrRequiredProperties = new List<PropertyInfoEx>();
                 foreach (var kvp in passThroughLookup)
                 {
                     using (new Block("public " + kvp.Value.SubPropertyTypeString + " " + kvp.Key))
@@ -57,7 +58,8 @@ namespace ClassGenMacros
                 foreach (var prop in allProperties)
                 {
                     if(passThroughLookup.ContainsKey(prop.PropertyInfo.Name)) continue;
-                    #region public property
+                    #region public propert
+                    if (prop.Ignore != null) continue;
                     Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
                     if (prop.DefaultValue != null)
                     {
@@ -71,10 +73,12 @@ namespace ClassGenMacros
                     {
                         optionalPropertiesWithNoDefaultValues.Add(prop);
                     }
+                    optionalOrRequiredProperties.Add(prop);
                     #endregion
                 }
 
                 var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name);
+                
                 var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
                     p.DefaultValue.Value.ToCharpValue());
                 var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
@@ -82,7 +86,7 @@ namespace ClassGenMacros
                 var allParams = reqParams.Union(defParams).Union(optionalParams);
                 using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))
                 {
-                    foreach (var prop in allProperties)
+                    foreach (var prop in optionalOrRequiredProperties)
                     {
                         Block.AppendClosingStatement("this." + prop.PropertyInfo.Name + " = " + prop.PropertyInfo.Name + ";");
                     }

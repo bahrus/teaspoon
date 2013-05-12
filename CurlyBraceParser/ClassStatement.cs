@@ -9,7 +9,7 @@ namespace CurlyBraceParser
     public partial class ClassStatement 
     {
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
         public ClassStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -37,9 +37,9 @@ namespace CurlyBraceParser
         public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
     }
 
-    public partial class ClassStatement : IHaveLiveStatement
+    public partial class ClassStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
     }
@@ -66,10 +66,10 @@ namespace CurlyBraceParser
         #region Class
         public const string ClassKeyword = "class";
 
-        public static bool IsClass(this IHaveLiveStatement statement)
+        public static bool IsClass(this ILiveStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
-            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.LiveStatement;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
+            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
             return statementWithoutPublicKeyword.StartsWith(ClassKeyword);
         }
 

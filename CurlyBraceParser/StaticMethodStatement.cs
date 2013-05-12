@@ -7,7 +7,7 @@ namespace CurlyBraceParser
         
 
         public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
+        public ILiveStatement LiveStatementBase { get; set; }
         public ILine Line { get; set; }
 
         public StaticMethodStatement(IOpenBraceStatement baseOpenBraceStatement)
@@ -22,7 +22,7 @@ namespace CurlyBraceParser
     {
         public string Name { get; set; }
 
-        public List<Statement> Parameters { get; set; }
+        public List<LiveStatement> Parameters { get; set; }
 
         public string ReturnType { get; set; }
     }
@@ -53,9 +53,9 @@ namespace CurlyBraceParser
         public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     }
 
-    public partial class StaticMethodStatement : IHaveLiveStatement
+    public partial class StaticMethodStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }

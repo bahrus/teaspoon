@@ -257,7 +257,7 @@ namespace CurlyBraceParser
                     }
                     else
                     {
-                        baseLine = new Statement(newline);
+                        baseLine = new LiveStatement(Line: newline);
                     }
                     #endregion
                     if (stack == null)
@@ -296,7 +296,7 @@ namespace CurlyBraceParser
                             {
                                 LineNumber = lineNo,
                             };
-                            var baseStatement = new Statement(newline);
+                            var baseStatement = new LiveStatement(Line: newline);
                             switch (lastOpenChar)
                             {
                                 case '(':
@@ -323,7 +323,7 @@ namespace CurlyBraceParser
                         {
                             LineNumber = lineNo,
                         };
-                        var baseStatement = new Statement(newline);
+                        var baseStatement = new LiveStatement(Line: newline);
                         switch (openChar)
                         {
                             case '(':
@@ -355,12 +355,12 @@ namespace CurlyBraceParser
                 {
                     baseLine.Comment = new string(commentChars.ToArray());
                 }
-                var statement = baseLine as IHaveLiveStatement;
+                var statement = baseLine as ILiveStatement;
                 if (statement != null)
                 {
                     var charArray = liveStatement.ToArray();
                     string s = new string(charArray);
-                    statement.LiveStatement = s;
+                    statement.Statement = s;
                 }
                 #endregion
                 lineNo++;
@@ -417,8 +417,8 @@ namespace CurlyBraceParser
     public partial class OpenBraceStatement : IOpenBraceStatement{
 
         public ILine Line { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
-        public OpenBraceStatement(IHaveLiveStatement liveStatement)
+        public ILiveStatement LiveStatementBase { get; set; }
+        public OpenBraceStatement(ILiveStatement liveStatement)
         {
             this.LiveStatementBase = liveStatement;
             this.Line = liveStatement.Line;
@@ -449,9 +449,9 @@ namespace CurlyBraceParser
         public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     }
 
-    public partial class OpenBraceStatement : IHaveLiveStatement
+    public partial class OpenBraceStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 
@@ -460,8 +460,8 @@ namespace CurlyBraceParser
     public partial class OpenParenOpenBraceStatement : IOpenStatement{
     
         public ILine Line { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
-        public OpenParenOpenBraceStatement (IHaveLiveStatement liveStatement)
+        public ILiveStatement LiveStatementBase { get; set; }
+        public OpenParenOpenBraceStatement (ILiveStatement liveStatement)
         {
             this.LiveStatementBase = liveStatement;
             this.Line = liveStatement.Line;
@@ -491,9 +491,9 @@ namespace CurlyBraceParser
         public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     }
 
-    public partial class OpenParenOpenBraceStatement : IHaveLiveStatement
+    public partial class OpenParenOpenBraceStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 
@@ -503,8 +503,8 @@ namespace CurlyBraceParser
 
     public partial class OpenBracketStatement : IOpenStatement{
         public ILine Line { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
-        public OpenBracketStatement (IHaveLiveStatement liveStatement)
+        public ILiveStatement LiveStatementBase { get; set; }
+        public OpenBracketStatement (ILiveStatement liveStatement)
         {
             this.LiveStatementBase = liveStatement;
             this.Line = liveStatement.Line;
@@ -539,9 +539,9 @@ namespace CurlyBraceParser
     
     }
 
-    public partial class OpenBracketStatement : IHaveLiveStatement
+    public partial class OpenBracketStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 
@@ -549,8 +549,8 @@ namespace CurlyBraceParser
 
     public partial class OpenParenOpenBracketStatement : IOpenStatement { 
         public ILine Line { get; set; }
-        public IHaveLiveStatement LiveStatementBase { get; set; }
-        public OpenParenOpenBracketStatement(IHaveLiveStatement liveStatement)
+        public ILiveStatement LiveStatementBase { get; set; }
+        public OpenParenOpenBracketStatement(ILiveStatement liveStatement)
         {
             this.LiveStatementBase = liveStatement;
             this.Line = liveStatement.Line;
@@ -581,9 +581,9 @@ namespace CurlyBraceParser
         public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     }
 
-    public partial class OpenParenOpenBracketStatement : IHaveLiveStatement
+    public partial class OpenParenOpenBracketStatement : ILiveStatement
     {
-        public string LiveStatement { get { return LiveStatementBase.LiveStatement; } set { LiveStatementBase.LiveStatement = value; } }
+        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
         public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
 

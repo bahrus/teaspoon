@@ -21,7 +21,7 @@ namespace CurlyBraceParser.CSharp
                     {
                         foreach (var line in IF.Children)
                         {
-                            line.IfType<Statement>(s => TranspileInterfaceStatement(s));
+                            line.IfType<LiveStatement>(s => TranspileInterfaceStatement(s));
                             //TranspileInterfaceStatement(line);
                         }
                     }
@@ -29,9 +29,9 @@ namespace CurlyBraceParser.CSharp
             }
         }
 
-        private static void TranspileInterfaceStatement(Statement st)
+        private static void TranspileInterfaceStatement(LiveStatement st)
         {
-            var ls = st.LiveStatement.Trim();
+            var ls = st.Statement.Trim();
             if (string.IsNullOrEmpty(ls)) return;
             //if (!ls.Contains(':')) return;
             var search = ls.FindChars(':', '(', ';');

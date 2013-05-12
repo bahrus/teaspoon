@@ -15,20 +15,20 @@ namespace CurlyBraceParser.CSharp
             return "//" + line.Comment;
         }
 
-        public static string GetContent(this IHaveLiveStatement liveStatement)
+        public static string GetContent(this ILiveStatement liveStatement)
         {
-            return liveStatement.LiveStatement + (string.IsNullOrEmpty(liveStatement.Comment) ? string.Empty : " //" + liveStatement.Comment);
+            return liveStatement.Statement + (string.IsNullOrEmpty(liveStatement.Comment) ? string.Empty : " //" + liveStatement.Comment);
         }
 
         public static string GetContent(this IOpenStatement openStatement)
         {
-            var liveStatement = openStatement as IHaveLiveStatement;
+            var liveStatement = openStatement as ILiveStatement;
             var sw = new StringWriter();
             sw.WriteLine(liveStatement.GetContent());
             foreach (var child in openStatement.Children)
             {
                 child.IfType<IOpenStatement>(os=> sw.WriteLine(os.GetContent()))
-                    .ElseIfType<IHaveLiveStatement>(ls => sw.WriteLine(ls.GetContent()))
+                    .ElseIfType<ILiveStatement>(ls => sw.WriteLine(ls.GetContent()))
                     .ElseIfType<ILine>(li => sw.WriteLine(li.GetContent()))
                 ;
             }

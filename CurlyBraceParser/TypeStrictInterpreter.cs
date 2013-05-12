@@ -20,9 +20,9 @@ namespace CurlyBraceParser
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
-        public static bool IsVariableDef(this Statement statement)
+        public static bool IsVariableDef(this LiveStatement statement)
         {
-            if (statement == null || string.IsNullOrEmpty(statement.LiveStatement)) return false;
+            if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
             return statement.FrontTrimmedLiveStatement.StartsWith(VariableKeyword);
         }
 
@@ -99,7 +99,7 @@ namespace CurlyBraceParser
             }
         }
 
-        public static Parameter ToParameter(this String arg, IHaveLiveStatement statement)
+        public static Parameter ToParameter(this String arg, ILiveStatement statement)
         {
             string defVal = arg.Contains("=") ? arg.SubstringAfter("=").Trim() : null;
             string type = null;
