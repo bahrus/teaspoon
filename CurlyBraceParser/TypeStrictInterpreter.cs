@@ -48,7 +48,7 @@ namespace CurlyBraceParser
             {
                 if (line.IsReference())
                 {
-                    var refStatement = new ReferenceStatement(line);
+                    var refStatement = new ReferenceStatement(Line: line);
                     pf.References[refStatement.ClientSideReference] = refStatement;
                     OutputLines.Add(refStatement);
                 }

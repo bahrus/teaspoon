@@ -25,18 +25,26 @@ namespace ClassGenMacros
             using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQName(typeInfoEx.Type.Namespace)))
             {
                 #region look for pass throughs
-
-                var passThroughs = typeInfoEx.Props.Where(prop => prop.PropertyInfo.GetCustomAttribute<PassThroughComponentAttribute>() != null);
+                var passThroughs = typeInfoEx.Props.Where(prop => prop.PassThrough != null);
+                //var passThroughs =  typeInfoEx.Props.Where(prop => prop.PropertyInfo.GetCustomAttribute<PassThroughComponentAttribute>() != null);
                 var passThroughLookup = new Dictionary<string, PassThroughInfo>();
-                passThroughs.ToList().ForEach(propInfoEx =>
+                var passThroughsList = passThroughs.ToList();
+                passThroughsList.Sort();
+                passThroughsList.Reverse();
+                passThroughsList.ForEach(propInfoEx =>
                 {
                     var passThroughProps = propInfoEx.PropertyInfo.PropertyType.GetPublicProperties();
                     foreach (var passThroughProp in passThroughProps)
                     {
+                        if(passThroughs.Any(propInfoEx2 => propInfoEx2.PropertyInfo.Name == passThroughProp.Name)) continue;
                         passThroughLookup[passThroughProp.Name] = new PassThroughInfo
                         {
-                           ComponentPassThroughProperty = propInfoEx.PropertyInfo.Name,
-                           SubPropertyTypeString = passThroughProp.PropertyType.FullName,
+                            ComponentPassThroughProperty = propInfoEx.PropertyInfo.Name,
+                            SubPropertyTypeString = passThroughProp.PropertyType.FullName,
+                            PropInfoEx = new PropertyInfoEx
+                            {
+                                PropertyInfo = passThroughProp,
+                            },
                         };
                     }
                 });
@@ -51,8 +59,15 @@ namespace ClassGenMacros
                 {
                     using (new Block("public " + kvp.Value.SubPropertyTypeString + " " + kvp.Key))
                     {
-                        Block.AppendClosingStatement("get {return this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + ";}");
-                        Block.AppendClosingStatement("set{this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + " = this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + ";}");
+                        var propInfo = kvp.Value.PropInfoEx.PropertyInfo;
+                        if (propInfo.CanRead)
+                        {
+                            Block.AppendClosingStatement("get {return this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + ";}");
+                        }
+                        if (propInfo.CanWrite)
+                        {
+                            Block.AppendClosingStatement("set{this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + " = this." + kvp.Value.ComponentPassThroughProperty + "." + kvp.Key + ";}");
+                        }
                     }
                 }
                 foreach (var prop in allProperties)
@@ -60,7 +75,17 @@ namespace ClassGenMacros
                     if(passThroughLookup.ContainsKey(prop.PropertyInfo.Name)) continue;
                     #region public propert
                     if (prop.Ignore != null) continue;
-                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullName + " " + prop.PropertyInfo.Name + "{get;set;}");
+                    string accessors = "{";
+                    if (prop.PropertyInfo.CanRead)
+                    {
+                        accessors += "get;";
+                    }
+                    if (prop.PropertyInfo.CanWrite)
+                    {
+                        accessors += "set;";
+                    }
+                    accessors += "}";
+                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + prop.PropertyInfo.Name + accessors);
                     if (prop.DefaultValue != null)
                     {
                         propertiesWithDefaultValues.Add(prop);
@@ -77,11 +102,11 @@ namespace ClassGenMacros
                     #endregion
                 }
 
-                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name);
+                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name);
                 
-                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
+                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
                     p.DefaultValue.Value.ToCharpValue());
-                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullName + " " + p.PropertyInfo.Name + " = " +
+                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
                     p.PropertyInfo.PropertyType.ToDefaultCSharpValue());
                 var allParams = reqParams.Union(defParams).Union(optionalParams);
                 using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))
@@ -104,6 +129,7 @@ namespace ClassGenMacros
 
             public string ComponentPassThroughProperty { get; set; }
             public string SubPropertyTypeString { get; set; }
+            public PropertyInfoEx PropInfoEx { get; set; }
         }
     }
 }

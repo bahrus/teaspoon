@@ -114,6 +114,7 @@ namespace ClassGenMacros
     #endregion
 
     #region PropertyAttributes
+    [AttributeUsage(AttributeTargets.Property, Inherited=true)]
     public class PassThroughComponentAttribute : Attribute
     {
     }

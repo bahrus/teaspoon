@@ -33,6 +33,7 @@ namespace ClassGenMacros
                         DefaultValue = prop.GetCustomAttribute<DefaultValueAttribute>(),
                         Required = prop.GetCustomAttribute<RequiredAttribute>(),
                         Ignore = prop.GetCustomAttribute<DoNotAutoGenerateAttribute>(),
+                        PassThrough = prop.GetCustomAttribute<PassThroughComponentAttribute>(),
                     }),
                     ProcessorAttribute = type.GetCustomAttribute<BaseTypeProcessorAttribute>(),
                 })

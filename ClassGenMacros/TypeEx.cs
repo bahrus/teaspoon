@@ -53,6 +53,8 @@ namespace ClassGenMacros
                 | BindingFlags.Public | BindingFlags.Instance);
         }
 
+        
+
         public static string FullQName(this Type type, string rootNS)
         {
             if (type.IsGenericType)

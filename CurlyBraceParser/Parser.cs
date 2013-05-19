@@ -332,7 +332,7 @@ namespace CurlyBraceParser
                                 baseLine = new OpenBracketStatement(baseStatement);
                                 break;
                             case '{':
-                                baseLine = new OpenBraceStatement(baseStatement);
+                                baseLine = new OpenBraceStatement(LiveStatementBase: baseStatement, Line: baseStatement.Line);
                                 break;
                         }
                         #endregion
@@ -414,48 +414,48 @@ namespace CurlyBraceParser
 
     
 
-    public partial class OpenBraceStatement : IOpenBraceStatement{
+    //public partial class OpenBraceStatement : IOpenBraceStatement{
 
-        public ILine Line { get; set; }
-        public ILiveStatement LiveStatementBase { get; set; }
-        public OpenBraceStatement(ILiveStatement liveStatement)
-        {
-            this.LiveStatementBase = liveStatement;
-            this.Line = liveStatement.Line;
-        }
+    //    public ILine Line { get; set; }
+    //    public ILiveStatement LiveStatementBase { get; set; }
+    //    public OpenBraceStatement(ILiveStatement liveStatement)
+    //    {
+    //        this.LiveStatementBase = liveStatement;
+    //        this.Line = liveStatement.Line;
+    //    }
 
-        public List<ILine> Children { get; set; }
+    //    public List<ILine> Children { get; set; }
 
-        public string ClosingLineComment { get; set; }
+    //    public string ClosingLineComment { get; set; }
 
-        public string OptionalLineSeparator { get; set; }
+    //    public string OptionalLineSeparator { get; set; }
 
-        public string ClosingLine { get; set; }
-    }
+    //    public string ClosingLine { get; set; }
+    //}
 
-    public partial class OpenBraceStatement : ILine
-    {
+    //public partial class OpenBraceStatement : ILine
+    //{
 
-        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+    //    public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
 
-        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
-
-
-        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+    //    public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
 
 
-        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+    //    public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
 
-        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
-    }
 
-    public partial class OpenBraceStatement : ILiveStatement
-    {
-        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
+    //    public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
 
-        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+    //    public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
+    //}
 
-    }
+    //public partial class OpenBraceStatement : ILiveStatement
+    //{
+    //    public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
+
+    //    public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+
+    //}
 
     public partial class OpenParenOpenBraceStatement : IOpenStatement{
     

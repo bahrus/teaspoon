@@ -55,7 +55,6 @@
     <Compile Include="ICanBePublicStatement.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="InterfaceStatement.cs" />
-    <Compile Include="Line.cs" />
     <Compile Include="LiveStatement.cs" />
     <Compile Include="ModuleStatement.cs" />
     <Compile Include="Parameter.cs" />
