@@ -32,6 +32,6 @@ namespace CurlyBraceParser.CSharp
             }
         }
 
-        public List<InterfaceStatement> Interfaces { get; set; }
+        public List<Interface> Interfaces { get; set; }
     }
 }

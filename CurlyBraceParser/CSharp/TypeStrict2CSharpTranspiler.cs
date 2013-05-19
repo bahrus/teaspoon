@@ -51,7 +51,7 @@ namespace CurlyBraceParser.CSharp
                     .IfType<ReferenceStatement>(refStatement =>
                     {
                     })
-                    .ElseIfType<ModuleStatement>(modStatement =>
+                    .ElseIfType<Module>(modStatement =>
                     {
                         string fn = modStatement.FullName;
                         if (fn.Contains('.'))
@@ -68,7 +68,7 @@ namespace CurlyBraceParser.CSharp
                 ;
         }
 
-        private static void ProcessModule(CSharpCompilerContext context, ModuleStatement mod)
+        private static void ProcessModule(CSharpCompilerContext context, Module mod)
         {
             if (mod.Children == null) return;
             foreach (var line in mod.Children)
@@ -82,11 +82,11 @@ namespace CurlyBraceParser.CSharp
         {
             var csharpFlie = context.CurrentCSharpOutputFile;
             context.CurrentLine
-                .IfType<InterfaceStatement>(interfaceStatement =>
+                .IfType<Interface>(interfaceStatement =>
                 {
                     if (csharpFlie.Interfaces == null)
                     {
-                        csharpFlie.Interfaces = new List<InterfaceStatement>();
+                        csharpFlie.Interfaces = new List<Interface>();
                     }
                     csharpFlie.Interfaces.Add(interfaceStatement);
                 });

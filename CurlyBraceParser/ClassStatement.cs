@@ -73,7 +73,7 @@ namespace CurlyBraceParser
             return statementWithoutPublicKeyword.StartsWith(ClassKeyword);
         }
 
-        //public static ClassStatement ToClass(this OpenBraceStatement statement)
+        //public static ClassStatement ToClass(this OpenBraceStatementBase statement)
         //{
         //    string name = statement.GetStatementWithoutPublicKeyWord().Substring(ClassKeyword.Length + 1).TrimStart();
         //    name = name.SubstringBefore(' ', '{');

@@ -414,11 +414,11 @@ namespace CurlyBraceParser
 
     
 
-    //public partial class OpenBraceStatement : IOpenBraceStatement{
+    //public partial class OpenBraceStatementBase : IOpenBraceStatement{
 
     //    public ILine Line { get; set; }
     //    public ILiveStatement LiveStatementBase { get; set; }
-    //    public OpenBraceStatement(ILiveStatement liveStatement)
+    //    public OpenBraceStatementBase(ILiveStatement liveStatement)
     //    {
     //        this.LiveStatementBase = liveStatement;
     //        this.Line = liveStatement.Line;
@@ -433,7 +433,7 @@ namespace CurlyBraceParser
     //    public string ClosingLine { get; set; }
     //}
 
-    //public partial class OpenBraceStatement : ILine
+    //public partial class OpenBraceStatementBase : ILine
     //{
 
     //    public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
@@ -449,7 +449,7 @@ namespace CurlyBraceParser
     //    public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
     //}
 
-    //public partial class OpenBraceStatement : ILiveStatement
+    //public partial class OpenBraceStatementBase : ILiveStatement
     //{
     //    public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
 
@@ -510,7 +510,7 @@ namespace CurlyBraceParser
             this.Line = liveStatement.Line;
         }
 
-        //public OpenBraceStatement(){
+        //public OpenBraceStatementBase(){
         //    this.LiveStatementBase = new Statement();
         //}
 

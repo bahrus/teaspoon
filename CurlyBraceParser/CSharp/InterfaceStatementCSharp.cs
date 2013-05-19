@@ -9,7 +9,7 @@ namespace CurlyBraceParser.CSharp
 {
     public static class InterfaceStatementCSharp
     {
-        public static void Content(this List<InterfaceStatement> Interfaces)
+        public static void Content(this List<Interface> Interfaces)
         {
             if (Interfaces == null) return;
             foreach (var IF in Interfaces)

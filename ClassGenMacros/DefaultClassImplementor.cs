@@ -40,7 +40,7 @@ namespace ClassGenMacros
                         passThroughLookup[passThroughProp.Name] = new PassThroughInfo
                         {
                             ComponentPassThroughProperty = propInfoEx.PropertyInfo.Name,
-                            SubPropertyTypeString = passThroughProp.PropertyType.FullName,
+                            SubPropertyTypeString = passThroughProp.PropertyType.FullQName(typeInfoEx.Type.Namespace),
                             PropInfoEx = new PropertyInfoEx
                             {
                                 PropertyInfo = passThroughProp,

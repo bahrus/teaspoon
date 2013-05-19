@@ -62,7 +62,11 @@ namespace CurlyBraceParser
             if (statement.IsInterface())
             {
                 //var interfaceStatement = statement.ToInterface();
-                var interfaceStatement = new InterfaceStatement(statement);
+                var interfaceStatement = new Interface(
+                    OpenBraceStatementBase: statement,
+                    LiveStatementBase: statement.LiveStatementBase,
+                    Line: statement.Line
+                );
                 pf.Interfaces[interfaceStatement.Name] = interfaceStatement;
                 statement = interfaceStatement as IOpenBraceStatement;
                 recurse = false;
@@ -70,7 +74,10 @@ namespace CurlyBraceParser
             else if (statement.IsFunction())
             {
                 //var functionStatement = statement.ToFunction();
-                var functionStatement = new StaticFunctionStatement(statement);
+                var functionStatement = new StaticFunction(
+                    OpenBraceStatementBase: statement, 
+                    LiveStatementBase:  statement.LiveStatementBase, 
+                    Line: statement.Line);
                 pf.Functions[functionStatement.GetFullName()] = functionStatement; 
             }
             else if (statement.IsClass())
@@ -82,7 +89,11 @@ namespace CurlyBraceParser
             else if (statement.IsModule())
             {
                 //var moduleStatement = statement.ToModule();
-                var moduleStatement = new ModuleStatement(statement);
+                var moduleStatement = new Module(
+                    OpenBraceStatementBase: statement,
+                    LiveStatementBase: statement.LiveStatementBase,
+                    Line: statement.Line
+                );
                 pf.Modules[moduleStatement.FullName] = moduleStatement;
                 statement = moduleStatement;
             }
