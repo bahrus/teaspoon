@@ -11,7 +11,7 @@ namespace CurlyBraceParser
             this.Functions = new Dictionary<string, StaticFunction>();
             this.Modules = new Dictionary<string, Module>();
             this.References = new Dictionary<string, ReferenceStatement>();
-            this.Classes = new Dictionary<string, ClassStatement>();
+            this.Classes = new Dictionary<string, Class>();
         }
         public string FilePath { get; set; }
 
@@ -25,7 +25,7 @@ namespace CurlyBraceParser
 
         public Dictionary<string, ReferenceStatement> References { get; set; }
 
-        public Dictionary<string, ClassStatement> Classes { get; set; }
+        public Dictionary<string, Class> Classes { get; set; }
 
         //public string ToCSharp()
         //{

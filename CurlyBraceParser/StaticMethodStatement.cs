@@ -2,62 +2,62 @@
 
 namespace CurlyBraceParser
 {
-    public partial class StaticMethodStatement : IOpenBraceStatement
-    {
+    //public partial class StaticMethodStatement : IOpenBraceStatement
+    //{
         
 
-        public IOpenBraceStatement OpenBraceStatement { get; set; }
-        public ILiveStatement LiveStatementBase { get; set; }
-        public ILine Line { get; set; }
+    //    public IOpenBraceStatement OpenBraceStatementBase { get; set; }
+    //    public ILiveStatement LiveStatementBase { get; set; }
+    //    public ILine Line { get; set; }
 
-        public StaticMethodStatement(IOpenBraceStatement baseOpenBraceStatement)
-        {
-            this.OpenBraceStatement = baseOpenBraceStatement;
-            this.LiveStatementBase = baseOpenBraceStatement.LiveStatementBase;
-            this.Line = baseOpenBraceStatement.Line;
-        }
-    }
+    //    public StaticMethodStatement(IOpenBraceStatement baseOpenBraceStatement)
+    //    {
+    //        this.OpenBraceStatementBase = baseOpenBraceStatement;
+    //        this.LiveStatementBase = baseOpenBraceStatement.LiveStatementBase;
+    //        this.Line = baseOpenBraceStatement.Line;
+    //    }
+    //}
 
-    public partial class StaticMethodStatement : IStaticInterfaceMethod
-    {
-        public string Name { get; set; }
+    //public partial class StaticMethodStatement : IStaticInterfaceMethod
+    //{
+    //    public string Name { get; set; }
 
-        public List<LiveStatement> Parameters { get; set; }
+    //    public List<LiveStatement> Parameters { get; set; }
 
-        public string ReturnType { get; set; }
-    }
+    //    public string ReturnType { get; set; }
+    //}
 
-    public partial class StaticMethodStatement
-    {
-        public List<ILine> Children { get { return this.OpenBraceStatement.Children; } set { this.OpenBraceStatement.Children = value; } }
+    //public partial class StaticMethodStatement
+    //{
+    //    public List<ILine> Children { get { return this.OpenBraceStatementBase.Children; } set { this.OpenBraceStatementBase.Children = value; } }
 
-        public string ClosingLineComment { get { return this.OpenBraceStatement.ClosingLineComment; } set { this.OpenBraceStatement.ClosingLineComment = value; } }
+    //    public string ClosingLineComment { get { return this.OpenBraceStatementBase.ClosingLineComment; } set { this.OpenBraceStatementBase.ClosingLineComment = value; } }
 
-        public string OptionalLineSeparator { get { return this.OpenBraceStatement.OptionalLineSeparator; } set { this.OpenBraceStatement.OptionalLineSeparator = value; } }
+    //    public string OptionalLineSeparator { get { return this.OpenBraceStatementBase.OptionalLineSeparator; } set { this.OpenBraceStatementBase.OptionalLineSeparator = value; } }
 
-        public string ClosingLine { get { return this.OpenBraceStatement.ClosingLine; } set { this.OpenBraceStatement.ClosingLine = value; } }
-    }
+    //    public string ClosingLine { get { return this.OpenBraceStatementBase.ClosingLine; } set { this.OpenBraceStatementBase.ClosingLine = value; } }
+    //}
 
-    public partial class StaticMethodStatement : ILine
-    {
-        public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
+    //public partial class StaticMethodStatement : ILine
+    //{
+    //    public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
 
-        public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
-
-
-        public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
+    //    public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
 
 
-        public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
-
-        public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
-    }
-
-    public partial class StaticMethodStatement : ILiveStatement
-    {
-        public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
+    //    public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
 
 
-        public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
-    }
+    //    public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
+
+    //    public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
+    //}
+
+    //public partial class StaticMethodStatement : ILiveStatement
+    //{
+    //    public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
+
+
+    //    public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
+    //}
 }

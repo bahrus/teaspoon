@@ -7,32 +7,7 @@ using ClassGenMacros;
 
 namespace CurlyBraceParser
 {
-    //public partial class ReferenceStatement : IReferenceStatement
-    //{
-    //    public string ClientSideReference { get; set; }
-
-    //    public ILine Line { get; set; }
-
-    //    public ReferenceStatement(ILine Line)
-    //    {
-    //        this.Line = Line;
-    //    }
-        
-    //}
-
-    //public partial class ReferenceStatement : ILine {
-    //    public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
-
-    //    public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
-
-
-    //    public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
-
-
-    //    public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
-
-    //    public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
-    //}
+    
 
     #if TypeStrict
     public static class ReferenceInterpreter

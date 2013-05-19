@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bin\Debug\CurlyBraceParser.defaultImpl.cs" />
-    <Compile Include="ClassStatement.cs" />
+    <Compile Include="ClassStatementInterpreter.cs" />
     <Compile Include="CSharp\ContentGenerator.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
     <Compile Include="CSharp\NameTypes.cs" />
@@ -54,18 +54,17 @@
     <Compile Include="DOM\HtmlDocumentFacade.cs" />
     <Compile Include="ICanBePublicStatement.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="InterfaceStatement.cs" />
+    <Compile Include="InterfaceInterpreter.cs" />
     <Compile Include="LiveStatement.cs" />
-    <Compile Include="ModuleStatement.cs" />
+    <Compile Include="ModuleInterpreter.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="ProcessedFile.cs" />
-    <Compile Include="ReferenceStatement.cs" />
+    <Compile Include="ReferenceInterpreter.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticFunctionStatement.cs" />
-    <Compile Include="StaticMethodStatement.cs" />
+    <Compile Include="StaticFunctionInterpreter.cs" />
     <Compile Include="TypeStrictInterpreter.cs" />
-    <Compile Include="VariableOpenStatement.cs" />
+    <Compile Include="VarInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

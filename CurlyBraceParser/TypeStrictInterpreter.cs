@@ -82,7 +82,11 @@ namespace CurlyBraceParser
             }
             else if (statement.IsClass())
             {
-                var classStatement = new ClassStatement(statement);
+                var classStatement = new Class(
+                    OpenBraceStatementBase: statement,
+                    LiveStatementBase: statement.LiveStatementBase,
+                    Line: statement.Line
+                );
                 pf.Classes[classStatement.Name] = classStatement;
                 statement = classStatement;
             }

@@ -70,9 +70,12 @@ namespace ClassGenMacros
                         }
                     }
                 }
+                var alreadyProcessed = new Dictionary<string, bool>();
                 foreach (var prop in allProperties)
                 {
                     if(passThroughLookup.ContainsKey(prop.PropertyInfo.Name)) continue;
+                    if (alreadyProcessed.ContainsKey(prop.PropertyInfo.Name)) continue;
+                    alreadyProcessed[prop.PropertyInfo.Name] = true;
                     #region public propert
                     if (prop.Ignore != null) continue;
                     string accessors = "{";

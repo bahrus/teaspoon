@@ -6,59 +6,6 @@ using System.Threading.Tasks;
 
 namespace CurlyBraceParser
 {
-    //public partial class StaticFunctionStatement
-    //{
-    //    public IOpenBraceStatement OpenBraceStatementBase { get; set; }
-    //    public ILiveStatement LiveStatementBase { get; set; }
-    //    public ILine Line { get; set; }
-        
-    //    public StaticFunctionStatement(IOpenBraceStatement baseOpenBraceStatement)
-    //    {
-    //        this.OpenBraceStatementBase = baseOpenBraceStatement;
-    //        this.LiveStatementBase = baseOpenBraceStatement.LiveStatementBase;
-    //        this.Line = baseOpenBraceStatement.Line;
-    //    }
-    //}
-
-    //public partial class StaticFunctionStatement : IStaticFunction {
-    //    public string Name { get; set; }
-
-    //    public bool Public { get; set; }
-
-    //    public List<Parameter> Args { get; set; }
-
-    //    public string ReturnType { get; set; }
-    //}
-
-    //public partial class StaticFunctionStatement : IOpenStatement {
-    //    public List<ILine> Children { get { return this.OpenBraceStatementBase.Children; } set { this.OpenBraceStatementBase.Children = value; } }
-
-    //    public string ClosingLineComment { get { return this.OpenBraceStatementBase.ClosingLineComment; } set { this.OpenBraceStatementBase.ClosingLineComment = value; } }
-
-    //    public string OptionalLineSeparator { get { return this.OpenBraceStatementBase.OptionalLineSeparator; } set { this.OpenBraceStatementBase.OptionalLineSeparator = value; } }
-
-    //    public string ClosingLine { get { return this.OpenBraceStatementBase.ClosingLine; } set { this.OpenBraceStatementBase.ClosingLine = value; } }
-    //}
-
-    //public partial class StaticFunctionStatement : ILiveStatement {
-    //    public string Statement { get { return LiveStatementBase.Statement; } set { LiveStatementBase.Statement = value; } }
-
-    //    public string FrontTrimmedLiveStatement { get { return LiveStatementBase.FrontTrimmedLiveStatement; } }
-    //}
-
-    //public partial class StaticFunctionStatement : ILine {
-    //    public int LineNumber { get { return Line.LineNumber; } set { Line.LineNumber = value; } }
-
-    //    public string FileName { get { return Line.FileName; } set { Line.FileName = value; } }
-
-
-    //    public bool IncludeNextLine { get { return Line.IncludeNextLine; } set { Line.IncludeNextLine = value; } }
-
-
-    //    public IOpenStatement Parent { get { return Line.Parent; } set { Line.Parent = value; } }
-
-    //    public string Comment { get { return Line.Comment; } set { Line.Comment = value; } }
-    //}
 
 
 #if TypeStrict
