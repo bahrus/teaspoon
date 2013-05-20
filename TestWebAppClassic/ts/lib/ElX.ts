@@ -4,17 +4,20 @@
 
 module tsp {
 
+    export class maps {
 
-    export var windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
+        static windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
+        static selectionChangeListeners: { [name: string]: { (); void; }[]; } = {};
+        static selectGroups: { [name: string]: IElX[]; } = {};
+    }
 
     //#region selection management
-    var selectionChangeListeners: { [name: string]: { (); void; }[]; } = {};
-    var selectGroups: { [name: string]: IElX[]; } = {};
+    
 
 
 
     function notifySelectionChange(name: string) {
-        var scls = selectionChangeListeners[name];
+        var scls = maps.selectionChangeListeners[name];
         if (!scls) return;
         for (var i = 0, n = scls.length; i < n; i++) {
             var scl = scls[i];
@@ -23,17 +26,18 @@ module tsp {
     }
 
     export function getSelections(groupName: string) {
-        return selectGroups[groupName];
+        return maps.selectGroups[groupName];
     }
 
     export function clearSelections(groupName: string, notify: bool) {
-        var sel = selectGroups[groupName];
+        var sel = maps.selectGroups[groupName];
         if (!sel) return;
         for (var i = 0, n = sel.length; i < n; i++) {
             var other = sel[i];
             other.selected = false;
         }
-        delete selectGroups[groupName];
+        var sg = maps.selectGroups;
+        delete sg[groupName];
         if (notify) {
             notifySelectionChange(groupName);
         }
@@ -46,24 +50,24 @@ module tsp {
     }
 
     export function addSelection(groupName: string, elX: IElX, notify: bool) {
-        var sel = selectGroups[groupName];
-        if (!sel) { sel = []; selectGroups[groupName] = sel; }
+        var sel = maps.selectGroups[groupName];
+        if (!sel) { sel = []; maps.selectGroups[groupName] = sel; }
         elX.selected = true;
         sel.push(elX);
         if (notify) notifySelectionChange(groupName);
     }
 
     export function removeSelection(groupName: string, elX: tsp.ElX, notify: bool) {
-        var sel = selectGroups[groupName];
+        var sel = maps.selectGroups[groupName];
         if (!sel) return;
         debugger;//TODO:  remove
     }
 
     export function addSelectionChangeListener(name: string, callBack: () => void ) {
-        var listeners = selectionChangeListeners[name];
+        var listeners = maps.selectionChangeListeners[name];
         if (!listeners) {
             listeners = [];
-            selectionChangeListeners[name] = listeners;
+            maps.selectionChangeListeners[name] = listeners;
         }
         listeners.push(callBack);
     }
@@ -74,9 +78,9 @@ module tsp {
         return {
             objectLookup: tsp._.objectLookup,
             objectListeners: tsp._.SVObjectChangeListeners,
-            windowEventListeners: windowEventListeners,
-            selectionChangeListeners: selectionChangeListeners,
-            selectGroups: selectGroups,
+            windowEventListeners: maps.windowEventListeners,
+            selectionChangeListeners: maps.selectionChangeListeners,
+            selectGroups: maps.selectGroups,
         };
     }
 
@@ -108,7 +112,7 @@ module tsp {
 
     function windowEventListener(ev: Event) {
         var evtName = ev.type;
-        var topicListenersSettings = windowEventListeners[evtName];
+        var topicListenersSettings = maps.windowEventListeners[evtName];
         console.log('windowEventListener.evtName=' + evtName);
         if (!topicListenersSettings) return;
         for (var i = 0, n = topicListenersSettings.length; i < n; i++) {
@@ -183,10 +187,10 @@ module tsp {
     export function addWindowEventListener(settings: IListenForTopic) {
         if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
         var evtName = settings.topicName;
-        var listeners = windowEventListeners[evtName];
+        var listeners = maps.windowEventListeners[evtName];
         if (!listeners) {
             listeners = [];
-            windowEventListeners[evtName] = listeners;
+            maps.windowEventListeners[evtName] = listeners;
         }
         var condition = settings.conditionForNotification;
 
