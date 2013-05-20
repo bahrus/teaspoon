@@ -26,15 +26,8 @@
     <Content Include="controls\control.js">
       <DependentUpon>control.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="controls\srollBar.ts" />
     <Content Include="controls\control.min.js">
       <DependentUpon>control.ts</DependentUpon>
-    </Content>
-    <Content Include="controls\srollBar.js">
-      <DependentUpon>srollBar.ts</DependentUpon>
-    </Content>
-    <Content Include="controls\srollBar.min.js">
-      <DependentUpon>srollBar.ts</DependentUpon>
     </Content>
     <Content Include="default.htm" />
     <Content Include="ie9.min.js">
@@ -94,9 +87,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="controls\srollBar.js.map">
-      <DependentUpon>srollBar.ts</DependentUpon>
-    </Content>
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
