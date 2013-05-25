@@ -78,7 +78,7 @@ module tsp {
                 }
             }
             if (bindInfo.valueSet) {
-                addWindowEventListener({
+                EventFns.addWindowEventListener({
                     elX: this,
                     callback: InputElementChangeHandler,
                     topicName: 'change',

@@ -120,7 +120,7 @@ module tsp.controls {
         }
 
         static generateElement(vsbr: VScrollBarRange): tsp.ElX {
-            var browserInfo = tsp._.BrowserDetect;
+            var browserInfo = tsp._.Environment.BrowserDetect;
             var browser = 'ie';
             var settings = vsbr.VScrollBarSettings;
             switch (browserInfo.browser) {
@@ -165,7 +165,7 @@ module tsp.controls {
                 innerDivHeight = Math.min(innerDivHeight, vsbr.BrowserSpecificMaxValueWithoutScaling);
 
             }
-            var _ = tsp, Div = _.Div;
+            var _ = tsp, Div = _.ElX.Div;
 
 
             var rootEl = Div({
@@ -183,7 +183,7 @@ module tsp.controls {
             });
 
             if (settings.scrollValueSet) {
-                tsp.addLocalEventListener({
+                tsp.EventFns.addLocalEventListener({
                     elX: rootEl,
                     callback: VScrollBarScrollHandler,
                     topicName: 'scroll',

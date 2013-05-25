@@ -45,7 +45,7 @@ function doPropTests() {
 }
 
 function doElxTests() {
-    var _ = tsp, Div = _.Div;
+    var _ = tsp, Div = _.ElX.Div;
 
     var el1 = new _.ElX({
         tag: "div",
@@ -53,7 +53,7 @@ function doElxTests() {
     });
     el1.render({ targetDomID: 'Element.Test1.Result' });
 
-    var el2 = _.Div({ text: "I am here" });
+    var el2 = _.ElX.Div({ text: "I am here" });
     el2.render({ targetDomID: 'Element.Test2.Result' });
 
     var el3 =
@@ -66,7 +66,7 @@ function doElxTests() {
 }
 
 function doInputTests() {
-    var _ = tsp, Input = _.Input, Label = _.LabelForInput, Span = _.Span;
+    var _ = tsp, Input = _.Input, Label = _.LabelForInput, Span = _.ElX.Span;
     var json = {
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
@@ -99,7 +99,7 @@ function doInputTests() {
 }
 
 function doTwoWayBindingTests() {
-    var _ = tsp, Div = _.Div, Input = _.Input, Label = _.LabelForInput, Span = _.Span;
+    var _ = tsp, Div = _.ElX.Div, Input = _.Input, Label = _.LabelForInput, Span = _.ElX.Span;
     var json = {
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
@@ -165,7 +165,7 @@ function doTwoWayBindingTests() {
     tw2.render({ targetDomID: 'TwoWayBinding.Test2.Result' });
 }
 
-if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
+if (tsp._.Environment.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) {
     onWindowLoad();
 } else {
     window.onload = () => {
@@ -174,7 +174,7 @@ if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer)
 }
 
 function doStaticLists() {
-    var _ = tsp, UL = _.UL, LI = _.LI;
+    var _ = tsp, UL = _.ElX.UL, LI = _.ElX.LI;
     var ul1 = UL({
         kids: [
             LI({
@@ -213,7 +213,7 @@ function doStaticLists() {
 
 var doDynamicLists_json: DataExamples.ISubject;
 function doDynamicLists() {
-    var _ = tsp, UL = _.UL, LI = _.LI;
+    var _ = tsp, UL = _.ElX.UL, LI = _.ElX.LI;
 
     var jsSubject = DataExamples.GenerateBooks(10, 10);
     doDynamicLists_json = jsSubject;
@@ -233,13 +233,13 @@ function doDynamicLists() {
             })]
 
     });
-    tsp.addSelectionChangeListener('global', selectionChangeListener);
+    tsp.SelectFns.addSelectionChangeListener('global', selectionChangeListener);
 
     ul1.render({ targetDomID: 'DynamicLists.Test1.Result' });
 }
 
 function selectionChangeListener() {
-    var _ = tsp, UL = _.UL;
+    var _ = tsp, UL = _.ElX.UL;
     var selectedChapters: DataExamples.IChapter[] = [];
     doDynamicLists_json.books.forEach(book => {
         book.chapters.forEach(chapter => {
@@ -257,7 +257,7 @@ function selectionChangeListener() {
 }
 
 function doCustomInputTests() {
-    var _ = tsp, Span = _.Span, Div = _.Div;
+    var _ = tsp, Span = _.ElX.Span, Div = _.ElX.Div;
     var json = new PropTests.Test2({
         BinaryProp1: true,
         NumberProp1: 0,

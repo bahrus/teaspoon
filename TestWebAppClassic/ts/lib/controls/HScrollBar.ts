@@ -119,7 +119,7 @@ module tsp.controls {
         }
 
         static generateElement(hsbr: HScrollBarRange): tsp.ElX {
-            var browserInfo = tsp._.BrowserDetect;
+            var browserInfo = tsp._.Environment.BrowserDetect;
             var browser = 'ie';
             var settings = hsbr.HScrollBarSettings;
             switch (browserInfo.browser) {
@@ -164,7 +164,7 @@ module tsp.controls {
                 innerDivWidth = Math.min(innerDivWidth, hsbr.BrowserSpecificMaxValueWithoutScaling);
 
             }
-            var _ = tsp, Div = _.Div;
+            var _ = tsp, Div = _.ElX.Div;
 
 
             var rootEl = Div({
@@ -183,7 +183,7 @@ module tsp.controls {
             });
 
             if (settings.scrollValueSet) {
-                tsp.addLocalEventListener({
+                tsp.EventFns.addLocalEventListener({
                     elX: rootEl,
                     callback: HScrollBarScrollHandler,
                     topicName: 'scroll',

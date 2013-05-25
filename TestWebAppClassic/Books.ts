@@ -18,7 +18,7 @@ module DataExamples {
     }
 
     export var chapterToLI: (chapter: IChapter, i: number) => tsp.ElX = (chapter, i) => {
-        return tsp.LI({
+        return tsp.ElX.LI({
             text: chapter.name, dataContext: chapter,
             selectSettings: {
                 selectSet: (elx, newVal) => {
@@ -31,7 +31,7 @@ module DataExamples {
     };
 
     export var chapterToLI2: (chapter: IChapter, i: number) => tsp.ElX = (chapter, i) => {
-        return tsp.LI({
+        return tsp.ElX.LI({
             text: chapter.name, dataContext: chapter,
 
         });
@@ -40,11 +40,11 @@ module DataExamples {
 
 
     export var bookToLI: (book: DataExamples.IBook, i: number) => tsp.ElX = (book, i) => {
-        var li = tsp.LI({
+        var li = tsp.ElX.LI({
             //collapsed:true,
             //toggleKidsOnParentClick:true,
             text: book.title,
-            kids: [tsp.UL({
+            kids: [tsp.ElX.UL({
                 collapsed: true,
                 toggleKidsOnParentClick: true,
                 kids: book.chapters.map(DataExamples.chapterToLI),
@@ -66,9 +66,9 @@ module DataExamples {
     };
 
     export var bookToLIDyn: (book: DataExamples.IBook, i: number) => tsp.ElX = (book, i) => {
-        var li = tsp.LI({
+        var li = tsp.ElX.LI({
             text: book.title,
-            kids: [tsp.UL({
+            kids: [tsp.ElX.UL({
                 dataContext: book,
                 collapsed: true,
                 toggleKidsOnParentClick: true,

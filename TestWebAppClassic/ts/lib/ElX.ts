@@ -9,214 +9,199 @@ module tsp {
         static windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
         static selectionChangeListeners: { [name: string]: { (); void; }[]; } = {};
         static selectGroups: { [name: string]: IElX[]; } = {};
-    }
 
-    //#region selection management
-    
-
-
-
-    function notifySelectionChange(name: string) {
-        var scls = maps.selectionChangeListeners[name];
-        if (!scls) return;
-        for (var i = 0, n = scls.length; i < n; i++) {
-            var scl = scls[i];
-            scl();
+        static getGlobalStorage() {
+            return {
+                objectLookup: tsp._.objectLookup,
+                objectListeners: tsp._.SVObjectChangeListeners,
+                windowEventListeners: maps.windowEventListeners,
+                selectionChangeListeners: maps.selectionChangeListeners,
+                selectGroups: maps.selectGroups,
+            };
         }
     }
 
-    export function getSelections(groupName: string) {
-        return maps.selectGroups[groupName];
-    }
-
-    export function clearSelections(groupName: string, notify: bool) {
-        var sel = maps.selectGroups[groupName];
-        if (!sel) return;
-        for (var i = 0, n = sel.length; i < n; i++) {
-            var other = sel[i];
-            other.selected = false;
-        }
-        var sg = maps.selectGroups;
-        delete sg[groupName];
-        if (notify) {
-            notifySelectionChange(groupName);
-        }
-
-    }
-
-    export function setSelection(groupName: string, elX: IElX) {
-        clearSelections(groupName, false);
-        addSelection(groupName, elX, true);
-    }
-
-    export function addSelection(groupName: string, elX: IElX, notify: bool) {
-        var sel = maps.selectGroups[groupName];
-        if (!sel) { sel = []; maps.selectGroups[groupName] = sel; }
-        elX.selected = true;
-        sel.push(elX);
-        if (notify) notifySelectionChange(groupName);
-    }
-
-    export function removeSelection(groupName: string, elX: tsp.ElX, notify: bool) {
-        var sel = maps.selectGroups[groupName];
-        if (!sel) return;
-        debugger;//TODO:  remove
-    }
-
-    export function addSelectionChangeListener(name: string, callBack: () => void ) {
-        var listeners = maps.selectionChangeListeners[name];
-        if (!listeners) {
-            listeners = [];
-            maps.selectionChangeListeners[name] = listeners;
-        }
-        listeners.push(callBack);
-    }
-
-    //#endregion
-
-    export function getGlobalStorage() {
-        return {
-            objectLookup: tsp._.objectLookup,
-            objectListeners: tsp._.SVObjectChangeListeners,
-            windowEventListeners: maps.windowEventListeners,
-            selectionChangeListeners: maps.selectionChangeListeners,
-            selectGroups: maps.selectGroups,
-        };
-    }
-
-    function ParentElementToggleClickHandler(tEvent: ITopicEvent) {
-        var elX = tEvent.elX;
-        //var target = <HTMLElement>tEvent.event.target;
-        var kids = elX.kidElements;
-        if (!kids) return;
-        for (var i = 0, n = kids.length; i < n; i++) {
-            var kid = kids[i];
-            //var target = kid.el;
-            var bI = kid.bindInfo;
-            if (bI.collapsed) {
-                delete bI.collapsed;
-                var target = kid.el;
-                kid.innerRender({
-                    targetDom: target,
-                });
-                kid.removeClass('collapsed');
-
-            } else if (bI.toggleKidsOnParentClick) {
-                bI.collapsed = true;
-                kid.ensureClass('collapsed');
-                //target.className = 'collapsed';
+    export class SelectFns {
+        static notifySelectionChange(name: string) {
+            var scls = maps.selectionChangeListeners[name];
+            if (!scls) return;
+            for (var i = 0, n = scls.length; i < n; i++) {
+                var scl = scls[i];
+                scl();
             }
         }
 
+        static getSelections(groupName: string) {
+            return maps.selectGroups[groupName];
+        }
+
+        static clearSelections(groupName: string, notify: bool) {
+            var sel = maps.selectGroups[groupName];
+            if (!sel) return;
+            for (var i = 0, n = sel.length; i < n; i++) {
+                var other = sel[i];
+                other.selected = false;
+            }
+            var sg = maps.selectGroups;
+            delete sg[groupName];
+            if (notify) {
+                SelectFns.notifySelectionChange(groupName);
+            }
+
+        }
+
+        static setSelection(groupName: string, elX: IElX) {
+            SelectFns.clearSelections(groupName, false);
+            SelectFns.addSelection(groupName, elX, true);
+        }
+
+        static addSelection(groupName: string, elX: IElX, notify: bool) {
+            var sel = maps.selectGroups[groupName];
+            if (!sel) { sel = []; maps.selectGroups[groupName] = sel; }
+            elX.selected = true;
+            sel.push(elX);
+            if (notify) SelectFns.notifySelectionChange(groupName);
+        }
+
+        static removeSelection(groupName: string, elX: tsp.ElX, notify: bool) {
+            var sel = maps.selectGroups[groupName];
+            if (!sel) return;
+            debugger;//TODO:  remove
+        }
+
+        static addSelectionChangeListener(name: string, callBack: () => void ) {
+            var listeners = maps.selectionChangeListeners[name];
+            if (!listeners) {
+                listeners = [];
+                maps.selectionChangeListeners[name] = listeners;
+            }
+            listeners.push(callBack);
+        }
     }
 
-    function windowEventListener(ev: Event) {
-        var evtName = ev.type;
-        var topicListenersSettings = maps.windowEventListeners[evtName];
-        console.log('windowEventListener.evtName=' + evtName);
-        if (!topicListenersSettings) return;
-        for (var i = 0, n = topicListenersSettings.length; i < n; i++) {
-            var settings = topicListenersSettings[i];
-            var condition = settings.conditionForNotification;
+    export class EventFns {
+        static ParentElementToggleClickHandler(tEvent: ITopicEvent) {
+            var elX = tEvent.elX;
+            //var target = <HTMLElement>tEvent.event.target;
+            var kids = elX.kidElements;
+            if (!kids) return;
+            for (var i = 0, n = kids.length; i < n; i++) {
+                var kid = kids[i];
+                //var target = kid.el;
+                var bI = kid.bindInfo;
+                if (bI.collapsed) {
+                    delete bI.collapsed;
+                    var target = kid.el;
+                    kid.innerRender({
+                        targetDom: target,
+                    });
+                    kid.removeClass('collapsed');
+
+                } else if (bI.toggleKidsOnParentClick) {
+                    bI.collapsed = true;
+                    kid.ensureClass('collapsed');
+                    //target.className = 'collapsed';
+                }
+            }
+
+        }
+
+        static windowEventListener(ev: Event) {
+            var evtName = ev.type;
+            var topicListenersSettings = maps.windowEventListeners[evtName];
+            console.log('windowEventListener.evtName=' + evtName);
+            if (!topicListenersSettings) return;
+            for (var i = 0, n = topicListenersSettings.length; i < n; i++) {
+                var settings = topicListenersSettings[i];
+                var condition = settings.conditionForNotification;
+                var el = <HTMLElement>(ev.target);
+                console.log('ev.target.id = ' + el.id);
+                var topicEvent: ITopicEvent = <ITopicEvent> settings;
+                topicEvent.topicEvent = ev;
+                if (!condition(topicEvent)) {
+                    delete topicEvent.topicEvent;
+                    continue;
+                }
+                var elX = tsp._.objectLookup[topicEvent.elXID];
+                if (!elX) {
+                    delete topicEvent.topicEvent;
+                    continue; //todo:  remove topic handler
+                }
+                topicEvent.elX = elX;
+
+                topicEvent.callback(topicEvent);
+                delete topicEvent.elX;
+                delete topicEvent.topicEvent;
+            }
+        }
+
+        static ElementMatchesID(tEvent: ITopicEvent) {
+            var el = <HTMLElement>(tEvent.topicEvent.target);
+            return el.id === tEvent.elXID;
+        }
+
+        static SelectElementClickHandler(tEvent: ITopicEvent) {
+            var elX = tEvent.elX;
+            var ss = elX.bindInfo.selectSettings;
+            //var ssss = ss.selectSet;
+            var newVal = !elX.selected;
+            var grp = ss.group ? ss.group : 'global';
+            if (!ss) return;
+            //if(ssss) ssss(newVal);
+
+            SelectFns.clearSelections(grp, false);
+            //tsp._.selectGroups[grp] = prevSelected;
+            //elX.selected = newVal;
+            if (newVal) { SelectFns.setSelection(grp, elX) }
+
+        }
+
+        static addLocalEventListener(settings: IListenForTopic) {
+            if (tsp._.Environment.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
+            if (!settings.elX._rendered) {
+                settings.elX.bindInfo.onNotifyAddedToDom = elX => {
+                    elX.el['data-tsp-evt-' + settings.topicName] = settings;
+                    elX.el.addEventListener(settings.topicName, EventFns.localEventListener, false);
+                }
+            }
+        }
+
+        static localEventListener(ev: Event) {
             var el = <HTMLElement>(ev.target);
-            console.log('ev.target.id = ' + el.id);
+            var sTopic = ev.type;
+            var settings = <IListenForTopic> el['data-tsp-evt-' + sTopic];
             var topicEvent: ITopicEvent = <ITopicEvent> settings;
             topicEvent.topicEvent = ev;
-            if (!condition(topicEvent)) {
-                delete topicEvent.topicEvent;
-                continue;
-            }
+            topicEvent.elXID = el.id;
             var elX = tsp._.objectLookup[topicEvent.elXID];
-            if (!elX) {
-                delete topicEvent.topicEvent;
-                continue; //todo:  remove topic handler
-            }
             topicEvent.elX = elX;
 
             topicEvent.callback(topicEvent);
-            delete topicEvent.elX;
-            delete topicEvent.topicEvent;
+
         }
-    }
 
-    function ElementMatchesID(tEvent: ITopicEvent) {
-        var el = <HTMLElement>(tEvent.topicEvent.target);
-        return el.id === tEvent.elXID;
-    }
-
-    function SelectElementClickHandler(tEvent: ITopicEvent) {
-        var elX = tEvent.elX;
-        var ss = elX.bindInfo.selectSettings;
-        //var ssss = ss.selectSet;
-        var newVal = !elX.selected;
-        var grp = ss.group ? ss.group : 'global';
-        if (!ss) return;
-        //if(ssss) ssss(newVal);
-
-        clearSelections(grp, false);
-        //tsp._.selectGroups[grp] = prevSelected;
-        //elX.selected = newVal;
-        if (newVal) { setSelection(grp, elX) }
-
-    }
-
-    export function addLocalEventListener(settings: IListenForTopic) {
-        if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
-        if (!settings.elX._rendered) {
-            settings.elX.bindInfo.onNotifyAddedToDom = elX => {
-                elX.el.attributes['data-tsp-evt-' + settings.topicName] = settings;
-                elX.el.addEventListener(settings.topicName, localEventListener, false);
+        static addWindowEventListener(settings: IListenForTopic) {
+            if (tsp._.Environment.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
+            var evtName = settings.topicName;
+            var listeners = maps.windowEventListeners[evtName];
+            if (!listeners) {
+                listeners = [];
+                maps.windowEventListeners[evtName] = listeners;
             }
-        }
-    }
+            var condition = settings.conditionForNotification;
 
-    function localEventListener(ev: Event) {
-        var el = <HTMLElement>(ev.target);
-        var sTopic = ev.type;
-        var settings = <IListenForTopic> el.attributes['data-tsp-evt-' + sTopic];
-        var topicEvent: ITopicEvent = <ITopicEvent> settings;
-        topicEvent.topicEvent = ev;
-        topicEvent.elXID = el.id;
-        var elX = tsp._.objectLookup[topicEvent.elXID];
-        topicEvent.elX = elX;
-
-        topicEvent.callback(topicEvent);
-
-    }
-
-    export function addWindowEventListener(settings: IListenForTopic) {
-        if (tsp._.runtimeEnvironment.environment === tsp._.EnvironmentOptions.WebServer) return;
-        var evtName = settings.topicName;
-        var listeners = maps.windowEventListeners[evtName];
-        if (!listeners) {
-            listeners = [];
-            maps.windowEventListeners[evtName] = listeners;
-        }
-        var condition = settings.conditionForNotification;
-
-        if (!condition) {
-            if (settings.elX) {
-                settings.elXID = settings.elX.ID;
-                delete settings.elX;
+            if (!condition) {
+                if (settings.elX) {
+                    settings.elXID = settings.elX.ID;
+                    delete settings.elX;
+                }
+                //condition = ElementMatchesID;
+                settings.conditionForNotification = EventFns.ElementMatchesID
             }
-            //condition = ElementMatchesID;
-            settings.conditionForNotification = ElementMatchesID
+            
+            listeners.push(settings);
+            window.addEventListener(evtName, EventFns.windowEventListener);
         }
-        //var listener = function (ev: Event) {
-        //    var el = <HTMLElement>(ev.target);
-        //    var topicEvent: ITopicEvent = <ITopicEvent> settings;
-        //    topicEvent.event = ev;
-        //    if(!condition(topicEvent)) return;
-        //    var elX = objectLookup[topicEvent.elXID];
-        //    if(!elX) return; //todo:  remove topic handler
-        //    topicEvent.elX = elX;
-        //    topicEvent.callback(topicEvent);
-        //    delete topicEvent.elX;
-        //}
-        //listeners.push(listener);
-        listeners.push(settings);
-        window.addEventListener(evtName, windowEventListener);
-        //window.addEventListener(settings.topicName, listener);
     }
 
     export class ElX implements IElX {
@@ -329,18 +314,18 @@ module tsp {
             context.elements.push(this);
             var bI = this.bindInfo;
             if (bI.toggleKidsOnParentClick) {
-                addWindowEventListener({
+                EventFns.addWindowEventListener({
                     elX: this.parentElement,
                     topicName: 'click',
-                    callback: ParentElementToggleClickHandler,
+                    callback: EventFns.ParentElementToggleClickHandler,
                 });
             }
             var ss = bI.selectSettings;
             if (ss) {
-                addWindowEventListener({
+                EventFns.addWindowEventListener({
                     elX: this,
                     topicName: 'click',
-                    callback: SelectElementClickHandler,
+                    callback: EventFns.SelectElementClickHandler,
                 });
                 if (ss.selected) {
                     this.ensureClass(ss.selClassName ? ss.selClassName : 'selected');
@@ -502,7 +487,7 @@ module tsp {
             return this.hasClass(s);
         }
 
-        public set selected(newVal?: bool) {
+        public set selected(newVal: bool) {
             var ss = this.bindInfo.selectSettings;
             if (!ss) return;
             var s = ss.selClassName ? ss.selClassName : 'selected';
@@ -602,29 +587,49 @@ module tsp {
             this.el.setAttribute(attribName, newVal);
         }
 
-        //public notifySPropChange(getter: tsp._.ISVGetter) {
-        //    if(!this._rendered) return;
-        //    var bI = this.bindInfo;
-        //    if (!bI.dynamicAttributes) return;
-        //    var propName = tsp._.getStringPropName(getter.getter);
-        //    //might be mixing concepts here
-        //    var elemPropGetter = bI.dynamicAttributes[propName];
-        //    if (!elemPropGetter) return;
-        //    var htmlElem = this.el;
-        //    var sVal = elemPropGetter(this);
-        //    if (htmlElem.attributes[propName] != sVal) {
-        //        htmlElem.attributes[propName] = sVal;
-        //    }
-        //}
 
-        //public notifyBPropChange(getter: tsp._.IBVGetter) {
-        //}
         //Retrieves the associated dom element
         public get el(): HTMLElement {
             return document.getElementById(this._id);
         }
-    }
 
+        //#region Element Shortcuts
+        static Div(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'div';
+            return new ElX(bindInfo);
+        }
+
+        static Span(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'span';
+            return new ElX(bindInfo);
+        }
+
+        static UL(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'ul';
+            return new ElX(bindInfo);
+        }
+
+        static LI(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'li';
+            return new ElX(bindInfo);
+        }
+
+        static THead(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'thead';
+            return new ElX(bindInfo);
+        }
+
+        static TFoot(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'tfoot';
+            return new ElX(bindInfo);
+        }
+
+        static TR(bindInfo: IDOMBinder): ElX {
+            bindInfo.tag = 'tr';
+            return new ElX(bindInfo);
+        }
+        //#endregion
+    }
 
     export class RenderContext implements IRenderContext {
         public output: string;
@@ -639,40 +644,5 @@ module tsp {
         }
     }
 
-    export function Div(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'div';
-        return new ElX(bindInfo);
-    }
 
-    export function Span(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'span';
-        return new ElX(bindInfo);
-    }
-
-    export function UL(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'ul';
-        return new ElX(bindInfo);
-    }
-
-    export function LI(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'li';
-        return new ElX(bindInfo);
-    }
-
-
-
-    export function THead(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'thead';
-        return new ElX(bindInfo);
-    }
-
-    export function TFoot(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'tfoot';
-        return new ElX(bindInfo);
-    }
-
-    export function TR(bindInfo: IDOMBinder): ElX {
-        bindInfo.tag = 'tr';
-        return new ElX(bindInfo);
-    }
 }
