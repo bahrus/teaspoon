@@ -34,14 +34,6 @@ function doPropTests() {
         setContent('PropTests.Test3.Result', newVal);
     } );
 
-    //tsp._.ListenForSVChange({
-    //    getter: propTest3.Prop2Getter,
-    //    obj: propTest3,
-    //    callback: newVal => {
-    //        setContent('PropTests.Test3.Result', newVal);
-    //    },
-    //});
-
     propTest3.Prop2 = 'new value';
     console.log(propTest3);
 
@@ -324,9 +316,9 @@ function doCustomInputTests() {
 }
 
 function onWindowLoad() {
-    doPropTests();
+    //doPropTests();
     //doElxTests();
-    //doInputTests();
+    doInputTests();
     //doTwoWayBindingTests();
     //doStaticLists();
     //doDynamicLists();   

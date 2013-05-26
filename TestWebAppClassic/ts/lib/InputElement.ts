@@ -2,6 +2,11 @@
 ///<reference path="ElX.ts" />
 
 module tsp {
+
+    export interface IDInputBinder<TObj> extends IInputBinder, IDOM2WayBinder<TObj> {
+        valueBind: tsp._.Binder<TObj, string>;
+    }
+
     export interface IInputBinder extends IDOMBinder {
         disabled?: bool;
         disabledGet? (ie: InputElement): bool;
@@ -9,12 +14,16 @@ module tsp {
         type?: string;
         value?: string;
         valueGet? (ie: InputElement): string;
-        valueSet? (ie: InputElement, newVal: string): void;
-        checkedValueSet? (ie: InputElement, oldVal: string, newVal: string): void;
+        //valueSet? (ie: InputElement, newVal: string): void;
+        //checkedValueSet? (ie: InputElement, oldVal: string, newVal: string): void;
     }
 
     export function Input(bindInfo: IInputBinder): InputElement {
         return new InputElement(bindInfo);
+    }
+
+    export function DInput<TObj>(bindInfo: IDInputBinder<TObj>) {
+        return new DInputElement<TObj>(bindInfo);
     }
 
     export function LabelForInput(bindInfo: IInputLabelBinder): InputLabelElement {
@@ -26,12 +35,12 @@ module tsp {
     }
 
     function InputElementChangeHandler(tEvent: ITopicEvent) {
-        var ie = <InputElement> tEvent.elX;
+        var ie = <DInputElement> tEvent.elX;
         var newValue = (ie.type === InputElement.type_checkbox ? tEvent.topicEvent.target['checked'] : tEvent.topicEvent.target['value']);
 
         if (newValue === null || !ie) return;
-        ie.bindInfo.valueSet(ie, newValue);
-    }
+        ie.bindInfo.valueBind.value = newValue;
+    }   
 
     export class InputElement extends ElX {
 
@@ -77,13 +86,13 @@ module tsp {
                     this.disabled = true;
                 }
             }
-            if (bindInfo.valueSet) {
-                EventFns.addWindowEventListener({
-                    elX: this,
-                    callback: InputElementChangeHandler,
-                    topicName: 'change',
-                });
-            }
+            //if (bindInfo.valueSet) {
+            //    EventFns.addWindowEventListener({
+            //        elX: this,
+            //        callback: InputElementChangeHandler,
+            //        topicName: 'change',
+            //    });
+            //}
 
         }
 
@@ -146,6 +155,12 @@ module tsp {
 
         set type(val: string) {
             this.setAttr('type', val);
+        }
+    }
+
+    export class DInputElement<TObj> extends InputElement {
+        constructor(public bindInfo: IDInputBinder<TObj>) {
+            super(bindInfo);
         }
     }
 

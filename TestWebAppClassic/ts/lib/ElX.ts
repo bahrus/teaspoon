@@ -204,12 +204,6 @@ module tsp {
         }
     }
 
-    export class DElX<TObj> extends ElX implements IDElX<TObj> {
-        constructor(public bindInfo: IDOM2WayBinder<TObj>) {
-            super(bindInfo);
-        }
-    }
-
     export class ElX implements IElX {
 
         constructor(public bindInfo: IDOMBinder) {
@@ -355,15 +349,23 @@ module tsp {
                 }
             }
             context.output += '>';
-            if (bI.textGet) {
-                context.output += bI.textGet(this);
-            } else if (bI.text) {
-                context.output += bI.text;
+            var txt = this.getText();
+            if (txt) {
+                context.output += txt;
             }
             if (!bI.collapsed) {
                 this.doInnerRender(context);
             }
             context.output += '</' + bI.tag + '>';
+        }
+
+        public getText(): string {
+            var bI = this.bindInfo;
+            if (bI.textGet) {
+                return bI.textGet(this);
+            } else if (bI.text) {
+                return bI.text;
+            }
         }
 
         public doInnerRender(context: RenderContext) {
@@ -635,6 +637,22 @@ module tsp {
             return new ElX(bindInfo);
         }
         //#endregion
+    }
+
+    export class DElX<TObj> extends ElX implements IDElX<TObj> {
+        constructor(public bindInfo: IDOM2WayBinder<TObj>) {
+            super(bindInfo);
+        }
+
+        public getText(): string {
+            var bI = this.bindInfo;
+            if (bI.textBinder) {
+                return bI.textBinder.value;
+            } else {
+                return super.getText();
+            }
+        
+        }
     }
 
     export class RenderContext implements IRenderContext {
