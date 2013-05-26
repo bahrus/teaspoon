@@ -204,6 +204,12 @@ module tsp {
         }
     }
 
+    export class DElX<TObj> extends ElX implements IDElX<TObj> {
+        constructor(public bindInfo: IDOM2WayBinder<TObj>) {
+            super(bindInfo);
+        }
+    }
+
     export class ElX implements IElX {
 
         constructor(public bindInfo: IDOMBinder) {

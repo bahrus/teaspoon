@@ -36,19 +36,33 @@ module PropTests {
     export class Test2 {
         constructor(private Prop2Data: ITest2) {
             //this.counter = 0;
+            //this._prop2 = {
+            //    eval: ibind => {
+            //        if(ibind.val != null) 
+            //        return ibind.obj.Prop2
+            //    },
+            //    obj: Prop2Data,
+            //};
+            this.Prop2Bind = new tsp._.Binder<ITest2, string>({
+                getter: itest2 => itest2.Prop2,
+                setter: (itest2, val) => itest2.Prop2 = val,
+                obj: Prop2Data,
+            });
         }
 
         public counter: number = 0;
 
         //public onBeforeProp2Changed: { (newVal: string): bool; }[]; // array of delegates
 
-        get Prop2(): string {
+        public Prop2Bind: tsp._.Binder<ITest2, string>;
+
+        public get Prop2(): string {
             this.counter++;
-            return this.Prop2Data.Prop2;
+            return this.Prop2Bind.value;
         }
 
         private Prop2Setter = (obj: Test2, s: string) => {
-            obj.Prop2Data.Prop2 = s;
+            obj.Prop2Bind.value = s;
         };
 
         public Prop2Getter = (obj: Test2): string => {

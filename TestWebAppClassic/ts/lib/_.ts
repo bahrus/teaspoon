@@ -155,7 +155,56 @@ module tsp._ {
     Environment.BrowserDetect.init();
     //#endif
 
+    export interface IVal<TObj, TProp>{
+        obj: TObj;
+        val?: TProp;
+    }
 
+    
+
+    export interface IBinder<TObj, TProp>{
+        setter(obj: TObj, val: TProp): void;
+        getter(obj: TObj): TProp;
+        obj: TObj;
+    
+    }
+
+    export interface IChangeApproval{
+        approved: boolean;
+        reasonForDisapproval?: string;
+    }
+
+    export class Binder<TObj, TProp>{
+        constructor(private bindInfo: IBinder<TObj, TProp>) { }
+        private approvers: { (binder: Binder<TObj, TProp>, proposedVal: TProp) : IChangeApproval; }[];
+        private watchers: { (binder: Binder<TObj, TProp>, newVal: TProp) : void; }[];
+
+        private val: TProp;
+        get value(): TProp {
+            if (typeof (this.val) === 'undefined') {
+                this.val = this.bindInfo.getter(this.bindInfo.obj);
+            }
+            return this.val;
+        }
+        set value(newVal: TProp) {
+            if (this.val === newVal) return;
+            var bI = this.bindInfo;
+            bI.setter(bI.obj, newVal);
+            delete this.val;
+            if (this.watchers) {
+                this.watchers.forEach(callBackFn => callBackFn(this, newVal));
+            }
+        }
+        public addWatch(fnCallBack: (binder: Binder<TObj, TProp>, newVal: TProp) => void ) {
+            if (!this.watchers) this.watchers = [];
+            this.watchers.push(fnCallBack);
+        } 
+
+        public addChangeApprover(fnCallBack: (binder: Binder<TObj, TProp>, proposedVal: TProp) => IChangeApproval) {
+            if (!this.approvers) this.approvers = [];
+            this.approvers.push(fnCallBack);
+        }
+    }
 
     export interface ISetBoolValue extends IBVGetter {
         setter(obj: any, val: bool): void;

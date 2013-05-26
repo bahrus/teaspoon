@@ -37,6 +37,9 @@
       <DependentUpon>InputElement.ts</DependentUpon>
     </Content>
     <Content Include="Interface_ElX.js" />
+    <Content Include="Interface_ElX.min.js">
+      <DependentUpon>Interface_ElX.ts</DependentUpon>
+    </Content>
     <Content Include="Interface_ElX.ts" />
     <Content Include="_.min.js">
       <DependentUpon>_.ts</DependentUpon>

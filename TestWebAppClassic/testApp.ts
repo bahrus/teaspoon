@@ -30,14 +30,17 @@ function doPropTests() {
 
     var propTest3 = new PropTests.Test2(json);
 
+    propTest3.Prop2Bind.addWatch((bind, newVal) => {
+        setContent('PropTests.Test3.Result', newVal);
+    } );
 
-    tsp._.ListenForSVChange({
-        getter: propTest3.Prop2Getter,
-        obj: propTest3,
-        callback: newVal => {
-            setContent('PropTests.Test3.Result', newVal);
-        },
-    });
+    //tsp._.ListenForSVChange({
+    //    getter: propTest3.Prop2Getter,
+    //    obj: propTest3,
+    //    callback: newVal => {
+    //        setContent('PropTests.Test3.Result', newVal);
+    //    },
+    //});
 
     propTest3.Prop2 = 'new value';
     console.log(propTest3);
@@ -270,6 +273,7 @@ function doCustomInputTests() {
         height: 150,
         scrollValueSet: (ie, newVal) => {
             json.NumberProp1 = newVal;
+            return newVal;
         },
     });
     console.log("doCustomInputTests.2");
@@ -298,6 +302,7 @@ function doCustomInputTests() {
         width: 200,
         scrollValueSet: (ie, newVal) => {
             json.NumberProp2 = newVal;
+            return newVal;
         },
     });
     var span2 = Span({
@@ -320,10 +325,10 @@ function doCustomInputTests() {
 
 function onWindowLoad() {
     doPropTests();
-    doElxTests();
-    doInputTests();
-    doTwoWayBindingTests();
-    doStaticLists();
-    doDynamicLists();   
-    doCustomInputTests();
+    //doElxTests();
+    //doInputTests();
+    //doTwoWayBindingTests();
+    //doStaticLists();
+    //doDynamicLists();   
+    //doCustomInputTests();
 }

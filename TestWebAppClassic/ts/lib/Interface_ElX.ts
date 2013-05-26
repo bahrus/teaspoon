@@ -1,5 +1,9 @@
 module tsp {
 
+    export interface IDOM2WayBinder<TObj> extends IDOMBinder {
+        textBinder?: tsp._.Binder<TObj, string>;
+    }
+
     export interface IDOMBinder {
 
         attributes?: { [name: string]: string; };
@@ -22,8 +26,10 @@ module tsp {
         text?: string;
         //Dynamic Inner Content
         textGet? (el: IElX): string;
-        //child elements - used if kidsGet is null
+        
+        
 
+        //child elements - used if kidsGet is null
         toggleKidsOnParentClick?: bool;
         collapsed?: bool;
         dataContext?: any;
@@ -36,6 +42,10 @@ module tsp {
         parentElement: IRenderable;
         doRender(context: IRenderContext);
         ID: string;
+    }
+
+    export interface IDElX<TObj> extends IElX{
+        bindInfo: IDOM2WayBinder<TObj>;
     }
 
     export interface IElX extends IRenderable {
