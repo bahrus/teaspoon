@@ -94,28 +94,32 @@ function doInputTests() {
 }
 
 function doTwoWayBindingTests() {
-    var _ = tsp, Div = _.ElX.Div, Input = _.Input, Label = _.LabelForInput, Span = _.ElX.Span;
+    var _ = tsp, Div = _.ElX.Div, Input = _.Input, Label = _.LabelForInput, Span = _.ElX.Span,
+        c = new tsp.CreateDElX<PropTests.ITest2>(), cI = new tsp.CreateDInput<PropTests.ITest2>();
     var json = {
         Prop1: 'iah',
         Prop2: 'Prop Val 2',
         BinaryProp1: true,
     };
     var propTest1 = new PropTests.Test2(json);
-    var d = Div({ textGet: () => propTest1.Prop2 });
-    //var n = d.notifyTextChange;
+    //var d = Div({ textGet: () => propTest1.Prop2 });
+    var d = c.Div({ textBinder: propTest1.Prop2Bind });
+    d.bindInfo.textBinder.addWatch((b, s) => d.notifyTextChange());
+    var i = cI.Input({ valueBind: propTest1.Prop2Bind });
     var tw1 = Div({
         kids: [
             d,
-            Input({ valueGet: (ie) => propTest1.Prop2, type: 'text', valueSet: (ie, newVal) => { propTest1.Prop2 = newVal; } }),
+            //Input({ valueGet: (ie) => propTest1.Prop2, type: 'text', valueSet: (ie, newVal) => { propTest1.Prop2 = newVal; } }),
+            i,
         ]
     });
-    _._.ListenForSVChange({
-        getter: propTest1.Prop2Getter,
-        obj: propTest1,
-        callback: newVal => {
-            d.notifyTextChange();
-        },
-    });
+    //_._.ListenForSVChange({
+    //    getter: propTest1.Prop2Getter,
+    //    obj: propTest1,
+    //    callback: newVal => {
+    //        d.notifyTextChange();
+    //    },
+    //});
     tw1.render({ targetDomID: 'TwoWayBinding.Test1.Result' });
 
     var d2 = Div({
@@ -318,8 +322,8 @@ function doCustomInputTests() {
 function onWindowLoad() {
     //doPropTests();
     //doElxTests();
-    doInputTests();
-    //doTwoWayBindingTests();
+    //doInputTests();
+    doTwoWayBindingTests();
     //doStaticLists();
     //doDynamicLists();   
     //doCustomInputTests();

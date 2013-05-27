@@ -22,9 +22,9 @@ module tsp {
         return new InputElement(bindInfo);
     }
 
-    export function DInput<TObj>(bindInfo: IDInputBinder<TObj>) {
-        return new DInputElement<TObj>(bindInfo);
-    }
+    //export function DInput<TObj>(bindInfo: IDInputBinder<TObj>) {
+    //    return new DInputElement<TObj>(bindInfo);
+    //}
 
     export function LabelForInput(bindInfo: IInputLabelBinder): InputLabelElement {
         return new InputLabelElement(bindInfo);
@@ -34,13 +34,23 @@ module tsp {
         forElX: ElX;
     }
 
-    function InputElementChangeHandler(tEvent: ITopicEvent) {
+    //function InputElementChangeHandler(tEvent: ITopicEvent) {
+    //    var ie = <DInputElement> tEvent.elX;
+    //    var newValue = (ie.type === InputElement.type_checkbox ? tEvent.topicEvent.target['checked'] : tEvent.topicEvent.target['value']);
+
+    //    if (newValue === null || !ie) return;
+    //    ie.bindInfo.valueBind.value = newValue;
+    //}
+    
+    function DInputElementChangeHandler(tEvent: ITopicEvent) {
         var ie = <DInputElement> tEvent.elX;
         var newValue = (ie.type === InputElement.type_checkbox ? tEvent.topicEvent.target['checked'] : tEvent.topicEvent.target['value']);
 
         if (newValue === null || !ie) return;
         ie.bindInfo.valueBind.value = newValue;
-    }   
+    } 
+    
+      
 
     export class InputElement extends ElX {
 
@@ -74,11 +84,7 @@ module tsp {
             bindInfo.tag = "input";
             this.type = bindInfo.type ? bindInfo.type : InputElement.type_text;
             delete bindInfo.type;
-            if (bindInfo.valueGet) {
-                this.value = bindInfo.valueGet(this);
-            } else {
-                this.value = bindInfo.value;
-            }
+            this.value = this.getValue();
             if (bindInfo.disabledGet) {
                 this.disabled = bindInfo.disabledGet(this);
             } else {
@@ -86,14 +92,17 @@ module tsp {
                     this.disabled = true;
                 }
             }
-            //if (bindInfo.valueSet) {
-            //    EventFns.addWindowEventListener({
-            //        elX: this,
-            //        callback: InputElementChangeHandler,
-            //        topicName: 'change',
-            //    });
-            //}
+        
 
+        }
+
+        public getValue(): string {
+            var bI = this.bindInfo;
+            if (bI.valueGet) {
+                return bI.valueGet(this);
+            } else {
+                return bI.value;
+            }
         }
 
         public notifyDisabledChange() {
@@ -161,6 +170,22 @@ module tsp {
     export class DInputElement<TObj> extends InputElement {
         constructor(public bindInfo: IDInputBinder<TObj>) {
             super(bindInfo);
+            if (bindInfo.valueBind) {
+                EventFns.addWindowEventListener({
+                    elX: this,
+                    callback: DInputElementChangeHandler,
+                    topicName: 'change',
+                });
+            }
+        }
+
+        public getValue(): string {
+            var bI = this.bindInfo;
+            if (bI.valueBind) {
+                return bI.valueBind.value;
+            } else {
+                return super.getValue();
+            }
         }
     }
 
@@ -182,6 +207,12 @@ module tsp {
             if (sVal) {
                 this.bindInfo.attributes['for'] = sVal;
             }
+        }
+    }
+
+    export class CreateDInput<TObj>{
+        public Input(bindInfo: IDInputBinder<TObj>): DInputElement<TObj> {
+            return new DInputElement(bindInfo);
         }
     }
 }

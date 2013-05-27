@@ -607,6 +607,8 @@ module tsp {
             return new ElX(bindInfo);
         }
 
+        
+
         static Span(bindInfo: IDOMBinder): ElX {
             bindInfo.tag = 'span';
             return new ElX(bindInfo);
@@ -653,6 +655,21 @@ module tsp {
             }
         
         }
+
+        public notifyTextChange(/*getter: tsp._.ISVGetter*/) {
+            if (!this._rendered) return;
+            var bI = this.bindInfo;
+            if (!bI.textBinder) {
+                super.notifyTextChange();
+                return;
+            }
+            
+            var newVal = bI.textBinder.value;
+            var h: HTMLElement = this.el;
+            if (h.innerHTML === newVal) return;
+            h.innerHTML = newVal;
+        }
+        
     }
 
     export class RenderContext implements IRenderContext {
@@ -668,5 +685,15 @@ module tsp {
         }
     }
 
+    export class CreateDElX<TObj>{
+        public Div(bindInfo: IDOM2WayBinder<TObj>): DElX<TObj>
+        {
+            bindInfo.tag = 'div';
+            return new DElX<TObj>(bindInfo);
+        }
 
+        
+    }
+
+    
 }
