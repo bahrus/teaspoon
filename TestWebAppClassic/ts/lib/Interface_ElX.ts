@@ -1,7 +1,8 @@
 module tsp {
 
-    export interface IDOM2WayBinder<TObj> extends IDOMBinder {
-        textBinder?: tsp._.Binder<TObj, string>;
+    export interface IDOM2WayBinder<TObj> {
+        textBind?: tsp._.Binder<TObj, string>;
+        classBind?: { [name: string]: tsp._.Binder<TObj, boolean> };
     }
 
     export interface IDOMBinder {
@@ -9,7 +10,7 @@ module tsp {
         attributes?: { [name: string]: string; };
         contentEditable?: bool;
         dynamicAttributes?: { [name: string]: { (el: IElX): string; }; };
-        dynamicClasses?: { [name: string]: { (el: IElX): bool; }; };
+        dynamicClasses?: { [name: string]: { (el: IElX): boolean; }; };
         dynamicStyles?: { [name: string]: { (el: IElX): string; }; };
 
         classes?: string[];

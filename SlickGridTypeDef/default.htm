@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>SlickGrid example 1: Basic grid</title>
+  <link rel="stylesheet" href="slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="examples.css" type="text/css"/>
+  <style>
+    .cell-title {
+      font-weight: bold;
+    }
+
+    .cell-effort-driven {
+      text-align: center;
+    }
+  </style>
+    <script src="lib/firebugx.js"></script>
+    <script src="lib/jquery-1.7.min.js"></script>
+    <script src="lib/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="lib/jquery.event.drag-2.2.js"></script>
+
+    <script src="slick.core.js"></script>
+    <script src="plugins/slick.cellrangedecorator.js"></script>
+    <script src="plugins/slick.cellrangeselector.js"></script>
+    <script src="plugins/slick.cellselectionmodel.js"></script>
+    <script src="slick.formatters.js"></script>
+    <script src="slick.editors.js"></script>
+    <script src="slick.grid.js"></script>
+
+    <script src="app.js"></script>
+</head>
+<body>
+<table width="100%">
+  <tr>
+    <td valign="top" width="50%">
+      <div id="myGrid1" style="width:600px;height:500px;"></div>
+    </td>
+    <td valign="top">
+      <h2>Demonstrates:</h2>
+      <ul>
+        <li>basic grid with minimal configuration</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="50%">
+      <div id="myGrid2" style="width:600px;height:500px;"></div>
+    </td>
+    <td valign="top">
+      <h2>Demonstrates:</h2>
+      <ul>
+        <li>width, minWidth, maxWidth, resizable, cssClass column attributes</li>
+        <li>custom column formatters</li>
+      </ul>
+    </td>
+  </tr>
+    <tr>
+    <td valign="top" width="50%">
+      <div id="myGrid3" style="width:600px;height:500px;"></div>
+    </td>
+    <td valign="top">
+      <h2>Demonstrates:</h2>
+      <ul>
+        <li>adding basic keyboard navigation and editing</li>
+        <li>custom editors and validators</li>
+        <li>auto-edit settings</li>
+
+      </ul>
+        <h2>Options:</h2>
+            <button onclick="grid3.setOptions({autoEdit:true})">Auto-edit ON</button>
+                &nbsp;
+            <button onclick="grid3.setOptions({autoEdit:false})">Auto-edit OFF</button>
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+</body>
+</html>

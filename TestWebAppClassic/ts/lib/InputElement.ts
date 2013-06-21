@@ -4,12 +4,19 @@
 module tsp {
 
     export interface IDInputBinder<TObj> extends IInputBinder, IDOM2WayBinder<TObj> {
-        valueBind: tsp._.Binder<TObj, string>;
+        valueBind?: tsp._.Binder<TObj, string>;
+
+        //
+        checkedBind?: tsp._.Binder<TObj, boolean>;
+        
     }
 
     export interface IInputBinder extends IDOMBinder {
         disabled?: bool;
         disabledGet? (ie: InputElement): bool;
+
+        checked?: bool;
+        checkedGet? (ie: InputElement): bool;
 
         type?: string;
         value?: string;
@@ -92,8 +99,17 @@ module tsp {
                     this.disabled = true;
                 }
             }
-        
+            this.checked = this.getChecked();
+        }
 
+        public getChecked(): bool {
+            var bI = this.bindInfo;
+            if (bI.checkedGet) {
+                return bI.checkedGet(this);
+            } else if (bI.checked) {
+                return bI.checked;
+            }
+            return false;
         }
 
         public getValue(): string {
@@ -136,7 +152,19 @@ module tsp {
             }
         }
 
-        get disabled(): bool {
+        get checked(): boolean {
+            if (this._rendered) {
+                var el = this.el;
+                return el.getAttribute('checked') != null;
+            }
+            var s = this.getAttr('checked');
+            return s != null && s.length > 0;
+        }
+
+        set checked(val: boolean) {
+        }
+
+        get disabled(): boolean {
             if (this._rendered) {
                 var el = this.el;
                 return el.disabled;
@@ -185,6 +213,16 @@ module tsp {
                 return bI.valueBind.value;
             } else {
                 return super.getValue();
+            }
+        }
+
+        public getChecked(): boolean {
+            var bI = this.bindInfo;
+            if (bI.checkedBind != null) {
+                var cB: tsp._.Binder<TObj, boolean> = bI.checkedBind;
+                return bI.checkedBind.value;
+            } else {
+                return super.getChecked();
             }
         }
     }

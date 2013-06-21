@@ -35,24 +35,21 @@ module PropTests {
 
     export class Test2 {
         constructor(private Prop2Data: ITest2) {
-            //this.counter = 0;
-            //this._prop2 = {
-            //    eval: ibind => {
-            //        if(ibind.val != null) 
-            //        return ibind.obj.Prop2
-            //    },
-            //    obj: Prop2Data,
-            //};
+            
             this.Prop2Bind = new tsp._.Binder<ITest2, string>({
                 getter: itest2 => itest2.Prop2,
                 setter: (itest2, val) => itest2.Prop2 = val,
                 obj: Prop2Data,
             });
+
+            this.BinaryProp1Bind = new tsp._.Binder<ITest2, bool>({
+                getter: itest2 => itest2.BinaryProp1,
+                setter: (itest2, val) => itest2.BinaryProp1 = val,
+                obj: Prop2Data,
+            });
         }
 
         public counter: number = 0;
-
-        //public onBeforeProp2Changed: { (newVal: string): bool; }[]; // array of delegates
 
         public Prop2Bind: tsp._.Binder<ITest2, string>;
 
@@ -61,34 +58,25 @@ module PropTests {
             return this.Prop2Bind.value;
         }
 
-        private Prop2Setter = (obj: Test2, s: string) => {
-            obj.Prop2Bind.value = s;
-        };
-
-        public Prop2Getter = (obj: Test2): string => {
-            return obj.Prop2;
-        };
 
         set Prop2(val: string) {
-            tsp._.setSV({ setter: this.Prop2Setter, obj: this, val: val, getter: this.Prop2Getter, });
+            this.Prop2Bind.value = val;
         }
 
         //#region BinaryProp1
+
+        public BinaryProp1Bind: tsp._.Binder<ITest2, bool>;
         public get BinaryProp1(): bool {
-            return this.Prop2Data.BinaryProp1;
+            return this.BinaryProp1Bind.value;
         }
 
-        public BinaryProp1Getter = (obj: Test2): bool => {
-            return obj.BinaryProp1;
-        }
+        
 
         public set BinaryProp1(bVal: bool) {
-            tsp._.setBV({ setter: this.BinaryProp1Setter, getter: this.BinaryProp1Getter, obj: this, val: bVal, });
+            this.BinaryProp1Bind.value = bVal;
         }
 
-        private BinaryProp1Setter = (obj: Test2, b: bool) => {
-            obj.Prop2Data.BinaryProp1 = b;
-        };
+        
         //#endregion
 
         //#region NumberPrp1

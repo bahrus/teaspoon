@@ -7,7 +7,7 @@ module tsp {
     export class maps {
 
         static windowEventListeners: { [name: string]: IListenForTopic[]; } = {};
-        static selectionChangeListeners: { [name: string]: { (); void; }[]; } = {};
+        static selectionChangeListeners: { [name: string]: { (): void; }[]; } = {};
         static selectGroups: { [name: string]: IElX[]; } = {};
 
         static getGlobalStorage() {
@@ -70,7 +70,7 @@ module tsp {
         }
 
         static addSelectionChangeListener(name: string, callBack: () => void ) {
-            var listeners = maps.selectionChangeListeners[name];
+            var listeners: { (): void; }[] = maps.selectionChangeListeners[name];
             if (!listeners) {
                 listeners = [];
                 maps.selectionChangeListeners[name] = listeners;
@@ -225,15 +225,7 @@ module tsp {
                     this.bindInfo.attributes[attribName] = dynA(this);
                 }
             }
-            var dc = bindInfo.dynamicClasses;
-            if (dc) {
-                for (var className in dc) {
-                    var dynC = dc[className];
-                    if (dynC(this)) {
-                        this.ensureClass(className);
-                    }
-                }
-            }
+            this.addDynamicClass();
             if (bindInfo.classes) {
                 bindInfo.attributes['class'] = bindInfo.classes.join(' ');
                 delete bindInfo.classes;
@@ -261,6 +253,18 @@ module tsp {
             }
 
 
+        }
+
+        public addDynamicClass() : void {
+            var dc = this.bindInfo.dynamicClasses;
+            if (dc) {
+                for (var className in dc) {
+                    var dynC = dc[className];
+                    if (dynC(this)) {
+                        this.ensureClass(className);
+                    }
+                }
+            }
         }
 
         public ensureClass(className: string) {
@@ -642,14 +646,23 @@ module tsp {
     }
 
     export class DElX<TObj> extends ElX implements IDElX<TObj> {
-        constructor(public bindInfo: IDOM2WayBinder<TObj>) {
+        constructor(public twoWayBindInfo: IDOM2WayBinder<TObj>, public bindInfo: IDOMBinder) {
             super(bindInfo);
+            if (twoWayBindInfo.textBind) {
+                twoWayBindInfo.textBind.addWatch((b, s) => this.notifyTextChange());
+            }
+            if (twoWayBindInfo.classBind) {
+                for (var cb in twoWayBindInfo.classBind) {
+                    cb.addWatch((b, s) => this.notifyClassChange(cb));
+                }
+            }
         }
 
+        //#region text
         public getText(): string {
-            var bI = this.bindInfo;
-            if (bI.textBinder) {
-                return bI.textBinder.value;
+            var bI = this.twoWayBindInfo;
+            if (bI.textBind) {
+                return bI.textBind.value;
             } else {
                 return super.getText();
             }
@@ -658,18 +671,59 @@ module tsp {
 
         public notifyTextChange(/*getter: tsp._.ISVGetter*/) {
             if (!this._rendered) return;
-            var bI = this.bindInfo;
-            if (!bI.textBinder) {
+            var bI = this.twoWayBindInfo;
+            if (!bI.textBind) {
                 super.notifyTextChange();
                 return;
             }
             
-            var newVal = bI.textBinder.value;
+            var newVal = bI.textBind.value;
             var h: HTMLElement = this.el;
             if (h.innerHTML === newVal) return;
             h.innerHTML = newVal;
         }
-        
+        //#endregion
+
+        //#region dynamic classes
+        public addDynamicClass() : void {
+            var dc = this.bindInfo.dynamicClasses;
+            if (dc) {
+                for (var className in dc) {
+                    var dynC = dc[className];
+                    if (dynC(this)) {
+                        this.ensureClass(className);
+                    }
+                }
+            }
+            var cb = this.twoWayBindInfo.classBind;
+            if (!cb) {
+                super.addDynamicClass();
+                return;
+            }
+            for (var className in cb) {
+                var cr = cb[className];
+                if (cr.value) this.ensureClass(className);
+            }
+        }
+
+
+        public notifyClassChange(className: string) {
+            var bI = this.twoWayBindInfo;
+            if (!bI.classBind) {
+                super.notifyClassChange(className);
+                return;
+            }
+            if (!this._rendered) return;
+            var cb = bI.classBind[className];
+            if (!cb) return;
+            var newVal = cb.value;
+            if (!newVal) {
+                this.removeClass(className);
+            } else {
+                this.ensureClass(className);
+            }
+        }
+        //#endregion
     }
 
     export class RenderContext implements IRenderContext {
@@ -686,10 +740,14 @@ module tsp {
     }
 
     export class CreateDElX<TObj>{
-        public Div(bindInfo: IDOM2WayBinder<TObj>): DElX<TObj>
+        public Div(bindInfo: IDOMBinder, twoWayBindInfo: IDOM2WayBinder<TObj>): DElX<TObj>
         {
             bindInfo.tag = 'div';
-            return new DElX<TObj>(bindInfo);
+            var d = new DElX<TObj>(bindInfo, twoWayBindInfo);
+            //if (bindInfo.textBind) {
+            //    bindInfo.textBind.addWatch((b, s) => d.notifyTextChange());
+            //}
+            return d;
         }
 
         

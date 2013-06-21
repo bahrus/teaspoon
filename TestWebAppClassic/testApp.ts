@@ -85,9 +85,10 @@ function doInputTests() {
     lbl2.render({ targetDomID: 'Input.Label2.Result' });
 
     var in3 = Input({ type: 'checkbox' });
-    var span3 = Span({
+    var span3Bindings: tsp.IDOMBinder = {
         kids: [Label({ text: 'Label for Checkbox', forElX: in3 }), in3],
-    });
+    };
+    var span3 = Span(span3Bindings);
     span3.render({ targetDomID: 'Input.Test3.Result' });
     //var in3 = Input({
 
@@ -102,28 +103,23 @@ function doTwoWayBindingTests() {
         BinaryProp1: true,
     };
     var propTest1 = new PropTests.Test2(json);
-    //var d = Div({ textGet: () => propTest1.Prop2 });
-    var d = c.Div({ textBinder: propTest1.Prop2Bind });
-    d.bindInfo.textBinder.addWatch((b, s) => d.notifyTextChange());
-    var i = cI.Input({ valueBind: propTest1.Prop2Bind });
+    
     var tw1 = Div({
         kids: [
-            d,
-            //Input({ valueGet: (ie) => propTest1.Prop2, type: 'text', valueSet: (ie, newVal) => { propTest1.Prop2 = newVal; } }),
-            i,
+            c.Div({ twoWayBindInfo: propTest1.Prop2Bind, bindInfo: null, }),
+            cI.Input({ valueBind: propTest1.Prop2Bind }),
         ]
     });
-    //_._.ListenForSVChange({
-    //    getter: propTest1.Prop2Getter,
-    //    obj: propTest1,
-    //    callback: newVal => {
-    //        d.notifyTextChange();
-    //    },
-    //});
+   
     tw1.render({ targetDomID: 'TwoWayBinding.Test1.Result' });
 
-    var d2 = Div({
-        textGet: () => propTest1.BinaryProp1 ? 'yes' : 'no',
+    //var d2 = Div({
+    //    textGet: () => propTest1.BinaryProp1 ? 'yes' : 'no',
+    //});
+    var d2 = c.Div({
+        classBind: {
+            "yesno": propTest1.BinaryProp1Bind
+        },
     });
     var txt2 = Input({ disabledGet: (ie) => propTest1.BinaryProp1, value: 'testing' });
     var s2 = Span({
@@ -134,6 +130,7 @@ function doTwoWayBindingTests() {
     });
     //s2.bindInfo.dynamicClasses['red'] = (ie) => propTest1.BinaryProp1;
     var ckbox = Input({ valueGet: (ie) => propTest1.BinaryProp1 ? 'checked' : null, type: 'checkbox', valueSet: (ie, newVal) => { propTest1.BinaryProp1 = newVal ? true : false; } });
+    //var ckbox = cI.Input({
     var tw2 = Div({
         kids: [
             d2,
@@ -143,24 +140,7 @@ function doTwoWayBindingTests() {
             s2,
         ],
     });
-    _._.ListenForBVChange({
-        getter: propTest1.BinaryProp1Getter,
-        obj: propTest1,
-        callback: newVal => {
-            //d2.notifyTextChange();
-            //txt2.notifyDisabledChange();
-            s2.notifyClassChange('red');
-        },
-    });
-    _._.ListenForBVChange({
-        getter: propTest1.BinaryProp1Getter,
-        obj: propTest1,
-        callback: newVal => {
-            d2.notifyTextChange();
-            txt2.notifyDisabledChange();
-            //s2.notifyClassChange('red');
-        },
-    });
+    
     tw2.render({ targetDomID: 'TwoWayBinding.Test2.Result' });
 }
 
