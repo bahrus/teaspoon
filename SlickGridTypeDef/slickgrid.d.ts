@@ -1,4 +1,9 @@
-﻿declare module Slick {
+﻿// Type definitions for SlickGrid
+// Project: https://github.com/mleibman/SlickGrid
+// Definitions by: Bruce Anderson <https://github.com/bahrus>
+// Definitions: https://github.com/borisyankov/DefinitelyTyped
+
+declare module Slick {
     //#region Options
     export interface ColumnOption {
         /**
@@ -260,125 +265,125 @@
         /**
         * Initializes the grid. Called after plugins are registered. Normally, this is called by the constructor, so you don't need to call it. However, in certain cases you may need to delay the initialization until some other process has finished. In that case, set the explicitInitialization option to true and call the grid.init() manually.
         */
-        init: () => void;
+        init() : void;
 
-        getData: () => TItem[];
+        getData() : TItem[];
 
-        getDataItem: (index: number) => TItem;
+        getDataItem(index: number) : TItem;
 
-        setData: (newData, scrollToTop) => void;
+        setData(newData, scrollToTop) : void;
 
-        getDataLength: () => number;
+        getDataLength() : number;
 
-        getOptions: () => GridOptions;
+        getOptions() : GridOptions;
 
-        getSelectedRows: () => number[];
+        getSelectedRows() : number[];
 
-        getSelectionModel: () => any;
+        getSelectionModel() : any;
 
-        setOptions: (options: GridOptions) => void;
+        setOptions(options: GridOptions) : void;
 
-        setSelectedRows: (rowsArray: number[]) => void;
+        setSelectedRows(rowsArray: number[]) : void;
 
-        setSelectionModel: (selectionModel: any) => void;
+        setSelectionModel(selectionModel: any) : void;
 
-        autosizeColumns: () => void;
+        autosizeColumns() : void;
 
-        getColumnIndex: (id: string) => number;
+        getColumnIndex(id: string) : number;
 
-        getColumns: () => ColumnOption[];
+        getColumns() : ColumnOption[];
 
-        setColumns: (columnDefinitions: ColumnOption[]) => void;
+        setColumns(columnDefinitions: ColumnOption[]) : void;
 
-        setSortColumn: (columnId: string, ascending: boolean) => void;
+        setSortColumn(columnId: string, ascending: boolean) : void;
 
-        setSortColumns: (cols: ColumnSort[]) => void;
+        setSortColumns(cols: ColumnSort[]) : void;
 
-        updateColumnHeader: (columnId: string, title: string, toolTip: string) => string;
+        updateColumnHeader(columnId: string, title: string, toolTip: string) : string;
 
         /**
         * Adds an "overlay" of CSS classes to cell DOM elements. SlickGrid can have many such overlays associated with different keys and they are frequently used by plugins. For example, SlickGrid uses this method internally to decorate selected cells with selectedCellCssClass (see options).
         */
-        addCellCssStyles: (key: string, hash: any) => void;
+        addCellCssStyles(key: string, hash: any) : void;
 
         /**
         * Returns true if you can click on a given cell and make it the active focus.
         */
-        canCellBeActive: (row: number, col: number) => boolean;
+        canCellBeActive(row: number, col: number) : boolean;
 
         /**
         * Returns true if selecting the row causes this particular cell to have the selectedCellCssClass applied to it. A cell can be selected if it exists and if it isn't on an empty / "Add New" row and if it is not marked as "unselectable" in the column definition.
         */
-        canCellBeSelected: (row: number, col: number) => boolean;
+        canCellBeSelected(row: number, col: number) : boolean;
 
         /**
         * Attempts to switch the active cell into edit mode. Will throw an error if the cell is set to be not editable. Uses the specified editor, otherwise defaults to any default editor for that given cell.
         */
-        editActiveCell: (editor: any) => void;
+        editActiveCell(editor: any) : void;
 
         /**
         * Flashes the cell twice by toggling the CSS class 4 times.
         */
-        flashCell: (row: number, cell: number, speed: number) => void;
+        flashCell(row: number, cell: number, speed: number) : void;
 
         /**
         *  Returns an object representing the coordinates of the currently active cell
         */
-        getActiveCell: () => CellCoordinates;
+        getActiveCell() : CellCoordinates;
 
 
         /**
         * Returns the DOM element containing the currently active cell. If no cell is active, null is returned.
         */
-        getActiveCellNode: () => HTMLElement;
+        getActiveCellNode() : HTMLElement;
 
         /**
         * Returns an object representing information about the active cell's position. All coordinates are absolute and take into consideration the visibility and scrolling position of all ancestors.
         */
-        getActiveCellPosition: () => CellPosition;
+        getActiveCellPosition() : CellPosition;
 
         /**
         * Accepts a key name, returns the group of CSS styles defined under that name. 
         */
-        getCellCssStyles: (key: string) => any;
+        getCellCssStyles(key: string) : any;
 
         /**
         * Returns the active cell editor. If there is no actively edited cell, null is returned.
         */
-        getCellEditor: () => any;
+        getCellEditor() : any;
 
         /**
         * Returns a hash containing row and cell indexes from a standard W3C/jQuery event.
         */
-        getCellFromEvent: (e: Event) => any;
+        getCellFromEvent (e: Event) : any;
 
         /**
         * Returns a hash containing row and cell indexes. Coordinates are relative to the top left corner of the grid beginning with the first row (not including the column headers).
         */
-        getCellFromPoint: (x: number, y: number) => any;
+        getCellFromPoint(x: number, y: number) : any;
 
         /**
         * Returns a DOM element containing a cell at a given row and cell.
         */
-        getCellNode: (row: number, cell: number) => HTMLElement;
+        getCellNode(row: number, cell: number) : HTMLElement;
 
         /**
         * Returns an object representing information about a cell's position. All coordinates are absolute and take into consideration the visibility and scrolling position of all ancestors. 
         */
-        getCellNodeBox: (row: number, cell: number) => CellPosition;
+        getCellNodeBox (row: number, cell: number) : CellPosition;
 
         /**
         * Accepts a row integer and a cell integer, scrolling the view to the row where row is its row index, and cell is its cell index. Optionally accepts a forceEdit boolean which, if true, will attempt to initiate the edit dialogue for the field in the specified cell.
         * Unlike setActiveCell, this scrolls the row into the viewport and sets the keyboard focus.
         */
-        gotoCell: (row: number, cell: number, forceEdit: boolean) => void;
+        gotoCell (row: number, cell: number, forceEdit: boolean) : void;
 
-        invalidateRow: (row: number) => void;
+        invalidateRow (row: number) : void;
 
         /**
         * Switches the active cell one row down skipping unselectable cells. Returns a boolean saying whether it was able to complete or not.
         */
-        navigateDown: () => void;
+        navigateDown () : void;
 
         /**
         * Switches the active cell one cell left skipping unselectable cells. Unline navigatePrev, navigateLeft stops at the first cell of the row. Returns a boolean saying whether it was able to complete or not.
@@ -431,7 +436,7 @@
         setCellCssStyles(key: string, hash: { [rowIndex: number]: any; });
 
 
-        updateRowCount: () => void;
+        updateRowCount() : void;
 
         /**
          *Returns the DIV element matching class grid-canvas, which contains every data row currently being rendered in the DOM.
@@ -439,7 +444,8 @@
         getCanvasNode(): HTMLElement;
 
         //#region Event Handlers
-        public onAddNewRow: ISubscribable;
+        onAddNewRow: ISubscribable;
+        onValidationError: ISubscribable;
         //#endregion
 
     }

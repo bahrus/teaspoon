@@ -28,7 +28,7 @@
     <script src="slick.editors.js"></script>
     <script src="slick.grid.js"></script>
 
-    <script src="app.js"></script>
+    <script src="slickgrid-tests.js"></script>
 </head>
 <body>
 <table width="100%">
@@ -65,6 +65,24 @@
         <li>adding basic keyboard navigation and editing</li>
         <li>custom editors and validators</li>
         <li>auto-edit settings</li>
+
+      </ul>
+        <h2>Options:</h2>
+            <button onclick="grid3.setOptions({autoEdit:true})">Auto-edit ON</button>
+                &nbsp;
+            <button onclick="grid3.setOptions({autoEdit:false})">Auto-edit OFF</button>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="50%">
+      <div id="myGrid3a" style="width:600px;height:500px;"></div>
+    </td>
+    <td valign="top">
+      <h2>Demonstrates:</h2>
+      <ul>
+        <li>compound cell editors driving multiple fields from one cell</li>
+      <li>providing validation from the editor</li>
+      <li>hooking into validation events</li>
 
       </ul>
         <h2>Options:</h2>

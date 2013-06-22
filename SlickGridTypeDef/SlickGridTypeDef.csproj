@@ -32,9 +32,6 @@
     <Content Include="css\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="css\smoothness\jquery-ui-1.8.16.custom.css" />
     <Content Include="default.htm" />
-    <Content Include="app.js">
-      <DependentUpon>app.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="jquery.d.ts" />
     <Content Include="examples.css" />
     <Content Include="images\actions.gif" />
@@ -106,12 +103,13 @@
     <Content Include="slick.remotemodel.js" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="slickgrid.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="slickgrid-tests.ts" />
+    <Content Include="slickgrid-tests.js">
+      <DependentUpon>slickgrid-tests.ts</DependentUpon>
+    </Content>
     <Content Include="slickgrid.d.js">
       <DependentUpon>slickgrid.d.ts</DependentUpon>
     </Content>
