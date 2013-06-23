@@ -313,8 +313,8 @@ $(function () {
     //#endregion
 
     //#region Example 4 Model
-    var dataView;
-    var grid;
+    var dataView4;
+    var grid4;
     var data = [];
     var columns = [
         { id: "sel", name: "#", field: "num", behavior: "select", cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false },
@@ -371,7 +371,7 @@ $(function () {
     }
 
     function toggleFilterRow() {
-        grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
+        grid4.setTopPanelVisibility(!grid4.getOptions().showTopPanel);
     }
 
 
@@ -400,45 +400,45 @@ $(function () {
         }
 
 
-        dataView = new Slick.Data.DataView({ inlineFilters: true });
-        grid = new Slick.Grid("#myGrid", dataView, columns, options);
-        grid.setSelectionModel(new Slick.RowSelectionModel());
+        dataView4 = new Slick.Data.DataView({ inlineFilters: true });
+        grid4 = new Slick.Grid("#myGrid", dataView4, columns, options);
+        grid4.setSelectionModel(new Slick.RowSelectionModel());
 
-        var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
-        var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
+        var pager = new Slick.Controls.Pager(dataView4, grid4, $("#pager"));
+        var columnpicker = new Slick.Controls.ColumnPicker(columns, grid4, options);
 
 
         // move the filter panel defined in a hidden div into grid top panel
         $("#inlineFilterPanel")
-            .appendTo(grid.getTopPanel())
+            .appendTo(grid4.getTopPanel())
             .show();
 
-        grid.onCellChange.subscribe(function (e, args) {
-            dataView.updateItem(args.item.id, args.item);
+        grid4.onCellChange.subscribe(function (e, args) {
+            dataView4.updateItem(args.item.id, args.item);
         });
 
-        grid.onAddNewRow.subscribe(function (e, args) {
+        grid4.onAddNewRow.subscribe(function (e, args) {
             var item = { "num": data.length, "id": "new_" + (Math.round(Math.random() * 10000)), "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false };
             $.extend(item, args.item);
-            dataView.addItem(item);
+            dataView4.addItem(item);
         });
 
-        grid.onKeyDown.subscribe(function (e) {
+        grid4.onKeyDown.subscribe(function (e) {
             // select all rows on ctrl-a
             if (e.which != 65 || !e.ctrlKey) {
                 return false;
             }
 
             var rows = [];
-            for (var i = 0; i < dataView.getLength(); i++) {
+            for (var i = 0; i < dataView4.getLength(); i++) {
                 rows.push(i);
             }
 
-            grid.setSelectedRows(rows);
+            grid4.setSelectedRows(rows);
             e.preventDefault();
         });
 
-        grid.onSort.subscribe(function (e, args) {
+        grid4.onSort.subscribe(function (e, args) {
             sortdir = args.sortAsc ? 1 : -1;
             sortcol = args.sortCol.field;
 
@@ -458,32 +458,32 @@ $(function () {
             //    };
 
             //    // use numeric sort of % and lexicographic for everything else
-            //    dataView.fastSort((sortcol == "percentComplete") ? percentCompleteValueFn : sortcol, args.sortAsc);
+            //    dataView4.fastSort((sortcol == "percentComplete") ? percentCompleteValueFn : sortcol, args.sortAsc);
             //} else {
                 // using native sort with comparer
                 // preferred method but can be very slow in IE with huge datasets
-                dataView.sort(comparer, args.sortAsc);
+                dataView4.sort(comparer, args.sortAsc);
             //}
         });
 
         // wire up model events to drive the grid
-        dataView.onRowCountChanged.subscribe(function (e, args) {
-            grid.updateRowCount();
-            grid.render();
+        dataView4.onRowCountChanged.subscribe(function (e, args) {
+            grid4.updateRowCount();
+            grid4.render();
         });
 
-        dataView.onRowsChanged.subscribe(function (e, args) {
-            grid.invalidateRows(args.rows);
-            grid.render();
+        dataView4.onRowsChanged.subscribe(function (e, args) {
+            grid4.invalidateRows(args.rows);
+            grid4.render();
         });
 
-        dataView.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
+        dataView4.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
             var isLastPage = pagingInfo.pageNum == pagingInfo.totalPages - 1;
             var enableAddRow = isLastPage || pagingInfo.pageSize == 0;
-            var options = grid.getOptions();
+            var options = grid4.getOptions();
 
             if (options.enableAddRow != enableAddRow) {
-                grid.setOptions({ enableAddRow: enableAddRow });
+                grid4.setOptions({ enableAddRow: enableAddRow });
             }
         });
 
@@ -519,11 +519,11 @@ $(function () {
         });
 
         function updateFilter() {
-            dataView.setFilterArgs({
+            dataView4.setFilterArgs({
                 percentCompleteThreshold: percentCompleteThreshold,
                 searchString: searchString
             });
-            dataView.refresh();
+            dataView4.refresh();
         }
 
         $("#btnSelectRows").click(function () {
@@ -532,27 +532,27 @@ $(function () {
             }
 
             var rows = [];
-            for (var i = 0; i < 10 && i < dataView.getLength(); i++) {
+            for (var i = 0; i < 10 && i < dataView4.getLength(); i++) {
                 rows.push(i);
             }
 
-            grid.setSelectedRows(rows);
+            grid4.setSelectedRows(rows);
         });
 
 
         // initialize the model after all the events have been hooked up
-        dataView.beginUpdate();
-        dataView.setItems(data);
-        dataView.setFilterArgs({
+        dataView4.beginUpdate();
+        dataView4.setItems(data);
+        dataView4.setFilterArgs({
             percentCompleteThreshold: percentCompleteThreshold,
             searchString: searchString
         });
-        dataView.setFilter(myFilter);
-        dataView.endUpdate();
+        dataView4.setFilter(myFilter);
+        dataView4.endUpdate();
 
         // if you don't want the items that are not visible (due to being filtered out
         // or being on a different page) to stay selected, pass 'false' to the second arg
-        dataView.syncGridSelection(grid, true);
+        dataView4.syncGridSelection(grid4, true);
 
         $("#gridContainer").resizable();
     })
