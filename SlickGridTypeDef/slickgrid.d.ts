@@ -128,6 +128,8 @@ declare module Slick {
         width: number;
     }
 
+    
+
     export interface GridOptions {
         /**
         * Makes cell editors load asynchronously after a small delay. This greatly increases keyboard navigation speed.
@@ -467,6 +469,9 @@ declare module Slick {
         export var Checkmark: any;
     }
 
+    export class RowSelectionModel {
+    }
+
     //#region Events
     export interface eventArgs {
         item: any;
@@ -476,4 +481,31 @@ declare module Slick {
         subscribe: (fn: (e: Event, args: eventArgs) => void) => void;
     }
     //#endregion
+
+    
+}
+
+declare module Slick.GlobalEditorLock {
+    var cancelCurrentEdit: () => void;
+    var commitCurrentEdit: () => void;
+}
+
+declare module Slick.Controls {
+    export class Pager<TItem> {
+        constructor(dataView: Slick.Data.DataView, grid: Slick.Grid<TItem>, jQueryElement: JQuery);
+    }
+
+    export class ColumnPicker<TItem>{
+        constructor(columns: ColumnOption[], grid: Slick.Grid<TItem>, options: any);
+    }
+}
+
+declare module Slick.Data {
+    export class DataView {
+        constructor(options: DataViewOptions);
+    }
+
+    export class DataViewOptions {
+        inlineFilters: boolean;
+    }
 }

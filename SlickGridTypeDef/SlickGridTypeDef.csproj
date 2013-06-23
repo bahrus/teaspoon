@@ -71,16 +71,16 @@
     <Content Include="jquery.d.js">
       <DependentUpon>jquery.d.ts</DependentUpon>
     </Content>
-    <Content Include="lib\firebugx.js" />
-    <Content Include="lib\jquery-1.7.min.js" />
-    <Content Include="lib\jquery-ui-1.8.16.custom.min.js" />
-    <Content Include="lib\jquery.event.drag-2.2.js" />
-    <Content Include="lib\jquery.event.drop-2.2.js" />
-    <Content Include="lib\jquery.jsonp-1.1.0.min.js" />
-    <Content Include="lib\jquery.simulate.js" />
-    <Content Include="lib\jquery.sparkline.min.js" />
-    <Content Include="lib\qunit.css" />
-    <Content Include="lib\qunit.js" />
+    <Content Include="images\lib\firebugx.js" />
+    <Content Include="images\lib\jquery-1.7.min.js" />
+    <Content Include="images\lib\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="images\lib\jquery.event.drag-2.2.js" />
+    <Content Include="images\lib\jquery.event.drop-2.2.js" />
+    <Content Include="images\lib\jquery.jsonp-1.1.0.min.js" />
+    <Content Include="images\lib\jquery.simulate.js" />
+    <Content Include="images\lib\jquery.sparkline.min.js" />
+    <Content Include="images\lib\qunit.css" />
+    <Content Include="images\lib\qunit.js" />
     <Content Include="plugins\slick.autotooltips.js" />
     <Content Include="plugins\slick.cellcopymanager.js" />
     <Content Include="plugins\slick.cellrangedecorator.js" />
