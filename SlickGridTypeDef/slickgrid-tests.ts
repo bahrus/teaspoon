@@ -10,6 +10,7 @@ interface ITask1 {
     start: string;
     finish: string;
     effortDriven: boolean;
+    id?: string;
 }
 
 interface ITask2 {
@@ -51,6 +52,7 @@ $(function () {
     }
     
     var grid1 = new Slick.Grid<ITask1>("#myGrid1", data1, columns1, options1);
+    
     //#endregion
 
     //#region Example 2 Formatters
@@ -58,7 +60,6 @@ $(function () {
         return value;
     }
 
-    var grid2;
     var data2: ITask1[] = [];
     var columns2 = [
         { id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", formatter: formatter2 },
@@ -87,7 +88,7 @@ $(function () {
         }
     }
 
-    var grid2 = new Slick.Grid("#myGrid2", data2, columns2, options2);
+    var grid2 = new Slick.Grid<ITask1>("#myGrid2", data2, columns2, options2);
 
 
     //#endregion
@@ -133,10 +134,10 @@ $(function () {
         }
     }
 
-    grid3 = new Slick.Grid("#myGrid3", data3, columns3, options3);
+    var grid3 = new Slick.Grid<ITask1>("#myGrid3", data3, columns3, options3);
     grid3.setSelectionModel(new Slick.CellSelectionModel());
 
-    grid3.onAddNewRow.subscribe(function (e, args) {
+    grid3.onAddNewRow.subscribe(function (e, args : Slick.eventArgs<ITask1>) {
         var item = args.item;
         grid3.invalidateRow(data3.length);
         data3.push(item);
@@ -147,7 +148,6 @@ $(function () {
     //#endregion
 
     //#region Example 3a Compound Editor
-    var grid3a;
     var data3a: ITask2[] = [];
     var columns3a = [
         { id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", editor: Slick.Editors.Text },
@@ -240,10 +240,10 @@ $(function () {
         }
     }
 
-    grid3a = new Slick.Grid<ITask2>("#myGrid3a", data3a, columns3a, options3a);
+    var grid3a = new Slick.Grid<ITask2>("#myGrid3a", data3a, columns3a, options3a);
     
 
-    grid3a.onValidationError.subscribe(function (e, args) {
+    grid3a.onValidationError.subscribe(function (e: Event, args : Slick.eventArgs<ITask2>) {
         alert(args.validationResults.msg);
     });
 
@@ -258,7 +258,6 @@ $(function () {
         }
     }
 
-    var grid3b;
     var data3b: ITask1[] = [];
 
     var columns3b : Slick.ColumnOption[] = [
@@ -309,16 +308,16 @@ $(function () {
         }
     }
 
-    grid3b = new Slick.Grid<ITask1>("#myGrid3b", data3b, columns3b, options3b);
+    var grid3b = new Slick.Grid<ITask1>("#myGrid3b", data3b, columns3b, options3b);
+
     //#endregion
 
     //#region Example 4 Model
-    var dataView4;
     var grid4;
-    var data = [];
-    var columns = [
+    var data4 : ITask1[] = [];
+    var columns4 = [
         { id: "sel", name: "#", field: "num", behavior: "select", cssClass: "cell-selection", width: 40, cannotTriggerInsert: true, resizable: false, selectable: false },
-        { id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: Slick.Editors.Text, validator: requiredFieldValidator, sortable: true },
+        { id: "title", name: "Title", field: "title", width: 120, minWidth: 120, cssClass: "cell-title", editor: Slick.Editors.Text, validator: requiredFieldValidator4, sortable: true },
         { id: "duration", name: "Duration", field: "duration", editor: Slick.Editors.Text, sortable: true },
         { id: "%", defaultSortAsc: false, name: "% Complete", field: "percentComplete", width: 80, resizable: false, formatter: Slick.Formatters.PercentCompleteBar, editor: Slick.Editors.PercentComplete, sortable: true },
         { id: "start", name: "Start", field: "start", minWidth: 60, editor: Slick.Editors.Date, sortable: true },
@@ -326,7 +325,7 @@ $(function () {
         { id: "effort-driven", name: "Effort Driven", width: 80, minWidth: 20, maxWidth: 80, cssClass: "cell-effort-driven", field: "effortDriven", formatter: Slick.Formatters.Checkmark, editor: Slick.Editors.Checkbox, cannotTriggerInsert: true, sortable: true }
     ];
 
-    var options = {
+    var options4 = {
         editable: true,
         enableAddRow: true,
         enableCellNavigation: true,
@@ -335,12 +334,12 @@ $(function () {
         topPanelHeight: 25
     };
 
-    var sortcol = "title";
-    var sortdir = 1;
-    var percentCompleteThreshold = 0;
-    var searchString = "";
+    var sortcol4 = "title";
+    var sortdir4 = 1;
+    var percentCompleteThreshold4 = 0;
+    var searchString4 = "";
 
-    function requiredFieldValidator(value) {
+    function requiredFieldValidator4(value) {
         if (value == null || value == undefined || !value.length) {
             return { valid: false, msg: "This is a required field" };
         }
@@ -349,7 +348,7 @@ $(function () {
         }
     }
 
-    function myFilter(item, args) {
+    function myFilter4(item, args) {
         if (item["percentComplete"] < args.percentCompleteThreshold) {
             return false;
         }
@@ -361,12 +360,12 @@ $(function () {
         return true;
     }
 
-    function percentCompleteSort(a, b) {
+    function percentCompleteSort4(a, b) {
         return a["percentComplete"] - b["percentComplete"];
     }
 
-    function comparer(a, b) {
-        var x = a[sortcol], y = b[sortcol];
+    function comparer4(a, b) {
+        var x = a[sortcol4], y = b[sortcol4];
         return (x == y ? 0 : (x > y ? 1 : -1));
     }
 
@@ -384,28 +383,29 @@ $(function () {
             $(e.target).removeClass("ui-state-hover")
         });
 
-    $(function () {
         // prepare the data
         for (var i = 0; i < 50000; i++) {
-            var d = (data[i] = {});
+            data4[i] = {
 
-            d["id"] = "id_" + i;
-            d["num"] = i;
-            d["title"] = "Task " + i;
-            d["duration"] = "5 days";
-            d["percentComplete"] = Math.round(Math.random() * 100);
-            d["start"] = "01/01/2009";
-            d["finish"] = "01/05/2009";
-            d["effortDriven"] = (i % 5 == 0);
+                id: "id_" + i,
+                num: i,
+                title: "Task " + i,
+                duration: "5 days",
+                percentComplete: Math.round(Math.random() * 100),
+                start: "01/01/2009",
+                finish: "01/05/2009",
+                effortDriven: (i % 5 == 0),
+            }
         }
 
 
-        dataView4 = new Slick.Data.DataView({ inlineFilters: true });
-        grid4 = new Slick.Grid("#myGrid", dataView4, columns, options);
+        var dataView4 = new Slick.Data.DataView<ITask1>({ inlineFilters: true });
+        grid4 = new Slick.Grid<ITask1>("#myGrid", dataView4, columns4, options4);
+        
         grid4.setSelectionModel(new Slick.RowSelectionModel());
 
-        var pager = new Slick.Controls.Pager(dataView4, grid4, $("#pager"));
-        var columnpicker = new Slick.Controls.ColumnPicker(columns, grid4, options);
+        var pager4 = new Slick.Controls.Pager(dataView4, grid4, $("#pager"));
+        var columnpicker4 = new Slick.Controls.ColumnPicker(columns4, grid4, options4);
 
 
         // move the filter panel defined in a hidden div into grid top panel
@@ -418,7 +418,7 @@ $(function () {
         });
 
         grid4.onAddNewRow.subscribe(function (e, args) {
-            var item = { "num": data.length, "id": "new_" + (Math.round(Math.random() * 10000)), "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false };
+            var item : ITask1 = { "num": data4.length, "id": "new_" + (Math.round(Math.random() * 10000)), "title": "New task", "duration": "1 day", "percentComplete": 0, "start": "01/01/2009", "finish": "01/01/2009", "effortDriven": false };
             $.extend(item, args.item);
             dataView4.addItem(item);
         });
@@ -439,8 +439,8 @@ $(function () {
         });
 
         grid4.onSort.subscribe(function (e, args) {
-            sortdir = args.sortAsc ? 1 : -1;
-            sortcol = args.sortCol.field;
+            sortdir4 = args.sortAsc ? 1 : -1;
+            sortcol4 = args.sortCol.field;
 
             //if ($.browser.msie && $.browser.version <= 8) {
             //    // using temporary Object.prototype.toString override
@@ -462,7 +462,7 @@ $(function () {
             //} else {
                 // using native sort with comparer
                 // preferred method but can be very slow in IE with huge datasets
-                dataView4.sort(comparer, args.sortAsc);
+                dataView4.sort(comparer4, args.sortAsc);
             //}
         });
 
@@ -472,12 +472,12 @@ $(function () {
             grid4.render();
         });
 
-        dataView4.onRowsChanged.subscribe(function (e, args) {
+        dataView4.onRowsChanged.subscribe(function (e, args : Slick.eventArgs<ITask1>) {
             grid4.invalidateRows(args.rows);
             grid4.render();
         });
 
-        dataView4.onPagingInfoChanged.subscribe(function (e, pagingInfo) {
+        dataView4.onPagingInfoChanged.subscribe(function (e, pagingInfo: Slick.eventArgs<ITask1>) {
             var isLastPage = pagingInfo.pageNum == pagingInfo.totalPages - 1;
             var enableAddRow = isLastPage || pagingInfo.pageSize == 0;
             var options = grid4.getOptions();
@@ -496,10 +496,10 @@ $(function () {
             "slide": function (event, ui) {
                 Slick.GlobalEditorLock.cancelCurrentEdit();
 
-                if (percentCompleteThreshold != ui.value) {
+                if (percentCompleteThreshold4 != ui.value) {
                     window.clearTimeout(h_runfilters);
                     h_runfilters = window.setTimeout(updateFilter, 10);
-                    percentCompleteThreshold = ui.value;
+                    percentCompleteThreshold4 = ui.value;
                 }
             }
         });
@@ -514,14 +514,14 @@ $(function () {
                 this.value = "";
             }
 
-            searchString = this.value;
+            searchString4 = this.value;
             updateFilter();
         });
 
         function updateFilter() {
             dataView4.setFilterArgs({
-                percentCompleteThreshold: percentCompleteThreshold,
-                searchString: searchString
+                percentCompleteThreshold: percentCompleteThreshold4,
+                searchString: searchString4
             });
             dataView4.refresh();
         }
@@ -542,12 +542,12 @@ $(function () {
 
         // initialize the model after all the events have been hooked up
         dataView4.beginUpdate();
-        dataView4.setItems(data);
+        dataView4.setItems(data4);
         dataView4.setFilterArgs({
-            percentCompleteThreshold: percentCompleteThreshold,
-            searchString: searchString
+            percentCompleteThreshold: percentCompleteThreshold4,
+            searchString: searchString4
         });
-        dataView4.setFilter(myFilter);
+        dataView4.setFilter(myFilter4);
         dataView4.endUpdate();
 
         // if you don't want the items that are not visible (due to being filtered out
@@ -555,7 +555,6 @@ $(function () {
         dataView4.syncGridSelection(grid4, true);
 
         $("#gridContainer").resizable();
-    })
 
     //#endregion
 

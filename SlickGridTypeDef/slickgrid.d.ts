@@ -263,6 +263,7 @@ declare module Slick {
     export class Grid<TItem> {
         constructor(container: any, data: TItem[], columns: ColumnOption[], options: GridOptions);
 
+        constructor(container: any, data: Slick.Data.DataView<TItem>, columns: ColumnOption[], options: GridOptions);
 
         /**
         * Initializes the grid. Called after plugins are registered. Normally, this is called by the constructor, so you don't need to call it. However, in certain cases you may need to delay the initialization until some other process has finished. In that case, set the explicitInitialization option to true and call the grid.init() manually.
@@ -378,9 +379,11 @@ declare module Slick {
         * Accepts a row integer and a cell integer, scrolling the view to the row where row is its row index, and cell is its cell index. Optionally accepts a forceEdit boolean which, if true, will attempt to initiate the edit dialogue for the field in the specified cell.
         * Unlike setActiveCell, this scrolls the row into the viewport and sets the keyboard focus.
         */
-        gotoCell (row: number, cell: number, forceEdit: boolean) : void;
+        gotoCell(row: number, cell: number, forceEdit: boolean);
 
-        invalidateRow (row: number) : void;
+        invalidateRow(row: number);
+
+        invlidateRows(rows: any);
 
         /**
         * Switches the active cell one row down skipping unselectable cells. Returns a boolean saying whether it was able to complete or not.
@@ -446,8 +449,8 @@ declare module Slick {
         getCanvasNode(): HTMLElement;
 
         //#region Event Handlers
-        onAddNewRow: ISubscribable;
-        onValidationError: ISubscribable;
+        onAddNewRow: ISubscribable<TItem>;
+        onValidationError: ISubscribable<TItem>;
         //#endregion
 
     }
@@ -473,13 +476,24 @@ declare module Slick {
     }
 
     //#region Events
-    export interface eventArgs {
-        item: any;
+    export interface eventArgs<TItem> {
+        item?: TItem;
+        pageNum?: number;
+        pageSize?: number;
+        rows?: any;
+        totalPages?: number;
+        validationResults?: IValidationResults;
     }
 
-    export interface ISubscribable {
-        subscribe: (fn: (e: Event, args: eventArgs) => void) => void;
+    export interface ISubscribable<TItem> {
+        subscribe: (fn: (e: Event, args: eventArgs<TItem>) => void) => void;
     }
+
+    export interface IValidationResults {
+        msg: string;
+    }
+
+    
     //#endregion
 
     
@@ -492,7 +506,7 @@ declare module Slick.GlobalEditorLock {
 
 declare module Slick.Controls {
     export class Pager<TItem> {
-        constructor(dataView: Slick.Data.DataView, grid: Slick.Grid<TItem>, jQueryElement: JQuery);
+        constructor(dataView: Slick.Data.DataView<TItem>, grid: Slick.Grid<TItem>, jQueryElement: JQuery);
     }
 
     export class ColumnPicker<TItem>{
@@ -501,11 +515,42 @@ declare module Slick.Controls {
 }
 
 declare module Slick.Data {
-    export class DataView {
+    export class DataView<TItem> {
         constructor(options: DataViewOptions);
+
+        addItem(item: TItem);
+
+        beginUpdate();
+
+        endUpdate();
+
+        getLength(): number;
+
+        refresh();
+
+        setFilterArgs(args: any);
+
+        setFilter(filter: (item: TItem, args: any) => boolean);
+
+        setItems(data: TItem[]);
+
+        sort(comparer: (a: TItem, b: TItem) => number, sortDirection: any);
+
+        syncGridSelection(grid : Slick.Grid<TItem>, filterOut: boolean);
+
+        updateItem(id: string, item: TItem);
+
+        //#region events
+        onPagingInfoChanged: ISubscribable<TItem>;
+        onRowCountChanged: ISubscribable<TItem>;
+        onRowsChanged: ISubscribable<TItem>;
+        //#endregion
+
     }
 
     export class DataViewOptions {
         inlineFilters: boolean;
     }
+
+    
 }
