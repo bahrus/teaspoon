@@ -2,7 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!--<script src="testApp.ts" data-handler="server"></script>-->
-    <script src="testApp.ts" data-handler="browser"></script>
+    <!--<script src="testApp.ts" data-handler="browser"></script>-->
+    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct">
+        var model = { Name: "Bruce Anderson" };
+    </script>
+    <script>alert(model.Name);</script>
     <title></title>
 </head>
 <body>

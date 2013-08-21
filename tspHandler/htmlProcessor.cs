@@ -338,36 +338,10 @@ namespace tspHandler
             filePaths.Add(filePath);
         }
 
-        //public void GetListOfDependentUrls(string fileURL, List<string> fileURLs, HttpContext context)
-        //{
-        //}
-
-        //private string GetRelativePath(string currentPath, string linkedPath)
-        //{
-        //}
+        
     }
 
-    public class Console
-    {
-        public void log(object obj)
-        {
-        }
-    }
+    
 
-    public class Navigator
-    {
-        public string userAgent
-        {
-            get
-            {
-                return HttpContext.Current.Request.UserAgent;
-            }
-        }
-
-        public string appVersion {
-            get{
-                return this.userAgent.SubstringAfter("/");
-            }
-        }
-    }
+    
 }

@@ -61,118 +61,16 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="testApp.ts" />
-    <TypeScriptCompile Include="Books.ts" />
-    <Content Include="Books.js">
-      <DependentUpon>Books.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="PropTests.ts" />
-    <Content Include="Books.min.js">
-      <DependentUpon>Books.ts</DependentUpon>
-    </Content>
-    <Content Include="PropTests.js">
-      <DependentUpon>PropTests.ts</DependentUpon>
-    </Content>
-    <Content Include="PropTests.min.js">
-      <DependentUpon>PropTests.ts</DependentUpon>
-    </Content>
-    <Content Include="testApp.js">
-      <DependentUpon>testApp.ts</DependentUpon>
-    </Content>
-    <Content Include="testApp.min.js">
-      <DependentUpon>testApp.ts</DependentUpon>
-    </Content>
     <Content Include="TestPage1.tsp.html" />
-    <TypeScriptCompile Include="ts\lib\controls\VScrollBar.ts" />
-    <TypeScriptCompile Include="ts\lib\controls\control.ts" />
-    <Content Include="ts\lib\controls\control.js">
-      <DependentUpon>control.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="ts\lib\controls\HScrollBar.ts" />
-    <Content Include="ts\lib\controls\control.min.js">
-      <DependentUpon>control.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\HScrollBar.js">
-      <DependentUpon>HScrollBar.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\HScrollBar.min.js">
-      <DependentUpon>HScrollBar.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\VScrollBar.js">
-      <DependentUpon>VScrollBar.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\VScrollBar.min.js">
-      <DependentUpon>VScrollBar.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\ElX.js">
-      <DependentUpon>ElX.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="ts\lib\Interface_ElX.ts" />
-    <TypeScriptCompile Include="ts\lib\ElX.ts" />
-    <Content Include="ts\lib\ElX.min.js">
-      <DependentUpon>ElX.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="ts\lib\ie9.ts" />
-    <Content Include="ts\lib\ie9.js">
-      <DependentUpon>ie9.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="ts\lib\InputElement.ts" />
-    <Content Include="ts\lib\ie9.min.js">
-      <DependentUpon>ie9.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\InputElement.js">
-      <DependentUpon>InputElement.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\InputElement.min.js">
-      <DependentUpon>InputElement.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\Interface_ElX.js">
-      <DependentUpon>Interface_ElX.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="ts\lib\_.ts" />
-    <Content Include="ts\lib\_.js">
-      <DependentUpon>_.ts</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\_.min.js">
-      <DependentUpon>_.ts</DependentUpon>
-    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetrieveProduct.cs" />
+    <Compile Include="TestModel1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="ts\lib\ElX.min.js.map">
-      <DependentUpon>ElX.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\_.min.js.map">
-      <DependentUpon>_.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\ie9.min.js.map">
-      <DependentUpon>ie9.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\InputElement.min.js.map">
-      <DependentUpon>InputElement.js</DependentUpon>
-    </Content>
-    <Content Include="Books.min.js.map">
-      <DependentUpon>Books.js</DependentUpon>
-    </Content>
-    <Content Include="testApp.min.js.map">
-      <DependentUpon>testApp.js</DependentUpon>
-    </Content>
-    <Content Include="PropTests.min.js.map">
-      <DependentUpon>PropTests.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\control.min.js.map">
-      <DependentUpon>control.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\VScrollBar.min.js.map">
-      <DependentUpon>VScrollBar.js</DependentUpon>
-    </Content>
-    <Content Include="ts\lib\controls\HScrollBar.min.js.map">
-      <DependentUpon>HScrollBar.js</DependentUpon>
-    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -186,9 +84,7 @@
       <Name>tspHandler</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ts\TestApp1\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

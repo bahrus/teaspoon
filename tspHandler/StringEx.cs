@@ -90,7 +90,23 @@ namespace tspHandler
             if (stringToSearch == null) return null;
             int iPos = stringToSearch.IndexOf(searchString);
             if (iPos == -1) return string.Empty;
-            return stringToSearch.Substring(iPos);
+            return stringToSearch.Substring(iPos + 1);
+        }
+
+        public static string SubstringAfterLast(this string stringToSearch, string searchString)
+        {
+            if (stringToSearch == null) return null;
+            int iPos = stringToSearch.LastIndexOf(searchString);
+            if (iPos == -1) return string.Empty;
+            return stringToSearch.Substring(iPos + 1);
+        }
+
+        public static string SubstringBeforeLast(this string stringToSearch, string searchString)
+        {
+            if (stringToSearch == null) return null;
+            int iPos = stringToSearch.LastIndexOf(searchString);
+            if (iPos == -1) return stringToSearch;
+            return stringToSearch.Substring(0, iPos);
         }
     }
 
