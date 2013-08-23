@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		WE-settings.xml = WE-settings.xml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurlyBraceParser", "CurlyBraceParser\CurlyBraceParser.csproj", "{04CF9C5C-172C-4A5A-8629-627F703F8D5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenMacros", "ClassGenMacros\ClassGenMacros.csproj", "{ACADE0C9-F545-4648-8359-506F3D5FA416}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

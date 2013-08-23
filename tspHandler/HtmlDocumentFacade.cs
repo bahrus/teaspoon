@@ -1,17 +1,38 @@
-﻿using HtmlAgilityPack;
+﻿using CurlyBraceParser;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using ClassGenMacros;
 
 namespace tspHandler
 {
     public class HtmlDocumentFacade
     {
         private HtmlDocument _htmlDoc;
+        private IDocumentHost _host;
+
+        /// <summary>
+        /// Deprecate
+        /// </summary>
+        /// <param name="Content"></param>
         public HtmlDocumentFacade(string Content)
         {
             _htmlDoc = new HtmlDocument();
             _htmlDoc.LoadHtml(Content);
+        }
+
+        public HtmlDocumentFacade(IDocumentHost host)
+        {
+            _htmlDoc = new HtmlDocument();
+            _host = host;
+            _htmlDoc.LoadHtml(host.GetContentOfDocument());
+        }
+
+        public string GetHostContent(string src)
+        {
+            return _host.GetContentOfRelativeResource(src);
         }
 
         public List<HtmlNodeFacade> getElementsByTagName(string tag)
@@ -57,6 +78,8 @@ namespace tspHandler
             }
         }
 
+        
+
         public HtmlNodeFacade createElement(string tag)
         {
             return new HtmlNodeFacade( _htmlDoc.CreateElement(tag));
@@ -66,68 +89,79 @@ namespace tspHandler
         {
             return new HtmlNodeFacade(_htmlDoc.CreateTextNode(text));
         }
-    }
 
-    public class HtmlNodeFacade
-    {
-        private HtmlNode _node;
-        public HtmlNodeFacade(HtmlNode node)
-        {
-            this._node = node;
-        }
+        private StyleSheet[] _styleSheets;
 
-        public string getAttribute(string key)
-        {
-            return _node.GetAttributeValue(key, "");
-        }
-
-        public void setAttribute(string key, string val)
-        {
-            _node.SetAttributeValue(key, val);
-        }
-
-        public string innerHTML
+        public StyleSheet[] styleSheets
         {
             get
             {
-                return this._node.InnerHtml;
-            }
-            set
-            {
-                this._node.InnerHtml = value;
+                if (this._styleSheets == null)
+                {
+                    #region get external style sheets
+                    var styleSheets = this.getElementsByTagName("link").Where(node =>
+                    {
+                        if (node.getAttribute("href") == null) return false;
+                        string typ = node.getAttribute("type");
+                        if (typ == null) return false;
+                        typ = typ.ToLower().Trim();
+                        return typ == "css/text";
+                    })
+                    .Select(node => node.getAttribute("href"))
+                    .Select(href => this._host.GetContentOfRelativeResource(href))
+                    .Select(cssContent => this.processCssContent(cssContent))
+                    .ToList();
+                    #endregion
+                    #region get css from actual document
+                    var inlineStyles = this.getElementsByTagName("style")
+                        .Select(node => node.innerHTML).ToArray();
+                    styleSheets.Add(this.processCssContent(String.Join("\n\r", inlineStyles)));
+                    #endregion
+                    this._styleSheets = styleSheets.ToArray();
+
+                }
+                return this._styleSheets;
             }
         }
 
-        public HtmlNodeFacade parentNode
+        private StyleSheet processCssContent(string cssContent)
         {
-            get
+            var lines = CurlyBraceParser.Parser.Parse(cssContent);
+            var list = new List<CssRule>();
+            var rules = lines.Where(line =>
             {
-                return new HtmlNodeFacade(this._node.ParentNode);
-            }
-        }
-
-        public void removeChild(HtmlNodeFacade childNode)
-        {
-            this._node.RemoveChild(childNode._node);
-        }
-
-        public List<HtmlNodeFacade> getElementsByTagName(string tag)
-        {
-            var docNode = this._node;
-            var list = new List<HtmlNodeFacade>();
-            Func<HtmlNode, bool> test = node =>
+                var openStatement = line as OpenBraceStatement;
+                return openStatement != null;
+            })
+            .Select(line => line as OpenBraceStatement)
+            .Select(obs => {
+                return new CssRule
+                {
+                    selectorText = obs.FrontTrimmedLiveStatement,
+                    style = this.processStyle(obs.Children),
+                };
+            });
+            return new StyleSheet
             {
-                return node.Name == tag;
-
+                rules = rules.ToArray(),
             };
-            HtmlDocumentFacade.searchForNode(test, docNode, list);
-            return list;
         }
 
-        public void appendChild(HtmlNodeFacade child)
+        private Dictionary<string, string> processStyle(List<ILine> Children)
         {
-            this._node.AppendChild(child._node);
+            var returnObj = new Dictionary<string, string>();
+            Children.ForEach(child =>
+            {
+                var liveStatement = child as LiveStatement;
+                if (liveStatement == null) return;
+                string str = liveStatement.FrontTrimmedLiveStatement;
+                if (!str.Contains(":")) return;
+                var keyValue = str.SplitFirst(":");
+                returnObj[keyValue[0]] = keyValue[1];
+            });
+            return returnObj;
         }
-        
     }
+
+    
 }

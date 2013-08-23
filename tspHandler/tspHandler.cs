@@ -2,35 +2,50 @@
 using System.Linq;
 using System;
 using Newtonsoft.Json;
+using ClassGenMacros;
 
 namespace tspHandler
 {
-    public class tspHandler : IHttpHandler
+    public class tspHandler : IHttpHandler, IDocumentHost
     {
+        private string _documentFilePath;
         public bool IsReusable
         {
             get { return true; }
         }
 
+
+
         public void ProcessRequest(HttpContext context)
         {
-            var currentFilePath = context.Request.PhysicalPath;
-            var content = currentFilePath.ReadFile();
-            var doc = new HtmlDocumentFacade(content);
-            #region process Model
-            var model = doc.getElementsByTagName("script").FirstOrDefault(node => !string.IsNullOrEmpty(node.getAttribute("data-model")));
-            if (model != null)
-            {
-                var staticMethodString = model.getAttribute("data-model");
-                var typeString = staticMethodString.SubstringBeforeLast(".");
-                var methodString = staticMethodString.SubstringAfterLast(".");
-                var typ = Type.GetType(typeString, true);
-                var result = typ.GetMethod(methodString).Invoke(null, null);
-                string json = JsonConvert.SerializeObject(result);
-                model.innerHTML = "var model = " + json;
-            }
-            #endregion
+            //var currentFilePath = context.Request.PhysicalPath;
+            this._documentFilePath = context.Request.PhysicalPath;
+            //var content = currentFilePath.ReadFile();
+            var doc = new HtmlDocumentFacade(this);
+            doc
+                .ProcessServerSideScripts()
+                .RetrieveContext()
+                .PerformServerSideProcessing()
+            ;
             context.Response.Write(doc.Content);
         }
+
+        public string GetContentOfRelativeResource(string path)
+        {
+            return this._documentFilePath.NavigateTo(path).ReadFile();
+        }
+
+
+        public string GetContentOfDocument()
+        {
+            return this._documentFilePath.ReadFile();
+        }
+    }
+
+    public interface IDocumentHost
+    {
+        string GetContentOfRelativeResource(string path);
+
+        string GetContentOfDocument();
     }
 }

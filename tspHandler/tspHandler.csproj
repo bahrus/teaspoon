@@ -37,12 +37,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Noesis.Javascript">
-      <HintPath>..\lib\Noesis.Javascript.dll</HintPath>
-    </Reference>
-    <Reference Include="RemObjects.Script, Version=2.0.65.1067, Culture=neutral, PublicKeyToken=3df3cad1b7aa5098, processorArchitecture=MSIL">
+    <Reference Include="Noesis.Javascript, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\RemObjects.Script.dll</HintPath>
+      <HintPath>..\lib\Noesis.Javascript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,17 +53,32 @@
   <ItemGroup>
     <Compile Include="Console.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
-    <Compile Include="htmlProcessor.cs" />
+    <Compile Include="HtmlNodeFacade.cs" />
     <Compile Include="Navigator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringEx.cs" />
+    <Compile Include="StyleSheet.cs" />
     <Compile Include="tspHandler.cs" />
+    <Compile Include="tspProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Usage.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassGenMacros\ClassGenMacros.csproj">
+      <Project>{acade0c9-f545-4648-8359-506f3d5fa416}</Project>
+      <Name>ClassGenMacros</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CurlyBraceParser\CurlyBraceParser.csproj">
+      <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
+      <Name>CurlyBraceParser</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="tsp.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

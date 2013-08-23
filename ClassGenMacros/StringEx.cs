@@ -1,10 +1,26 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+
 namespace ClassGenMacros
 {
     public static class StringEx
     {
+        public static string ReadFile(this string FilePath)
+        {
+            if (FilePath == null) return null;
+            if (!File.Exists(FilePath)) return null;
+            return File.ReadAllText(FilePath);
+        }
+
+        public static string[] SplitFirst(this string value, string separator)
+        {
+            if (value == null) return null;
+            int iPos = value.IndexOf(separator);
+            if (iPos == -1) return new string[] { value };
+            return new string[] { value.Substring(0, iPos), value.Substring(iPos + separator.Length) };
+        }
 
         public static string SubstringAfter(this string value, string search)
         {
@@ -64,16 +80,47 @@ namespace ClassGenMacros
             };
         }
 
-        public static string GetRelativeFilePath(this string filePath, string relativePath)
+        //public static string GetRelativeFilePath(this string filePath, string relativePath)
+        //{
+        //    var pathTokens = relativePath.Split('/');
+        //    var filePathTokens = filePath.Split('\\');
+        //    var filePathTokenStack = new Stack<string>();
+        //    foreach (string filePathToken in filePathTokens)
+        //    {
+        //        filePathTokenStack.Push(filePathToken);
+        //    }
+        //    filePathTokenStack.Pop();
+        //    foreach (string dirName in pathTokens)
+        //    {
+        //        if (dirName == "..")
+        //        {
+        //            filePathTokenStack.Pop();
+        //        }
+        //        else
+        //        {
+        //            filePathTokenStack.Push(dirName);
+        //        }
+        //    }
+        //    var sl = new List<string>();
+        //    while (filePathTokenStack.Count > 0)
+        //    {
+        //        sl.Add(filePathTokenStack.Pop());
+        //    }
+        //    sl.Reverse();
+        //    string path = string.Join("\\", sl.ToArray());
+        //    return path;
+        //}
+
+        public static string NavigateTo(this string filePathOfWebResource, string relativeURL)
         {
-            var pathTokens = relativePath.Split('/');
-            var filePathTokens = filePath.Split('\\');
+            var pathTokens = relativeURL.Split('/');
+            var filePathTokens = filePathOfWebResource.Split('\\');
             var filePathTokenStack = new Stack<string>();
             foreach (string filePathToken in filePathTokens)
             {
                 filePathTokenStack.Push(filePathToken);
             }
-            filePathTokenStack.Pop();
+            filePathTokenStack.Pop(); //directory of web resource
             foreach (string dirName in pathTokens)
             {
                 if (dirName == "..")
@@ -91,8 +138,7 @@ namespace ClassGenMacros
                 sl.Add(filePathTokenStack.Pop());
             }
             sl.Reverse();
-            string path = string.Join("\\", sl.ToArray());
-            return path;
+            return string.Join("\\", sl.ToArray());
         }
 
         /// <summary>

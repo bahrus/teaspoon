@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -6,37 +7,32 @@ namespace tspHandler
 {
     public static class StringEx
     {
-        public static string ReadFile(this string FilePath)
-        {
-            if (FilePath == null) return null;
-            if (!File.Exists(FilePath)) return null;
-            return File.ReadAllText(FilePath);
-        }
+        
 
-        public static FileInfo GetFileInfo(this string FilePath)
-        {
-            if (FilePath == null) return null;
-            return new FileInfo(FilePath);
-        }
+        //public static FileInfo GetFileInfo(this string FilePath)
+        //{
+        //    if (FilePath == null) return null;
+        //    return new FileInfo(FilePath);
+        //}
 
-        public static BetweenStringsSearch SubstringBetween(this string stringToSearch, string startsWith)
-        {
-            return new BetweenStringsSearch
-            {
-                StringBeingSearched = stringToSearch,
-                StartsWith = startsWith,
-            };
-        }
+        //public static BetweenStringsSearch SubstringBetween(this string stringToSearch, string startsWith)
+        //{
+        //    return new BetweenStringsSearch
+        //    {
+        //        StringBeingSearched = stringToSearch,
+        //        StartsWith = startsWith,
+        //    };
+        //}
 
-        public static ReplaceString ReplaceLast(this string stringToSearch, string searchString)
-        {
-            return new ReplaceString
-            {
-                Last = true,
-                StringToSearch = stringToSearch,
-                SearchString = searchString,
-            };
-        }
+        //public static ReplaceString ReplaceLast(this string stringToSearch, string searchString)
+        //{
+        //    return new ReplaceString
+        //    {
+        //        Last = true,
+        //        StringToSearch = stringToSearch,
+        //        SearchString = searchString,
+        //    };
+        //}
 
         /// <summary>
         /// From http://www.iandevlin.com/blog/2010/01/csharp/generating-a-relative-path-in-csharp
@@ -85,29 +81,31 @@ namespace tspHandler
             return relativePath.ToString();
         }
 
-        public static string SubstringAfter(this string stringToSearch, string searchString)
-        {
-            if (stringToSearch == null) return null;
-            int iPos = stringToSearch.IndexOf(searchString);
-            if (iPos == -1) return string.Empty;
-            return stringToSearch.Substring(iPos + 1);
-        }
+        
 
-        public static string SubstringAfterLast(this string stringToSearch, string searchString)
-        {
-            if (stringToSearch == null) return null;
-            int iPos = stringToSearch.LastIndexOf(searchString);
-            if (iPos == -1) return string.Empty;
-            return stringToSearch.Substring(iPos + 1);
-        }
+        //public static string SubstringAfter(this string stringToSearch, string searchString)
+        //{
+        //    if (stringToSearch == null) return null;
+        //    int iPos = stringToSearch.IndexOf(searchString);
+        //    if (iPos == -1) return string.Empty;
+        //    return stringToSearch.Substring(iPos + 1);
+        //}
 
-        public static string SubstringBeforeLast(this string stringToSearch, string searchString)
-        {
-            if (stringToSearch == null) return null;
-            int iPos = stringToSearch.LastIndexOf(searchString);
-            if (iPos == -1) return stringToSearch;
-            return stringToSearch.Substring(0, iPos);
-        }
+        //public static string SubstringAfterLast(this string stringToSearch, string searchString)
+        //{
+        //    if (stringToSearch == null) return null;
+        //    int iPos = stringToSearch.LastIndexOf(searchString);
+        //    if (iPos == -1) return string.Empty;
+        //    return stringToSearch.Substring(iPos + 1);
+        //}
+
+        //public static string SubstringBeforeLast(this string stringToSearch, string searchString)
+        //{
+        //    if (stringToSearch == null) return null;
+        //    int iPos = stringToSearch.LastIndexOf(searchString);
+        //    if (iPos == -1) return stringToSearch;
+        //    return stringToSearch.Substring(0, iPos);
+        //}
     }
 
     public class BetweenStringsSearch

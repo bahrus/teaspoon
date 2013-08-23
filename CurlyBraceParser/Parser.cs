@@ -13,10 +13,10 @@ namespace CurlyBraceParser
         public static char[] OpenChars   = new char[] { '(', '{', '[', '<' };
         public static char[] ClosedChars = new char[] { ')', '}', ']', '>' };
 
-        public static List<ILine> Parse(string TypeStrict)
+        public static List<ILine> Parse(string CurlyBraceString)
         {
             #region Break Down Text into Lines
-            var sr = new StringReader(TypeStrict);
+            var sr = new StringReader(CurlyBraceString);
             var lines = new List<string>();
             while (sr.Peek() != -1)
             {
@@ -399,7 +399,7 @@ namespace CurlyBraceParser
             pf.Lines = outline;
             foreach (var referenceLine in pf.References)
             {
-                string newPath = FilePath.GetRelativeFilePath(referenceLine.Value.ClientSideReference);
+                string newPath = FilePath.NavigateTo(referenceLine.Value.ClientSideReference);
                 ProcessFile(files, newPath);
             }
         }
