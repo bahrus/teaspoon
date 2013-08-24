@@ -51,13 +51,13 @@ namespace tspHandler
             serverSideScripts.ToList().ForEach(node =>
             {
                 string src = node.getAttribute("src");
-                if (src != null)
+                if (string.IsNullOrEmpty(src))
                 {
-                    sb.AppendLine(doc.GetHostContent(src));
+                    sb.AppendLine(node.innerHTML);
                 }
                 else
                 {
-                    sb.AppendLine(node.innerHTML);
+                    sb.AppendLine(doc.GetHostContent(src));
                 }
                 string mode = node.getAttribute(Mode);
                 if (mode == ServerSideMode)
@@ -69,7 +69,7 @@ namespace tspHandler
             if (script.Length > 0)
             {
                 // Initialize a context
-                sb.AppendLine("tsp.applyRules(document);");
+                //sb.AppendLine("tsp.applyRules(document);");
                 script = sb.ToString();
                 using (JavascriptContext context = new JavascriptContext())
                 {
@@ -80,7 +80,7 @@ namespace tspHandler
                     context.SetParameter("model", model);
                     context.SetParameter("mode", "server");
                     // Running the script
-                    //context.Run(script);
+                    context.Run(script);
                 }
             }
 

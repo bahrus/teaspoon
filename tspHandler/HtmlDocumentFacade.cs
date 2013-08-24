@@ -104,6 +104,12 @@ namespace tspHandler
             return new HtmlNodeFacade(_htmlDoc.CreateTextNode(text));
         }
 
+        public List<HtmlNodeFacade> querySelectorAll(string selectorText)
+        {
+            var returnObj = new List<HtmlNodeFacade>();
+            return returnObj;
+        }
+
         private StyleSheet[] _styleSheets;
 
         public StyleSheet[] styleSheets

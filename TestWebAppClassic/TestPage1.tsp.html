@@ -16,12 +16,13 @@
         }
         
     </style>-->
-    <script data-mode="client-side-only">
+    <script data-mode="server-side-only">
         tsp.push('.content1', {
                 'tsp-condition': function(){return model.Name !== 'Harry Potter';},
                 'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
                 'exe-cond':'tsp.applyConditionalRule',
         });
+        tsp.applyRules(document);
     </script>
     <title></title>
 </head>
