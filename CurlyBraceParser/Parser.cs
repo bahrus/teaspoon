@@ -323,7 +323,7 @@ namespace CurlyBraceParser
                         {
                             LineNumber = lineNo,
                         };
-                        var baseStatement = new LiveStatement(Line: newline);
+                        var baseStatement = new LiveStatement(Line: newline, Statement: new string( liveStatement.ToArray()));
                         switch (openChar)
                         {
                             case '(':

@@ -7,6 +7,19 @@ namespace tspHandler
     public class HtmlNodeFacade
     {
         private HtmlNode _node;
+
+        public string className
+        {
+            get
+            {
+                return this.getAttribute("class");
+            }
+            set
+            {
+                this.setAttribute("class", value);
+            }
+        }
+
         public HtmlNodeFacade(HtmlNode node)
         {
             this._node = node;

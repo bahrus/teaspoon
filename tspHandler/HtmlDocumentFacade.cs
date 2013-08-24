@@ -48,6 +48,20 @@ namespace tspHandler
             return list;
         }
 
+        public List<HtmlNodeFacade> getElementsByClassName(string className)
+        {
+            var docNode = this._htmlDoc.DocumentNode;
+            var list = new List<HtmlNodeFacade>();
+            Func<HtmlNode, bool> test = node =>
+            {
+                string classTest = node.GetAttributeValue("class", string.Empty);
+                string[] classes = classTest.Split(' ');
+                return classes.Contains(className);
+            };
+            searchForNode(test, docNode, list);
+            return list;
+        }
+
         public HtmlNodeFacade getElementById(string id)
         {
             if (id == null) return null;
@@ -135,9 +149,10 @@ namespace tspHandler
             })
             .Select(line => line as OpenBraceStatement)
             .Select(obs => {
+                string selectorText =  obs.FrontTrimmedLiveStatement.SubstringBeforeLast("{").Trim();
                 return new CssRule
                 {
-                    selectorText = obs.FrontTrimmedLiveStatement,
+                    selectorText = selectorText,
                     style = this.processStyle(obs.Children),
                 };
             });
@@ -157,7 +172,9 @@ namespace tspHandler
                 string str = liveStatement.FrontTrimmedLiveStatement;
                 if (!str.Contains(":")) return;
                 var keyValue = str.SplitFirst(":");
-                returnObj[keyValue[0]] = keyValue[1];
+                string key = keyValue[0].Trim();
+                string val = keyValue[1].SubstringBeforeLast(";").Trim();
+                returnObj[key] = val;
             });
             return returnObj;
         }

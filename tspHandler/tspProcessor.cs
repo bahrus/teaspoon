@@ -66,19 +66,22 @@ namespace tspHandler
                 }
             });
             string script = sb.ToString();
-            // Initialize a context
-            using (JavascriptContext context = new JavascriptContext())
+            if (script.Length > 0)
             {
+                // Initialize a context
+                sb.AppendLine("tsp.applyRules(document);");
+                script = sb.ToString();
+                using (JavascriptContext context = new JavascriptContext())
+                {
 
-                // Setting external parameters for the context
-                context.SetParameter("console", new Console());
-                context.SetParameter("document", doc);
-                
-
-                // Running the script
-                context.Run(script);
-
-                
+                    // Setting external parameters for the context
+                    context.SetParameter("console", new Console());
+                    context.SetParameter("document", doc);
+                    context.SetParameter("model", model);
+                    context.SetParameter("mode", "server");
+                    // Running the script
+                    //context.Run(script);
+                }
             }
 
             return doc;

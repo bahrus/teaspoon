@@ -61,8 +61,20 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="file1.ts" />
+    <Content Include="file1.min.js">
+      <DependentUpon>file1.ts</DependentUpon>
+    </Content>
     <Content Include="FundamentalPrinciples.html" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="jquery.d.ts" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="TestPage1.tsp.html" />
+    <Content Include="tsp.min.js">
+      <DependentUpon>tsp.ts</DependentUpon>
+    </Content>
+    <Content Include="tsp.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

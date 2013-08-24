@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspHandler", "tspHandler\tspHandler.csproj", "{265AFA1A-2873-4C1D-8992-5DB42B804DD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebAppClassic", "TestWebAppClassic\TestWebAppClassic.csproj", "{6BBAE0A7-5596-4351-A401-CD107FD4CCD7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FA938F2F-D2C0-404C-99F0-1DE3296616F0} = {FA938F2F-D2C0-404C-99F0-1DE3296616F0}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspScriptLib", "TestWebAppClassic\ts\lib\tspScriptLib.csproj", "{FA938F2F-D2C0-404C-99F0-1DE3296616F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D812289F-30FB-4F43-93DC-952F4E54E77E}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurlyBraceParser", "CurlyBraceParser\CurlyBraceParser.csproj", "{04CF9C5C-172C-4A5A-8629-627F703F8D5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenMacros", "ClassGenMacros\ClassGenMacros.csproj", "{ACADE0C9-F545-4648-8359-506F3D5FA416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspScriptLib", "tspScriptLib\tspScriptLib.csproj", "{6F06D5CE-B4E1-438D-97A1-FBBCC7E2995D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +30,6 @@ Global
 		{6BBAE0A7-5596-4351-A401-CD107FD4CCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BBAE0A7-5596-4351-A401-CD107FD4CCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BBAE0A7-5596-4351-A401-CD107FD4CCD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA938F2F-D2C0-404C-99F0-1DE3296616F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +38,10 @@ Global
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F06D5CE-B4E1-438D-97A1-FBBCC7E2995D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F06D5CE-B4E1-438D-97A1-FBBCC7E2995D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F06D5CE-B4E1-438D-97A1-FBBCC7E2995D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F06D5CE-B4E1-438D-97A1-FBBCC7E2995D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

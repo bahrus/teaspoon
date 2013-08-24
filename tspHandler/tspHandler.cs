@@ -25,7 +25,7 @@ namespace tspHandler
             doc
                 .ProcessServerSideScripts()
                 .RetrieveContext()
-                .PerformServerSideProcessing()
+                //.PerformServerSideProcessing()
             ;
             context.Response.Write(doc.Content);
         }

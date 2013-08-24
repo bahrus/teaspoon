@@ -1,77 +1,33 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <!--<script src="testApp.ts" data-handler="server"></script>-->
-    <!--<script src="testApp.ts" data-handler="browser"></script>-->
-    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct">
-        var model = { Name: "Bruce Anderson" };
+    <script src="tsp.js" data-mode="all"></script>
+    <script src="Scripts/jquery-2.0.3.js"></script>
+    <script src="file1.js"></script>
+    
+    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct" data-mode="server-side-only">
+        var model = { Name: "Harry Potter" };
     </script>
-    <script>alert(model.Name);</script>
+    <!--<style>
+        .content1 {
+            tsp-ssx: 'tsp.applyConditionalRule';
+            tsp-condition : 'model.Name !== "Harry Potter"';
+            tsp-actionIfTrue : 'function(el){el.parentNode.removeChild(el);}';
+        }
+        
+    </style>-->
+    <script data-mode="client-side-only">
+        tsp.push('.content1', {
+                'tsp-condition': function(){return model.Name !== 'Harry Potter';},
+                'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
+                'exe-cond':'tsp.applyConditionalRule',
+        });
+    </script>
     <title></title>
 </head>
 <body>
-        <div id="content">
-        <table>
-            <thead>
-                <tr>
-                    <th>Test Name</th><th>Expected Result</th><th>Actual Result</th>
-                </tr>
-            </thead>
-            <tr>
-                <td>PropTests.Test1</td><td>Prop Val 1</td><td id="PropTests.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>PropTests.Test2</td><td>Prop Val 2</td><td id="PropTests.Test2.Result"></td>
-            </tr>
-            <tr>
-                <td>PropTests.Test3</td><td>new value</td><td id="PropTests.Test3.Result"></td>
-            </tr>
-            <tr>
-                <td>Element.Test1</td><td>hello world</td><td id="Element.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>Element.Test2</td><td>I am here</td><td id="Element.Test2.Result"></td>
-            </tr>
-            <tr>
-                <td>Element.Test3</td><td><div>Parent Div<div>child div</div></div></td><td id="Element.Test3.Result"></td>
-            </tr>
-            <tr>
-                <td>Input.Test1</td><td><input type="text" value="Default Text Value"/></td><td id="Input.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>Input.Label2</td><td><label for="Input.Test2.Expected">label test</label></td><td id="Input.Label2.Result"></td>
-            </tr>
-            <tr>
-                <td>Input.Test2</td><td><input type="text" value="Prop Val 2" id="Input.Test2.Expected"/></td><td id="Input.Test2.Result"></td>
-            </tr>
-            <tr>
-                <td>Input.Test3</td><td><span><label for="Input.Test3.Expected">Label for Checkbox</label><input id="Input.Test3.Expected" type="checkbox"/></span></td><td id="Input.Test3.Result"></td>
-            </tr>
-            <tr>
-                <td>TwoWayBinding.Test1</td><td>Div text should echo textbox</td><td id="TwoWayBinding.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>TwoWayBinding.Test2</td><td>Div text should echo checkbox</td><td id="TwoWayBinding.Test2.Result"></td>
-            </tr>
-            <tr>
-                <td>Lists.Test1</td><td><ul><li>list item 1<ul></ul></li><li>list item 2</li></ul></td><td id="Lists.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>Lists.Test2</td><td><ul><li>JavaScript<ul></ul></li></ul></td><td id="Lists.Test2.Result"></td>
-            </tr>
-            <tr>
-                <td>DynamicLists.Test1</td><td>Master Tree; Click on Chapter to see detail below</td><td id="DynamicLists.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>DynamicLists.Test1.Detail</td><td>Detail Node</td><td id="DynamicLists.Test1.Result.Detail"></td>
-            </tr>
-            <tr>
-                <td>VScrollbar.Test1</td><td>cccc</td><td id="VScrollbar.Test1.Result"></td>
-            </tr>
-            <tr>
-                <td>HScrollbar.Test1</td><td>cccc</td><td id="HScrollbar.Test1.Result"></td>
-            </tr>
-        </table>
-    </div>
+        <div class="content1">Show if model.Name == "Harry Potter"</div>
+        
+        <div class="content2">Show if model.Name == "Apple"</div>
 </body>
 </html>
