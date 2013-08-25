@@ -1,31 +1,6 @@
 declare var mode: string;
 declare var data: any;
 
-// from  http://james.padolsey.com/javascript/element-datastorage/ :
-
-// WITHOUT ENCAPSULATION:
-//(function () {
-
-//    var cache = [{}],
-//        expando = 'data' + +new Date();
-
-//    function data(elem : HTMLElement) {
-
-//        var cacheIndex = elem[expando], nextCacheIndex = cache.length;
-
-//        if (!cacheIndex) {
-//            cacheIndex = elem[expando] = nextCacheIndex;
-//            cache[cacheIndex] = {};
-//        }
-
-//        return cache[cacheIndex];
-
-//    }
-
-//    window['data'] = data;
-
-//})();
-
 module tsp {
 
     var cache = [{}],
@@ -44,11 +19,7 @@ module tsp {
 
     }
 
-    //window['data'] = data;
-
-    //export var clientSideProcessor = 'tsp-csx';
-    //export var serverSideProcessor = 'tsp-ssx';
-    //export var dualSideProcessor = 'tsp-dsx';
+    
     export var processor = 'tsp-processor';
     export var processorScope = 'tsp-scope';
     export var processorScopeLocal = 'tsp-scope-local';
@@ -160,10 +131,7 @@ module tsp {
         }
     }
 
-    //export interface IProcessingRule {
-    //    processor: string;
-    //    processorScope? : string;
-    //}
+    
 
     export interface IConditionalRule {
         condition: (el?:HTMLElement) => boolean;

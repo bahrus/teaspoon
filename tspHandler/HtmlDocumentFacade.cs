@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ClassGenMacros;
+using Fizzler.Systems.HtmlAgilityPack;
 
 namespace tspHandler
 {
@@ -106,8 +107,10 @@ namespace tspHandler
 
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
-            var returnObj = new List<HtmlNodeFacade>();
-            return returnObj;
+            return _htmlDoc.DocumentNode
+                .QuerySelectorAll(selectorText)
+                .Select(node => new HtmlNodeFacade(node))
+                .ToList();
         }
 
         private StyleSheet[] _styleSheets;
