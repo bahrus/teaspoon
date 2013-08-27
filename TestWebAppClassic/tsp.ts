@@ -1,30 +1,14 @@
 declare var mode: string;
-declare var data: any;
 
-// from  http://james.padolsey.com/javascript/element-datastorage/ :
+// Type definitions for the DOM Mutation Observers API
+// http://dom.spec.whatwg.org/#mutation-observers
 
-// WITHOUT ENCAPSULATION:
-//(function () {
 
-//    var cache = [{}],
-//        expando = 'data' + +new Date();
 
-//    function data(elem : HTMLElement) {
-
-//        var cacheIndex = elem[expando], nextCacheIndex = cache.length;
-
-//        if (!cacheIndex) {
-//            cacheIndex = elem[expando] = nextCacheIndex;
-//            cache[cacheIndex] = {};
-//        }
-
-//        return cache[cacheIndex];
-
-//    }
-
-//    window['data'] = data;
-
-//})();
+declare var MutationObserver: {
+  prototype: MutationObserver;
+  new(callback:(records:MutationRecord[])=>any): MutationObserver;
+}
 
 module tsp {
 
@@ -44,15 +28,13 @@ module tsp {
 
     }
 
-    //window['data'] = data;
-
-    //export var clientSideProcessor = 'tsp-csx';
-    //export var serverSideProcessor = 'tsp-ssx';
-    //export var dualSideProcessor = 'tsp-dsx';
-    export var processor = 'tsp-processor';
-    export var processorScope = 'tsp-scope';
-    export var processorScopeLocal = 'tsp-scope-local';
-
+    export function addEventHandler(elem, eventType, handler) {
+        if (elem.addEventListener)
+            elem.addEventListener(eventType, handler, false);
+        else if (elem.attachEvent)
+            elem.attachEvent('on' + eventType, handler);
+    }
+    
     export interface ICascadingRule {
         selectorText: string;
         properties: { [key: string]: any; };
@@ -132,8 +114,6 @@ module tsp {
         //#endregion
     }
 
-    
-
     export function evalRulesSubset(props: { [key: string]: any; }, prefix: string) : any {
         var returnObj = {};
         for (var key in props) {
@@ -147,9 +127,7 @@ module tsp {
         }
         return returnObj;
     }
-
-    
-
+   
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
         var conditionalRule = <IConditionalRule> evalRulesSubset(props, 'tsp-');
         var test = conditionalRule.condition(el);
@@ -160,10 +138,46 @@ module tsp {
         }
     }
 
-    //export interface IProcessingRule {
-    //    processor: string;
-    //    processorScope? : string;
-    //}
+    export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }) {
+        if (typeof (mode) == 'undefined' || mode !== 'server') {
+            //#region observe change to style.display
+            if (typeof(MutationObserver) !== 'undefined') {
+                //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
+                //    // Handle mutations
+                //    for (var i = 0, n = mrs.length; i < n; i++) {
+                //        var mr = mrs[i];
+                //        if (mr.attributeName !== 'style') continue;
+                        
+                //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
+                //        break;
+                //    }
+                //});
+                //observer.observe(el, {  
+                //    attributes: true,
+                //});
+            } else if (el.attachEvent) {
+                //TODO:  deprecate eventually
+                el.attachEvent('onpropertychange', function (ev: Event) {
+                    handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
+                });
+            }
+            //#endregion
+        }
+    }
+
+    function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
+        var sNewValue = el.style.display;
+        var sOldValue = data(el).tsp_display;
+        if (!sOldValue) sOldValue = 'none';
+        data(el).tsp_display = sNewValue;
+        if (!data(el).tsp_lazyloaded && (sNewValue !== 'none')) {
+            el.insertAdjacentHTML('beforebegin', el.innerHTML.trim());
+            el.innerHTML = '';
+        }
+        (<HTMLElement> el.previousSibling).style.display = sNewValue;
+    }
+
+    
 
     export interface IConditionalRule {
         condition: (el?:HTMLElement) => boolean;
@@ -171,5 +185,27 @@ module tsp {
         actionIfFalse?: (el?:HTMLElement) => void;
     }
 
+
+}
+
+module tsp.util {
+    function parse_selector(selector: string) {
+        var simple_selectors = []
+        // Split by the group operator ','
+        var commaDelimitedSelectors = selector.split(',');
+        // Split each selector group by combinators ' ', '+', '~', '>'
+        // :not() is a special case, do not include it as a pseudo-class
+
+        // For the selector div > p:not(.foo) ~ span.bar,
+        // sample output is ['div', 'p', '.foo', 'span', '.bar']
+        return simple_selectors;
+    }
+
+    interface ISelectorCount {
+        isInline: boolean;
+        noOfIds: number;
+        noOfClassOrAttributeOrPseudoClasses: number;
+        noOfContextual
+    }
 
 }

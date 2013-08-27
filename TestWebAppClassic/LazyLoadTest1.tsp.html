@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="tsp.js" data-mode="all"></script>
+    
+    <script>
+        function show() {
+            var myScript = document.getElementById("myScript");
+            myScript.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <script type="text/html" id="myScript">
+        <div>i am here</div>
+    </script>
+    <input type="button" onclick="show()" value="show" />
+    <script>
+        tsp.push('#myScript', {
+            'exe-lzyLoad': 'tsp.lazyLoad',
+        });
+        tsp.applyRules(document);
+    </script>
+</body>
+</html>

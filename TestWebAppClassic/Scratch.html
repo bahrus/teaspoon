@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script>
+        function show() {
+            var el = document.getElementById("myDiv");
+            el.style.display = 'block';
+            //el.title = 'hello';
+        }
+
+        function addEventHandler(elem, eventType, handler) {
+            if (elem.addEventListener)
+                elem.addEventListener(eventType, handler, false);
+            else if (elem.attachEvent)
+                elem.attachEvent('on' + eventType, handler);
+        }
+    </script>
+</head>
+<body>
+    <script type="text/html" id="myDiv">
+        <div>i am here</div>
+    </script>
+    <input type="button" onclick="show()" value="show" />
+    <script>
+        var myNode = document.getElementById('myDiv');
+            myNode.attachEvent('onpropertychange', function (a, b, c, d) {
+            debugger;
+        });
+        //var observer = new MutationObserver(function (mutationRecords) {
+        //    // Handle mutations
+        //    debugger;
+        //    alert('iah');
+        //});
+        
+        //observer.observe(myNode,
+        // {  // options:
+        //     subtree: false,  // observe the subtree rooted at myNode
+        //     childList: false,  // include information childNode insertion/removals
+        //     attributes: true  // include information about changes to attributes within the subtree
+        // });
+    </script>
+</body>
+</html>

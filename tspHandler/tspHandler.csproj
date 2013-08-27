@@ -90,6 +90,7 @@
     <TypeScriptCompile Include="tsp.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="jquery.d.ts" />
     <Content Include="tsp.min.js">
       <DependentUpon>tsp.ts</DependentUpon>
     </Content>
