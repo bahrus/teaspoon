@@ -10,12 +10,12 @@ namespace ClassGenMacros
             var returnObj = new List<FileContentsGeneratedFromAssembly>();
             foreach (var assembly in Assemblies)
             {
-                var processor = assembly.GetCustAttrib<BaseAssemblyProcessorToFileAttribute>();
-                if (processor != null)
+                var processors = assembly.GetCustAttribs<BaseAssemblyProcessorToFileAttribute>();
+                processors.ForEach(processor =>
                 {
                     var processed = processor.Processor.Process(assembly);
-                    returnObj.AddRange(processed);
-                }
+                    returnObj.AddRange(processed); 
+                });
             }
             return returnObj;
         }

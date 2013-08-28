@@ -55,7 +55,7 @@ namespace ClassGenMacros
 
         
 
-        public static string FullQName(this Type type, string rootNS)
+        public static string FullQCSharpName(this Type type, string rootNS)
         {
             if (type.IsGenericType)
             {
@@ -67,8 +67,8 @@ namespace ClassGenMacros
                     
                 }
                 //type.GetGenericArguments()
-                //var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQName(rootNS));
-                var args = type.GetGenericArguments().Select(genericArgType => genericArgType.FullQName(rootNS));
+                //var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQCSharpName(rootNS));
+                var args = type.GetGenericArguments().Select(genericArgType => genericArgType.FullQCSharpName(rootNS));
                 return genericBase + "<" + String.Join(", ", args.ToArray()) + ">";
             }
             var fn = type.FullName.Replace('+', '.');
@@ -81,6 +81,38 @@ namespace ClassGenMacros
             {
                 case "System.Void":
                     return "void";
+                default: return fn;
+            }
+        }
+
+        public static string FullQTypeScriptName(this Type type, string rootNS)
+        {
+            if (type.IsGenericType)
+            {
+                string genericBase = type.FullName.SubstringBefore("`");
+                if (rootNS != null)
+                {
+                    string rootNSDot = rootNS + ".";
+                    if (genericBase.StartsWith(rootNSDot)) genericBase = genericBase.SubstringAfter(rootNSDot);
+
+                }
+                //type.GetGenericArguments()
+                //var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQCSharpName(rootNS));
+                var args = type.GetGenericArguments().Select(genericArgType => genericArgType.FullQCSharpName(rootNS));
+                return genericBase + "<" + String.Join(", ", args.ToArray()) + ">";
+            }
+            var fn = type.FullName.Replace('+', '.');
+            if (rootNS != null)
+            {
+                string rootNSDot = rootNS + ".";
+                if (fn.StartsWith(rootNSDot)) fn = fn.SubstringAfter(rootNSDot);
+            }
+            switch (fn)
+            {
+                case "System.Void":
+                    return "void";
+                case "System.String":
+                    return "string";
                 default: return fn;
             }
         }
@@ -149,6 +181,11 @@ namespace ClassGenMacros
             return attribs[0] as T;
         }
 
+        public static List<T> GetCustAttribs<T>(this Assembly assbly) where T : Attribute
+        {
+            var attribs = assbly.GetCustomAttributes(typeof(T), true);
+            return attribs.Select(attrib => attrib as T).ToList();
+        }
 
     }
 

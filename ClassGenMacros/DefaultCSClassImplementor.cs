@@ -22,7 +22,7 @@ namespace ClassGenMacros
                     string.Empty : "_" + declaringTypeName);
             if (!isStandardInterfaceName) className += "_defaultImpl";
             Block.IncrementLevel();
-            using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQName(typeInfoEx.Type.Namespace)))
+            using (new Block("public partial class " + className + " : " + typeInfoEx.Type.FullQCSharpName(typeInfoEx.Type.Namespace)))
             {
                 #region look for pass throughs
                 var passThroughs = typeInfoEx.Props.Where(prop => prop.PassThrough != null);
@@ -40,7 +40,7 @@ namespace ClassGenMacros
                         passThroughLookup[passThroughProp.Name] = new PassThroughInfo
                         {
                             ComponentPassThroughProperty = propInfoEx.PropertyInfo.Name,
-                            SubPropertyTypeString = passThroughProp.PropertyType.FullQName(typeInfoEx.Type.Namespace),
+                            SubPropertyTypeString = passThroughProp.PropertyType.FullQCSharpName(typeInfoEx.Type.Namespace),
                             PropInfoEx = new PropertyInfoEx
                             {
                                 PropertyInfo = passThroughProp,
@@ -88,7 +88,7 @@ namespace ClassGenMacros
                         accessors += "set;";
                     }
                     accessors += "}";
-                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + prop.PropertyInfo.Name + accessors);
+                    Block.AppendClosingStatement("public " + prop.PropertyInfo.PropertyType.FullQCSharpName(typeInfoEx.Type.Namespace) + " " + prop.PropertyInfo.Name + accessors);
                     if (prop.DefaultValue != null)
                     {
                         propertiesWithDefaultValues.Add(prop);
@@ -105,11 +105,11 @@ namespace ClassGenMacros
                     #endregion
                 }
 
-                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name);
+                var reqParams = requiredProperties.Select(p => p.PropertyInfo.PropertyType.FullQCSharpName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name);
                 
-                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
+                var defParams = propertiesWithDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQCSharpName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
                     p.DefaultValue.Value.ToCharpValue());
-                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
+                var optionalParams = optionalPropertiesWithNoDefaultValues.Select(p => p.PropertyInfo.PropertyType.FullQCSharpName(typeInfoEx.Type.Namespace) + " " + p.PropertyInfo.Name + " = " +
                     p.PropertyInfo.PropertyType.ToDefaultCSharpValue());
                 var allParams = reqParams.Union(defParams).Union(optionalParams);
                 using (new Block("public " + className + "(" + string.Join(", ", allParams.ToArray()) + ")"))

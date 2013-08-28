@@ -20,7 +20,7 @@ namespace ClassGenMacros
             string className = typeInfoEx.Type.Name;
             Block.IncrementLevel();
             var typeToImplement = typeInfoEx.ProcessorAttribute.AssociatedType;
-            using (new Block("public partial class " + className + " : " + typeToImplement.FullQName(typeInfoEx.Type.Namespace)))
+            using (new Block("public partial class " + className + " : " + typeToImplement.FullQCSharpName(typeInfoEx.Type.Namespace)))
             {
                 #region public partial class
                 var allProperties = typeInfoEx.Props.ToList();
@@ -87,7 +87,7 @@ namespace ClassGenMacros
                 {
                     var methodParams = method.GetParameters(); 
                     var incomingArgs =methodParams
-                        .Select(pi => pi.ParameterType.FullQName(ns) + " " + pi.Name
+                        .Select(pi => pi.ParameterType.FullQCSharpName(ns) + " " + pi.Name
                             //+ (pi.HasDefaultValue ? "=" + pi.DefaultValue : null)
                         )
                         .ToList();
@@ -109,7 +109,7 @@ namespace ClassGenMacros
                     {
                         incomingArgs[0] = "this " + incomingArgs[0];
                     }
-                    string returnTypeString = method.ReturnType.FullQName(ns);
+                    string returnTypeString = method.ReturnType.FullQCSharpName(ns);
                     using (new Block("public static " + returnTypeString + " " + method.Name + "(" + string.Join(", ", incomingArgs.ToArray()) + ")"))
                     {
                         Block.AppendStatement((returnTypeString == "void" ? string.Empty : "return ") +  "_this." + method.Name + "(" + string.Join(", ", callingArgs.ToArray()) + ")");
@@ -133,7 +133,7 @@ namespace ClassGenMacros
             {
                 using (new Block("public static class " + typeInfoEx.Type.Namespace.Replace(".", "_") + typeInfoEx.Type.Name + "Extension"))
                 {
-                    Block.AppendClosingStatement("public static void Extend(this " + extType.FullQName(extType.Namespace) + " _this, "
+                    Block.AppendClosingStatement("public static void Extend(this " + extType.FullQCSharpName(extType.Namespace) + " _this, "
                         + ExtensionMethodsImplementor.GetExtensionMethodsClassNS(typeInfoEx, extType.Namespace) + "." + typeInfoEx.Type.Name + "_Ref" + " Extender){}");
 
                 }
