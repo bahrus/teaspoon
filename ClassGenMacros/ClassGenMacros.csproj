@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClassGenMacros</RootNamespace>
     <AssemblyName>ClassGenMacros</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,14 +36,13 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyProcessors.cs" />
     <Compile Include="Control.cs" />
-    <Compile Include="DefaultClassImplementor.cs" />
+    <Compile Include="DefaultCSClassImplementor.cs" />
     <Compile Include="ListEx.cs" />
     <Compile Include="ProcessorAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="TypeInfoEx.cs" />
     <Compile Include="TypeMatch.cs" />
     <Compile Include="TypeProcessors.cs" />
+    <Compile Include="TypeScriptTypeGenerator.cs" />
     <Compile Include="Union.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

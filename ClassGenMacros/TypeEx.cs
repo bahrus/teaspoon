@@ -66,7 +66,9 @@ namespace ClassGenMacros
                     if (genericBase.StartsWith(rootNSDot)) genericBase = genericBase.SubstringAfter(rootNSDot);
                     
                 }
-                var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQName(rootNS));
+                //type.GetGenericArguments()
+                //var args = type.GenericTypeArguments.Select(genericArgType => genericArgType.FullQName(rootNS));
+                var args = type.GetGenericArguments().Select(genericArgType => genericArgType.FullQName(rootNS));
                 return genericBase + "<" + String.Join(", ", args.ToArray()) + ">";
             }
             var fn = type.FullName.Replace('+', '.');
@@ -125,6 +127,29 @@ namespace ClassGenMacros
             // Return an array of FieldInfos
             return (FieldInfo[])constants.ToArray(typeof(FieldInfo));
         }
+
+        public static T GetCustAttrib<T>(this Type type) where T: Attribute
+        {
+            var attribs = type.GetCustomAttributes(typeof(T), true);
+            if (attribs.Length == 0) return null;
+            return attribs[0] as T;
+        }
+
+        public static T GetCustAttrib<T>(this PropertyInfo pi) where T : Attribute
+        {
+            var attribs = pi.GetCustomAttributes(typeof(T), true);
+            if (attribs.Length == 0) return null;
+            return attribs[0] as T;
+        }
+
+        public static T GetCustAttrib<T>(this Assembly assbly) where T : Attribute
+        {
+            var attribs = assbly.GetCustomAttributes(typeof(T), true);
+            if (attribs.Length == 0) return null;
+            return attribs[0] as T;
+        }
+
+
     }
 
     

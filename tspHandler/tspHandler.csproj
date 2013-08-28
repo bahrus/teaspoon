@@ -85,6 +85,10 @@
       <Project>{04cf9c5c-172c-4a5a-8629-627f703f8d5e}</Project>
       <Name>CurlyBraceParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ICurlyBraceParser\ICurlyBraceParser.csproj">
+      <Project>{b65498d1-ddbf-49bc-99cf-fb807d18c186}</Project>
+      <Name>ICurlyBraceParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="tsp.ts" />

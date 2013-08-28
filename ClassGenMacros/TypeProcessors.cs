@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
 namespace ClassGenMacros
 {
@@ -87,8 +87,9 @@ namespace ClassGenMacros
                 {
                     var methodParams = method.GetParameters(); 
                     var incomingArgs =methodParams
-                        .Select(pi => pi.ParameterType.FullQName(ns) + " " + pi.Name +
-                            (pi.HasDefaultValue ? "=" + pi.DefaultValue : null))
+                        .Select(pi => pi.ParameterType.FullQName(ns) + " " + pi.Name
+                            //+ (pi.HasDefaultValue ? "=" + pi.DefaultValue : null)
+                        )
                         .ToList();
                     
                     var callingArgs = method.GetParameters()
@@ -109,9 +110,9 @@ namespace ClassGenMacros
                         incomingArgs[0] = "this " + incomingArgs[0];
                     }
                     string returnTypeString = method.ReturnType.FullQName(ns);
-                    using (new Block("public static " + returnTypeString + " " + method.Name + "(" + string.Join(", ", incomingArgs) + ")"))
+                    using (new Block("public static " + returnTypeString + " " + method.Name + "(" + string.Join(", ", incomingArgs.ToArray()) + ")"))
                     {
-                        Block.AppendStatement((returnTypeString == "void" ? string.Empty : "return ") +  "_this." + method.Name + "(" + string.Join(", ", callingArgs) + ")");
+                        Block.AppendStatement((returnTypeString == "void" ? string.Empty : "return ") +  "_this." + method.Name + "(" + string.Join(", ", callingArgs.ToArray()) + ")");
                     }
                 }
                 #endregion

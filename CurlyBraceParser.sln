@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeStrictTests", "TypeStri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenMacros", "ClassGenMacros\ClassGenMacros.csproj", "{ACADE0C9-F545-4648-8359-506F3D5FA416}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICurlyBraceParser", "ICurlyBraceParser\ICurlyBraceParser.csproj", "{B65498D1-DDBF-49BC-99CF-FB807D18C186}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

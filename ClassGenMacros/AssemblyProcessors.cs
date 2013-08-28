@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
+//using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 namespace ClassGenMacros
@@ -23,19 +23,19 @@ namespace ClassGenMacros
         public static string ProcessToString(Assembly assembly, Func<Type, bool> TypeTest)
         {
             var typesEx = assembly.GetTypes()
-                .Where(type => (type.GetCustomAttribute<BaseTypeProcessorAttribute>()) != null && TypeTest(type))
+                .Where(type => (type.GetCustAttrib<BaseTypeProcessorAttribute>()) != null && TypeTest(type))
                 .Select(type => new TypeInfoEx
                 {
                     Type = type,
                     Props = type.GetPublicProperties().Select(prop => new PropertyInfoEx
                     {
                         PropertyInfo = prop,
-                        DefaultValue = prop.GetCustomAttribute<DefaultValueAttribute>(),
-                        Required = prop.GetCustomAttribute<RequiredAttribute>(),
-                        Ignore = prop.GetCustomAttribute<DoNotAutoGenerateAttribute>(),
-                        PassThrough = prop.GetCustomAttribute<PassThroughComponentAttribute>(),
+                        DefaultValue =  prop.GetCustAttrib<DefaultValueAttribute>(),
+                        Required =      prop.GetCustAttrib<RequiredAttribute>(),
+                        Ignore =        prop.GetCustAttrib<DoNotAutoGenerateAttribute>(),
+                        PassThrough =   prop.GetCustAttrib<PassThroughComponentAttribute>(),
                     }),
-                    ProcessorAttribute = type.GetCustomAttribute<BaseTypeProcessorAttribute>(),
+                    ProcessorAttribute = type.GetCustAttrib<BaseTypeProcessorAttribute>(),
                 })
             ;
             var typeStrings = typesEx.Select(typeEx =>
@@ -101,7 +101,7 @@ namespace ClassGenMacros
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
         {
-            string interfaces = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute <AutoGeneratePropertiesAttribute>() != null);
+            string interfaces = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustAttrib<AutoGeneratePropertiesAttribute>() != null);
             var ret = new List<AssemblyProcessorOutput>();
             var interf = new AssemblyProcessorOutput
             {
@@ -119,7 +119,7 @@ namespace ClassGenMacros
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
         {
-            string extensionClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute<AutoGenerateExtensionMethodsAttribute>() != null);
+            string extensionClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustAttrib<AutoGenerateExtensionMethodsAttribute>() != null);
             var ret = new List<AssemblyProcessorOutput>();
             var interf = new AssemblyProcessorOutput
             {
@@ -137,7 +137,7 @@ namespace ClassGenMacros
     {
         public List<AssemblyProcessorOutput> Process(Assembly assembly)
         {
-            string namingClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustomAttribute<AutoGenerateNamingClassAttribute>() != null);
+            string namingClasses = AssemblyProcessorOutput.ProcessToString(assembly, type => type.IsClass && type.GetCustAttrib<AutoGenerateNamingClassAttribute>() != null);
             var ret = new List<AssemblyProcessorOutput>();
             var interf = new AssemblyProcessorOutput
             {

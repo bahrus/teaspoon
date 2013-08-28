@@ -10,7 +10,7 @@ namespace ClassGenMacros
             var returnObj = new List<AssemblyProcessorOutput>();
             foreach (var assembly in Assemblies)
             {
-                var processor = assembly.GetCustomAttribute<BaseAssemblyProcessorAttribute>();
+                var processor = assembly.GetCustAttrib<BaseAssemblyProcessorAttribute>();
                 if (processor != null)
                 {
                     var processed = processor.Processor.Process(assembly);

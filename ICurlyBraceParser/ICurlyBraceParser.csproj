@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04CF9C5C-172C-4A5A-8629-627F703F8D5E}</ProjectGuid>
+    <ProjectGuid>{B65498D1-DDBF-49BC-99CF-FB807D18C186}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CurlyBraceParser</RootNamespace>
-    <AssemblyName>CurlyBraceParser</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>ICurlyBraceParser</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -18,10 +18,9 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TypeStrict</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,64 +29,29 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassStatementInterpreter.cs" />
-    <Compile Include="CSharp\ContentGenerator.cs" />
-    <Compile Include="CSharp\CSharpFile.cs" />
-    <Compile Include="CSharp\NameTypes.cs" />
-    <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
-    <Compile Include="CSharp\TypeStrict2CSharpTranspiler.cs" />
-    <Compile Include="CSharp\VSProject.cs" />
-    <Compile Include="DOM\HtmlDocumentFacade.cs" />
-    <Compile Include="ICanBePublicStatement.cs" />
-    <Compile Include="ICurlyBraceParser.defaultImpl.cs" />
-    <Compile Include="InterfaceInterpreter.cs" />
-    <Compile Include="LiveStatement.cs" />
-    <Compile Include="ModuleInterpreter.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="ProcessedFile.cs" />
-    <Compile Include="ReferenceInterpreter.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticFunctionInterpreter.cs" />
-    <Compile Include="TypeStrictInterpreter.cs" />
-    <Compile Include="VarInterpreter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassGenMacros\ClassGenMacros.csproj">
       <Project>{acade0c9-f545-4648-8359-506f3d5fa416}</Project>
       <Name>ClassGenMacros</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICurlyBraceParser\ICurlyBraceParser.csproj">
-      <Project>{b65498d1-ddbf-49bc-99cf-fb807d18c186}</Project>
-      <Name>ICurlyBraceParser</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PostBuildEvent>$(ProjectDir)Macros\AutoGen.exe $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
