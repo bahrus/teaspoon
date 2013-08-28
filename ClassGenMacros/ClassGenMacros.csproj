@@ -40,9 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyProcessors.cs" />
+    <Compile Include="CSharpAssemblyProcessors.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="DefaultCSClassImplementor.cs" />
+    <Compile Include="FileContentsGeneratedFromAssembly.cs" />
     <Compile Include="ListEx.cs" />
     <Compile Include="ProcessorAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="TypeInfoEx.cs" />
     <Compile Include="TypeMatch.cs" />
     <Compile Include="TypeProcessors.cs" />
+    <Compile Include="TypeScriptAssemblyProcessors.cs" />
     <Compile Include="TypeScriptTypeGenerator.cs" />
     <Compile Include="Union.cs" />
   </ItemGroup>

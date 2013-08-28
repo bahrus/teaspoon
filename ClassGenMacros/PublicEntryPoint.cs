@@ -5,12 +5,12 @@ namespace ClassGenMacros
 {
     public static class PublicEntryPoint
     {
-        public static List<AssemblyProcessorOutput> ProcessAssemblies(this List<Assembly> Assemblies)
+        public static List<FileContentsGeneratedFromAssembly> ProcessAssemblies(this List<Assembly> Assemblies)
         {
-            var returnObj = new List<AssemblyProcessorOutput>();
+            var returnObj = new List<FileContentsGeneratedFromAssembly>();
             foreach (var assembly in Assemblies)
             {
-                var processor = assembly.GetCustAttrib<BaseAssemblyProcessorAttribute>();
+                var processor = assembly.GetCustAttrib<BaseAssemblyProcessorToFileAttribute>();
                 if (processor != null)
                 {
                     var processed = processor.Processor.Process(assembly);
