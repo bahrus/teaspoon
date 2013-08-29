@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CurlyBraceParser.DOM;
+//using CurlyBraceParser.DOM;
 
 public static partial class tsp
 {
@@ -35,7 +35,7 @@ public static partial class tsp
     public interface IElX
     {
         IDOMBinder bindInfo { get; set; }
-        HTMLElement el { get; set; }
+        //HTMLElement el { get; set; }
         IElX[] kidElements { get; set; }
         bool selected { get; set; }
         bool _rendered { get; set; }
@@ -70,11 +70,11 @@ public static partial class tsp
     }
     public interface ITopicEvent
     {
-        Event topicEvent { get; set; }
+        //Event topicEvent { get; set; }
     }
     public interface IRenderContextProps
     {
         string targetDomID { get; set; }
-        HTMLElement targetDom { get; set; }
+        //HTMLElement targetDom { get; set; }
     }
 }

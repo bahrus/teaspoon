@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CurlyBraceParser</RootNamespace>
     <AssemblyName>CurlyBraceParser</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +43,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -53,7 +54,6 @@
     <Compile Include="CSharp\InterfaceStatementCSharp.cs" />
     <Compile Include="CSharp\TypeStrict2CSharpTranspiler.cs" />
     <Compile Include="CSharp\VSProject.cs" />
-    <Compile Include="DOM\HtmlDocumentFacade.cs" />
     <Compile Include="ICanBePublicStatement.cs" />
     <Compile Include="ICurlyBraceParser.defaultImpl.cs" />
     <Compile Include="InterfaceInterpreter.cs" />
@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
+    <Folder Include="DOM\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassGenMacros\ClassGenMacros.csproj">
@@ -89,6 +90,7 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -18,6 +18,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tspScriptLib", "tspScriptLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICurlyBraceParser", "ICurlyBraceParser\ICurlyBraceParser.csproj", "{B65498D1-DDBF-49BC-99CF-FB807D18C186}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F8598F7-6691-4A8E-86E9-93E2115C0A14}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
