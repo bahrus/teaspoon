@@ -6,20 +6,22 @@
     
     <script>
         function show() {
-            var myScript = document.getElementById("myScript");
+            var myScript = document.getElementById("myDiv");
             myScript.style.display = 'block';
         }
     </script>
 </head>
 <body>
-    <script type="text/html" id="myScript">
-        <div>i am here</div>
-    </script>
+    <div id="myDiv">i am here</div>
     <input type="button" onclick="show()" value="show" />
-    <script>
-        tsp.push('#myScript', {
-            'exe-lzyLoad': 'tsp.lazyLoad',
+    <script data-mode="server-side-only">
+        tsp.push('#myDiv', {
+            'exe-lazyLoad': 'tsp.lazyLoad',
         });
+        tsp.applyRules(document);
+    </script>
+    <script data-mode="client-side-only">
+        debugger;
         tsp.applyRules(document);
     </script>
 </body>

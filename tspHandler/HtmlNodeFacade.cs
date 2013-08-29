@@ -20,6 +20,18 @@ namespace tspHandler
             }
         }
 
+        public string id
+        {
+            get
+            {
+                return _node.Id;
+            }
+            set
+            {
+                _node.Id = value;
+            }
+        }
+
         public HtmlNodeFacade(HtmlNode node)
         {
             this._node = node;
@@ -73,9 +85,20 @@ namespace tspHandler
             return list;
         }
 
-        public void appendChild(HtmlNodeFacade child)
+        public HtmlNodeFacade appendChild(HtmlNodeFacade child)
         {
-            this._node.AppendChild(child._node);
+            var parent = child.parentNode;
+            var returnObj = this._node.AppendChild(child._node);
+            if (parent != null)
+            {
+                parent.removeChild(child);
+            }
+            return new HtmlNodeFacade(returnObj);
+        }
+
+        public HtmlNodeFacade insertBefore(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
+        {
+            return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node));
         }
 
     }

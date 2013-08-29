@@ -5,12 +5,14 @@ declare var mode: string;
 
 
 
-declare var MutationObserver: {
-  prototype: MutationObserver;
-  new(callback:(records:MutationRecord[])=>any): MutationObserver;
-}
+//declare var MutationObserver: {
+//  prototype: MutationObserver;
+//  new(callback:(records:MutationRecord[])=>any): MutationObserver;
+//}
 
 module tsp {
+
+    var reserved_lazyLoad = 'reserved_lazyLoad';
 
     var cache = [{}],
         expando = 'data' + +new Date();
@@ -28,12 +30,12 @@ module tsp {
 
     }
 
-    export function addEventHandler(elem, eventType, handler) {
-        if (elem.addEventListener)
-            elem.addEventListener(eventType, handler, false);
-        else if (elem.attachEvent)
-            elem.attachEvent('on' + eventType, handler);
-    }
+    //export function addEventHandler(elem, eventType, handler) {
+    //    if (elem.addEventListener)
+    //        elem.addEventListener(eventType, handler, false);
+    //    else if (elem.attachEvent)
+    //        elem.attachEvent('on' + eventType, handler);
+    //}
     
     export interface ICascadingRule {
         selectorText: string;
@@ -106,12 +108,44 @@ module tsp {
                         if (typeof (fn) === 'string') {
                             fn = eval(fn);
                         }
-                        fn(nd, data(nd).tsp);
+                        fn(nd, data(nd).tsp, doc);
                     }
                 }
             }
         }
         //#endregion
+        //#region perform reserved rules
+        if (typeof (mode) == 'undefined' || mode !== 'server') {
+            var nds = doc.querySelectorAll('.' + reserved_lazyLoad);
+            for (var j = 0, n = nds.length; j < n; j++) {
+                var nd = <HTMLElement> nds[j];
+                if (typeof (MutationObserver) !== 'undefined') {
+                    //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
+                    //    // Handle mutations
+                    //    for (var i = 0, n = mrs.length; i < n; i++) {
+                    //        var mr = mrs[i];
+                    //        if (mr.attributeName !== 'style') continue;
+
+                    //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
+                    //        break;
+                    //    }
+                    //});
+                    //observer.observe(el, {  
+                    //    attributes: true,
+                    //});
+                } else if (nd.attachEvent) {
+                    //TODO:  deprecate eventually - ie 10 and earlier
+                    nd.attachEvent('onpropertychange', handleOnPropertyChange);
+                }
+            }
+        }
+        
+        //#endregion
+    }
+
+    function handleOnPropertyChange(ev: Event) {
+        if(ev['propertyName'] !== 'style.display') return;
+        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
     }
 
     export function evalRulesSubset(props: { [key: string]: any; }, prefix: string) : any {
@@ -138,43 +172,41 @@ module tsp {
         }
     }
 
-    export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }) {
-        if (typeof (mode) == 'undefined' || mode !== 'server') {
-            //#region observe change to style.display
-            if (typeof(MutationObserver) !== 'undefined') {
-                //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
-                //    // Handle mutations
-                //    for (var i = 0, n = mrs.length; i < n; i++) {
-                //        var mr = mrs[i];
-                //        if (mr.attributeName !== 'style') continue;
-                        
-                //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
-                //        break;
-                //    }
-                //});
-                //observer.observe(el, {  
-                //    attributes: true,
-                //});
-            } else if (el.attachEvent) {
-                //TODO:  deprecate eventually
-                el.attachEvent('onpropertychange', function (ev: Event) {
-                    handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
-                });
-            }
-            //#endregion
-        }
+    export function lazyLoadClientSide(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
+    }
+
+    export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
+        console.log(mode);
+        if (typeof (mode) == 'undefined' || mode !== 'server') return;
+        var ndHidden = doc.createElement('script');
+        var sOriginalID = el.id;
+        el.setAttribute('data-originalID', sOriginalID);
+        el.id = el.id + '_temp';
+        ndHidden.setAttribute('type', 'text/html');
+        ndHidden.className = reserved_lazyLoad;
+        var inserted = <HTMLElement> el.parentNode.insertBefore(ndHidden, el);
+        inserted.appendChild(el);
+        inserted.setAttribute('id', sOriginalID);
     }
 
     function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
         var sNewValue = el.style.display;
         var sOldValue = data(el).tsp_display;
         if (!sOldValue) sOldValue = 'none';
+        if (sNewValue == sOldValue) return;
+        if (el.detachEvent) {
+            el.detachEvent('onpropertychange', handleOnPropertyChange);
+        }
         data(el).tsp_display = sNewValue;
         if (!data(el).tsp_lazyloaded && (sNewValue !== 'none')) {
             el.insertAdjacentHTML('beforebegin', el.innerHTML.trim());
             el.innerHTML = '';
         }
-        (<HTMLElement> el.previousSibling).style.display = sNewValue;
+        var newElement = (<HTMLElement> el.previousSibling);
+        newElement.style.display = sNewValue;
+        newElement.id = newElement.getAttribute('data-originalID');
+        
+        el.parentNode.removeChild(el);
     }
 
     
