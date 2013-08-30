@@ -1,26 +1,18 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <script src="tsp.js" data-mode="all"></script>
+    <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="file1.js"></script>
     
     <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct" data-mode="server-side-only">
         var model = { Name: "Harry Potter" };
     </script>
-    <!--<style>
-        .content1 {
-            tsp-ssx: 'tsp.applyConditionalRule';
-            tsp-condition : 'model.Name !== "Harry Potter"';
-            tsp-actionIfTrue : 'function(el){el.parentNode.removeChild(el);}';
-        }
-        
-    </style>-->
     <script data-mode="server-side-only">
-        tsp.push('.content1', {
-                'tsp-condition': function(){return model.Name !== 'Harry Potter';},
+        tsp._if('.content1', {
+                'tsp-condition': function () { return model.Name !== 'Harry Potter'; },
                 'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
-                'exe-cond':'tsp.applyConditionalRule',
+                'call':tsp.applyConditionalRule,
         });
         tsp.applyRules(document);
     </script>

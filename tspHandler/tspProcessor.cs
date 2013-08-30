@@ -16,7 +16,7 @@ namespace tspHandler
         public const string Mode = "data-mode";
         public const string ServerSideMode = "server-side-only";
         public const string ClientSideMode = "client-side-only";
-        public const string AllMode = "all";
+        public const string BothMode = "both";
         
 
         private static object InvokeServerSideMethod(string StaticMethodString, object[] args)
@@ -34,7 +34,7 @@ namespace tspHandler
             {
                 string mode = node.getAttribute(Mode);
                 if (string.IsNullOrEmpty(mode)) return false;
-                return (mode == ServerSideMode || mode == AllMode);
+                return (mode == ServerSideMode || mode == BothMode);
 
             });
             var model = serverSideScripts.FirstOrDefault(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
@@ -93,17 +93,17 @@ namespace tspHandler
             return doc;
         }
 
-        public static HtmlDocumentFacade PerformServerSideProcessing(this HtmlDocumentFacade doc)
-        {
-            var relevantStyles = doc.styleSheets
-                .SelectMany(ss => ss.rules)
-                .Where(rule => rule.style.ContainsKey(ServerSideProcessor));
-            relevantStyles.ToList().ForEach(rule =>
-            {
-                string staticMethodString = rule.style[ServerSideProcessor];
-                InvokeServerSideMethod(staticMethodString, new object[] { rule, doc });
-            });
-            return doc;
-        }
+        //public static HtmlDocumentFacade PerformServerSideProcessing(this HtmlDocumentFacade doc)
+        //{
+        //    var relevantStyles = doc.styleSheets
+        //        .SelectMany(ss => ss.rules)
+        //        .Where(rule => rule.style.ContainsKey(ServerSideProcessor));
+        //    relevantStyles.ToList().ForEach(rule =>
+        //    {
+        //        string staticMethodString = rule.style[ServerSideProcessor];
+        //        InvokeServerSideMethod(staticMethodString, new object[] { rule, doc });
+        //    });
+        //    return doc;
+        //}
     }
 }

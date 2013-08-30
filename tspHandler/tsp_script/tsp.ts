@@ -7,6 +7,7 @@ declare var mode: string;
 module tsp {
 
     var reserved_lazyLoad = 'reserved_lazyLoad';
+    var condition = 'tsp-condition';
 
     var cache = [{}],
         expando = 'data' + +new Date();
@@ -42,13 +43,16 @@ module tsp {
 
     var uidIdx = 0;
 
-    export function push(selectorText: string, props: { [key: string]: any; }) {
+    export function _if(selectorText: string, props: { [key: string]: any; }) : typeof tsp {
         rules[currIdx++] = {
             selectorText: selectorText,
             properties: props,
             docOrder: currIdx,
         };
+        return tsp;
     }
+
+    
 
     export function applyRules(doc: HTMLDocument) {
         var affectedEls: { [key: string]: HTMLElement; } = {};
@@ -79,7 +83,10 @@ module tsp {
                 for (var key in props) {
                     if (props.hasOwnProperty(key)) {
                         var sKey = <string> key;
-                        if (sKey.substr(0, 4) === 'exe-') {
+                        if (sKey.substr(0, 4) === 'call') {
+                            if (sKey.length == 4) {
+                                sKey += uidIdx++;
+                            }
                             exe_props[sKey] = props[key];
                         } else {
                             tsp_props[sKey] = props[key];
