@@ -138,11 +138,9 @@
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="TestPage1.tsp.html" />
-    <Content Include="tsp.min.js">
-      <DependentUpon>tsp.ts</DependentUpon>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
     </Content>
-    <Content Include="tsp.ts" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -203,11 +201,28 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- ======================== -->
+  <!-- Copy linked files -->
+  <Target Name="_CopyLinkedContentFiles">
+    <!-- Remove any old copies of the files -->
+    <Delete Condition=" '%(Content.Link)' != '' AND Exists('$(WebProjectOutputDir)\%(Content.Link)') " Files="$(WebProjectOutputDir)\%(Content.Link)" />
+    <!-- Copy linked content files recursively to the project folder -->
+    <Copy Condition=" '%(Content.Link)' != '' " SourceFiles="%(Content.Identity)" DestinationFiles="$(WebProjectOutputDir)\%(Content.Link)" />
+  </Target>
+  <PropertyGroup>
+    <!-- <PostBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)_build\site.xml"</PostBuildEvent> -->
+  </PropertyGroup>
+  <!-- ======================== -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
+  
   -->
+  <Target Name="AfterBuild">
+    <!-- Remove any old copies of the files -->
+    <Delete Condition=" '%(Content.Link)' != '' AND Exists('$(ProjectDir)\%(Content.Link)') " Files="$(ProjectDir)\%(Content.Link)" />
+    <!-- Copy linked content files recursively to the project folder -->
+    <Copy Condition=" '%(Content.Link)' != '' " SourceFiles="%(Content.Identity)" DestinationFiles="$(ProjectDir)\%(Content.Link)" />
+  </Target>
 </Project>

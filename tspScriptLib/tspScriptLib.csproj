@@ -17,9 +17,6 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="..\tspHandler\tsp.ts">
-      <Link>tsp.ts</Link>
-    </TypeScriptCompile>
     <Content Include="app.css" />
     <Content Include="default.htm" />
     <Content Include="web.config" />

@@ -1,5 +1,5 @@
 ///<reference path='jquery.d.ts'/>
-///<reference path='tsp.ts'/>
+////<reference path='tsp.ts'/>
 //var mode = "server";
 $(function () {
     //tsp.push({
@@ -9,5 +9,5 @@ $(function () {
     //        'tsp-actionIfTrue': 'function(el){el.parentNode.removeChild(el);}',
     //    },
     //});
-    tsp.applyRules(document);
+    //tsp.applyRules(document);
 });

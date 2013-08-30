@@ -4,12 +4,6 @@ declare var mode: string;
 // http://dom.spec.whatwg.org/#mutation-observers
 
 
-
-//declare var MutationObserver: {
-//  prototype: MutationObserver;
-//  new(callback:(records:MutationRecord[])=>any): MutationObserver;
-//}
-
 module tsp {
 
     var reserved_lazyLoad = 'reserved_lazyLoad';
@@ -17,25 +11,25 @@ module tsp {
     var cache = [{}],
         expando = 'data' + +new Date();
 
+    function trim(s) {
+        if (s.trim) return s.trim();
+        var l = 0; var r = s.length - 1;
+        while (l <= r && s[l] == ' ')
+        { l++; }
+        while (r > l && s[r] == ' ')
+        { r -= 1; }
+        return s.substring(l, r + 1);
+    }
+
+
     function data(elem: HTMLElement) : any {
-
         var cacheIndex = elem[expando], nextCacheIndex = cache.length;
-
         if (!cacheIndex) {
             cacheIndex = elem[expando] = nextCacheIndex;
             cache[cacheIndex] = {};
         }
-
         return cache[cacheIndex];
-
     }
-
-    //export function addEventHandler(elem, eventType, handler) {
-    //    if (elem.addEventListener)
-    //        elem.addEventListener(eventType, handler, false);
-    //    else if (elem.attachEvent)
-    //        elem.attachEvent('on' + eventType, handler);
-    //}
     
     export interface ICascadingRule {
         selectorText: string;
@@ -172,11 +166,7 @@ module tsp {
         }
     }
 
-    export function lazyLoadClientSide(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
-    }
-
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
-        console.log(mode);
         if (typeof (mode) == 'undefined' || mode !== 'server') return;
         var ndHidden = doc.createElement('script');
         var sOriginalID = el.id;
@@ -199,13 +189,11 @@ module tsp {
         }
         data(el).tsp_display = sNewValue;
         if (!data(el).tsp_lazyloaded && (sNewValue !== 'none')) {
-            el.insertAdjacentHTML('beforebegin', el.innerHTML.trim());
-            el.innerHTML = '';
+            el.insertAdjacentHTML('beforebegin', trim(el.innerHTML));
         }
         var newElement = (<HTMLElement> el.previousSibling);
         newElement.style.display = sNewValue;
         newElement.id = newElement.getAttribute('data-originalID');
-        
         el.parentNode.removeChild(el);
     }
 

@@ -10,3 +10,5 @@ packages/
 /CurlyBraceParser/TestResults/*.ldf
 /TestWebAppClassic/Web.Debug.config
 /TestWebAppClassic/Web.Release.config
+
+/TestWebAppClassic/tsp_script
