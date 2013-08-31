@@ -138,6 +138,7 @@
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="TestPage1.tsp.html" />
+    <Content Include="tsp_script\tsp.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -158,6 +159,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ITestWebAppClassic\ITestWebAppClassic.csproj">
+      <Project>{baae5e90-332c-41e8-a21a-e9a25682c396}</Project>
+      <Name>ITestWebAppClassic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\tspHandler\tspHandler.csproj">
       <Project>{265afa1a-2873-4c1d-8992-5db42b804dd3}</Project>
       <Name>tspHandler</Name>

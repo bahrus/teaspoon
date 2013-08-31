@@ -6,8 +6,9 @@ declare var mode: string;
 
 module tsp {
 
+    export var prefix = 'tsp-';
+
     var reserved_lazyLoad = 'reserved_lazyLoad';
-    var condition = 'tsp-condition';
 
     var cache = [{}],
         expando = 'data' + +new Date();
@@ -38,6 +39,47 @@ module tsp {
         docOrder: number;
     }
 
+    export interface IMergeCallOptions<T> {
+        prefix?: string;
+        call?: (el: HTMLElement, props: { [key: string]: any; }) => void;
+        options?: T;
+        callLabel?: string;
+    }
+
+    export interface IObjectMerge {
+        mergedObject: { [key: string]: any; };
+        merge<T>(prifix: string, obj: T);
+    }
+
+    export class ObjectMerge implements IObjectMerge {
+        mergedObject: { [key: string]: any; };
+        merge<T>(callOpts: IMergeCallOptions<T>) {
+            var prefix = callOpts.prefix ? callOpts.prefix : '';
+            var obj = callOpts.options;
+            if (obj) {
+                for (var prop in callOpts.options) {
+                    var sProp = <string> prop;
+                    this.mergedObject[prefix + sProp] = obj[prop];
+                }
+            }
+            var sCall = callOpts.callLabel ? callOpts.callLabel : 'call';
+            if (callOpts.call) this.mergedObject[sCall] = callOpts.call;
+        }
+        constructor(mergedObject: { [key: string]: any; }) {
+            this.mergedObject = mergedObject;
+        }
+    }
+
+    export function beginMerge<T>(callOpts: IMergeCallOptions<T>) : ObjectMerge {
+        var mergedObject: { [key: string]: any; } = {};
+        var om = new ObjectMerge(mergedObject);
+        om.merge(callOpts);
+        return om;
+    }
+
+    
+
+
     var rules: ICascadingRule[] = [];
     var currIdx = 0;
 
@@ -58,6 +100,7 @@ module tsp {
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules
         //TODO:  sort the rules according to precedence as described here: http://www.vanseodesign.com/css/css-specificity-inheritance-cascaade/
+        console.log('currIdx = ' + currIdx);
         for (var i = 0; i < currIdx; i++) {
             //#region iterate over all the rules
             var rule = rules[i];
@@ -68,6 +111,7 @@ module tsp {
                 if (!nd.id) {
                     nd.id = 'tsp_' + uidIdx++;
                 }
+                console.log(nd.id);
                 affectedEls[nd.id] = nd;
                 var tsp_props: { [key: string]: any; } = data(nd).tsp;
                 if (!tsp_props) {
@@ -164,7 +208,7 @@ module tsp {
     }
    
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
-        var conditionalRule = <IConditionalRule> evalRulesSubset(props, 'tsp-');
+        var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
         var test = conditionalRule.condition(el);
         if (test && conditionalRule.actionIfTrue) {
             conditionalRule.actionIfTrue(el);
@@ -183,7 +227,8 @@ module tsp {
         ndHidden.className = reserved_lazyLoad;
         var inserted = <HTMLElement> el.parentNode.insertBefore(ndHidden, el);
         inserted.appendChild(el);
-        inserted.setAttribute('id', sOriginalID);
+        //inserted.setAttribute('id', sOriginalID);
+        inserted.id = sOriginalID;
     }
 
     function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
@@ -204,10 +249,17 @@ module tsp {
         el.parentNode.removeChild(el);
     }
 
-    
+    export function createConditionalRule(conditionalRule: IConditionalRule) {
+        var conditionObj = tsp.beginMerge<tsp.IConditionalRule>({
+            call: applyConditionalRule,
+            prefix: prefix,
+            options: conditionalRule,
+        });
+        return conditionObj;
+    }
 
     export interface IConditionalRule {
-        condition: (el?:HTMLElement) => boolean;
+        condition?: (el?:HTMLElement) => boolean;
         actionIfTrue?: (el?:HTMLElement) => void;
         actionIfFalse?: (el?:HTMLElement) => void;
     }

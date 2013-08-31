@@ -1,13 +1,16 @@
 ///<reference path='jquery.d.ts'/>
-////<reference path='tsp.ts'/>
-//var mode = "server";
-$(function () {
-    //tsp.push({
-    //    selectorText: '.content1',
-    //    properties: {
-    //        'tsp-condition': 'model.Name !== "Harry Potter"',
-    //        'tsp-actionIfTrue': 'function(el){el.parentNode.removeChild(el);}',
-    //    },
-    //});
-    //tsp.applyRules(document);
-});
+///<reference path='tsp_script/tsp.ts'/>
+///<reference path='ITestWebAppClassic.d.ts'/>
+
+declare var model: TestWebAppClassic.IProduct;
+
+tsp._if('.content2',
+    tsp.createConditionalRule({
+        condition: (el?: HTMLElement) => model.Price > 3,
+        actionIfTrue: (el?: HTMLElement) => { el.parentNode.removeChild(el); },
+    }).mergedObject
+);
+
+
+
+

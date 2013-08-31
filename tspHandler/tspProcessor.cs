@@ -46,7 +46,7 @@ namespace tspHandler
                 model.innerHTML = "var model = " + json;
                 
             }
-            serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
+            //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
             var sb = new StringBuilder();
             serverSideScripts.ToList().ForEach(node =>
             {

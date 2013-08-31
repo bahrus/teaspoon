@@ -12,7 +12,7 @@ namespace ClassGenMacros
             string declaringTypeName = typeInfoEx.Type.DeclaringType != null ? typeInfoEx.Type.DeclaringType.Name : null;
             string interfaceName = typeInfoEx.Type.Name;
             Block.IncrementLevel();
-            using (new Block("export interface " + interfaceName + " : " + typeInfoEx.Type.FullQCSharpName(typeInfoEx.Type.Namespace)))
+            using (new Block("export interface " + interfaceName))
             {
                 
                 #region interface body

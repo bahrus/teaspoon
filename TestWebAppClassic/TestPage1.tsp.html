@@ -2,25 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
-    <script src="Scripts/jquery-2.0.3.js"></script>
-    <script src="file1.js"></script>
     
-    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct" data-mode="server-side-only">
+    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct" data-mode="both">
         var model = { Name: "Harry Potter" };
     </script>
     <script data-mode="server-side-only">
         tsp._if('.content1', {
-                'tsp-condition': function () { return model.Name !== 'Harry Potter'; },
+            'tsp-condition': function () {return model.Name !== 'Harry Potter';},
                 'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
                 'call':tsp.applyConditionalRule,
         });
-        tsp.applyRules(document);
     </script>
+    <script data-mode="server-side-only" src="file1.js"></script>
     <title></title>
 </head>
 <body>
         <div class="content1">Show if model.Name == "Harry Potter"</div>
         
-        <div class="content2">Show if model.Name == "Apple"</div>
+        <div class="content2">Show if model.Price &lt;= 3</div>
+
+    <script data-mode="both">
+        tsp.applyRules(document);
+    </script>
 </body>
 </html>

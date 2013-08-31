@@ -107,10 +107,11 @@ namespace tspHandler
 
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
-            return _htmlDoc.DocumentNode
+            var returnObj = _htmlDoc.DocumentNode
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node))
                 .ToList();
+            return returnObj;
         }
 
         private StyleSheet[] _styleSheets;

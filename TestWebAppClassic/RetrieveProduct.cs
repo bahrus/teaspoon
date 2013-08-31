@@ -21,7 +21,7 @@ namespace TestWebAppClassic
         }
     }
 
-    public class Product
+    public class Product : IProduct
     {
         public string Name { get; set; }
         public DateTime Expiry { get; set; }

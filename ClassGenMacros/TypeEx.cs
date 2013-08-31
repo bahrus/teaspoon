@@ -107,14 +107,13 @@ namespace ClassGenMacros
                 string rootNSDot = rootNS + ".";
                 if (fn.StartsWith(rootNSDot)) fn = fn.SubstringAfter(rootNSDot);
             }
-            switch (fn)
-            {
-                case "System.Void":
-                    return "void";
-                case "System.String":
-                    return "string";
-                default: return fn;
-            }
+            return fn
+                .Replace("System.Void", "void")
+                .Replace("System.String", "string")
+                .Replace("System.DateTime", "Date")
+                .Replace("System.Single", "number")
+            ;
+            
         }
 
         public static string ToCharpValue(this object Obj)

@@ -24,11 +24,11 @@ namespace tspHandler
         {
             get
             {
-                return _node.Id;
+                return _node.GetAttributeValue("id", string.Empty);
             }
             set
             {
-                _node.Id = value;
+                _node.SetAttributeValue("id", value);
             }
         }
 
