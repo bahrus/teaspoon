@@ -31,9 +31,21 @@ namespace tspHandler
             _htmlDoc.LoadHtml(host.GetContentOfDocument());
         }
 
+        public void Process()
+        {
+            this.ProcessServerSideScripts();
+            this.ProcessServerSideIncludes();
+            this.RetrieveContext();
+        }
+
         public string GetHostContent(string src)
         {
             return _host.GetContentOfRelativeResource(src);
+        }
+
+        public string GetHostContentFilePath(string src)
+        {
+            return _host.GetFilePathOfRelativeResource(src);
         }
 
         public List<HtmlNodeFacade> getElementsByTagName(string tag)
@@ -93,7 +105,13 @@ namespace tspHandler
             }
         }
 
-        
+        public HtmlNodeFacade documentElement
+        {
+            get
+            {
+                return new HtmlNodeFacade( _htmlDoc.DocumentNode);
+            }
+        }
 
         public HtmlNodeFacade createElement(string tag)
         {

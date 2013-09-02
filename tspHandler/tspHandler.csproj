@@ -72,6 +72,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Console.cs" />
+    <Compile Include="Context.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
     <Compile Include="HtmlNodeFacade.cs" />
     <Compile Include="Navigator.cs" />
@@ -99,7 +100,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="jquery.d.ts" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">
       <DependentUpon>tsp.ts</DependentUpon>

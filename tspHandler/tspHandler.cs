@@ -14,25 +14,36 @@ namespace tspHandler
             get { return true; }
         }
 
+        public tspHandler() { }
+
+        public tspHandler(string filePath)
+        {
+            this._documentFilePath = filePath;
+        }
 
 
         public void ProcessRequest(HttpContext context)
         {
-            //var currentFilePath = context.Request.PhysicalPath;
             this._documentFilePath = context.Request.PhysicalPath;
-            //var content = currentFilePath.ReadFile();
-            var doc = new HtmlDocumentFacade(this);
-            doc
-                .ProcessServerSideScripts()
-                .RetrieveContext()
-                //.PerformServerSideProcessing()
-            ;
+            var doc = this.ProcessFile();
             context.Response.Write(doc.Content);
+        }
+
+        public HtmlDocumentFacade ProcessFile()
+        {
+            var doc = new HtmlDocumentFacade(this);
+            doc.Process();
+            return doc;
         }
 
         public string GetContentOfRelativeResource(string path)
         {
-            return this._documentFilePath.NavigateTo(path).ReadFile();
+            return this.GetFilePathOfRelativeResource(path).ReadFile();
+        }
+
+        public string GetFilePathOfRelativeResource(string path)
+        {
+            return this._documentFilePath.NavigateTo(path);
         }
 
 
@@ -47,5 +58,7 @@ namespace tspHandler
         string GetContentOfRelativeResource(string path);
 
         string GetContentOfDocument();
+
+        string GetFilePathOfRelativeResource(string path);
     }
 }

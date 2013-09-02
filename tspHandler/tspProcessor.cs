@@ -21,33 +21,50 @@ namespace tspHandler
 
         private static object InvokeServerSideMethod(string StaticMethodString, object[] args)
         {
-            var typeString = StaticMethodString.SubstringBeforeLast(".");
+            var typeString = StaticMethodString.SubstringBeforeLast(".").SubstringAfter("[").SubstringBeforeLast("]");
             var methodString = StaticMethodString.SubstringAfterLast(".");
             var typ = Type.GetType(typeString, true);
             var result = typ.GetMethod(methodString).Invoke(null, args);
             return result;
         }
 
+        private static Func<HtmlNodeFacade, bool> _TestForServerSide =  node =>
+        {
+            string mode = node.getAttribute(Mode);
+            if (string.IsNullOrEmpty(mode)) return false;
+            return (mode == ServerSideMode || mode == BothMode);
+
+        };
+
         public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
         {
-            var serverSideScripts = doc.getElementsByTagName("script").Where(node =>
-            {
-                string mode = node.getAttribute(Mode);
-                if (string.IsNullOrEmpty(mode)) return false;
-                return (mode == ServerSideMode || mode == BothMode);
+            //var serverSideScripts = doc.getElementsByTagName("script").Where(node =>
+            //{
+            //    string mode = node.getAttribute(Mode);
+            //    if (string.IsNullOrEmpty(mode)) return false;
+            //    return (mode == ServerSideMode || mode == BothMode);
 
-            });
-            var model = serverSideScripts.FirstOrDefault(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
-            if (model != null)
-            {
+            //});
+            var serverSideScripts = doc.getElementsByTagName("script").Where(_TestForServerSide);
+            var models = serverSideScripts
+                .Where(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)))
+                .ToList();
+            var sb = new StringBuilder();
+            models.ForEach(model => {
+                var id = model.id;
+                if(string.IsNullOrEmpty(id)) throw new Exception("model script tags must have an id");
                 var staticMethodString = model.getAttribute(ModelAttribute);
                 var result = InvokeServerSideMethod(staticMethodString, null);
                 string json = JsonConvert.SerializeObject(result);
-                model.innerHTML = "var model = " + json;
                 
-            }
+                string modelScript = @"
+if(!model) var model = {};
+model['" + id + "'] = " + json;
+                //sb.AppendLine(modelScript);
+                model.innerHTML = modelScript;
+            });
             //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
-            var sb = new StringBuilder();
+            
             serverSideScripts.ToList().ForEach(node =>
             {
                 string src = node.getAttribute("src");
@@ -77,13 +94,37 @@ namespace tspHandler
                     // Setting external parameters for the context
                     context.SetParameter("console", new Console());
                     context.SetParameter("document", doc);
-                    context.SetParameter("model", model);
+                    //context.SetParameter("model", model);
                     context.SetParameter("mode", "server");
                     // Running the script
                     context.Run(script);
                 }
             }
 
+            return doc;
+        }
+
+        public static HtmlDocumentFacade ProcessServerSideIncludes(this HtmlDocumentFacade doc)
+        {
+            var serversideIframes = doc.getElementsByTagName("iframe")
+                .Where(_TestForServerSide).ToList();
+            serversideIframes.ForEach(iframe =>{
+                var src = iframe.getAttribute("src");
+                if (src == null) return;
+                var domID = src.SubstringAfter("#");
+                if (string.IsNullOrEmpty(domID)) throw new Exception("No id found in src url"); //TODO:  give more info
+                src = src.SubstringBefore('?', '#');
+                var iframeSrcFilePath = doc.GetHostContentFilePath(src);
+                var subHandler = new tspHandler(iframeSrcFilePath);
+                var subDoc = subHandler.ProcessFile();
+                var el = subDoc.getElementById(domID);
+                var div = doc.createElement("div");
+                div.id = iframe.id;
+                div.innerHTML = el.innerHTML;
+                var parent = iframe.parentNode;
+                parent.insertBefore(div, iframe);
+                parent.removeChild(iframe);
+            });
             return doc;
         }
 
@@ -106,4 +147,6 @@ namespace tspHandler
         //    return doc;
         //}
     }
+
+    
 }

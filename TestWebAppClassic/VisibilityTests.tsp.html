@@ -3,12 +3,14 @@
 <head>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     
-    <script data-model="TestWebAppClassic.ProductManager, TestWebAppClassic.RetrieveProduct" data-mode="both">
-        var model = { Name: "Harry Potter" };
+    <script data-model="[TestWebAppClassic.ProductManager, TestWebAppClassic].RetrieveProduct" data-mode="both" id="product">
+        var model = {};
+        model.product = { Name: "Harry Potter" };
     </script>
+    <script data-model="[tsp.Http].GetContext" data-mode="both" id="context"></script>
     <script data-mode="server-side-only">
         tsp._if('.content1', {
-            'tsp-condition': function () {return model.Name !== 'Harry Potter';},
+            'tsp-condition': function () {return model.product.Name !== 'Harry Potter';},
                 'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
                 'call':tsp.applyConditionalRule,
         });
@@ -20,6 +22,8 @@
         <div class="content1">Show if model.Name == "Harry Potter"</div>
         
         <div class="content2">Show if model.Price &lt;= 3</div>
+
+        <iframe src="LazyLoadTest1.tsp.html" style="height: 120px; width: 501px"></iframe>
 
     <script data-mode="both">
         tsp.applyRules(document);

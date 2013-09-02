@@ -1,13 +1,118 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Fundamental Principles</title>
+    <title>Overview of tsp</title>
 </head>
-<body>
-    <h1>Fundamental Principles of tsp</h1>
-    <h2>Maximize use of universally supported standards - Html, Ecmascript, CSS</h2>
+<body id="body">
+    <h1>Overview of tsp</h1>
+    <div id="overview">
     <ul>
-        <li>Prototyping can be done with any web server (Apache, etc.)</li>
+    <li>Keywords
+        <ul>
+            <li>Reserved keywords
+                <ul>
+                    <li>
+                        mode
+                    </li>
+                    <li>
+                        possible values are:
+                        <ul>
+                            <li data-detail="#">server-side-only</li>
+                            <li>client-side-only</li>
+                            <li>both</li>
+                            <li>either</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Maximize use of universally supported standards - Html, Ecmascript, CSS
+        <ul>
+            <li>Prototyping can be done with any web server (Apache, File server etc.)</li>
+            <li>Maximize utility of HTML / css editors - markup directives must not hamper visual designer</li>
+            <li>Build on the good parts of html / css</li>
+            <li>As much as possible rely on directives rather than code.</li>
+            <li>"Declarative" getting blurry</li>
+            <li>Code is Directive based if:
+                <ul>
+                    <li>It is declarative</li>
+                    <li>Directiveness of code: (1 -  # of parenthesis / lines of text) > 0.95 </li>
+                </ul>
+            </li>
+            <li>List of JS Directives modeled after css
+                <ul>
+                    <li>Rules applied based on css selector (like JQuey), but...</li>
+                    <li>Rules adhere to same inheritance rules as css (and more)</li>
+                    <li>Apply rules according to css specificity</li>
+                    <li>Every rule will allow for a flat list of properties (with namespaced prefix)</li>
+                    <li>Rule properties can be primitive (number, string, date, arrays of said)</li>
+                    <li>Rule properties can be functions</li>
+                    <li>Rule properties can be ordinary objects</li>
+                    <li>Rule properties can be special objects:
+                        <ul>
+                            <li>function composer object
+                                <ul> 
+                                    <li>objectType = 'tsp.functionComposer'</li>
+                                    <li>points to funtion which describes type</li>
+                                    <li>with optional properties:
+                                        <ul>
+                                            <li>
+                                                postEval: function(el, inheritedVal);
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>object merger object
+                                <ul>
+                                    <li>objectType = 'tsp.objectMerger'</li>
+                                    <li>with optional properties:
+                                        <ul>
+                                            <li>mergeProps</li>
+                                        </ul>
+                                    </li>
+                                
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Can add global events, e.g. click, which also filters for css like selectors</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li id="universalLanguage">Support same language / libraries / classes on both client and server as much as possible
+        <ul>
+        <li>Model can be generated in server based language, but automatically generate interface stubs for Typescript / Javascript</li>
+        <li>Script tags can execute in client, in server, or both</li>
+        <li>Attributes can be dynamically calculated on server if start with "tsp:something{jsExpression}something"</li>
+        <li id="iframes">
+            Iframes can be absorbed during server side
+            <ul>
+                <li>public pages vs private pages</li>
+                <li>src must contain #{id} in query string</li>
+                <li>id must exist in content.  This part of page will be incorporated</li>
+                <li>script refereces will be merged</li>
+                <li>model will be added to parent model, with {id} to reference it</li>
+                <li>query parameters</li>
+            </ul>
+        </li>
     </ul>
+    </li>
+    </ul>
+    </div>
+
+    <div>Details</div>
+    <div id="server-side-only">
+        <h3>server-side-only</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Context</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </body>
 </html>

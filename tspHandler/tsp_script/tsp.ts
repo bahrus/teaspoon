@@ -100,7 +100,6 @@ module tsp {
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules
         //TODO:  sort the rules according to precedence as described here: http://www.vanseodesign.com/css/css-specificity-inheritance-cascaade/
-        console.log('currIdx = ' + currIdx);
         for (var i = 0; i < currIdx; i++) {
             //#region iterate over all the rules
             var rule = rules[i];
@@ -111,7 +110,6 @@ module tsp {
                 if (!nd.id) {
                     nd.id = 'tsp_' + uidIdx++;
                 }
-                console.log(nd.id);
                 affectedEls[nd.id] = nd;
                 var tsp_props: { [key: string]: any; } = data(nd).tsp;
                 if (!tsp_props) {
@@ -207,16 +205,6 @@ module tsp {
         return returnObj;
     }
    
-    export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
-        var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
-        var test = conditionalRule.condition(el);
-        if (test && conditionalRule.actionIfTrue) {
-            conditionalRule.actionIfTrue(el);
-        } else if (!test && conditionalRule.actionIfFalse) {
-            conditionalRule.actionIfFalse(el);
-        }
-    }
-
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
         if (typeof (mode) == 'undefined' || mode !== 'server') return;
         var ndHidden = doc.createElement('script');
@@ -259,11 +247,47 @@ module tsp {
     }
 
     export interface IConditionalRule {
-        condition?: (el?:HTMLElement) => boolean;
-        actionIfTrue?: (el?:HTMLElement) => void;
-        actionIfFalse?: (el?:HTMLElement) => void;
+        condition: (el:HTMLElement) => boolean;
+        actionIfTrue?: (el:HTMLElement) => void;
+        actionIfFalse?: (el:HTMLElement) => void;
     }
 
+    export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
+        var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
+        var test = conditionalRule.condition(el);
+        if (test && conditionalRule.actionIfTrue) {
+            conditionalRule.actionIfTrue(el);
+        } else if (!test && conditionalRule.actionIfFalse) {
+            conditionalRule.actionIfFalse(el);
+        }
+    }
+
+    export interface IAction {
+        action: (el: HTMLElement) => void;
+    }
+
+    export function applyActionRule(el: HTMLElement, props: { [key: string]: any; }) {
+        var actionRule = <IAction> evalRulesSubset(props, prefix);
+        actionRule.action(el);
+    }
+
+    export interface IAttributeSet {
+        name: string;
+        value: any;
+    }
+
+    export function applyAttributeRule(el: HTMLElement, props: { [key: string]: any; }) {
+        var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);
+        var sVal = attrRule.value;
+        if (typeof (sVal) == 'function') {
+            sVal = sVal();
+        } else if (typeof (sVal) != 'string') {
+            sVal = '' + sVal;
+        }
+        if (el.getAttribute(attrRule.name) != sVal) {
+            el.setAttribute(attrRule.name, sVal);
+        }
+    }
 
 }
 
