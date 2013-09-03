@@ -111,8 +111,8 @@ model['" + id + "'] = " + json + ";";
                 model.innerHTML = modelScript;
             });
             //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
-            
-            serverSideScripts.ToList().ForEach(node =>
+            var serverSideScriptsList = serverSideScripts.ToList();
+            serverSideScriptsList.ForEach(node =>
             {
                 string src = node.getAttribute("src");
                 if (string.IsNullOrEmpty(src))
