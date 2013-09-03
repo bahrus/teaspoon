@@ -36,12 +36,19 @@ namespace tspHandler
 
         public HtmlNodeFacade(HtmlNode node)
         {
+            if (node == null) throw new Exception();
             this._node = node;
         }
 
         public string getAttribute(string key)
         {
             return _node.GetAttributeValue(key, "");
+        }
+
+        public bool hasAttribute(string key)
+        {
+            return _node.Attributes.Contains(key);
+            //return !string.IsNullOrEmpty(_node.GetAttributeValue(key, ""));
         }
 
         public void setAttribute(string key, string val)
@@ -65,7 +72,21 @@ namespace tspHandler
         {
             get
             {
+                if (this._node.ParentNode == null) return null;
                 return new HtmlNodeFacade(this._node.ParentNode);
+            }
+        }
+
+        public List<HtmlNodeFacade> ChildNodes
+        {
+            get
+            {
+                var returnObj = new List<HtmlNodeFacade>();
+                foreach (var child in _node.ChildNodes)
+                {
+                    returnObj.Add(new HtmlNodeFacade(child));
+                }
+                return returnObj;
             }
         }
 
@@ -101,6 +122,15 @@ namespace tspHandler
         public HtmlNodeFacade insertBefore(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
         {
             return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node));
+        }
+
+        public void DoForThisAndAllAncestors(Action<HtmlNodeFacade> action)
+        {
+            action(this);
+            foreach (var child in this.ChildNodes)
+            {
+                child.DoForThisAndAllAncestors(action);
+            }
         }
 
     }

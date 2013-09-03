@@ -46,6 +46,10 @@ namespace tspHandler
             return this._documentFilePath.NavigateTo(path);
         }
 
+        public string GetRelativePathOfFilePath(string filePath)
+        {
+            return this._documentFilePath.RelativeTo(filePath);
+        }
 
         public string GetContentOfDocument()
         {
@@ -60,5 +64,7 @@ namespace tspHandler
         string GetContentOfDocument();
 
         string GetFilePathOfRelativeResource(string path);
+
+        string GetRelativePathOfFilePath(string path);
     }
 }

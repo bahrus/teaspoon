@@ -3,14 +3,17 @@
 <head>
     <title></title>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
-    
+    <script data-model="[tsp.Http].GetContext" data-mode="both" id="context">
+        if (!model) var model = {};
+        model['context'] = { "Request": { "Params": { "Section": "A" } } };
+    </script>
 
 
     <script data-mode="server-side-only">
         tsp._if('#Section', {
             'call': tsp.applyAttributeRule,
             'tsp-name': 'src',
-            'tsp-value': 'FundamentalPrinciples.html#universalLanguage',
+            'tsp-value': 'FundamentalPrinciples.html#' + model.context.Request.Params.Section,
         });
     </script>
     

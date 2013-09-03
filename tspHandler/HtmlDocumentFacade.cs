@@ -31,6 +31,8 @@ namespace tspHandler
             _htmlDoc.LoadHtml(host.GetContentOfDocument());
         }
 
+        
+
         public void Process()
         {
             this.ProcessServerSideScripts();
@@ -46,6 +48,11 @@ namespace tspHandler
         public string GetHostContentFilePath(string src)
         {
             return _host.GetFilePathOfRelativeResource(src);
+        }
+
+        public string GetHostRelativePath(string filePath)
+        {
+            return _host.GetRelativePathOfFilePath(filePath);
         }
 
         public List<HtmlNodeFacade> getElementsByTagName(string tag)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System;
 
 namespace ClassGenMacros
 {
@@ -79,6 +80,57 @@ namespace ClassGenMacros
                 StartsWith = startsWith,
             };
         }
+
+        public static string RelativeTo(this string srcAbsFilePath, string referencedAbsFilePath)
+        {
+            return srcAbsFilePath.RelativeTo(referencedAbsFilePath, "/");
+        }
+
+        public static string RelativeTo(this string srcAbsFilePath, string referencedAbsFilePath, string returnPathSeparaor)
+        {
+            string srcAbsDirPath = srcAbsFilePath.SubstringBeforeLast("\\");
+            string[] absDirs = srcAbsDirPath.Split('\\');
+            string[] relDirs = referencedAbsFilePath.Split('\\');
+
+            // Get the shortest of the two paths
+            int len = Math.Min(absDirs.Length, relDirs.Length);
+
+            // Use to determine where in the loop we exited
+            int lastCommonRoot = -1;
+            int index;
+
+            // Find common root
+            for (index = 0; index < len; index++)
+            {
+                if (absDirs[index] == relDirs[index]) lastCommonRoot = index;
+                else break;
+            }
+
+            // If we didn't find a common prefix then throw
+            if (lastCommonRoot == -1)
+            {
+                throw new ArgumentException("Paths do not have a common base");
+            }
+
+            // Build up the relative path
+            StringBuilder relativePath = new StringBuilder();
+
+            // Add on the ..
+            for (index = lastCommonRoot + 1; index < absDirs.Length; index++)
+            {
+                if (absDirs[index].Length > 0) relativePath.Append(".." + returnPathSeparaor);
+            }
+
+            // Add on the folders
+            for (index = lastCommonRoot + 1; index < relDirs.Length - 1; index++)
+            {
+                relativePath.Append(relDirs[index] + returnPathSeparaor);
+            }
+            relativePath.Append(relDirs[relDirs.Length - 1]);
+
+            return relativePath.ToString();
+        }
+
 
         //public static string GetRelativeFilePath(this string filePath, string relativePath)
         //{

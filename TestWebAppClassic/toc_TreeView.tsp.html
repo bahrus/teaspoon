@@ -8,21 +8,28 @@
     <!--<script src="dynatree/jquery-ui.custom.js"></script>-->
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
 
-    <link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css' >
+    <link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>
     <script src="dynatree/jquery.dynatree-1.2.4.js"></script>
     <!-- Add code to initialize the tree when the document is loaded: -->
-    <!--<script type="text/javascript">
-        $(function () {
-            $("#tree").dynatree({});
-        });
-    </script>-->
-    <script defer>
-        tsp._if('#tree', {
-            'tsp-action': function (el) { $(el).dynatree({}) },
+    <script>
+        tsp._if('.tree', {
+            'tsp-action': function (el) {
+                $(el).dynatree({
+                    checkbox: true,
+                    selectMode: 3,
+                });
+            },
+            'call': tsp.applyActionRule
         });
     </script>
+    
 </head>
 <body>
-    <iframe data-mode="server-side-only" src="FundamentalPrinciples.html#overview" id="tree"></iframe>
+    <div id="treeContainer">
+        <iframe data-mode="server-side-only" src="toc.html#overview" class="tree"></iframe>
+    </div>
+    <script defer>
+        tsp.applyRules(document);
+    </script>
 </body>
 </html>
