@@ -3,10 +3,11 @@ using System.Linq;
 using System;
 using Newtonsoft.Json;
 using ClassGenMacros;
+using System.Web.SessionState;
 
 namespace tspHandler
 {
-    public class tspHandler : IHttpHandler, IDocumentHost
+    public class tspHandler : IHttpHandler, IDocumentHost, IReadOnlySessionState
     {
         private string _documentFilePath;
         public bool IsReusable

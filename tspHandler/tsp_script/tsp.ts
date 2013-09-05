@@ -39,6 +39,11 @@ module tsp {
         docOrder: number;
     }
 
+    export interface ICascadingHandler {
+        selectorText: string;
+        handler: (evt: Event) => void;
+    }
+
     export interface IMergeCallOptions<T> {
         prefix?: string;
         call?: (el: HTMLElement, props: { [key: string]: any; }) => void;
@@ -81,26 +86,46 @@ module tsp {
 
 
     var rules: ICascadingRule[] = [];
-    var currIdx = 0;
+    var rulesIdx = 0;
 
     var uidIdx = 0;
 
     export function _if(selectorText: string, props: { [key: string]: any; }) : typeof tsp {
-        rules[currIdx++] = {
+        rules[rulesIdx++] = {
             selectorText: selectorText,
             properties: props,
-            docOrder: currIdx,
+            docOrder: rulesIdx,
         };
         return tsp;
     }
 
+    var handlers: { [key: string]: ICascadingHandler[]; } = {};
+
+    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
+        if (!isClientSideMode()) return;
+        var eventHandlers = handlers[eventName];
+        if (!eventHandlers) {
+            eventHandlers = [];
+            handlers[eventName] = eventHandlers;
+            var body = document.body;
+            if (body.attachEvent) {
+                body.attachEvent('on' + eventName, handleCascadingEvent);
+            } else {
+                body.addEventListener(eventName, handleCascadingEvent);
+            }
+        }
+        eventHandlers[eventHandlers.length] = cascadingHandler;
+    }
+
+    function handleCascadingEvent(evt: Event) {
+    } 
     
 
     export function applyRules(doc: HTMLDocument) {
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules
         //TODO:  sort the rules according to precedence as described here: http://www.vanseodesign.com/css/css-specificity-inheritance-cascaade/
-        for (var i = 0; i < currIdx; i++) {
+        for (var i = 0; i < rulesIdx; i++) {
             //#region iterate over all the rules
             var rule = rules[i];
             var nds = doc.querySelectorAll(rule.selectorText);
@@ -158,7 +183,7 @@ module tsp {
         }
         //#endregion
         //#region perform reserved rules
-        if (typeof (mode) == 'undefined' || mode !== 'server') {
+        if (isClientSideMode()) {
             var nds = doc.querySelectorAll('.' + reserved_lazyLoad);
             for (var j = 0, n = nds.length; j < n; j++) {
                 var nd = <HTMLElement> nds[j];
@@ -186,6 +211,10 @@ module tsp {
         //#endregion
     }
 
+    function isClientSideMode() {
+        return typeof (mode) == 'undefined' || mode !== 'server'
+    }
+
     function handleOnPropertyChange(ev: Event) {
         if(ev['propertyName'] !== 'style.display') return;
         handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
@@ -206,7 +235,7 @@ module tsp {
     }
    
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
-        if (typeof (mode) == 'undefined' || mode !== 'server') return;
+        if (isClientSideMode()) return;
         var ndHidden = doc.createElement('script');
         var sOriginalID = el.id;
         el.setAttribute('data-originalID', sOriginalID);

@@ -6,7 +6,10 @@
         function show() {
             var el = document.getElementById("myDiv");
             el.style.display = 'block';
-            //el.title = 'hello';
+            el.title = 'hello';
+            el.innerHTML = 'you are there';
+            //var scr = document.getElementById('someScript');
+            //scr.text = "obj = { test: 'you are there' };";
         }
 
         function addEventHandler(elem, eventType, handler) {
@@ -18,20 +21,29 @@
     </script>
 </head>
 <body>
-    <script type="text/html" id="myDiv">
-        <div>i am here</div>
+    <script id="someScript">
+        var obj = { test: 'iamherre' };
     </script>
+    
+        <div>i am here</div>
+   
     <input type="button" onclick="show()" value="show" />
     <script>
-        var myNode = document.getElementById('myDiv');
-            myNode.attachEvent('onpropertychange', function (a, b, c, d) {
-            debugger;
-        });
-        //var observer = new MutationObserver(function (mutationRecords) {
-        //    // Handle mutations
+        //var myNode = document.getElementById('myDiv');
+        //    myNode.attachEvent('onpropertychange', function (a, b, c, d) {
         //    debugger;
-        //    alert('iah');
         //});
+            //var myScript = document.getElementById('someScript');
+            //myScript.attachEvent('onpropertychange', function (a, b, c, d) {
+            //    debugger;
+                
+            //});
+        var observer = new MutationObserver(function (mutationRecords) {
+
+            // Handle mutations
+            debugger;
+            alert('iah');
+        });
         
         //observer.observe(myNode,
         // {  // options:
@@ -39,6 +51,9 @@
         //     childList: false,  // include information childNode insertion/removals
         //     attributes: true  // include information about changes to attributes within the subtree
         // });
+        document.body.attachEvent('onpropertychange', function (a, b, c, d) {
+            debugger;
+        });
     </script>
 </body>
 </html>
