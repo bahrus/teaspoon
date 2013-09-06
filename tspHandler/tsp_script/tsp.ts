@@ -25,11 +25,9 @@ module tsp {
 
 
     function data(elem: HTMLElement): any {
-        //console.log('expando = ' + expando);
         var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
         var nCacheIndex : number;
         if (!cacheIndex) {
-            console.log("creating new Cache Index" + nextCacheIndex);
             elem.setAttribute(expando, nextCacheIndex.toString());
             cache[nextCacheIndex] = {};
             nCacheIndex = nextCacheIndex;
@@ -51,11 +49,23 @@ module tsp {
         handler: (evt: Event) => void;
     }
 
+  
+
+    export interface IConditionalRule {
+        condition?: (el: HTMLElement) => boolean;
+        actionIfTrue?: (el: HTMLElement) => void;
+        actionIfFalse?: (el: HTMLElement) => void;
+    }
+
     export interface IMergeCallOptions<T> {
         prefix?: string;
         call?: (el: HTMLElement, props: { [key: string]: any; }) => void;
         options?: T;
         callLabel?: string;
+    }
+
+    export interface ILazyLoadRule {
+        applyLazyConditionCheck?: (el: HTMLElement) => boolean;
     }
 
     export interface IObjectMerge {
@@ -138,7 +148,9 @@ module tsp {
             var nds = doc.querySelectorAll(rule.selectorText);
             for (var j = 0, n = nds.length; j < n; j++) {
                 //#region iterate over all the matching elements
+                
                 var nd = <HTMLElement> nds[j];
+                console.log(nd);
                 if (!nd.id) {
                     nd.id = 'tsp_' + uidIdx++;
                 }
@@ -243,6 +255,10 @@ module tsp {
    
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
         if (isClientSideMode()) return;
+        var lazyRule = <ILazyLoadRule> evalRulesSubset(props, prefix);
+        if (lazyRule.applyLazyConditionCheck) {
+            if (!lazyRule.applyLazyConditionCheck(el)) return;
+        }
         var ndHidden = doc.createElement('script');
         var sOriginalID = el.id;
         el.setAttribute('data-originalID', sOriginalID);
@@ -282,16 +298,12 @@ module tsp {
         return conditionObj;
     }
 
-    export interface IConditionalRule {
-        condition: (el:HTMLElement) => boolean;
-        actionIfTrue?: (el:HTMLElement) => void;
-        actionIfFalse?: (el:HTMLElement) => void;
-    }
+    
 
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
         var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
-        console.log(conditionalRule);
         if (!conditionalRule.condition) return;
+        
         var test = conditionalRule.condition(el);
         if (test && conditionalRule.actionIfTrue) {
             conditionalRule.actionIfTrue(el);
