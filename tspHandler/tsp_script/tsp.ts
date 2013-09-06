@@ -150,7 +150,6 @@ module tsp {
                 //#region iterate over all the matching elements
                 
                 var nd = <HTMLElement> nds[j];
-                console.log(nd);
                 if (!nd.id) {
                     nd.id = 'tsp_' + uidIdx++;
                 }

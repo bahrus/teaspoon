@@ -7,15 +7,15 @@
     <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery-ui.css" />
     <script>
         $(function () {
-            //$("#tabs").tabs();
+            $("#tabs").tabs();
         });
     </script>
     <script data-mode="both">
         var model = {};
         model.tabsVisibility = {
             'tab1': false,
-            'tab2': false,
-            'tab3': false,
+            'tab2': true,
+            'tab3': true,
             isFirst: function (s) {
                 for (var i = 0; i < 3; i++) {
                     var ithTab = 'tab' + i;
@@ -29,17 +29,18 @@
     <script data-mode="server-side-only">
         tsp._if('.tab1', {
             'tsp-condition': function () { return model.tabsVisibility.tab1; },
-            //'call': tsp.lazyLoad,
-            'tsp-applyLazyConditionCheck': function () { return !model.tabsVisibility.isFirst('tab1') },
+            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab1 && !model.tabsVisibility.isFirst('tab1') },
         })._if('.tab2', {
             'tsp-condition': function () { return model.tabsVisibility.tab2; },
-            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.isFirst('tab2') },
+            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab2 && !model.tabsVisibility.isFirst('tab2') },
         })._if('.tab3', {
-            'tsp-condition': function () { return model.tabsVisibility.tab3;},
-            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.isFirst('tab3') },
+            'tsp-condition': function () { return model.tabsVisibility.tab3; },
+            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab3 && !model.tabsVisibility.isFirst('tab3') },
         })._if('.conditional', {
             'call': tsp.applyConditionalRule,
             'tsp-actionIfFalse': function (el) { el.parentNode.removeChild(el); },
+        })._if('.content', {
+            'call': tsp.lazyLoad,
         });
     </script>
     
