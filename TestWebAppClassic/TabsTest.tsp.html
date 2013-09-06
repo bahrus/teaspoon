@@ -11,13 +11,14 @@
         });
     </script>
     <script data-mode="server-side-only">
-        tsp._if('#tabs-2,#tabs-3', {
-            'call': tsp.lazyLoad,
-        })._if('#tags', {
-            'tsp-action': function (el) { $(el).tabs(); },
-            'call': tsp.applyActionRule,
+        tsp._if('.tab1', {
+            'tsp-condition': function () { return false; },
+        })._if('.conditional', {
+            'call': tsp.applyConditionalRule,
+            'tsp-actionIfFalse': function (el) { el.parentNode.removeChild(el); },
         });
     </script>
+    
     <style>
         .content{
             width:100%;
@@ -32,17 +33,17 @@
 <body>
     <div id="tabs" style="width:100%; height:100%">
       <ul>
-        <li><a href="#tabs-1">Simple</a></li>
-        <li><a href="#tabs-2">More Complex</a></li>
-        <li><a href="#tabs-3">Most Complex</a></li>
+        <li class="conditional tab1"><a href="#tabs-1">Simple</a></li>
+        <li class="tab2"><a href="#tabs-2">More Complex</a></li>
+        <li class="tab3"><a href="#tabs-3">Most Complex</a></li>
       </ul>
       <div id="tabs-1" class="content">
         <iframe src="toc.html"></iframe>
       </div>
-      <div id="tabs-2" class="content">
+      <div class="tab2" id="tabs-2" class="content">
         <iframe src="toc_TreeView.tsp.html"></iframe>
       </div>
-      <div id="tabs-3" class="content">
+      <div class="tab3" id="tabs-3" class="content">
         <iframe src="tsp.tsp.html"></iframe>
       </div>
     </div>

@@ -11,7 +11,7 @@ module tsp {
     var reserved_lazyLoad = 'reserved_lazyLoad';
 
     var cache = [{}],
-        expando = 'data' + +new Date();
+        expando = 'data-tsp-cache';
 
     function trim(s) {
         if (s.trim) return s.trim();
@@ -24,13 +24,20 @@ module tsp {
     }
 
 
-    function data(elem: HTMLElement) : any {
-        var cacheIndex = elem[expando], nextCacheIndex = cache.length;
+    function data(elem: HTMLElement): any {
+        //console.log('expando = ' + expando);
+        var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
+        var nCacheIndex : number;
         if (!cacheIndex) {
-            cacheIndex = elem[expando] = nextCacheIndex;
-            cache[cacheIndex] = {};
+            console.log("creating new Cache Index" + nextCacheIndex);
+            elem.setAttribute(expando, nextCacheIndex.toString());
+            cache[nextCacheIndex] = {};
+            nCacheIndex = nextCacheIndex;
+        } else {
+            nCacheIndex = parseInt(cacheIndex);
         }
-        return cache[cacheIndex];
+        
+        return cache[nCacheIndex];
     }
     
     export interface ICascadingRule {
@@ -283,6 +290,8 @@ module tsp {
 
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
         var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
+        console.log(conditionalRule);
+        if (!conditionalRule.condition) return;
         var test = conditionalRule.condition(el);
         if (test && conditionalRule.actionIfTrue) {
             conditionalRule.actionIfTrue(el);

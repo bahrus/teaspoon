@@ -59,8 +59,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li>Can add global events, e.g. click, which also filters for css like selectors</li>
-                    <li>Rules can be reapplied when model property changes</li>
+                    <li>Can add global or local events, e.g. click, which also filters for css like selectors</li>
+                    <li>Rules can be reapplied when model property changes, and also used for validation</li>
                 </ul>
             </li>
         </ul>
@@ -70,6 +70,12 @@
         <li class="selected">Model can be generated in server based language, but automatically generate interface stubs for Typescript / Javascript</li>
         <li>tag can contain sample markup, which will be replaced</li>
         <li class="selected">Script tags can execute in client, in server, or both</li>
+            <li class="selected">Document can be stored in session, events on client applied to server.<ul>
+                <li class="selected">native method to monitor for changes, specify property</li>
+                <li class="selected">native button which submits changes, then clears on successful response - response can also send changes back.</li>
+                <li class="selected">ajax call made via script tag with src set to async</li>
+                </ul>
+            </li>
         <li id="iframes">
             "Embedded Iframes" is the route to reusable components (similar to "user controls" in asp.net).
             <ul>
