@@ -51,6 +51,12 @@ namespace tspHandler
             set { this.setAttribute("name", value); }
         }
 
+        public string value
+        {
+            get { return this.getAttribute("value"); }
+            set { this.setAttribute("value", value); }
+        }
+
         public HtmlNodeFacade(HtmlNode node)
         {
             if (node == null) throw new Exception();

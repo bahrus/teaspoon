@@ -169,6 +169,20 @@ model['" + id + "'] = " + json + ";";
 tsp.createInputAutoFillRule(model);
 ";
             head.appendChild(autoFill);
+            var inputs = doc.querySelectorAll("input[type='submit']");
+            var reqParams = HttpContext.Current.Request.QueryString;
+            inputs.ToList().ForEach(input =>
+            {
+                var name = input.name;
+                var reqVal = reqParams[name];
+                if (reqVal != null)
+                {
+                    if (reqVal == input.value)
+                    {
+                        input.setAttribute("data-eventName", "clicked");
+                    }
+                }
+            });
             return doc;
         }
 
