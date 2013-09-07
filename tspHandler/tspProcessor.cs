@@ -164,7 +164,7 @@ model['" + id + "'] = " + json + ";";
             var head = doc.head;
             head.appendChild(context);
             var autoFill = doc.createElement("script");
-            autoFill.setAttribute(Mode, BothMode);
+            autoFill.setAttribute(Mode, ServerSideMode);
             autoFill.innerHTML = @"
 tsp.createInputAutoFillRule(model);
 ";

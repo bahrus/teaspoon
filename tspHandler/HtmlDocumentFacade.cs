@@ -149,6 +149,10 @@ namespace tspHandler
 
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
+            if (selectorText.Contains(">"))
+            {
+                throw new Exception("querySelectorAll implementation does not currently support the > operator");
+            }
             var returnObj = _htmlDoc.DocumentNode
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node))

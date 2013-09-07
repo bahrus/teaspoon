@@ -13,14 +13,15 @@
         tsp._if('#Section', {
             'call': tsp.applyAttributeRule,
             'tsp-name': 'src',
-            'tsp-value': 'FundamentalPrinciples.html#' + model.context.Request.Params.Section,
+            'tsp-value': 'toc.html#' + model.context.Request.Params.Section,
         });
     </script>
     
     
 </head>
 <body>
-<iframe data-mode="server-side-only" src="FundamentalPrinciples.html#iframes" id="Section"></iframe> 
+    <input type="hidden" name="Section" />
+    <iframe data-mode="server-side-only" src="toc.html#iframes" id="Section"></iframe> 
 <script data-mode="both" defer>
     tsp.applyRules(document);
 </script>      

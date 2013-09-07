@@ -306,7 +306,7 @@ module tsp {
             valProp: 'value',
             fill: (el: HTMLElement , mdl : IHttpContext) => getValFromRequest(<HTMLInputElement> el, mdl.Request),
         };
-        _if('form > input[type="text"]', createFillRule<IHttpContext>(fillRule).mergedObject); 
+        _if('input[type="text"],input[type="hidden"]', createFillRule<IHttpContext>(fillRule).mergedObject)
     }
 
     export function createFillRule<TModel>(fillRule: IFill<TModel>) {
@@ -323,16 +323,24 @@ module tsp {
         var model = fillRule.modelRootElement;
         var val = fillRule.fill(el, model);
         var valProp = fillRule.valProp;
-        switch (fillRule.valProp) {
-            case 'innerHTML':
-                el.innerHTML = val;
-                break;
-            case 'value':
-                el[valProp] = val;
-                break;
-            default:
-                el.setAttribute(valProp, val);
+        
+        if (isClientSideMode()) {
+            switch (valProp) {
+                case 'innerHTML':
+                    el.innerHTML = val;
+                    break;
+                case 'value':
+                    el[valProp] = val;
+                    break;
+                default:
+                    el.setAttribute(valProp, val);
+            }
+        } else {
+            //can't get el[valProp] to work in HtmlNodeFacade
+            el.setAttribute(valProp, val);
         }
+        
+        
     }
 
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
@@ -382,7 +390,7 @@ module tsp {
         }
     }
 
-    function getValFromRequest(ie: HTMLInputElement, req: IHttpRequest) : string {
+    function getValFromRequest(ie: HTMLInputElement, req: IHttpRequest): string {
         return req.Params[ie.name];
     }
 

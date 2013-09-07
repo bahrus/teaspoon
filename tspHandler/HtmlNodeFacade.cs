@@ -20,6 +20,17 @@ namespace tspHandler
             }
         }
 
+        public string this[string index]
+        {
+            get
+            {
+                return this.getAttribute(index);
+            }
+            set
+            {
+                this.setAttribute(index, value);
+            }
+        }
         
 
         public string id
@@ -32,6 +43,12 @@ namespace tspHandler
             {
                 _node.SetAttributeValue("id", value);
             }
+        }
+
+        public string name
+        {
+            get { return this.getAttribute("name"); }
+            set { this.setAttribute("name", value); }
         }
 
         public HtmlNodeFacade(HtmlNode node)

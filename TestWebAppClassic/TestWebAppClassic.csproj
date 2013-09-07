@@ -157,7 +157,7 @@
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
     <Content Include="Scripts\typings\jquery.dynatree\jquery.dynatree.d.ts" />
     <Content Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
-    <Content Include="ShowEntireOutline.tsp.html" />
+    <Content Include="toc_Subsection.tsp.html" />
     <Content Include="toc_TreeView.tsp.html" />
     <Content Include="skin\icons-rtl.gif" />
     <Content Include="skin\icons.gif" />
