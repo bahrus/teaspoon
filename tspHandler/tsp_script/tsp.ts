@@ -224,6 +224,7 @@ module tsp {
                     nd.attachEvent('onpropertychange', handleOnPropertyChange);
                 }
             }
+        } else {
         }
         
         //#endregion
@@ -270,6 +271,7 @@ module tsp {
         inserted.id = sOriginalID;
     }
 
+
     function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
         var sNewValue = el.style.display;
         var sOldValue = data(el).tsp_display;
@@ -297,7 +299,41 @@ module tsp {
         return conditionObj;
     }
 
-    
+    export function createInputAutoFillRule(model: any) {
+        var modelRoot = <IHttpContext> model['httpContext'];
+        var fillRule: IFill<IHttpContext> = {
+            modelRootElement: modelRoot,
+            valProp: 'value',
+            fill: (el: HTMLElement , mdl : IHttpContext) => getValFromRequest(<HTMLInputElement> el, mdl.Request),
+        };
+        _if('form > input[type="text"]', createFillRule<IHttpContext>(fillRule).mergedObject); 
+    }
+
+    export function createFillRule<TModel>(fillRule: IFill<TModel>) {
+        var fillObj = tsp.beginMerge<IFill<TModel>>({
+            call: applyFillRule,
+            prefix: prefix,
+            options: fillRule,
+        });
+        return fillObj;
+    }
+
+    export function applyFillRule<TModel>(el: HTMLElement, props: { [key: string]: any; }) {
+        var fillRule = <IFill<TModel>> evalRulesSubset(props, prefix);
+        var model = fillRule.modelRootElement;
+        var val = fillRule.fill(el, model);
+        var valProp = fillRule.valProp;
+        switch (fillRule.valProp) {
+            case 'innerHTML':
+                el.innerHTML = val;
+                break;
+            case 'value':
+                el[valProp] = val;
+                break;
+            default:
+                el.setAttribute(valProp, val);
+        }
+    }
 
     export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
         var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
@@ -325,6 +361,14 @@ module tsp {
         value: any;
     }
 
+    
+
+    export interface IFill<TModel> {
+        valProp?: string; //example:  'value', 'innerHTML', 'class'
+        modelRootElement?: TModel;
+        fill?: (el: HTMLElement, model: TModel) => string;
+    }
+
     export function applyAttributeRule(el: HTMLElement, props: { [key: string]: any; }) {
         var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);
         var sVal = attrRule.value;
@@ -336,6 +380,18 @@ module tsp {
         if (el.getAttribute(attrRule.name) != sVal) {
             el.setAttribute(attrRule.name, sVal);
         }
+    }
+
+    function getValFromRequest(ie: HTMLInputElement, req: IHttpRequest) : string {
+        return req.Params[ie.name];
+    }
+
+    export interface IHttpContext {
+        Request: IHttpRequest
+    }
+
+    export interface IHttpRequest {
+        Params: { [key: string]: string; };
     }
 
 }

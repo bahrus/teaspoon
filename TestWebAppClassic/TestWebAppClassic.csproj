@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\jquery.layout-1.30.79.css" />
+    <Content Include="form1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
@@ -148,7 +149,6 @@
     </Content>
     <Content Include="toc.html" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="jquery.d.ts" />
     <Content Include="LazyLoadTest1.tsp.html" />
     <Content Include="Scratch.html" />
     <Content Include="Scripts\jquery-2.0.3.js" />

@@ -35,6 +35,7 @@ namespace tspHandler
 
         public void Process()
         {
+            this.ProcessServerSideForms();
             this.ProcessServerSideScripts();
             this.ProcessServerSideIncludes();
             this.RetrieveContext();
@@ -109,6 +110,22 @@ namespace tspHandler
                 var sw = new StringWriter();
                 this._htmlDoc.Save(sw);
                 return sw.ToString();
+            }
+        }
+
+        public HtmlNodeFacade body
+        {
+            get
+            {
+                return this.getElementsByTagName("body")[0];
+            }
+        }
+
+        public HtmlNodeFacade head
+        {
+            get
+            {
+                return this.getElementsByTagName("head")[0];
             }
         }
 

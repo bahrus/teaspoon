@@ -151,6 +151,27 @@ model['" + id + "'] = " + json + ";";
             return doc;
         }
 
+        public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)
+        {
+            var serversideForms = doc.getElementsByTagName("form")
+                .Where(_TestForServerSide).ToList();
+            if (serversideForms.Count == 0) return doc;
+            var context = doc.createElement("script");
+            //<script data-model= data-mode="both" id="context"></script>
+            context.setAttribute("data-model", "[tsp.Http].GetContext");
+            context.setAttribute(Mode, BothMode);
+            context.id = "httpContext";
+            var head = doc.head;
+            head.appendChild(context);
+            var autoFill = doc.createElement("script");
+            autoFill.setAttribute(Mode, BothMode);
+            autoFill.innerHTML = @"
+tsp.createInputAutoFillRule(model);
+";
+            head.appendChild(autoFill);
+            return doc;
+        }
+
         public static HtmlDocumentFacade ProcessServerSideIncludes(this HtmlDocumentFacade doc)
         {
             var serversideIframes = doc.getElementsByTagName("iframe")
@@ -205,8 +226,8 @@ model['" + id + "'] = " + json + ";";
                 parent.insertBefore(div, iframe);
                 parent.removeChild(iframe);
                 #endregion
-                var header = doc.getElementsByTagName("head")[0];
-                var body = doc.getElementsByTagName("body")[0];
+                var header = doc.head;
+                var body = doc.body;
                 var fn = Fun.InferType((HtmlNodeFacade node, string attr) =>
                 {
                     string iFramesrc = node.getAttribute(attr);
