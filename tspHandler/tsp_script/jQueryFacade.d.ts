@@ -2,6 +2,7 @@
 interface JQueryStaticFacade {
 
     (el: HTMLElement): JQueryFacade;
+    (selector: string): JQueryFacade;
 
     jQuery?: JQueryStaticFacade;
 }
