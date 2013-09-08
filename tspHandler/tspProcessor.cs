@@ -142,6 +142,8 @@ model['" + id + "'] = " + json + ";";
                     context.SetParameter("console", new Console());
                     context.SetParameter("document", doc);
                     //context.SetParameter("model", model);
+                    var jqueryFacade = new JQueryFacade(doc);
+                    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
                     context.SetParameter("mode", "server");
                     // Running the parentScript
                     context.Run(script);
@@ -311,18 +313,7 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
-        //public static HtmlDocumentFacade PerformServerSideProcessing(this HtmlDocumentFacade doc)
-        //{
-        //    var relevantStyles = doc.styleSheets
-        //        .SelectMany(ss => ss.rules)
-        //        .Where(rule => rule.style.ContainsKey(ServerSideProcessor));
-        //    relevantStyles.ToList().ForEach(rule =>
-        //    {
-        //        string staticMethodString = rule.style[ServerSideProcessor];
-        //        InvokeServerSideMethod(staticMethodString, new object[] { rule, doc });
-        //    });
-        //    return doc;
-        //}
+        
 
     }
 

@@ -75,6 +75,7 @@
     <Compile Include="Context.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
     <Compile Include="HtmlNodeFacade.cs" />
+    <Compile Include="JQueryFacade.cs" />
     <Compile Include="Navigator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringEx.cs" />
@@ -100,6 +101,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="tsp_script\tcp.ts" />
+    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
+    <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">
       <DependentUpon>tsp.ts</DependentUpon>
@@ -108,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="tsp_script\tcp.js.map" />
     <None Include="tsp_script\tsp.js.map" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

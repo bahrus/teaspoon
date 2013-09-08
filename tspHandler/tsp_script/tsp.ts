@@ -1,4 +1,7 @@
+///<reference path='jQueryFacade.d.ts'/>
+
 declare var mode: string;
+declare var jQueryServerSideFacade: JQueryStaticFacade;
 
 // Type definitions for the DOM Mutation Observers API
 // http://dom.spec.whatwg.org/#mutation-observers
@@ -8,7 +11,16 @@ module tsp {
 
     export var prefix = 'tsp-';
 
+    export var $: JQueryStaticFacade;
+
     var reserved_lazyLoad = 'reserved_lazyLoad';
+
+    if (!isClientSideMode()) {
+
+        $ = jQueryServerSideFacade.jQuery;
+    } else {
+        $ = <JQueryStaticFacade> eval('jQuery');
+    }
 
     var cache = [{}],
         expando = 'data-tsp-cache';
@@ -25,10 +37,14 @@ module tsp {
 
 
     function data(elem: HTMLElement): any {
-        var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
+
+        var $el = $(elem);
+        //var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
+        var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
         var nCacheIndex : number;
         if (!cacheIndex) {
-            elem.setAttribute(expando, nextCacheIndex.toString());
+            $el.attr(expando, nextCacheIndex.toString());
+            //elem.setAttribute(expando, nextCacheIndex.toString());
             cache[nextCacheIndex] = {};
             nCacheIndex = nextCacheIndex;
         } else {
@@ -116,26 +132,7 @@ module tsp {
         return tsp;
     }
 
-    var handlers: { [key: string]: ICascadingHandler[]; } = {};
-
-    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
-        if (!isClientSideMode()) return;
-        var eventHandlers = handlers[eventName];
-        if (!eventHandlers) {
-            eventHandlers = [];
-            handlers[eventName] = eventHandlers;
-            var body = document.body;
-            if (body.attachEvent) {
-                body.attachEvent('on' + eventName, handleCascadingEvent);
-            } else {
-                body.addEventListener(eventName, handleCascadingEvent);
-            }
-        }
-        eventHandlers[eventHandlers.length] = cascadingHandler;
-    }
-
-    function handleCascadingEvent(evt: Event) {
-    } 
+    
     
 
     export function applyRules(doc: HTMLDocument) {
