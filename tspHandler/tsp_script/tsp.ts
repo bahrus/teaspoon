@@ -1,4 +1,5 @@
 ///<reference path='jQueryFacade.d.ts'/>
+///<reference path='tcp.ts'/>
 
 declare var mode: string;
 declare var jQueryServerSideFacade: JQueryStaticFacade;
@@ -16,8 +17,8 @@ module tsp {
     var reserved_lazyLoad = 'reserved_lazyLoad';
 
     if (!isClientSideMode()) {
-
         $ = jQueryServerSideFacade.jQuery;
+         $.trim = (s: string) => $().trim(s);
     } else {
         $ = <JQueryStaticFacade> eval('jQuery');
     }
@@ -25,18 +26,23 @@ module tsp {
     var cache = [{}],
         expando = 'data-tsp-cache';
 
-    function trim(s) {
-        if (s.trim) return s.trim();
-        var l = 0; var r = s.length - 1;
-        while (l <= r && s[l] == ' ')
-        { l++; }
-        while (r > l && s[r] == ' ')
-        { r -= 1; }
-        return s.substring(l, r + 1);
-    }
+    //function trim(s : string) {
+    //    if (s.trim) return s.trim();
+    //    if (isClientSideMode()) {
+    //        return $.trim(s);
+    //    } else {
+    //        $().trim(s);
+    //    }
+    //    //var l = 0; var r = s.length - 1;
+    //    //while (l <= r && s[l] == ' ')
+    //    //{ l++; }
+    //    //while (r > l && s[r] == ' ')
+    //    //{ r -= 1; }
+    //    //return s.substring(l, r + 1);
+    //}
 
 
-    function data(elem: HTMLElement): any {
+    export function data(elem: HTMLElement): any {
 
         var $el = $(elem);
         //var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
@@ -142,7 +148,8 @@ module tsp {
         for (var i = 0; i < rulesIdx; i++) {
             //#region iterate over all the rules
             var rule = rules[i];
-            var nds = doc.querySelectorAll(rule.selectorText);
+            //var nds = doc.querySelectorAll(rule.selectorText);
+            var nds = $(rule.selectorText);
             for (var j = 0, n = nds.length; j < n; j++) {
                 //#region iterate over all the matching elements
                 
@@ -199,7 +206,7 @@ module tsp {
         //#endregion
         //#region perform reserved rules
         if (isClientSideMode()) {
-            var nds = doc.querySelectorAll('.' + reserved_lazyLoad);
+            var nds = $('.' + reserved_lazyLoad);
             for (var j = 0, n = nds.length; j < n; j++) {
                 var nd = <HTMLElement> nds[j];
                 if (typeof (MutationObserver) !== 'undefined') {
@@ -218,7 +225,7 @@ module tsp {
                     //});
                 } else if (nd.attachEvent) {
                     //TODO:  deprecate eventually - ie 10 and earlier
-                    nd.attachEvent('onpropertychange', handleOnPropertyChange);
+                    nd.attachEvent('onpropertychange', tcp.handleOnPropertyChange);
                 }
             }
         } else {
@@ -231,10 +238,7 @@ module tsp {
         return typeof (mode) == 'undefined' || mode !== 'server'
     }
 
-    function handleOnPropertyChange(ev: Event) {
-        if(ev['propertyName'] !== 'style.display') return;
-        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
-    }
+    
 
     export function evalRulesSubset(props: { [key: string]: any; }, prefix: string) : any {
         var returnObj = {};
@@ -269,23 +273,7 @@ module tsp {
     }
 
 
-    function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
-        var sNewValue = el.style.display;
-        var sOldValue = data(el).tsp_display;
-        if (!sOldValue) sOldValue = 'none';
-        if (sNewValue == sOldValue) return;
-        if (el.detachEvent) {
-            el.detachEvent('onpropertychange', handleOnPropertyChange);
-        }
-        data(el).tsp_display = sNewValue;
-        if (!data(el).tsp_lazyloaded && (sNewValue !== 'none')) {
-            el.insertAdjacentHTML('beforebegin', trim(el.innerHTML));
-        }
-        var newElement = (<HTMLElement> el.previousSibling);
-        newElement.style.display = sNewValue;
-        newElement.id = newElement.getAttribute('data-originalID');
-        el.parentNode.removeChild(el);
-    }
+    
 
     export function createConditionalRule(conditionalRule: IConditionalRule) {
         var conditionObj = tsp.beginMerge<tsp.IConditionalRule>({

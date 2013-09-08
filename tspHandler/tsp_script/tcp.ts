@@ -24,4 +24,30 @@ module tcp {
         }
         eventHandlers[eventHandlers.length] = cascadingHandler;
     }
+
+    export function handleOnPropertyChange(ev: Event) {
+        if (ev['propertyName'] !== 'style.display') return;
+        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
+    }
+
+    export function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
+        var $el = $(el);
+        //var sNewValue = el.style.display;
+        var sNewValue = $el.css('display');
+        var sOldValue = tsp.data(el).tsp_display;
+        if (!sOldValue) sOldValue = 'none';
+        if (sNewValue == sOldValue) return;
+        if (el.detachEvent) {
+            el.detachEvent('onpropertychange', handleOnPropertyChange);
+        }
+        tsp.data(el).tsp_display = sNewValue;
+        if (!tsp.data(el).tsp_lazyloaded && (sNewValue !== 'none')) {
+            var content = $.trim($el.html());
+            el.insertAdjacentHTML('beforebegin', content);
+        }
+        var newElement = (<HTMLElement> el.previousSibling);
+        newElement.style.display = sNewValue;
+        newElement.id = newElement.getAttribute('data-originalID');
+        el.parentNode.removeChild(el);
+    }
 }

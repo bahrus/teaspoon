@@ -4,7 +4,10 @@ namespace tspHandler
 {
     public class JQueryFacade
     {
-
+        public string trim(string str)
+        {
+            return str.Trim();
+        }
 
         public HtmlNodeFacade this[int index]
         {
@@ -12,6 +15,15 @@ namespace tspHandler
             {
                 if (_nodes == null || _nodes.Count==0) return null;
                 return _nodes[index];
+            }
+        }
+
+        public int length
+        {
+            get
+            {
+                if (_nodes == null) return 0;
+                return _nodes.Count;
             }
         }
 
@@ -23,24 +35,39 @@ namespace tspHandler
         }
 
 
-        public JQueryFacade jQuery()
-        {
-            return this;
-        }
+        
 
         public JQueryFacade jQuery(HtmlNodeFacade el)
         {
-            _nodes = new List<HtmlNodeFacade>
+            var returnObj = new JQueryFacade(_doc)
             {
-                el,
+                _nodes = new List<HtmlNodeFacade>
+                {
+                    el,
+                },
             };
-            return this;
+            return returnObj;
         }
 
         public JQueryFacade jQuery(string selectorText)
         {
-            _nodes = _doc.querySelectorAll(selectorText);
-            return this;
+            var returnObj = new JQueryFacade(_doc)
+            {
+                _nodes = _doc.querySelectorAll(selectorText)
+            };
+            return returnObj;
+        }
+
+        public JQueryFacade jQuery()
+        {
+
+            var returnObj = new JQueryFacade(_doc)
+            {
+                _nodes = new List<HtmlNodeFacade>
+                {
+                },
+            };
+            return returnObj;
         }
 
         public string attr(string name)
@@ -58,6 +85,12 @@ namespace tspHandler
             }
             return this;
         }
+
+        //public string css(string name)
+        //{
+        //    if (_nodes == null || _nodes.Count == 0) return string.Empty;
+
+        //}
 
         public string html()
         {

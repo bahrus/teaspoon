@@ -21,17 +21,15 @@
     </script>
     <script data-mode="server-side-only">
         var $ = tsp.$;
-        //var btn2 = g('button2');
-        //if (btn2.getAttribute('data-eventName') == 'clicked') {
+        
         var btn2 = $('#button2[data-eventName="clicked"]')[0];
-        console.log(btn2);
         if (btn2) {
-            //var spn = g('msg');
-            $('msg').html($('#myTextBox').val());
-            //var txt = g('myTextBox');
-            //spn.innerHTML = txt.value;
+            $('#msg').html($('#myTextBox').val());
         }
-        //}
+        var s = "12345   ";
+        //var t = $.trim(s);
+        //$('#msg').html(t);
+        $('#msg').html($.trim(s));
     </script>
 </body>
 </html>
