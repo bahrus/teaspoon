@@ -16,4 +16,5 @@ interface JQueryFacade {
     val(): any;
     trim(s: string): string;
     length: number;
+    each(callback: (indexInArray: any, valueOfElement: any) => any): any;
 }

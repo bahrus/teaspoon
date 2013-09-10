@@ -65,47 +65,70 @@
             </li>
         </ul>
     </li>
-    <li id="universalLanguage">Support same language / libraries / classes on both client and server as much as possible
+    <li id="universalLanguage">Server-Side Scripting
         <ul>
         <li class="selected">Model can be generated in server based language, but automatically generate interface stubs for Typescript / Javascript</li>
         <li>tag can contain sample markup, which will be replaced</li>
-        <li class="selected">Script tags can execute in client, in server, or both</li>
-            <li class="selected">Document can be stored in session, events on client applied to server.<ul>
-                <li class="selected">native method to monitor for changes, specify property</li>
-                <li class="selected">native button which submits changes, then clears on successful response - response can also send changes back.</li>
-                <li class="selected">ajax call made via script tag with src set to async</li>
+        <li class="selected" id="scripting">Script tags can execute in client, in server, or both</li>
+            <li class="selected">Server side script will have full access to the DOM</li>
+            <li>Server side script will have access to a jQuery facade (with limited functionality)</li>
+        <li>Document can be stored in session, events on client applied to server.
+                <ul>
+                    <li>native method to monitor for changes, specify property</li>
+                    <li>native button which submits changes, then clears on successful response - response can also send changes back.</li>
+                    <li>ajax call made via script tag with src set to async</li>
                 </ul>
             </li>
-        <li id="iframes">
-            "Embedded Iframes" is the route to reusable components (similar to "user controls" in asp.net).
-            <ul>
-                <li class="selected">If iframe tag has data-mode='server-side-only", then contents of referenced page will be embedded in page</li>
-                <li class="selected">src must contain #{id} in query string - this will limit the contents to what is in the dom id with that id</li>
-                <li class="selected">Refenced page will execute all server side script</li>
-                <li class="selected">id's in iframe will be "namespaced" to start with id of iframe tag, using an underscore separator</li>
-                <li>url in iframe reference will be "namespaced" to start with id of iframe tag, using an underscore separator</li>
-                <li>Page can register configuration parameters (query parameters)
-                    <ul>
-                        <li>reserved query parameter:  ?help=</li>
-                    </ul>
-                </li>
-                <li>Need to make sure rules support: http://stackoverflow.com/questions/5402312/same-style-for-ids-that-end-with-the-same-letters and pages that use iframes should use this</li>
-                <li>public pages vs private pages -- private pages cannot be requested standalone</li>
-                <li class="selected">Multiple server side iframes referencing same exact url will only be evaluated once.</li>
-                <li class="selected">script references / code are merged</li>
-                <li class="selected">style references are merged</li>
-                <li>model will be added to parent model, with {id} to reference it</li>
-                <li>code in iframe will see a server side global variable giving container dom id</li>
-            </ul>
-        </li>
     </ul>
     </li>
+        <li id="iframes">Serverside Components<ul>
+            <li id="iframes">"Embedded Iframes" is the route to reusable components (similar to "user controls" in asp.net).
+                <ul>
+                    <li class="selected">If iframe tag has data-mode='server-side-only", then contents of referenced page will be embedded in page</li>
+                    <li class="selected">src must contain #{id} in query string - this will limit the contents to what is in the dom id with that id</li>
+                    <li class="selected">Refenced page will execute all server side script</li>
+                    <li class="selected">id's in iframe will be "namespaced" to start with id of iframe tag, using an underscore separator</li>
+                    <li>forms will be merged into top of parent page.  form elements will be tagged with form name using html 5 attribute form</li>
+                    <li>url in iframe reference will be "namespaced" to start with id of iframe tag, using an underscore separator</li>
+                    <li>Page can register configuration parameters (query parameters)
+                        <ul>
+                            <li>reserved query parameter:  ?help=</li>
+                        </ul>
+                    </li>
+                    <li>Need to make sure rules support: http://stackoverflow.com/questions/5402312/same-style-for-ids-that-end-with-the-same-letters and pages that use iframes should use this</li>
+                    <li>public pages vs private pages -- private pages cannot be requested standalone</li>
+                    <li class="selected">Multiple server side iframes referencing same exact url will only be evaluated once.</li>
+                    <li class="selected">script references / code are merged</li>
+                    <li class="selected">style references are merged</li>
+                    <li>model will be added to parent model, with {id} to reference it</li>
+                    <li>code in iframe will see a server side global variable giving container dom id</li>
+                </ul>
+            </li>
+            </ul>
+        </li>
+        <li>Form-based Ajax<ul>
+            <li>Forms will build on some new features for html 5, while providing polyfill backwards support as necessary / possible,<ul>
+                <li id="forms" class="selected">Basic Form will submit even without JavaScript Enabled</li>
+                <li id="forms" class="selected">form fields will auto populate when submitted</li>
+                <li>hidden form fields used to track non standard input
+                    <ul>
+                        <li>?help exposes all the fields, allows to build a custom url</li>
+                        <li>buttons too are exposed and can be passed in via query string for initial display, like public methods</li>
+                    </ul>
+                </li>
+                <li>Forms can be separate elements from actual input elements.  Input elements can specify the form</li>
+                <li>Some javascript based polyfill support for internet explorer (even 10) required</li>
+                <li>Response to submit provides can update multiple nodes</li>
+                </ul>
+            </li>
+            </ul>
+        </li>
     <li>Keywords
         <ul>
             <li>Reserved keywords
                 <ul>
                     <li>
-                      mode
+                      mode, data-mode
                     </li>
                     <li>
                         possible values are:
@@ -114,9 +137,10 @@
                             <li>client-side-only</li>
                             <li>both</li>
                             <li>either</li>
+                            <li>design-time-only</li>
                         </ul>
                     </li>
-                    <li>containerDOM_ID</li>
+                    <li>?mode=design</li>
                 </ul>
             </li>
         </ul>

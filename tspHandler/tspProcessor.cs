@@ -14,8 +14,10 @@ namespace tspHandler
     {
 
         public const string ModelAttribute = "data-model";
-        public const string ServerSideProcessor = "tsp-ssx";
-        public const string Mode = "data-mode";
+        public const string ModeAttribute = "data-mode";
+        public const string DesignTypeAttribute = "data-design-type";
+
+        public const string modeParameter = "mode";
         public const string ServerSideMode = "server-side-only";
         public const string ClientSideMode = "client-side-only";
         public const string BothMode = "both";
@@ -33,7 +35,7 @@ namespace tspHandler
 
         private static Func<HtmlNodeFacade, bool> _TestForServerSide =  node =>
         {
-            string mode = node.getAttribute(Mode);
+            string mode = node.getAttribute(ModeAttribute);
             if (string.IsNullOrEmpty(mode)) return false;
             return (mode == ServerSideMode || mode == BothMode);
 
@@ -41,7 +43,7 @@ namespace tspHandler
 
         private static Func<HtmlNodeFacade, bool> _TestForClientSide = node =>
         {
-            string mode = node.getAttribute(Mode);
+            string mode = node.getAttribute(ModeAttribute);
             if (string.IsNullOrEmpty(mode)) return true;
             return (mode != ServerSideMode);
 
@@ -83,74 +85,67 @@ namespace tspHandler
             });
         }
 
-        public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
+        
+        public static HtmlDocumentFacade DisplayDesignMode(this HtmlDocumentFacade doc)
         {
-            //var serverSideScripts = doc.getElementsByTagName("parentScript").Where(node =>
-            //{
-            //    string mode = node.getAttribute(Mode);
-            //    if (string.IsNullOrEmpty(mode)) return false;
-            //    return (mode == ServerSideMode || mode == BothMode);
-
-            //});
-            var serverSideScripts = doc.getElementsByTagName("script").Where(_TestForServerSide);
-            var models = serverSideScripts
-                .Where(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)))
-                .ToList();
-            var sb = new StringBuilder();
-            models.ForEach(model => {
-                var id = model.id;
-                if(string.IsNullOrEmpty(id)) throw new Exception("model script tags must have an id");
-                var staticMethodString = model.getAttribute(ModelAttribute);
-                var result = InvokeServerSideMethod(staticMethodString, null);
-                string json = JsonConvert.SerializeObject(result);
-                
-                string modelScript = @"
-if(!model) var model = {};
-model['" + id + "'] = " + json + ";";
-                //sb.AppendLine(modelScript);
-                model.innerHTML = modelScript;
-            });
-            //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
-            var serverSideScriptsList = serverSideScripts.ToList();
-            serverSideScriptsList.ForEach(node =>
-            {
-                string src = node.getAttribute("src");
-                if (string.IsNullOrEmpty(src))
+            #region get all form elements and display them only
+            doc.body.DoForThisAndAllAncestors(nd =>{
+                switch (nd.tagName)
                 {
-                    sb.AppendLine(node.innerHTML);
-                }
-                else
-                {
-                    sb.AppendLine(doc.GetHostContent(src));
-                }
-                string mode = node.getAttribute(Mode);
-                if (mode == ServerSideMode)
-                {
-                    node.parentNode.removeChild(node);
+                    case "body":
+                    case "form":
+                    case "script":
+                    case "#text":
+                    case "datalist":
+                    case "option":
+                        break;
+                    case "input":
+                        if (nd.type == "hidden")
+                        {
+                            var designType = nd.getAttribute(DesignTypeAttribute);
+                            if (string.IsNullOrEmpty(designType))
+                            {
+                                nd.type = "text";
+                            }
+                            else
+                            {
+                                switch (designType)
+                                {
+                                    case "datalist":
+                                        nd.removeAttribute("type");
+                                        break;
+                                        
+                                }
+                            }
+                        }
+                        var p = nd.parentNode;
+                        var label = doc.createElement("label");
+                        label.innerHTML = nd.name + ": ";
+                        p.insertBefore(label, nd);
+                        var lineBr = doc.createElement("br");
+                        p.insertAfter(lineBr, nd);
+                        break;
+                    default:
+                        nd.delete();
+                        break;
                 }
             });
-            string script = sb.ToString();
-            if (script.Length > 0)
-            {
-                // Initialize a context
-                //sb.AppendLine("tsp.applyRules(document);");
-                script = sb.ToString();
-                using (JavascriptContext context = new JavascriptContext())
-                {
-
-                    // Setting external parameters for the context
-                    context.SetParameter("console", new Console());
-                    context.SetParameter("document", doc);
-                    //context.SetParameter("model", model);
-                    var jqueryFacade = new JQueryFacade(doc);
-                    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
-                    context.SetParameter("mode", "server");
-                    // Running the parentScript
-                    context.Run(script);
-                }
-            }
-
+            
+            #endregion
             return doc;
+        }
+
+        #region Process Methods
+        public static void Process(this HtmlDocumentFacade doc)
+        {
+            ProcessServerSideForms(doc);
+            ProcessServerSideScripts(doc);
+            if (doc.Host.IsDesignMode())
+            {
+                DisplayDesignMode(doc);
+                return;
+            }
+            ProcessServerSideIncludes(doc);
         }
 
         public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)
@@ -161,12 +156,12 @@ model['" + id + "'] = " + json + ";";
             var context = doc.createElement("script");
             //<script data-model= data-mode="both" id="context"></script>
             context.setAttribute("data-model", "[tsp.Http].GetContext");
-            context.setAttribute(Mode, BothMode);
+            context.setAttribute(ModeAttribute, BothMode);
             context.id = "httpContext";
             var head = doc.head;
             head.appendChild(context);
             var autoFill = doc.createElement("script");
-            autoFill.setAttribute(Mode, ServerSideMode);
+            autoFill.setAttribute(ModeAttribute, ServerSideMode);
             autoFill.innerHTML = @"
 tsp.createInputAutoFillRule(model);
 ";
@@ -188,6 +183,77 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
+        public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
+        {
+            //var serverSideScripts = doc.getElementsByTagName("parentScript").Where(node =>
+            //{
+            //    string mode = node.getAttribute(ModeAttribute);
+            //    if (string.IsNullOrEmpty(mode)) return false;
+            //    return (mode == ServerSideMode || mode == BothMode);
+
+            //});
+            var serverSideScripts = doc.getElementsByTagName("script").Where(_TestForServerSide);
+            var models = serverSideScripts
+                .Where(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)))
+                .ToList();
+            var sb = new StringBuilder();
+            models.ForEach(model =>
+            {
+                var id = model.id;
+                if (string.IsNullOrEmpty(id)) throw new Exception("model script tags must have an id");
+                var staticMethodString = model.getAttribute(ModelAttribute);
+                var result = InvokeServerSideMethod(staticMethodString, null);
+                string json = JsonConvert.SerializeObject(result);
+
+                string modelScript = @"
+if(!model) var model = {};
+model['" + id + "'] = " + json + ";";
+                //sb.AppendLine(modelScript);
+                model.innerHTML = modelScript;
+            });
+            //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
+            var serverSideScriptsList = serverSideScripts.ToList();
+            serverSideScriptsList.ForEach(node =>
+            {
+                string src = node.getAttribute("src");
+                if (string.IsNullOrEmpty(src))
+                {
+                    sb.AppendLine(node.innerHTML);
+                }
+                else
+                {
+                    sb.AppendLine(doc.GetHostContent(src));
+                }
+                string mode = node.getAttribute(ModeAttribute);
+                if (mode == ServerSideMode)
+                {
+                    node.parentNode.removeChild(node);
+                }
+            });
+            string script = sb.ToString();
+            if (script.Length > 0)
+            {
+                // Initialize a context
+                //sb.AppendLine("tsp.applyRules(document);");
+                script = sb.ToString();
+                using (JavascriptContext context = new JavascriptContext())
+                {
+
+                    // Setting external parameters for the context
+                    context.SetParameter("console", new Console());
+                    context.SetParameter("document", doc);
+                    //context.SetParameter("model", model);
+                    var jqueryFacade = new JQueryFacade(doc);
+                    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
+                    context.SetParameter(modeParameter, "server");
+                    // Running the parentScript
+                    context.Run(script);
+                }
+            }
+
+            return doc;
+        }
+     
         public static HtmlDocumentFacade ProcessServerSideIncludes(this HtmlDocumentFacade doc)
         {
             var serversideIframes = doc.getElementsByTagName("iframe")
@@ -307,11 +373,8 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
-        public static HtmlDocumentFacade RetrieveContext(this HtmlDocumentFacade doc)
-        {
-            //TODO:  Implement
-            return doc;
-        }
+        #endregion
+        
 
         
 

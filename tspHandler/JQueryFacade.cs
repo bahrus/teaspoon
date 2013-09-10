@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace tspHandler
 {
@@ -113,6 +114,10 @@ namespace tspHandler
             if (_nodes == null || _nodes.Count == 0) return null;
             //TODO:  Selects are different
             return _nodes[0].value;
+        }
+
+        public void each(Action<HtmlNodeFacade> callBack)
+        {
         }
 
     }

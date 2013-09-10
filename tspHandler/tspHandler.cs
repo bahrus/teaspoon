@@ -15,6 +15,11 @@ namespace tspHandler
             get { return true; }
         }
 
+        public bool IsDesignMode()
+        {
+            return HttpContext.Current.Request[tspProcessor.modeParameter] == "design";
+        }
+
         public tspHandler() { }
 
         public tspHandler(string filePath)
@@ -67,5 +72,7 @@ namespace tspHandler
         string GetFilePathOfRelativeResource(string path);
 
         string GetRelativePathOfFilePath(string path);
+
+        bool IsDesignMode();
     }
 }

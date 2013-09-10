@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using Fizzler.Systems.HtmlAgilityPack;
+using System.Linq;
 
 namespace tspHandler
 {
@@ -31,7 +33,19 @@ namespace tspHandler
                 this.setAttribute(index, value);
             }
         }
-        
+
+        public void delete()
+        {
+            _node.ParentNode.RemoveChild(_node);
+        }
+
+        public string tagName
+        {
+            get { 
+                return _node.Name; 
+            }
+            set { _node.Name = value; }
+        }
 
         public string id
         {
@@ -57,10 +71,29 @@ namespace tspHandler
             set { this.setAttribute("value", value); }
         }
 
+        public string type
+        {
+            get { return this.getAttribute("type"); }
+            set { this.setAttribute("type", value); }
+        }
+
         public HtmlNodeFacade(HtmlNode node)
         {
             if (node == null) throw new Exception();
             this._node = node;
+        }
+
+        public List<HtmlNodeFacade> querySelectorAll(string selectorText)
+        {
+            if (selectorText.Contains(">"))
+            {
+                throw new Exception("querySelectorAll implementation does not currently support the > operator");
+            }
+            var returnObj = _node
+                .QuerySelectorAll(selectorText)
+                .Select(node => new HtmlNodeFacade(node))
+                .ToList();
+            return returnObj;
         }
 
         public string getAttribute(string key)
@@ -145,6 +178,16 @@ namespace tspHandler
         public HtmlNodeFacade insertBefore(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
         {
             return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node));
+        }
+
+        public HtmlNodeFacade insertAfter(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
+        {
+            return new HtmlNodeFacade(this._node.InsertAfter(newChild._node, refChild._node));
+        }
+
+        public void removeAttribute(string attrName)
+        {
+            _node.Attributes.Remove(attrName);
         }
 
         public void DoForThisAndAllAncestors(Action<HtmlNodeFacade> action)

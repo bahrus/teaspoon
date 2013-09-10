@@ -6,12 +6,21 @@ using System.IO;
 using System.Linq;
 using ClassGenMacros;
 using Fizzler.Systems.HtmlAgilityPack;
+using System.Web;
 
 namespace tspHandler
 {
     public class HtmlDocumentFacade
     {
         private HtmlDocument _htmlDoc;
+
+        public IDocumentHost Host
+        {
+            get
+            {
+                return _host;
+            }
+        }
         private IDocumentHost _host;
 
         /// <summary>
@@ -33,13 +42,7 @@ namespace tspHandler
 
         
 
-        public void Process()
-        {
-            this.ProcessServerSideForms();
-            this.ProcessServerSideScripts();
-            this.ProcessServerSideIncludes();
-            this.RetrieveContext();
-        }
+        
 
         public string GetHostContent(string src)
         {

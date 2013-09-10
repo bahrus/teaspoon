@@ -139,7 +139,6 @@ module tsp {
     }
 
     
-    
 
     export function applyRules(doc: HTMLDocument) {
         var affectedEls: { [key: string]: HTMLElement; } = {};
@@ -148,8 +147,7 @@ module tsp {
         for (var i = 0; i < rulesIdx; i++) {
             //#region iterate over all the rules
             var rule = rules[i];
-            //var nds = doc.querySelectorAll(rule.selectorText);
-            var nds = $(rule.selectorText);
+            var nds = doc.querySelectorAll(rule.selectorText);
             for (var j = 0, n = nds.length; j < n; j++) {
                 //#region iterate over all the matching elements
                 
@@ -206,7 +204,7 @@ module tsp {
         //#endregion
         //#region perform reserved rules
         if (isClientSideMode()) {
-            var nds = $('.' + reserved_lazyLoad);
+            var nds = doc.querySelectorAll('.' + reserved_lazyLoad);
             for (var j = 0, n = nds.length; j < n; j++) {
                 var nd = <HTMLElement> nds[j];
                 if (typeof (MutationObserver) !== 'undefined') {
