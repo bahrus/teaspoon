@@ -6,10 +6,11 @@
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     
+    
 </head>
 <body>
-    <form name="myForm" data-mode="both">
-        <input type="text" name="myTextBox" id="myTextBox"/>
+    <form name="myForm" data-mode="both" id="myForm">
+        
         <span id="msg"></span>
         <input type="hidden" name="myHiddenField" data-design-type="datalist" list="browsers" />
 
@@ -25,6 +26,12 @@
         <input type="submit" value="button2" id="button2" name="submits" />
         <input type="submit" value="button3" name="submits2" />
         <input type="submit" value="button4" name="submits2"/>
+
+        
+    </form>
+    <input type="text" name="myTextBox" id="myTextBox" form="myForm"/>
+    <form name="tcp_urlBuilder_form">
+        <textarea id="tcp_urlBuilder"></textarea>
     </form>
     <script data-mode="both" defer>
         tsp.applyRules(document);
@@ -42,4 +49,5 @@
         $('#msg').html($.trim(s));
     </script>
 </body>
+    <script src="form1.js"></script>
 </html>

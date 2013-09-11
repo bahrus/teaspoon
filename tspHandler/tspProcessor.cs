@@ -98,6 +98,7 @@ namespace tspHandler
                     case "#text":
                     case "datalist":
                     case "option":
+                    case "textarea":
                         break;
                     case "input":
                         if (nd.type == "hidden")

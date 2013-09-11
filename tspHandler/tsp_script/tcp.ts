@@ -3,19 +3,53 @@
 
 module tcp {
 
-    var handlers: { [key: string]: tsp.ICascadingHandler[]; } = {};
+    export interface ICascadingHandler {
+        selectorText: string;
+        handler: (evt: Event, handler: ICascadingHandler) => void;
+    }
+
+    var handlers: { [key: string]: ICascadingHandler[]; } = {};
+
+    var matchesSelector = function (node, selector) {
+        var nodeList = node.parentNode.querySelectorAll(selector),
+            length = nodeList.length,
+            i = 0;
+        while (i < length) {
+            if (nodeList[i] == node) return true;
+            ++i;
+        }
+        return false;
+    };
+
+    
 
     function handleCascadingEvent(evt: Event) {
-        
+        var el = evt.srcElement;
+        var evtHandlers = handlers[evt.type];
+        //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
+         
+        for (var i = 0, n = evtHandlers.length; i < n; i++) {
+            var evtHandler = evtHandlers[i];
+            var doesMatch = false;
+            if (el.msMatchesSelector) {
+                doesMatch = el.msMatchesSelector(evtHandler.selectorText);
+            } else{//need to test other browsers with native support
+                doesMatch = matchesSelector(el, evtHandler.selectorText);
+            }
+            if (doesMatch) {
+                evtHandler.handler(evt, evtHandler);
+            }
+        }
     } 
 
-    export function _when(eventName: string, cascadingHandler: tsp.ICascadingHandler) {
+    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
         
         var eventHandlers = handlers[eventName];
         if (!eventHandlers) {
             eventHandlers = [];
             handlers[eventName] = eventHandlers;
             var body = document.body;
+           
             if (body.attachEvent) {
                 body.attachEvent('on' + eventName, handleCascadingEvent);
             } else {
