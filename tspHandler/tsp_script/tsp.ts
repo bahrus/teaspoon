@@ -18,20 +18,19 @@ module tsp {
 
     if (!isClientSideMode()) {
         $ = jQueryServerSideFacade.jQuery;
-         $.trim = (s: string) => $().trim(s);
+        $.trim = (s: string) => $().trim(s);
     } else {
         $ = <JQueryStaticFacade> eval('jQuery');
     }
 
     var cache = [{}],
-        expando = 'data-tsp-cache';
+        expando = isClientSideMode() ? 'data-tcp-cache' : 'data-tsp-cache';
 
 
     export function data(elem: HTMLElement): any {
-
         var $el = $(elem);
-        //var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
-        var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
+        var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
+        //var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
         var nCacheIndex : number;
         if (!cacheIndex) {
             $el.attr(expando, nextCacheIndex.toString());
@@ -40,8 +39,9 @@ module tsp {
             nCacheIndex = nextCacheIndex;
         } else {
             nCacheIndex = parseInt(cacheIndex);
+            
         }
-        
+        if(!cache[nCacheIndex]) cache[nextCacheIndex] = {};
         return cache[nCacheIndex];
     }
     
@@ -142,10 +142,12 @@ module tsp {
                 if (!tsp_props) {
                     tsp_props = {};
                     data(nd).tsp = tsp_props; 
+                    
                 }
-                var exe_props: { [key: string]: any; } = data(nd).exe;
+                var exe_props: { [key: string]: any; } = data(nd).exe;// data(nd).exe;
                 if (!exe_props) {
                     exe_props = {};
+                    //data(nd).exe = exe_props;
                     data(nd).exe = exe_props;
                 }
                 var props = rule.properties;
@@ -235,6 +237,7 @@ module tsp {
     }
    
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
+        console.log('in lazyload');
         if (isClientSideMode()) return;
         var lazyRule = <ILazyLoadRule> evalRulesSubset(props, prefix);
         if (lazyRule.applyLazyConditionCheck) {

@@ -5,10 +5,47 @@ namespace tspHandler
 {
     public class JQueryFacade
     {
+        //[ThreadStatic]
+        //private static Dictionary<HtmlNodeFacade, Dictionary<string, object>> _data;
+
         public string trim(string str)
         {
             return str.Trim();
         }
+
+        //public object data(HtmlNodeFacade el, string key = null, object val = null)
+        //{
+        //    if (_data == null) _data = new Dictionary<HtmlNodeFacade, Dictionary<string, object>>();
+        //    if (!_data.ContainsKey(el))
+        //    {
+        //        _data[el] = new Dictionary<string, object>();
+        //    }
+        //    var d = _data[el];
+        //    if (key == null)
+        //    {
+        //        return d;
+        //    }
+        //    if (val == null)
+        //    {
+        //        if (d.ContainsKey(key)) return d[key];
+        //    }
+        //    d[key] = val;
+        //    return val;
+        //}
+
+        //public Dictionary<string,object> data()
+        //{
+        //    if (_nodes == null || _nodes.Count == 0) return null;
+        //    if (_nodes.Count > 1) throw new NotImplementedException();
+        //    if (_data == null) _data = new Dictionary<HtmlNodeFacade,Dictionary<string,object>>();
+        //    var el = _nodes[0];
+        //    if (!_data.ContainsKey(el))
+        //    {
+        //        _data[el] = new Dictionary<string,object>();
+        //    }
+        //    return _data[el];
+        //}
+        
 
         public HtmlNodeFacade this[int index]
         {
