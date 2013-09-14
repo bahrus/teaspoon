@@ -64,6 +64,7 @@
   <ItemGroup>
     <Content Include="Content\jquery.layout-1.30.79.css" />
     <TypeScriptCompile Include="form1.ts" />
+    <Content Include="datagrid.tsp.html" />
     <Content Include="form1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />

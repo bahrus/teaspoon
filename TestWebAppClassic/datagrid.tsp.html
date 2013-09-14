@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+    </style>
+
+    <script type="text/javascript" src="Scripts/jquery-2.0.3.js"></script>
+    <script src="tsp_script/tsp.js" data-mode="both"></script>
+    <script src="tsp_script/tcp.js"></script>
+
+    <script data-mode="both" data-model="[TestWebAppClassic.DataTableTestModel, TestWebAppClassic].GetTbl" id="dataTable"></script>
+
+    <script>
+        function populate(dataTable, rowOffsetFld, template) {
+            var rcs = template.querySelectorAll('*[data-rc]');
+            var rowOffset = rowOffsetFld.value > 0 ? parseInt(rowOffsetFld.value) : 0;
+            for (var i = 0, n = rcs.length; i < n; i++) {
+                var rc = rcs[i];
+                var coord = rc.getAttribute('data-rc').split(',');
+                var row = parseInt(coord[0]) - 1 + rowOffset;
+                var col = parseInt(coord[1]) - 1;
+                var dRow = dataTable.data[row];
+                var val = dRow[col];
+                rc.innerHTML = val;
+            }    
+
+        }
+    </script>
+
+</head>
+<body>
+    <form data-mode="both">
+        <input type="hidden" name="rowOffset" id="rowOffset" />
+
+    </form>
+    
+
+    
+
+    <table id="myTable">
+        <tr>
+            <td data-rc="1,1"></td>
+            <td data-rc="1,2"></td>
+            <td data-rc="1,3"></td>
+            <td data-rc="1,4"></td>
+            <td data-rc="1,5"></td>
+            <td data-rc="1,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="2,1"></td>
+            <td data-rc="2,2"></td>
+            <td data-rc="2,3"></td>
+            <td data-rc="2,4"></td>
+            <td data-rc="2,5"></td>
+            <td data-rc="2,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="3,1"></td>
+            <td data-rc="3,2"></td>
+            <td data-rc="3,3"></td>
+            <td data-rc="3,4"></td>
+            <td data-rc="3,5"></td>
+            <td data-rc="3,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="4,1"></td>
+            <td data-rc="4,2"></td>
+            <td data-rc="4,3"></td>
+            <td data-rc="4,4"></td>
+            <td data-rc="4,5"></td>
+            <td data-rc="4,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="5,1"></td>
+            <td data-rc="5,2"></td>
+            <td data-rc="5,3"></td>
+            <td data-rc="5,4"></td>
+            <td data-rc="5,5"></td>
+            <td data-rc="5,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="6,1"></td>
+            <td data-rc="6,2"></td>
+            <td data-rc="6,3"></td>
+            <td data-rc="6,4"></td>
+            <td data-rc="6,5"></td>
+            <td data-rc="6,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="7,1"></td>
+            <td data-rc="7,2"></td>
+            <td data-rc="7,3"></td>
+            <td data-rc="7,4"></td>
+            <td data-rc="7,5"></td>
+            <td data-rc="7,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="8,1"></td>
+            <td data-rc="8,2"></td>
+            <td data-rc="8,3"></td>
+            <td data-rc="8,4"></td>
+            <td data-rc="8,5"></td>
+            <td data-rc="8,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="9,1"></td>
+            <td data-rc="9,2"></td>
+            <td data-rc="9,3"></td>
+            <td data-rc="9,4"></td>
+            <td data-rc="9,5"></td>
+            <td data-rc="9,6"></td>
+        </tr>
+        <tr>
+            <td data-rc="10,1"></td>
+            <td data-rc="10,2"></td>
+            <td data-rc="10,3"></td>
+            <td data-rc="10,4"></td>
+            <td data-rc="10,5"></td>
+            <td data-rc="10,6"></td>
+        </tr>
+    </table>
+    
+
+</body>
+</html>
+<script defer data-mode="both">
+    tsp.applyRules(document);
+    
+</script>
+<script defer>
+    populate(model.dataTable, document.getElementById('rowOffset'), document.getElementById('myTable'));
+</script>

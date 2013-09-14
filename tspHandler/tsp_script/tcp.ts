@@ -11,7 +11,6 @@ module tcp {
     }
 
     export interface IUIBindingInfo {
-        //selectorText?: string;
         propertyToMonitor?: string;
         subPropertyToMonitor?: string;
         form?: string;
@@ -59,8 +58,6 @@ module tcp {
             if (frm.length == 0) continue;
             var $inpFld = frm.find('.' + sControlID);
             if ($inpFld.length == 0) {
-                //$inpFld = frm.add('<input type="hidden" name="' + sControlID + '" class="' + sControlID + '"/>');
-                //$inpFld = frm.add('input').attr('type', 'hidden').attr('name', sControlID).addClass(sControlID);
                 frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID));
                 $inpFld = frm.find('.' + sControlID);
             }

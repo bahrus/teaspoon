@@ -50,7 +50,7 @@ namespace TestWebAppClassic
                 };
                 dt.fields.Add(dc);
             }
-            int iRows = 50000;
+            int iRows = 50;
             for (int i = 0; i < iRows; i++)
             {
                 var dataRow = new object[iColumns];

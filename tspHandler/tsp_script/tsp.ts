@@ -237,7 +237,6 @@ module tsp {
     }
    
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
-        console.log('in lazyload');
         if (isClientSideMode()) return;
         var lazyRule = <ILazyLoadRule> evalRulesSubset(props, prefix);
         if (lazyRule.applyLazyConditionCheck) {
