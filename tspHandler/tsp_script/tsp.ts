@@ -351,25 +351,35 @@ module tsp {
         getDataTable?: (el: HTMLElement) => IDataTable;
     }
 
-    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }) {
-        var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
-        var dataTable = populateRule.getDataTable(el);
-        var data = dataTable.data;
+    
+
+
+    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IPopulateRectCoordinates) {
+        var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
+        var rowOffset = (rowOffsetFld2 && rowOffsetFld2.value.length > 0) ? parseInt(rowOffsetFld2.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
+        var rule = populateRule ? populateRule : <IPopulateRectCoordinates> tsp.data(el).populateRule;
+        var dataTable = rule.getDataTable(el);
+        var data = dataTable.data;
+        for (var i = 0, n = rcs.length; i < n; i++) {
+            var rc = <HTMLElement> rcs[i];
+            var coord = rc.getAttribute('data-rc').split(',');
+            var row = parseInt(coord[0]) - 1 + rowOffset;
+            var col = parseInt(coord[1]) - 1;
+            var dRow = row < data.length ? dataTable.data[row] : null;
+            var val = dRow == null ? '&nbsp;' : dRow[col];
+            rc.innerHTML = val;
+        }
+    }
+
+    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }, bClientSideRefresh?: boolean) {
+        var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
         var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
-        if (isClientSideMode()) {
+        tsp.data(el).populateRule = populateRule;
+        if (isClientSideMode() && !bClientSideRefresh) {
             //TODO:  listen for changes to rowOffsetFld
         } else {
-            var rowOffset = (rowOffsetFld && rowOffsetFld.value.length > 0) ? parseInt(rowOffsetFld.value) : 0;
-            for (var i = 0, n = rcs.length; i < n; i++) {
-                var rc = <HTMLElement> rcs[i];
-                var coord = rc.getAttribute('data-rc').split(',');
-                var row = parseInt(coord[0]) - 1 + rowOffset;
-                var col = parseInt(coord[1]) - 1;
-                var dRow = row < data.length ? dataTable.data[row] : null;
-                var val = dRow == null ? '&nbsp;' : dRow[col];
-                rc.innerHTML = val;
-            }
+            refreshTemplateWithRectCoords(el, rowOffsetFld, populateRule);
         }
             
     }

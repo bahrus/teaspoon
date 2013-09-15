@@ -2,13 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <style type="text/css">
         .auto-style1 {
             width: 100%;
         }
     </style>
 
-    <script type="text/javascript" src="Scripts/jquery-2.0.3.js"></script>
+    <script src="Scripts/jquery-2.0.3.js"></script>
+    <script src="Scripts/jquery-ui-1.10.3.js"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
 
@@ -19,21 +21,32 @@
             call: tsp.applyPopulateTemplateWithRectCoords,
             'tsp-getDataTable': function (el) { return model.dataTable;}
         });
-        //function populate(dataTable, rowOffsetFld, template) {
-        //    var rcs = template.querySelectorAll('*[data-rc]');
-        //    var rowOffset = rowOffsetFld.value > 0 ? parseInt(rowOffsetFld.value) : 0;
-        //    for (var i = 0, n = rcs.length; i < n; i++) {
-        //        var rc = rcs[i];
-        //        var coord = rc.getAttribute('data-rc').split(',');
-        //        var row = parseInt(coord[0]) - 1 + rowOffset;
-        //        var col = parseInt(coord[1]) - 1;
-        //        var dRow = dataTable.data[row];
-        //        var val = dRow[col];
-        //        rc.innerHTML = val;
-        //    }    
-
-        //}
     </script>
+
+      <script>
+          $(function () {
+              var table = $("#myTable");
+              //var rowOffset = $('#myTable_rowOffset');
+              var rowOffset = document.getElementById('myTable_rowOffset');
+              var slider = $("<div id='slider'></div>").insertAfter(table).slider({
+                  min: 1,
+                  max: model.dataTable.data.length,
+                  range: "min",
+                  value: 0,
+                  slide: function (event, ui) {
+                      rowOffset.setAttribute('value', '' + ui.value - 1);
+                  }
+              });
+              //$("#minbeds").change(function () {
+              //    slider.slider("value", this.selectedIndex + 1);
+              //});
+              rowOffset.attachEvent('onpropertychange', function (evt) {
+                  var el = evt.srcElement;
+                  var tbl = document.getElementById(el.id.replace('_rowOffset', ''));
+                  tsp.refreshTemplateWithRectCoords(tbl, el)
+              });
+          });
+  </script>
 
 </head>
 <body>
