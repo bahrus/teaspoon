@@ -14,27 +14,31 @@
 
     <script data-mode="both" data-model="[TestWebAppClassic.DataTableTestModel, TestWebAppClassic].GetTbl" id="dataTable"></script>
 
-    <script>
-        function populate(dataTable, rowOffsetFld, template) {
-            var rcs = template.querySelectorAll('*[data-rc]');
-            var rowOffset = rowOffsetFld.value > 0 ? parseInt(rowOffsetFld.value) : 0;
-            for (var i = 0, n = rcs.length; i < n; i++) {
-                var rc = rcs[i];
-                var coord = rc.getAttribute('data-rc').split(',');
-                var row = parseInt(coord[0]) - 1 + rowOffset;
-                var col = parseInt(coord[1]) - 1;
-                var dRow = dataTable.data[row];
-                var val = dRow[col];
-                rc.innerHTML = val;
-            }    
+    <script data-mode="both">
+        tsp._if('#myTable', {
+            call: tsp.applyPopulateTemplateWithRectCoords,
+            'tsp-getDataTable': function (el) { return model.dataTable;}
+        });
+        //function populate(dataTable, rowOffsetFld, template) {
+        //    var rcs = template.querySelectorAll('*[data-rc]');
+        //    var rowOffset = rowOffsetFld.value > 0 ? parseInt(rowOffsetFld.value) : 0;
+        //    for (var i = 0, n = rcs.length; i < n; i++) {
+        //        var rc = rcs[i];
+        //        var coord = rc.getAttribute('data-rc').split(',');
+        //        var row = parseInt(coord[0]) - 1 + rowOffset;
+        //        var col = parseInt(coord[1]) - 1;
+        //        var dRow = dataTable.data[row];
+        //        var val = dRow[col];
+        //        rc.innerHTML = val;
+        //    }    
 
-        }
+        //}
     </script>
 
 </head>
 <body>
     <form data-mode="both">
-        <input type="hidden" name="rowOffset" id="rowOffset" />
+        <input type="hidden" name="myTable_rowOffset" id="myTable_rowOffset" />
 
     </form>
     
@@ -131,6 +135,6 @@
     tsp.applyRules(document);
     
 </script>
-<script defer>
-    populate(model.dataTable, document.getElementById('rowOffset'), document.getElementById('myTable'));
-</script>
+<!--<script defer>
+    populate(model.dataTable, document.getElementById('myTable_rowOffset'), document.getElementById('myTable'));
+</script>-->

@@ -51,9 +51,6 @@ module tsp {
         docOrder: number;
     }
 
-    
-
-  
 
     export interface IConditionalRule {
         condition?: (el: HTMLElement) => boolean;
@@ -342,6 +339,39 @@ module tsp {
         valProp?: string; //example:  'value', 'innerHTML', 'class'
         modelRootElement?: TModel;
         fill?: (el: HTMLElement, model: TModel) => string;
+    }
+
+    export interface IDataTable {
+        data?: any[][];
+    }
+
+    export interface IPopulateRectCoordinates {
+        //templateSelector: string;
+        //verticalOffsetCtlSelector?: 
+        getDataTable?: (el: HTMLElement) => IDataTable;
+    }
+
+    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }) {
+        var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
+        var dataTable = populateRule.getDataTable(el);
+        var data = dataTable.data;
+        var rcs = el.querySelectorAll('*[data-rc]');
+        var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
+        if (isClientSideMode()) {
+            //TODO:  listen for changes to rowOffsetFld
+        } else {
+            var rowOffset = (rowOffsetFld && rowOffsetFld.value.length > 0) ? parseInt(rowOffsetFld.value) : 0;
+            for (var i = 0, n = rcs.length; i < n; i++) {
+                var rc = <HTMLElement> rcs[i];
+                var coord = rc.getAttribute('data-rc').split(',');
+                var row = parseInt(coord[0]) - 1 + rowOffset;
+                var col = parseInt(coord[1]) - 1;
+                var dRow = row < data.length ? dataTable.data[row] : null;
+                var val = dRow == null ? '&nbsp;' : dRow[col];
+                rc.innerHTML = val;
+            }
+        }
+            
     }
 
     export function applyAttributeRule(el: HTMLElement, props: { [key: string]: any; }) {
