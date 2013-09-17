@@ -44,9 +44,9 @@ module tcp {
     }
 
     function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
-        var el = document.getElementById(cascadeInfo.data);
+        var el = document.getElementById(cascadeInfo.containerID);
         var r = evt.srcElement.getAttribute('data-rc').split(',')[0];
-        var rcs = el.querySelectorAll('*[data-rc|' + r + ',]');
+        var rcs = el.querySelectorAll('[data-rc^="' + r + ',"]');
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             rc.style.backgroundColor = 'blue';
@@ -56,10 +56,9 @@ module tcp {
     export function addRowSelection(el: HTMLElement) {
         var sID = el.id;
         _when('click', {
-            selectorText: '[data-rc]',
-            //test: el => 
-            data:el.id,
+            containerID : el.id,
             handler: handleRowSelection,
+            selectorNodeTest: '*[data-rc]',
         });
     }
 
@@ -142,31 +141,34 @@ module tcp {
 
     function handleCascadingEvent(evt: Event) {
         var el = <HTMLElement> evt.srcElement;
+        var evtEl = el;
         while (el) {
-            if (el.id && el.id.length == 0) {
+            if (el.id && el.id.length > 0) {
                 var evtHandlers = tsp.data(el).handlers;
                 if (evtHandlers) {
                     var evtHandler = evtHandlers[evt.type];
                     if (evtHandler) {
                         for (var i = 0, n = evtHandler.length; i < n; i++) {
-                            var cascadeHandler = evtHandlers[i];
+                            var cascadeHandler = evtHandler[i];
                             var doesMatch = false;
                             if (cascadeHandler.selectorNodeTest) {
                                 //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
-                                if (el.msMatchesSelector) {
-                                    doesMatch = el.msMatchesSelector(evtHandler.selectorNodeTest);
+                                if (evtEl.msMatchesSelector) {
+                                    doesMatch = evtEl.msMatchesSelector(cascadeHandler.selectorNodeTest);
                                 } else {//need to test other browsers with native support
-                                    doesMatch = matchesSelector(el, evtHandler.selectorNodeTest);
+                                    doesMatch = matchesSelector(evtEl, cascadeHandler.selectorNodeTest);
                                 }
                             }
                             if (doesMatch) {
                                 cascadeHandler.handler(evt, cascadeHandler);
+                                return;
                             }
                         }
                     }
                 }
             }
-            if (el.tagName == 'body') return;
+            el = <HTMLElement> el.parentNode;
+            if (el && el.tagName == 'body') return;
         }
         
         
