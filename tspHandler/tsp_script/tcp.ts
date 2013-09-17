@@ -1,13 +1,18 @@
 ///<reference path='tsp.ts'/>
 ///<reference path='../Scripts/typings/jquery/jquery.d.ts'/>
+///<reference path='../Scripts/typings/jqueryui/jqueryui.d.ts'/>
 
 module tcp {
 
     var prefix = 'tcp-';
 
     export interface ICascadingHandler {
-        selectorText: string;
-        handler: (evt: Event, handler: ICascadingHandler) => void;
+        selectorNodeTest?: string;
+        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
+        //test?: (el: HTMLElement) => boolean;
+        containerID?: string;
+        container?: HTMLElement;
+        data?: any;
     }
 
     export interface IUIBindingInfo {
@@ -24,6 +29,38 @@ module tcp {
             options: bindingRule,
         });
         return bindingObj;
+    }
+
+    export function addVScroller(el: HTMLElement, dt: tsp.IDataTable, rowOffset: HTMLInputElement) {
+        var slider = $("<div id='slider'></div>").insertAfter(el).slider({
+            min: 1,
+            max: dt.data.length,
+            range: "min",
+            value: 0,
+            slide: function (event, ui) {
+                rowOffset.setAttribute('value', '' + (ui.value - 1));
+            }
+        });
+    }
+
+    function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
+        var el = document.getElementById(cascadeInfo.data);
+        var r = evt.srcElement.getAttribute('data-rc').split(',')[0];
+        var rcs = el.querySelectorAll('*[data-rc|' + r + ',]');
+        for (var i = 0, n = rcs.length; i < n; i++) {
+            var rc = <HTMLElement> rcs[i];
+            rc.style.backgroundColor = 'blue';
+        }
+    }
+
+    export function addRowSelection(el: HTMLElement) {
+        var sID = el.id;
+        _when('click', {
+            selectorText: '[data-rc]',
+            //test: el => 
+            data:el.id,
+            handler: handleRowSelection,
+        });
     }
 
 
@@ -66,7 +103,7 @@ module tcp {
         
     }
 
-    var handlers: { [key: string]: ICascadingHandler[]; } = {};
+    //var handlers: { [key: string]: ICascadingHandler[]; } = {};
 
     var matchesSelector = function (node, selector) {
         var nodeList = node.parentNode.querySelectorAll(selector),
@@ -104,39 +141,63 @@ module tcp {
     
 
     function handleCascadingEvent(evt: Event) {
-        var el = evt.srcElement;
-        var evtHandlers = handlers[evt.type];
-        //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
-         
-        for (var i = 0, n = evtHandlers.length; i < n; i++) {
-            var evtHandler = evtHandlers[i];
-            var doesMatch = false;
-            if (el.msMatchesSelector) {
-                doesMatch = el.msMatchesSelector(evtHandler.selectorText);
-            } else{//need to test other browsers with native support
-                doesMatch = matchesSelector(el, evtHandler.selectorText);
+        var el = <HTMLElement> evt.srcElement;
+        while (el) {
+            if (el.id && el.id.length == 0) {
+                var evtHandlers = tsp.data(el).handlers;
+                if (evtHandlers) {
+                    var evtHandler = evtHandlers[evt.type];
+                    if (evtHandler) {
+                        for (var i = 0, n = evtHandler.length; i < n; i++) {
+                            var cascadeHandler = evtHandlers[i];
+                            var doesMatch = false;
+                            if (cascadeHandler.selectorNodeTest) {
+                                //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
+                                if (el.msMatchesSelector) {
+                                    doesMatch = el.msMatchesSelector(evtHandler.selectorNodeTest);
+                                } else {//need to test other browsers with native support
+                                    doesMatch = matchesSelector(el, evtHandler.selectorNodeTest);
+                                }
+                            }
+                            if (doesMatch) {
+                                cascadeHandler.handler(evt, cascadeHandler);
+                            }
+                        }
+                    }
+                }
             }
-            if (doesMatch) {
-                evtHandler.handler(evt, evtHandler);
-            }
+            if (el.tagName == 'body') return;
         }
+        
+        
     } 
 
     export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
-        
-        var eventHandlers = handlers[eventName];
+        var el: HTMLElement;
+        if (cascadingHandler.containerID) {
+            el = document.getElementById(cascadingHandler.containerID);
+        } else if (cascadingHandler.container) {
+            el = cascadingHandler.container;
+        }  else {
+            el = document.body;
+        }
+        //var eventHandlers = handlers[eventName];
+        var eventHandlers: { [key: string]: ICascadingHandler[]; }  = tsp.data(el).handlers;
         if (!eventHandlers) {
-            eventHandlers = [];
-            handlers[eventName] = eventHandlers;
-            var body = document.body;
-           
-            if (body.attachEvent) {
-                body.attachEvent('on' + eventName, handleCascadingEvent);
+            eventHandlers = {};
+            tsp.data(el).handlers = eventHandlers;
+        }
+        var eventHandler = eventHandlers[eventName];
+        if (!eventHandler) {
+            eventHandler = [];
+            eventHandlers[eventName] = eventHandler;
+            if (el.attachEvent) {
+                el.attachEvent('on' + eventName, handleCascadingEvent);
             } else {
-                body.addEventListener(eventName, handleCascadingEvent);
+                el.addEventListener(eventName, handleCascadingEvent);
             }
         }
-        eventHandlers[eventHandlers.length] = cascadingHandler;
+        eventHandler[eventHandler.length] = cascadingHandler;
     }
 
     

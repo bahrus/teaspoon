@@ -343,12 +343,22 @@ module tsp {
 
     export interface IDataTable {
         data?: any[][];
+        fields: IDataField[];
+    }
+
+    export interface IDataField {
+        name?: string;
+        isPrimaryKey?: string;
+        header?: string;
+        footer?: string;
     }
 
     export interface IPopulateRectCoordinates {
         //templateSelector: string;
         //verticalOffsetCtlSelector?: 
         getDataTable?: (el: HTMLElement) => IDataTable;
+        suppressVerticalVirtualization?: boolean;
+        supportRowSelection?: boolean;
     }
 
     
@@ -372,12 +382,17 @@ module tsp {
         }
     }
 
-    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }, bClientSideRefresh?: boolean) {
+    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }) {
         var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
         var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
         tsp.data(el).populateRule = populateRule;
-        if (isClientSideMode() && !bClientSideRefresh) {
-            //TODO:  listen for changes to rowOffsetFld
+        if (isClientSideMode()) {
+            if (!populateRule.suppressVerticalVirtualization) {
+                tcp.addVScroller(el, populateRule.getDataTable(el), rowOffsetFld);
+            }
+            if (populateRule.supportRowSelection) {
+                tcp.addRowSelection(el);
+            }
         } else {
             refreshTemplateWithRectCoords(el, rowOffsetFld, populateRule);
         }

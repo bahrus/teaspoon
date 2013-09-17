@@ -46,7 +46,7 @@ namespace TestWebAppClassic
             {
                 var dc = new tspField
                 {
-                    Name = "Column " + i,
+                    name = "Column " + i,
                 };
                 dt.fields.Add(dc);
             }
@@ -73,6 +73,9 @@ namespace TestWebAppClassic
 
     public class tspField
     {
-        public string Name;
+        public string name;
+        public bool isPrimaryKey;
+        public string header;
+        public string footer;
     }
 }

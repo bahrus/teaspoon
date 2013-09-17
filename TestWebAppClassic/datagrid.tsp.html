@@ -19,7 +19,8 @@
     <script data-mode="both">
         tsp._if('#myTable', {
             call: tsp.applyPopulateTemplateWithRectCoords,
-            'tsp-getDataTable': function (el) { return model.dataTable;}
+            'tsp-getDataTable'          : function (el) { return model.dataTable; },
+            'tsp-supportRowSelection'   : true,
         });
     </script>
 
@@ -28,15 +29,7 @@
               var table = $("#myTable");
               //var rowOffset = $('#myTable_rowOffset');
               var rowOffset = document.getElementById('myTable_rowOffset');
-              var slider = $("<div id='slider'></div>").insertAfter(table).slider({
-                  min: 1,
-                  max: model.dataTable.data.length,
-                  range: "min",
-                  value: 0,
-                  slide: function (event, ui) {
-                      rowOffset.setAttribute('value', '' + ui.value - 1);
-                  }
-              });
+              
               //$("#minbeds").change(function () {
               //    slider.slider("value", this.selectedIndex + 1);
               //});
@@ -50,15 +43,15 @@
 
 </head>
 <body>
-    <form data-mode="both">
+    <form data-mode="both" id="myForm">
         <input type="hidden" name="myTable_rowOffset" id="myTable_rowOffset" />
-
+        <input type="hidden" name="myTable_selectedRows" id="myTable_selectedRows" />
     </form>
     
 
     
 
-    <table id="myTable">
+    <table id="myTable" form="">
         <tr>
             <td data-rc="1,1"></td>
             <td data-rc="1,2"></td>
