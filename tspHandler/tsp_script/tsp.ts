@@ -14,7 +14,7 @@ module tsp {
 
     export var $: JQueryStaticFacade;
 
-    var reserved_lazyLoad = 'reserved_lazyLoad';
+    export var reserved_lazyLoad = 'reserved_lazyLoad';
 
     if (!isClientSideMode()) {
         $ = jQueryServerSideFacade.jQuery;
@@ -185,28 +185,8 @@ module tsp {
         //#endregion
         //#region perform reserved rules
         if (isClientSideMode()) {
-            var nds = doc.querySelectorAll('.' + reserved_lazyLoad);
-            for (var j = 0, n = nds.length; j < n; j++) {
-                var nd = <HTMLElement> nds[j];
-                if (typeof (MutationObserver) !== 'undefined') {
-                    //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
-                    //    // Handle mutations
-                    //    for (var i = 0, n = mrs.length; i < n; i++) {
-                    //        var mr = mrs[i];
-                    //        if (mr.attributeName !== 'style') continue;
-
-                    //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
-                    //        break;
-                    //    }
-                    //});
-                    //observer.observe(el, {  
-                    //    attributes: true,
-                    //});
-                } else if (nd.attachEvent) {
-                    //TODO:  deprecate eventually - ie 10 and earlier
-                    nd.attachEvent('onpropertychange', tcp.handleOnPropertyChange);
-                }
-            }
+            tcp.performReservedRules(doc);
+            
         } else {
         }
         

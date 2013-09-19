@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script>
+        function changed() {
+            debugger;
+        }
+
+        function changeHiddenelement() {
+            debugger;
+            var hid = document.getElementById("hidden");
+            hid.value = "new value";
+            hid.setAttribute('value', 'new value');
+        }
+    </script>
+</head>
+<body>
+    <input type="hidden" onchange="changed()" name="hidden" id ="hidden" />
+
+    <input type="button" value="click" onclick="changeHiddenelement()">
+</body>
+</html>

@@ -24,36 +24,13 @@
         });
     </script>
 
-      <script>
-          tsp._if('input[form]',
-                tcp.createBindingRule({
-                    form: 'myForm',
-                    ignoreIfFormAttrSupport: true,
-                    propertyToMonitor: 'value',
-                }).mergedObject
-          );
-          $(function () {
-              var table = $("#myTable");
-              //var rowOffset = $('#myTable_rowOffset');
-              var rowOffset = document.getElementById('myTable_rowOffset');
-              
-              //$("#minbeds").change(function () {
-              //    slider.slider("value", this.selectedIndex + 1);
-              //});
-              rowOffset.attachEvent('onpropertychange', function (evt) {
-                  var el = evt.srcElement;
-                  var tbl = document.getElementById(el.id.replace('_rowOffset', ''));
-                  tsp.refreshTemplateWithRectCoords(tbl, el)
-              });
-          });
-  </script>
+      <script src="datagrid.js"></script>
 
 </head>
 <body>
     <form data-mode="both" id="myForm">
         <input type="hidden" name="myTable_rowOffset" id="myTable_rowOffset" />
         <input type="hidden" name="myTable_selectedRows" id="myTable_selectedRows" />
-        <input type="hidden" name="myTable_filter_col_0" id="myTable_filter_col_0" class="myTable_filter" />
     </form>
     
 
@@ -65,7 +42,7 @@
                 <th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th><th>Column 5</th><th>Column 6</th>
             </tr>
             <tr>
-                <th><input type="text" name /></th>
+                <th colspan="6"><input type="text" name="myTable_filter_col_0" form="myForm"/></th>
             </tr>
         </thead>
         <tr>

@@ -18,7 +18,7 @@ module tcp {
     export interface IUIBindingInfo {
         propertyToMonitor?: string;
         subPropertyToMonitor?: string;
-        form?: string;
+        //form?: string;
         ignoreIfFormAttrSupport?: boolean;
     }
 
@@ -39,6 +39,7 @@ module tcp {
             value: 0,
             slide: function (event, ui) {
                 rowOffset.setAttribute('value', '' + (ui.value - 1));
+                tsp.refreshTemplateWithRectCoords(el);
             }
         });
     }
@@ -90,9 +91,11 @@ module tcp {
             elPropVal = elPropVal[br.subPropertyToMonitor];
         }
         if (ev['propertyName'] !== sPropertyName) return;
-        var sControlID = el.id + '_' + sPropertyName.replace('.', '_');
-        
-        var frms = br.form.split(' ');
+        var sName = el.getAttribute('name');
+        if (!sName) sName = el.id; 
+        var sControlID =  sName + '_' + sPropertyName.replace('.', '_');
+        //var frms = br.form.split(' ');
+        var frms = el.getAttribute('form').split(' ');
         for (var i = 0, n = frms.length; i < n; i++) {
             var frmID = frms[i];
             var frm = $('#' + frmID);
@@ -148,9 +151,9 @@ module tcp {
         var el = <HTMLElement> evt.srcElement;
         var evtEl = el;
         while (el) {
+            var bCheckedBody = (el.tagName == 'BODY');
             var test = el.getAttribute(tsp.dataExpando);
             if (test) {
-                var bCheckedBody = (el.tagName == 'BODY');
                 var evtHandlers = tsp.data(el).handlers;
                 if (evtHandlers) {
                     var evtHandler = evtHandlers[evt.type];
@@ -236,4 +239,36 @@ module tcp {
         newElement.id = newElement.getAttribute('data-originalID');
         el.parentNode.removeChild(el);
     }
+
+    export function performReservedRules(doc: HTMLDocument) {
+        var nds = doc.querySelectorAll('.' + tsp.reserved_lazyLoad);
+        for (var j = 0, n = nds.length; j < n; j++) {
+            var nd = <HTMLElement> nds[j];
+            if (typeof (MutationObserver) !== 'undefined') {
+                //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
+                //    // Handle mutations
+                //    for (var i = 0, n = mrs.length; i < n; i++) {
+                //        var mr = mrs[i];
+                //        if (mr.attributeName !== 'style') continue;
+
+                //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
+                //        break;
+                //    }
+                //});
+                //observer.observe(el, {  
+                //    attributes: true,
+                //});
+            } else if (nd.attachEvent) {
+                //TODO:  deprecate eventually - ie 10 and earlier
+                nd.attachEvent('onpropertychange', tcp.handleOnPropertyChange);
+            }
+        }
+    }
 }
+
+tsp._if('input[form]',
+    tcp.createBindingRule({
+        ignoreIfFormAttrSupport: true,
+        propertyToMonitor: 'value',
+    }).mergedObject
+);

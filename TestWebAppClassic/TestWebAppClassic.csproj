@@ -64,9 +64,11 @@
   <ItemGroup>
     <Content Include="Content\jquery.layout-1.30.79.css" />
     <TypeScriptCompile Include="form1.ts" />
+    <TypeScriptCompile Include="datagrid.ts" />
     <Content Include="datagrid.tsp.html" />
     <Content Include="form1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
+    <Content Include="Scratch2.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
     <Content Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
