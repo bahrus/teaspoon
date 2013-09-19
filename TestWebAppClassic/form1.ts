@@ -9,9 +9,8 @@ tsp._if('input[form]',
     }).mergedObject
 );
 
-
 tcp._when('change', {
-    selectorText: 'input',
+    selectorNodeTest: 'input',
     handler: evt => {
         
         var url = $('form[name="myForm"]').serialize();

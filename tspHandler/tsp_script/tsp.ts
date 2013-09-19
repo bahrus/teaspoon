@@ -23,17 +23,17 @@ module tsp {
         $ = <JQueryStaticFacade> eval('jQuery');
     }
 
-    var cache = [{}],
-        expando = isClientSideMode() ? 'data-tcp-cache' : 'data-tsp-cache';
+    var cache = [{}];
+    export var dataExpando = isClientSideMode() ? 'data-tcp-cache' : 'data-tsp-cache';
 
 
     export function data(elem: HTMLElement): any {
         var $el = $(elem);
-        var cacheIndex = elem.getAttribute(expando), nextCacheIndex = cache.length;
+        var cacheIndex = elem.getAttribute(dataExpando), nextCacheIndex = cache.length;
         //var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
         var nCacheIndex : number;
         if (!cacheIndex) {
-            $el.attr(expando, nextCacheIndex.toString());
+            $el.attr(dataExpando, nextCacheIndex.toString());
             //elem.setAttribute(expando, nextCacheIndex.toString());
             cache[nextCacheIndex] = {};
             nCacheIndex = nextCacheIndex;
@@ -343,7 +343,59 @@ module tsp {
 
     export interface IDataTable {
         data?: any[][];
-        fields: IDataField[];
+        fields?: IDataField[];
+
+        rowView?: number[];
+        rowDontView?: number[];
+    }
+
+    export interface IFilterOptions {
+        matchWholeString?: boolean;
+        caseSensitive?: boolean;
+    }
+
+    function checkFilterVal(val: string, filter: string, options?: IFilterOptions): boolean {
+        if (options) {
+            if (options.caseSensitive) {
+                val = val.toLowerCase();
+                filter = filter.toLowerCase();
+            }
+            if (options.matchWholeString) return val == filter;
+        }
+        return val.substr(0, filter.length) == filter;
+    }
+
+    export function filterColumn(dt: IDataTable, col: number, filter: string, options?: IFilterOptions) {
+        var view = dt.rowView;
+        var data = dt.data;
+        var dontView = dt.rowDontView;
+        if (!view) {
+            view = [];
+            dt.rowView = view;
+            dontView = [];
+            dt.rowDontView = dontView;
+            for (var i = 0, n = dt.data.length; i < n; i++) {
+                var val = data[i][col].toString(); //TODO:
+                if (checkFilterVal(val, filter, options)) {
+                    view.push(i);
+                } else {
+                    dontView.push(i);
+                }
+            }
+        } else {
+            var newView : number[] = [];
+            var newDontView : number[] = [];
+            for (var i = 0, n = view.length; i < n; i++) {
+                var rowIdx = view[i];
+                var val = data[rowIdx][col].toString(); //TODO:
+                if(checkFilterVal(val, filter, options)) {
+                    newView.push(rowIdx);
+                } else {
+                    dontView.push(rowIdx);
+                }
+            }
+        }
+        
     }
 
     export interface IDataField {
@@ -371,12 +423,23 @@ module tsp {
         var rule = populateRule ? populateRule : <IPopulateRectCoordinates> tsp.data(el).populateRule;
         var dataTable = rule.getDataTable(el);
         var data = dataTable.data;
+        var view = dataTable.rowView;
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
             var row = parseInt(coord[0]) - 1 + rowOffset;
             var col = parseInt(coord[1]) - 1;
-            var dRow = row < data.length ? dataTable.data[row] : null;
+            var dRow;
+            if (view) {
+                row = (row < view.length) ? view[row] : -1
+
+            } 
+            if (row < 0) {
+                dRow = null;
+            } else {
+                dRow = row < data.length ? data[row] : null;
+
+            }
             var val = dRow == null ? '&nbsp;' : dRow[col];
             rc.innerHTML = val;
         }

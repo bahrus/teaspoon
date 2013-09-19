@@ -25,6 +25,13 @@
     </script>
 
       <script>
+          tsp._if('input[form]',
+                tcp.createBindingRule({
+                    form: 'myForm',
+                    ignoreIfFormAttrSupport: true,
+                    propertyToMonitor: 'value',
+                }).mergedObject
+          );
           $(function () {
               var table = $("#myTable");
               //var rowOffset = $('#myTable_rowOffset');
@@ -46,12 +53,21 @@
     <form data-mode="both" id="myForm">
         <input type="hidden" name="myTable_rowOffset" id="myTable_rowOffset" />
         <input type="hidden" name="myTable_selectedRows" id="myTable_selectedRows" />
+        <input type="hidden" name="myTable_filter_col_0" id="myTable_filter_col_0" class="myTable_filter" />
     </form>
     
 
     
 
-    <table id="myTable" form="">
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th><th>Column 5</th><th>Column 6</th>
+            </tr>
+            <tr>
+                <th><input type="text" name /></th>
+            </tr>
+        </thead>
         <tr>
             <td data-rc="1,1"></td>
             <td data-rc="1,2"></td>

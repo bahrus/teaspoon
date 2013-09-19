@@ -44,13 +44,18 @@ module tcp {
     }
 
     function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
-        var el = document.getElementById(cascadeInfo.containerID);
-        var r = evt.srcElement.getAttribute('data-rc').split(',')[0];
-        var rcs = el.querySelectorAll('[data-rc^="' + r + ',"]');
-        for (var i = 0, n = rcs.length; i < n; i++) {
-            var rc = <HTMLElement> rcs[i];
-            rc.style.backgroundColor = 'blue';
+        var $el = $('#' + cascadeInfo.containerID);
+        var sel = evt.srcElement, $sel = $(sel);
+        var selRowsInp = <HTMLInputElement> document.getElementById(cascadeInfo.containerID + '_selectedRows');
+        var selRows = selRowsInp.value.split(',');
+        for (var i = 0, n = selRows.length; i < n; i++) {
+            var selRow = selRows[i];
+            $el.find('[data-rc^="' + selRow + ',"]').css('backgroundColor', 'white');
         }
+        var r = $sel.attr('data-rc').split(',')[0];
+        selRowsInp.value = r;
+        $el.find('[data-rc^="' + r + ',"]').css('backgroundColor', 'blue');
+        
     }
 
     export function addRowSelection(el: HTMLElement) {
@@ -143,7 +148,9 @@ module tcp {
         var el = <HTMLElement> evt.srcElement;
         var evtEl = el;
         while (el) {
-            if (el.id && el.id.length > 0) {
+            var test = el.getAttribute(tsp.dataExpando);
+            if (test) {
+                var bCheckedBody = (el.tagName == 'BODY');
                 var evtHandlers = tsp.data(el).handlers;
                 if (evtHandlers) {
                     var evtHandler = evtHandlers[evt.type];
@@ -168,7 +175,7 @@ module tcp {
                 }
             }
             el = <HTMLElement> el.parentNode;
-            if (el && el.tagName == 'body') return;
+            if (bCheckedBody) return;
         }
         
         
