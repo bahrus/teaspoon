@@ -254,12 +254,18 @@ module tsp {
     }
 
     export function createFillRule<TModel>(fillRule: IFill<TModel>) {
-        var fillObj = tsp.beginMerge<IFill<TModel>>({
+        return tsp.beginMerge<IFill<TModel>>({
             call: applyFillRule,
             prefix: prefix,
             options: fillRule,
         });
-        return fillObj;
+    }
+
+    export function createFilterRule(filterRule: IFilterOptions) {
+        return tsp.beginMerge({
+            prefix: prefix,
+            options: filterRule,
+        });
     }
 
     export function applyFillRule<TModel>(el: HTMLElement, props: { [key: string]: any; }) {
@@ -315,6 +321,8 @@ module tsp {
 
     
 
+    
+
     export interface IFill<TModel> {
         valProp?: string; //example:  'value', 'innerHTML', 'class'
         modelRootElement?: TModel;
@@ -364,18 +372,31 @@ module tsp {
             }
         } else {
             var newView : number[] = [];
-            var newDontView : number[] = [];
             for (var i = 0, n = view.length; i < n; i++) {
                 var rowIdx = view[i];
                 var val = data[rowIdx][col].toString(); //TODO:
-                if(checkFilterVal(val, filter, options)) {
-                    newView.push(rowIdx);
+                if (!checkFilterVal(val, filter, options)) {
+                    dontView.push(i);
                 } else {
-                    dontView.push(rowIdx);
+                    newView.push(i);
                 }
             }
+            dt.rowView = newView;
         }
         
+    }
+
+    export function applyAllFilters(templEl: HTMLElement, populateRule : IPopulateRectCoordinates) {
+        var filters = document.querySelectorAll('input[type="hidden"].' + templEl.id + '_filter');
+        var dt = populateRule.getDataTable(templEl);
+        dt.rowView = null;
+        for (var i = 0, n = filters.length; i < n; i++) {
+            var filter = <HTMLInputElement> filters[i];
+            var filterVal = filter.value;
+            if (filterVal.length == 0) continue;
+            var elIDTokens = filter.name.split('_');
+            filterColumn(dt, parseInt(elIDTokens[3]) - 1, filterVal);
+        }
     }
 
     export interface IDataField {

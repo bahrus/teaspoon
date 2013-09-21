@@ -93,7 +93,8 @@ module tcp {
         if (ev['propertyName'] !== sPropertyName) return;
         var sName = el.getAttribute('name');
         if (!sName) sName = el.id; 
-        var sControlID =  sName + '_' + sPropertyName.replace('.', '_');
+        var sControlID = sName + '_' + sPropertyName.replace('.', '_');
+        tsp.data(el).shadowElClass = sControlID;
         //var frms = br.form.split(' ');
         var frms = el.getAttribute('form').split(' ');
         for (var i = 0, n = frms.length; i < n; i++) {
@@ -102,7 +103,7 @@ module tcp {
             if (frm.length == 0) continue;
             var $inpFld = frm.find('.' + sControlID);
             if ($inpFld.length == 0) {
-                frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID));
+                frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID).addClass(el.className));
                 $inpFld = frm.find('.' + sControlID);
             }
             $inpFld.val(elPropVal);
@@ -212,6 +213,29 @@ module tcp {
         eventHandler[eventHandler.length] = cascadingHandler;
     }
 
+    export function handleTextFilterChange(evt: Event, cascHandler: tcp.ICascadingHandler) {
+        var el = <HTMLInputElement> evt.srcElement;
+        var oldValue = <string> tsp.data(el).oldValue;
+        var newValue = el.value;
+        if (oldValue == newValue) return;
+        tsp.data(el).oldValue = el.value;
+        var filterOptions = <tsp.IFilterOptions> tsp.evalRulesSubset( tsp.data(el).tsp, tsp.prefix);
+        var shadowClass = tsp.data(el).shadowElClass;
+        var shadowEls = document.querySelectorAll('.' + shadowClass);
+        for (var i = 0, n = shadowEls.length; i < n; i++) {
+            tsp.data(<HTMLElement> shadowEls[i]).filterOptions = filterOptions;
+        }
+        var elIDTokens = el.name.split('_');
+        var templ = document.getElementById(elIDTokens[0]);
+        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templ).populateRule;
+        
+        if (!oldValue || (newValue.length > oldValue.length && newValue.substr(0, oldValue.length) == oldValue)) {
+            tsp.filterColumn(rule.getDataTable(templ), parseInt(elIDTokens[3]) - 1, el.value);
+        } else {
+            tsp.applyAllFilters(templ, rule);
+        }
+        tsp.refreshTemplateWithRectCoords(templ);
+    }
     
 
     export function handleOnPropertyChange(ev: Event) {

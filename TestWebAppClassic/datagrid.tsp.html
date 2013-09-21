@@ -22,7 +22,9 @@
             'tsp-getDataTable'          : function (el) { return model.dataTable; },
             'tsp-supportRowSelection'   : true,
         });
+       
     </script>
+    
 
       <script src="datagrid.js"></script>
 
@@ -42,7 +44,12 @@
                 <th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th><th>Column 5</th><th>Column 6</th>
             </tr>
             <tr>
-                <th colspan="6"><input type="text" name="myTable_filter_col_0" form="myForm"/></th>
+                <th><input type="text" name="myTable_filter_col_1" form="myForm" class="myTable_filter"/></th>
+                <th><input type="text" name="myTable_filter_col_2" form="myForm" class="myTable_filter"/></th>
+                <th><input type="text" name="myTable_filter_col_3" form="myForm" class="myTable_filter"/></th>
+                <th><input type="text" name="myTable_filter_col_4" form="myForm" class="myTable_filter"/></th>
+                <th><input type="text" name="myTable_filter_col_5" form="myForm" class="myTable_filter"/></th>
+                <th><input type="text" name="myTable_filter_col_6" form="myForm" class="myTable_filter"/></th>
             </tr>
         </thead>
         <tr>
@@ -131,6 +138,11 @@
 </body>
 </html>
 <script defer data-mode="both">
+    tsp._if('input.textFilter',
+        tsp.createFilterRule({
+            matchWholeString: true,
+        }).mergedObject
+    );
     tsp.applyRules(document);
     
 </script>
