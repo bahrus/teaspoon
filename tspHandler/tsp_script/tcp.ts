@@ -32,16 +32,24 @@ module tcp {
     }
 
     export function addVScroller(el: HTMLElement, dt: tsp.IDataTable, rowOffset: HTMLInputElement) {
+        var $el = $(el);
+        var max = dt.data.length;
         var slider = $("<div id='slider'></div>").insertAfter(el).slider({
             min: 1,
-            max: dt.data.length,
+            max: max,
             range: "min",
-            value: 0,
+            orientation: 'vertical',
+            value: 100,
             slide: function (event, ui) {
-                rowOffset.setAttribute('value', '' + (ui.value - 1));
+                rowOffset.setAttribute('value', '' + (max - ui.value));
                 tsp.refreshTemplateWithRectCoords(el);
-            }
+            },
         });
+        slider.position({
+            of: $el,
+            my: 'left top',
+            at: 'right top',
+        }).height($el.outerHeight());
     }
 
     function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
