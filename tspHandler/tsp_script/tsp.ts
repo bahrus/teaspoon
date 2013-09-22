@@ -399,9 +399,44 @@ module tsp {
         }
     }
 
+
+    export function applyTreeView(templEl: HTMLElement, populateRule: IPopulateRectCoordinates) {
+        var dt = populateRule.getDataTable(templEl);
+        var expanded = {};
+        var treeFldIdx = -1;
+        var flds = dt.fields;
+        for (var i = 0, n = flds.length; i < n; i++) {
+            var fld = flds[i];
+            if (fld.isTreeNodeInfo) {
+                treeFldIdx = i;
+                break;
+            }
+        }
+        if (treeFldIdx == -1) {
+            populateRule.supportTreeColumn = false;
+            return;
+        }
+        data(templEl).treeNodeIndex = treeFldIdx;
+        var d = dt.data;
+        var view = [];
+        var dontView = [];
+        for (var i = 0, n = d.length; i < n; i++) {
+            var r = d[i];
+            var tn = r[treeFldIdx];
+            if (tn[2] && tn[2].length > 0) {
+                dontView.push(i);
+            } else {
+                view.push(i);
+            }
+        }
+        dt.rowView = view;
+        dt.rowDontView = dontView;
+    }
+
     export interface IDataField {
         name?: string;
-        isPrimaryKey?: string;
+        isPrimaryKey?: boolean;
+        isTreeNodeInfo?: boolean;
         header?: string;
         footer?: string;
     }
@@ -412,9 +447,15 @@ module tsp {
         getDataTable?: (el: HTMLElement) => IDataTable;
         suppressVerticalVirtualization?: boolean;
         supportRowSelection?: boolean;
+        supportTreeColumn?: boolean;
     }
 
-    
+
+
+
+    export function TreeGridColumnRenderer(node: any[]) : string {
+        return node[0];
+    }
 
 
     export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IPopulateRectCoordinates) {
@@ -423,8 +464,12 @@ module tsp {
         var rcs = el.querySelectorAll('*[data-rc]');
         var rule = populateRule ? populateRule : <IPopulateRectCoordinates> tsp.data(el).populateRule;
         var dataTable = rule.getDataTable(el);
-        var data = dataTable.data;
+        var dt = dataTable.data;
         var view = dataTable.rowView;
+        var tnIdx = -1;
+        if (rule.supportTreeColumn) {
+            tnIdx = <number> data(el).treeNodeIndex;
+        }
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
@@ -438,10 +483,13 @@ module tsp {
             if (row < 0) {
                 dRow = null;
             } else {
-                dRow = row < data.length ? data[row] : null;
+                dRow = row < dt.length ? dt[row] : null;
 
             }
             var val = dRow == null ? '&nbsp;' : dRow[col];
+            if (tnIdx == col) {
+                val = TreeGridColumnRenderer(val);
+            }
             rc.innerHTML = val;
         }
     }
@@ -458,6 +506,9 @@ module tsp {
                 tcp.addRowSelection(el);
             }
         } else {
+            if (populateRule.supportTreeColumn) {
+                applyTreeView(el, populateRule);
+            }
             refreshTemplateWithRectCoords(el, rowOffsetFld, populateRule);
         }
             

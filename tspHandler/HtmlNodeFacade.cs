@@ -120,6 +120,11 @@ namespace tspHandler
             }
             set
             {
+                if (value == null)
+                {
+                    this._node.InnerHtml = "null";
+                    return;
+                }
                 this._node.InnerHtml = value;
             }
         }

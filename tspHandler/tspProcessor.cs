@@ -140,13 +140,18 @@ namespace tspHandler
         public static void Process(this HtmlDocumentFacade doc)
         {
             ProcessServerSideForms(doc);
-            ProcessServerSideScripts(doc);
             if (doc.Host.IsDesignMode())
             {
+                ProcessServerSideScripts(doc);
                 DisplayDesignMode(doc);
                 return;
             }
-            ProcessServerSideIncludes(doc);
+            else
+            {
+                ProcessServerSideIncludes(doc);
+                ProcessServerSideScripts(doc);
+            }
+            
         }
 
         public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)
@@ -300,7 +305,7 @@ model['" + id + "'] = " + json + ";";
                 });
                 #endregion
                 #region insert content
-                var div = doc.createElement("div");
+                var div = doc.createElement(el.tagName);
                 div.id = parentId;
                 string parentClassName = iframe.className;
                 if(!string.IsNullOrEmpty(parentClassName)) div.className = iframe.className;

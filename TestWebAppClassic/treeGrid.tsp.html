@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-2.0.3.js"></script>
+    <script src="Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="tsp_script/tsp.js" data-mode="both"></script>
+    <script src="tsp_script/tcp.js"></script>
+    <link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>
+
+    <script data-mode="both" data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeGridData"></script>
+</head>
+<body>
+    <iframe data-mode="server-side-only" src="baseTable6x10.html#myTable" id="myTable"></iframe>
+</body>
+</html>
+
+<script defer data-mode="both">
+    tsp._if('#myTable', {
+        call: tsp.applyPopulateTemplateWithRectCoords,
+        'tsp-getDataTable': function (el) { return model.treeGridData; },
+        'tsp-supportRowSelection': true,
+        'tsp-supportTreeColumn': true,
+    })._if('input.textFilter',
+        tsp.createFilterRule({
+            matchWholeString: true,
+        }).mergedObject
+    );
+    tsp.applyRules(document);
+
+</script>

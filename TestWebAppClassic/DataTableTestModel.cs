@@ -74,7 +74,10 @@ namespace TestWebAppClassic
     public class tspField
     {
         public string name;
-        public bool isPrimaryKey;
+        //public bool isPrimaryKey;
+        //public bool isParentKey;
+        //public bool isLevel;
+        public bool isTreeNodeInfo;
         public string header;
         public string footer;
     }
