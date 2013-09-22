@@ -77,12 +77,42 @@ module tcp {
         
     }
 
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
+        //debugger;
+        var evtEl = evt.srcElement;
+        var dataCell = evtEl;
+        var rc = dataCell.getAttribute('data-rc');
+        while (dataCell && !rc) {
+            dataCell = <Element> dataCell.parentNode;
+            rc = dataCell.getAttribute('data-rc');
+        }
+        if (!dataCell) return;
+        var rowNo = parseInt( rc.split(',')[0]) - 1;
+        var templEl = document.getElementById(cascadeInfo.containerID);
+        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templEl).populateRule;
+        var dt = rule.getDataTable(templEl);
+        var dtRow = dt.data[rowNo];
+        var ndFldIdx = tsp.getNodeFldIdx(dt);
+        var nd = dtRow[ndFldIdx];
+        nd[tsp.nodeIdxes.numChildren] = -1 * nd[tsp.nodeIdxes.numChildren];
+        tsp.applyTreeView(templEl, rule);
+        tsp.refreshTemplateWithRectCoords(templEl, null, rule);
+    }
+
     export function addRowSelection(el: HTMLElement) {
-        var sID = el.id;
+        //var sID = el.id;
         _when('click', {
             containerID : el.id,
             handler: handleRowSelection,
             selectorNodeTest: '*[data-rc]',
+        });
+    }
+
+    export function addTreeNodeToggle(el: HTMLElement) {
+        _when('click', {
+            containerID: el.id,
+            handler: handleTreeNodeToggle,
+            selectorNodeTest: 'span.treeNodeToggler', 
         });
     }
 

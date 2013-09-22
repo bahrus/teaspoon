@@ -434,10 +434,7 @@ module tsp {
         }
     }
 
-
-    export function applyTreeView(templEl: HTMLElement, populateRule: IPopulateRectCoordinates) {
-        var dt = populateRule.getDataTable(templEl);
-        var expanded = {};
+    export function getNodeFldIdx(dt: IDataTable): number {
         var treeFldIdx = -1;
         var flds = dt.fields;
         for (var i = 0, n = flds.length; i < n; i++) {
@@ -447,6 +444,21 @@ module tsp {
                 break;
             }
         }
+        return treeFldIdx;
+    }
+
+    export enum nodeIdxes {
+        text = 0,
+        id = 1,
+        parentId = 2,
+        level = 3,
+        numChildren = 4,
+    }
+
+    export function applyTreeView(templEl: HTMLElement, populateRule: IPopulateRectCoordinates) {
+        var dt = populateRule.getDataTable(templEl);
+        var expanded = {};
+        var treeFldIdx = getNodeFldIdx(dt);
         if (treeFldIdx == -1) {
             populateRule.supportTreeColumn = false;
             return;
@@ -458,10 +470,15 @@ module tsp {
         for (var i = 0, n = d.length; i < n; i++) {
             var r = d[i];
             var tn = r[treeFldIdx];
-            if (tn[2] && tn[2].length > 0) {
-                dontView.push(i);
-            } else {
+
+            if (tn[nodeIdxes.numChildren] < 0) {
+                expanded[tn[nodeIdxes.id]] = true;
+            }
+            var parentID = tn[nodeIdxes.parentId];
+            if(!parentID || expanded[parentID]){
                 view.push(i);
+            } else {
+                dontView.push(i);
             }
         }
         dt.rowView = view;
@@ -493,7 +510,7 @@ module tsp {
         var sR;
         var nd4 = node[4];
         if (nd4 > 0) {
-            sR = '<span class="dynatree-expander">&nbsp;</span>';
+            sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
         } else if (nd4 == 0) {
             sR = '';
         } 
@@ -553,6 +570,9 @@ module tsp {
                 }
                 if (populateRule.supportRowSelection) {
                     tcp.addRowSelection(el);
+                }
+                if (populateRule.supportTreeColumn) {
+                    tcp.addTreeNodeToggle(el);
                 }
             } else {
                 if (populateRule.supportTreeColumn) {
