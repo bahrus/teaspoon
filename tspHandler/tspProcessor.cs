@@ -306,6 +306,10 @@ model['" + id + "'] = " + json + ";";
                 #endregion
                 #region insert content
                 var div = doc.createElement(el.tagName);
+                foreach (var attrib in el.attributes)
+                {
+                    div.setAttribute(attrib.name, attrib.value);
+                }
                 div.id = parentId;
                 string parentClassName = iframe.className;
                 if(!string.IsNullOrEmpty(parentClassName)) div.className = iframe.className;

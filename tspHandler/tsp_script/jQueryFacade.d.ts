@@ -15,9 +15,12 @@ interface JQueryStaticFacade {
 interface JQueryFacade {
     attr(name: string): string;
     attr(name: string, val: string): JQueryFacade;
+    find(selector: string): JQueryFacade;
     html(): string;
     val(): any;
     trim(s: string): string;
+    addClass(name: string): JQueryFacade;
+    append($el: JQueryFacade): JQueryFacade;
     //data(key: string, value: any): JQuery;
     //data(obj: { [key: string]: any; }): JQuery;
     //data(key?: string): any;

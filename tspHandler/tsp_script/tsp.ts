@@ -329,6 +329,8 @@ module tsp {
         fill?: (el: HTMLElement, model: TModel) => string;
     }
 
+    //#region data grid support
+
     export interface IDataTable {
         data?: any[][];
         fields?: IDataField[];
@@ -352,6 +354,8 @@ module tsp {
         }
         return val.substr(0, filter.length) == filter;
     }
+
+    
 
     export function filterColumn(dt: IDataTable, col: number, filter: string, options?: IFilterOptions) {
         var view = dt.rowView;
@@ -384,6 +388,37 @@ module tsp {
             dt.rowView = newView;
         }
         
+    }
+
+    export function getOrCreateHiddenInput(el: HTMLElement, inputName: string, callBack: (hiddenFld: HTMLInputElement) => void) {
+        var frms = el.getAttribute('form').split(' ');
+        var body = document.body;
+        for (var i = 0, n = frms.length; i < n; i++) {
+            var frmID = frms[i];
+            var frm = document.getElementById(frmID);
+            if (!frm) {
+                frm = document.createElement("form");
+                frm.id = frmID;
+                body.appendChild(frm)
+            }
+            //var $inpFld = $frm.find('.' + inputName);
+            var inpFlds = frm.querySelectorAll('.' + inputName);
+            var inpFld;
+            if (inpFlds.length == 0) {
+                inpFld = document.createElement('input');
+                var $inpFld = $(inpFld);
+                $inpFld.attr('type', 'hidden').attr('name', inputName.replace('_value', '')).addClass(inputName);
+                frm.appendChild(inpFld);
+                callBack(inpFld);
+            } else {
+                for (var j = 0, n1 = inpFlds.length; j < n1; j++) {
+                    var inpFld2 = <HTMLInputElement> inpFlds[j];
+                    callBack(inpFld2);
+                }
+            }
+            
+            
+        }
     }
 
     export function applyAllFilters(templEl: HTMLElement, populateRule : IPopulateRectCoordinates) {
@@ -451,15 +486,29 @@ module tsp {
     }
 
 
+    
 
 
     export function TreeGridColumnRenderer(node: any[]) : string {
-        return node[0];
+        var sR;
+        var nd4 = node[4];
+        if (nd4 > 0) {
+            sR = '<span class="dynatree-expander">&nbsp;</span>';
+        } else if (nd4 == 0) {
+            sR = '';
+        } 
+        return sR + node[0];
     }
 
 
     export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IPopulateRectCoordinates) {
-        var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
+        var rowOffsetFld2;
+        if(rowOffsetFld){
+            rowOffsetFld2 = rowOffsetFld;
+        }else{
+            rowOffsetFld2 = document.querySelectorAll('.' + el.id + '_rowOffset')[0];
+        }
+        //var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
         var rowOffset = (rowOffsetFld2 && rowOffsetFld2.value.length > 0) ? parseInt(rowOffsetFld2.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
         var rule = populateRule ? populateRule : <IPopulateRectCoordinates> tsp.data(el).populateRule;
@@ -496,23 +545,28 @@ module tsp {
 
     export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }) {
         var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
-        var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
-        tsp.data(el).populateRule = populateRule;
-        if (isClientSideMode()) {
-            if (!populateRule.suppressVerticalVirtualization) {
-                tcp.addVScroller(el, populateRule.getDataTable(el), rowOffsetFld);
+        getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
+            tsp.data(el).populateRule = populateRule;
+            if (isClientSideMode()) {
+                if (!populateRule.suppressVerticalVirtualization) {
+                    tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
+                }
+                if (populateRule.supportRowSelection) {
+                    tcp.addRowSelection(el);
+                }
+            } else {
+                if (populateRule.supportTreeColumn) {
+                    applyTreeView(el, populateRule);
+                }
+                refreshTemplateWithRectCoords(el, hiddenFld, populateRule);
             }
-            if (populateRule.supportRowSelection) {
-                tcp.addRowSelection(el);
-            }
-        } else {
-            if (populateRule.supportTreeColumn) {
-                applyTreeView(el, populateRule);
-            }
-            refreshTemplateWithRectCoords(el, rowOffsetFld, populateRule);
-        }
+        });
+        //var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
+        
             
     }
+
+    //#endregion
 
     export function applyAttributeRule(el: HTMLElement, props: { [key: string]: any; }) {
         var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);

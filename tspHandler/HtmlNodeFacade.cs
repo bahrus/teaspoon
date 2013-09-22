@@ -129,6 +129,22 @@ namespace tspHandler
             }
         }
 
+        public string outerHTML
+        {
+            get
+            {
+                return this._node.OuterHtml;
+            }
+        }
+
+        public List<HtmlAttributeFacade> attributes
+        {
+            get
+            {
+                return _node.Attributes.Select(attr => new HtmlAttributeFacade(attr)).ToList();
+            }
+        }
+
         public HtmlNodeFacade parentNode
         {
             get

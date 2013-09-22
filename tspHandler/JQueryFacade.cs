@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using ClassGenMacros;
 
 namespace tspHandler
 {
@@ -89,11 +91,36 @@ namespace tspHandler
 
         public JQueryFacade jQuery(string selectorText)
         {
-            var returnObj = new JQueryFacade(_doc)
+            if (selectorText.StartsWith("<"))
             {
-                _nodes = _doc.querySelectorAll(selectorText)
-            };
-            return returnObj;
+                if (selectorText.Contains(" "))
+                {
+                    throw new NotImplementedException();
+                }
+                string tag = selectorText.SubstringAfter("<").SubstringBeforeLast("/>");
+                if (tag.Contains("<"))
+                {
+                    throw new NotImplementedException();
+                }
+                //return new JQueryFacade(_doc)
+                //{
+                //    _nodes = new List<HtmlNodeFacade>{
+                //        _doc.createElement(tag),
+                //    }
+                //};
+                _nodes = new List<HtmlNodeFacade>{
+                    _doc.createElement(tag),
+                };
+                return this;
+            }
+            else
+            {
+                var returnObj = new JQueryFacade(_doc)
+                {
+                    _nodes = _doc.querySelectorAll(selectorText)
+                };
+                return returnObj;
+            }
         }
 
         public JQueryFacade jQuery()
@@ -106,6 +133,70 @@ namespace tspHandler
                 },
             };
             return returnObj;
+        }
+
+        public JQueryFacade append(JQueryFacade inner)
+        {
+            if (this._nodes == null) return this;
+            if (inner._nodes == null) return this;
+            foreach (var parentNode in this._nodes)
+            {
+                foreach (var childNode in inner._nodes)
+                {
+                    parentNode.appendChild(childNode);
+                }
+            }
+            return this;
+        }
+
+        public JQueryFacade find(string selectorText)
+        {
+            var newNodes = new List<HtmlNodeFacade>();
+            if (_nodes != null)
+            {
+                foreach (var nd in _nodes)
+                {
+                    newNodes.AddRange(nd.querySelectorAll(selectorText));
+                }
+            }
+            else
+            {
+                newNodes.AddRange(_doc.querySelectorAll(selectorText));
+            }
+            var returnObj = new JQueryFacade(_doc)
+            {
+                _nodes = newNodes,
+            };
+            return returnObj;
+        }
+
+        public JQueryFacade addClass(string className)
+        {
+            if (string.IsNullOrEmpty(className)) return this;
+            string[] classNames = className.Split(' ');
+            foreach (var nd in _nodes)
+            {
+                string currClassName = nd.className;
+                if (string.IsNullOrEmpty(currClassName))
+                {
+                    nd.className = className;
+                }
+                else
+                {
+                    var currClassNames = currClassName.Split(' ').ToList();
+                    foreach (string newClassName in classNames)
+                    {
+                        if (!currClassNames.Contains(newClassName))
+                        {
+                            currClassNames.Add(newClassName);
+                        }
+                    }
+                    nd.className = string.Join(" ", currClassNames.ToArray());
+                }
+
+            }
+            return this;
+
         }
 
         public string attr(string name)

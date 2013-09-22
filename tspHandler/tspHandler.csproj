@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Console.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="HtmlAttributeFacade.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
     <Compile Include="HtmlNodeFacade.cs" />
     <Compile Include="JQueryFacade.cs" />

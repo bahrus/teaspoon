@@ -41,6 +41,7 @@ module tcp {
             orientation: 'vertical',
             value: 100,
             slide: function (event, ui) {
+                //TODO: memory leak?
                 rowOffset.setAttribute('value', '' + (max - ui.value));
                 tsp.refreshTemplateWithRectCoords(el);
             },
@@ -52,18 +53,27 @@ module tcp {
         }).height($el.outerHeight());
     }
 
+    
+
     function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
-        var $el = $('#' + cascadeInfo.containerID);
+        var el = document.getElementById(cascadeInfo.containerID);
+        var $el = $(el);
         var sel = evt.srcElement, $sel = $(sel);
-        var selRowsInp = <HTMLInputElement> document.getElementById(cascadeInfo.containerID + '_selectedRows');
-        var selRows = selRowsInp.value.split(',');
-        for (var i = 0, n = selRows.length; i < n; i++) {
-            var selRow = selRows[i];
-            $el.find('[data-rc^="' + selRow + ',"]').css('backgroundColor', 'white');
-        }
-        var r = $sel.attr('data-rc').split(',')[0];
-        selRowsInp.value = r;
-        $el.find('[data-rc^="' + r + ',"]').css('backgroundColor', 'blue');
+        tsp.getOrCreateHiddenInput(el, cascadeInfo.containerID + '_selectedRows', inp => {
+            //var selRowsInp = <HTMLInputElement> document.getElementById(cascadeInfo.containerID + '_selectedRows');
+
+            //var selRows = selRowsInp.value.split(',');
+            var selRows = inp.value.split(',');
+            for (var i = 0, n = selRows.length; i < n; i++) {
+                var selRow = selRows[i];
+                $el.find('[data-rc^="' + selRow + ',"]').css('backgroundColor', 'white');
+            }
+            var r = $sel.attr('data-rc').split(',')[0];
+            //selRowsInp.value = r;
+            inp.value = r;
+            $el.find('[data-rc^="' + r + ',"]').css('backgroundColor', 'blue');
+        });
+        
         
     }
 
@@ -89,6 +99,8 @@ module tcp {
         
     }
 
+    
+
     function handleBindingChange(ev: Event) {
         var el = <HTMLElement> ev.srcElement, elPropVal;
         var br = <IUIBindingInfo> $.data(el).bindingRule;
@@ -103,19 +115,19 @@ module tcp {
         if (!sName) sName = el.id; 
         var sControlID = sName + '_' + sPropertyName.replace('.', '_');
         tsp.data(el).shadowElClass = sControlID;
-        //var frms = br.form.split(' ');
-        var frms = el.getAttribute('form').split(' ');
-        for (var i = 0, n = frms.length; i < n; i++) {
-            var frmID = frms[i];
-            var frm = $('#' + frmID);
-            if (frm.length == 0) continue;
-            var $inpFld = frm.find('.' + sControlID);
-            if ($inpFld.length == 0) {
-                frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID).addClass(el.className));
-                $inpFld = frm.find('.' + sControlID);
-            }
-            $inpFld.val(elPropVal);
-        }
+        tsp.getOrCreateHiddenInput(el, sControlID, inpFld => $(inpFld).addClass(el.className).val(elPropVal));
+        //var frms = el.getAttribute('form').split(' ');
+        //for (var i = 0, n = frms.length; i < n; i++) {
+        //    var frmID = frms[i];
+        //    var frm = $('#' + frmID);
+        //    if (frm.length == 0) continue;
+        //    var $inpFld = frm.find('.' + sControlID);
+        //    if ($inpFld.length == 0) {
+        //        frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID).addClass(el.className));
+        //        $inpFld = frm.find('.' + sControlID);
+        //    }
+        //    $inpFld.val(elPropVal);
+        //}
         
     }
 
@@ -220,6 +232,8 @@ module tcp {
         }
         eventHandler[eventHandler.length] = cascadingHandler;
     }
+
+    
 
     export function handleTextFilterChange(evt: Event, cascHandler: tcp.ICascadingHandler) {
         var el = <HTMLInputElement> evt.srcElement;
