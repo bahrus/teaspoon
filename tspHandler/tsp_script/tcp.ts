@@ -33,7 +33,7 @@ module tcp {
 
     export function addVScroller(el: HTMLElement, dt: tsp.IDataTable, rowOffset: HTMLInputElement) {
         var $el = $(el);
-        var max = dt.data.length;
+        var max = dt.rowView ? dt.rowView.length : dt.data.length;
         var slider = $("<div id='slider'></div>").insertAfter(el).slider({
             min: 1,
             max: max,
@@ -51,6 +51,10 @@ module tcp {
             my: 'left top',
             at: 'right top',
         }).height($el.outerHeight());
+        $el.width($el.outerWidth());
+        $el.height($el.outerHeight());
+
+        //$el.css('overflow-x', 'hidden');
     }
 
     
@@ -80,7 +84,10 @@ module tcp {
     function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
         //debugger;
         var evtEl = evt.srcElement;
+        var $evtEl = $(evtEl);
+        $evtEl.toggleClass('plus').toggleClass('minus');
         var dataCell = evtEl;
+
         var rc = dataCell.getAttribute('data-rc');
         while (dataCell && !rc) {
             dataCell = <Element> dataCell.parentNode;
@@ -94,7 +101,8 @@ module tcp {
         var dtRow = dt.data[rowNo];
         var ndFldIdx = tsp.getNodeFldIdx(dt);
         var nd = dtRow[ndFldIdx];
-        nd[tsp.nodeIdxes.numChildren] = -1 * nd[tsp.nodeIdxes.numChildren];
+        var numChildren = nd[tsp.nodeIdxes.numChildren];
+        nd[tsp.nodeIdxes.numChildren] = -1 * numChildren;
         tsp.applyTreeView(templEl, rule);
         tsp.refreshTemplateWithRectCoords(templEl, null, rule);
     }

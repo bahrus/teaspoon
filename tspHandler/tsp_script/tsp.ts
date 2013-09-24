@@ -503,18 +503,22 @@ module tsp {
     }
 
 
-    
 
 
     export function TreeGridColumnRenderer(node: any[]) : string {
         var sR;
-        var nd4 = node[4];
+        //var nd4 = node[4];
+        var nd4 = node[nodeIdxes.numChildren];
+        var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
         if (nd4 > 0) {
-            sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
+            //sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
+            sR = '<span class="ui-state-default ui-icon plus treeNodeToggler">&nbsp;</span>';
         } else if (nd4 == 0) {
             sR = '';
-        } 
-        return sR + node[0];
+        } else {
+            sR = '<span class="ui-state-default ui-icon minus treeNodeToggler">&nbsp;</span>';
+        }
+        return sp + sR + node[nodeIdxes.text];
     }
 
 
@@ -552,9 +556,13 @@ module tsp {
                 dRow = row < dt.length ? dt[row] : null;
 
             }
-            var val = dRow == null ? '&nbsp;' : dRow[col];
-            if (tnIdx == col) {
-                val = TreeGridColumnRenderer(val);
+            var val;
+            if (dRow == null) {
+                val = '&nbsp;';
+            } else if (tnIdx == col) {
+                val = TreeGridColumnRenderer(dRow[col]);
+            } else {
+                var val = dRow[col];
             }
             rc.innerHTML = val;
         }
@@ -565,14 +573,15 @@ module tsp {
         getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
             tsp.data(el).populateRule = populateRule;
             if (isClientSideMode()) {
-                if (!populateRule.suppressVerticalVirtualization) {
-                    tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
-                }
                 if (populateRule.supportRowSelection) {
                     tcp.addRowSelection(el);
                 }
                 if (populateRule.supportTreeColumn) {
+                    applyTreeView(el, populateRule);
                     tcp.addTreeNodeToggle(el);
+                }
+                if (!populateRule.suppressVerticalVirtualization) {
+                    tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
                 }
             } else {
                 if (populateRule.supportTreeColumn) {

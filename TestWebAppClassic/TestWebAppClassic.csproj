@@ -66,6 +66,7 @@
     <Content Include="Content\jquery.layout-1.30.79.css" />
     <TypeScriptCompile Include="form1.ts" />
     <TypeScriptCompile Include="datagrid.ts" />
+    <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.tsp.html" />
     <Content Include="form1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
@@ -78,6 +79,7 @@
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
     <Content Include="tsp_script\tcp.ts" />
+    <Content Include="tsp_script\tsp.css" />
     <Content Include="WebForm1.aspx" />
     <TypeScriptCompile Include="file1.ts" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
