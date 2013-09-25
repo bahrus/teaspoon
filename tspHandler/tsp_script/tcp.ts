@@ -42,6 +42,7 @@ module tcp {
             value: 100,
             slide: function (event, ui) {
                 //TODO: memory leak?
+                max = slider.slider('option', 'max');
                 rowOffset.setAttribute('value', '' + (max - ui.value));
                 tsp.refreshTemplateWithRectCoords(el);
             },
@@ -51,10 +52,13 @@ module tcp {
             my: 'left top',
             at: 'right top',
         }).height($el.outerHeight());
+        tsp.data(el).slider = slider;
         $el.width($el.outerWidth());
         $el.height($el.outerHeight());
 
-        //$el.css('overflow-x', 'hidden');
+        $el.css('overflow-x', 'hidden');
+        $el.css('overflow-y', 'hidden');
+        $el.css('display', 'block');
     }
 
     

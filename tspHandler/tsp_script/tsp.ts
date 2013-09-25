@@ -483,6 +483,8 @@ module tsp {
         }
         dt.rowView = view;
         dt.rowDontView = dontView;
+        var vSlider = tsp.data(templEl).slider;
+        if (vSlider) vSlider.slider('option', 'max', view.length);
     }
 
     export interface IDataField {
