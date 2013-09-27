@@ -31,11 +31,24 @@
         'tsp-getDataTable': function (el) { return model.treeGridData; },
         'tsp-supportRowSelection': true,
         'tsp-supportTreeColumn': true,
+        'tsp-supportToolTips': true,
     })._if('input.textFilter',
         tsp.createFilterRule({
             matchWholeString: true,
         }).mergedObject
     );
+    
     tsp.applyRules(document);
 
+</script>
+
+<script>
+    //tcp._when('mousemove', {
+    //    selectorNodeTest: 'td',
+    //    handler: function (evt) {
+    //        var el = evt.srcElement;
+    //        //if (el.title) return;
+    //        el.title = el.innerText;
+    //    }
+    //});
 </script>

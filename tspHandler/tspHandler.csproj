@@ -106,6 +106,7 @@
     <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
     <Content Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">

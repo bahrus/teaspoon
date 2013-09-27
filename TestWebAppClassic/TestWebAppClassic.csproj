@@ -68,7 +68,12 @@
     <TypeScriptCompile Include="datagrid.ts" />
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.tsp.html" />
+    <Content Include="Emmet.tsp.html" />
+    <Content Include="Emmet\emmet.js" />
+    <Content Include="Emmet\emmet.min.js" />
+    <Content Include="Emmet\index.html" />
     <Content Include="form1.tsp.html" />
+    <Content Include="Lorem.html" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scratch2.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
@@ -157,6 +162,8 @@
       <DependentUpon>file1.ts</DependentUpon>
     </Content>
     <Content Include="toc.html" />
+    <Content Include="Emmet\.DS_Store" />
+    <Content Include="Emmet\README.md" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="LazyLoadTest1.tsp.html" />
     <Content Include="Scratch.html" />

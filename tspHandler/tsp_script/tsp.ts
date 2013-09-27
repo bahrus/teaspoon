@@ -1,5 +1,6 @@
 ///<reference path='jQueryFacade.d.ts'/>
 ///<reference path='tcp.ts'/>
+///<reference path='emmet.d.ts'/>
 
 declare var mode: string;
 declare var jQueryServerSideFacade: JQueryStaticFacade;
@@ -120,6 +121,21 @@ module tsp {
     
 
     export function applyRules(doc: HTMLDocument) {
+        var emmetSelector = 'script[data-emmet="';
+        if (isClientSideMode()) {
+            emmetSelector +=   'client-side-only';
+        } else {
+            emmetSelector += 'server-side-only'
+        }
+        emmetSelector += '"]';
+        var emmetNodes = doc.querySelectorAll(emmetSelector);
+        for (var i = 0, n = emmetNodes.length; i < n; i++) {
+            var nd = <HTMLElement> emmetNodes[i];
+            var inner = $.trim(nd.innerHTML);
+            var content = emmet.expandAbbreviation(inner, 'html', 'html', null);
+            nd.insertAdjacentHTML('beforebegin', content);
+            nd.parentNode.removeChild(nd);
+        }
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules
         //TODO:  sort the rules according to precedence as described here: http://www.vanseodesign.com/css/css-specificity-inheritance-cascaade/
@@ -502,6 +518,7 @@ module tsp {
         suppressVerticalVirtualization?: boolean;
         supportRowSelection?: boolean;
         supportTreeColumn?: boolean;
+        supportToolTips?: boolean;
     }
 
 
@@ -584,6 +601,15 @@ module tsp {
                 }
                 if (!populateRule.suppressVerticalVirtualization) {
                     tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
+                }
+                if (populateRule.supportToolTips) {
+                    tcp._when('mousemove', {
+                        selectorNodeTest: 'td',
+                        handler: function (evt) {
+                            var el = evt.srcElement;
+                            el.title = el.innerText;
+                        }
+                    });
                 }
             } else {
                 if (populateRule.supportTreeColumn) {
