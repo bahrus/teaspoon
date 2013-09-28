@@ -139,6 +139,7 @@ namespace tspHandler
         #region Process Methods
         public static void Process(this HtmlDocumentFacade doc)
         {
+            ProcessEmmetSpaces(doc);
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
             {
@@ -152,6 +153,18 @@ namespace tspHandler
                 ProcessServerSideScripts(doc);
             }
             
+        }
+
+        public static HtmlDocumentFacade ProcessEmmetSpaces(this HtmlDocumentFacade doc)
+        {
+            var emmetTagsWithSpaces = doc.querySelectorAll("script.emmet.withSpaces").ToList();
+            emmetTagsWithSpaces.ForEach(node =>
+            {
+                string content = node.innerHTML.Trim();
+                content = content.RemoveWhiteSpaceOutsideGroupings(new char[] { '{' }, new char[] { '}' });
+                node.innerHTML = content;
+            });
+            return doc;
         }
 
         public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)

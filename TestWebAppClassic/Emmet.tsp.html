@@ -4,17 +4,27 @@
     <title></title>
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
-    <script src="Emmet/emmet.js"></script>
+    <script src="Emmet/emmet.js" data-mode="both"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
 
 </head>
 <body>
-    <script type="text/html" data-emmet="client-side-only">
-        table>(tr*6>(td#$*3))#$
+    <!--<script type="text/html" data-emmet="server-side-only" data-templateProcessor="tsp.MakeRCsUnique">
+        table>((thead>tr>td*3)+(tbody>tr*6>(td[data-rc=$]*3)))
+    </script>-->
+    <script type="text/html" class="emmet withSpaces"  data-mode="client-side-only" data-template-processor="tsp.MakeRCsUnique">
+        table>(
+            (thead>tr>td*3)
+          + (tbody>
+                (tr>
+                    (td[data-rc=r,$]*3)
+                )*6
+            )
+        )
     </script>
 </body>
 </html>
-<script defer>
+<script defer data-mode="both">
     tsp.applyRules(document);
 </script>

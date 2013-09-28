@@ -118,10 +118,22 @@ module tsp {
         return tsp;
     }
 
-    
+
+    export function MakeRCsUnique(content: string) {
+        var spl = content.split('data-rc=\"r,');
+        var count = 0;
+        for (var i = 0, n = spl.length; i < n - 1; i++) {
+            var aft = spl[i + 1];
+            if (aft.substr(0, 2) == '1"') {
+                count++;
+            }
+            spl[i + 1] = count + ',' + aft;
+        }
+        return spl.join('data-rc=\"');
+    }
 
     export function applyRules(doc: HTMLDocument) {
-        var emmetSelector = 'script[data-emmet="';
+        var emmetSelector = 'script.emmet[data-mode="';
         if (isClientSideMode()) {
             emmetSelector +=   'client-side-only';
         } else {
@@ -132,7 +144,12 @@ module tsp {
         for (var i = 0, n = emmetNodes.length; i < n; i++) {
             var nd = <HTMLElement> emmetNodes[i];
             var inner = $.trim(nd.innerHTML);
-            var content = emmet.expandAbbreviation(inner, 'html', 'html', null);
+            var content = emmet.expandAbbreviation(inner, 'html', 'html', null).split('${0}').join('');
+            var templ = nd.getAttribute('data-template-processor');
+            if (templ) {
+                var fn = eval(templ);
+                content = fn(content);
+            }
             nd.insertAdjacentHTML('beforebegin', content);
             nd.parentNode.removeChild(nd);
         }

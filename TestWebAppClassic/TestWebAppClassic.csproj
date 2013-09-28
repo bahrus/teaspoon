@@ -164,6 +164,9 @@
     <Content Include="toc.html" />
     <Content Include="Emmet\.DS_Store" />
     <Content Include="Emmet\README.md" />
+    <Content Include="Emmet\emmet.min.js.map">
+      <DependentUpon>emmet.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="LazyLoadTest1.tsp.html" />
     <Content Include="Scratch.html" />

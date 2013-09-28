@@ -83,6 +83,24 @@ namespace tspHandler
             this._node = node;
         }
 
+        public void insertAdjacentHTML(string placement, string content){
+            var span = _node.OwnerDocument.CreateElement("span");
+            span.InnerHtml = content;
+            switch (placement.ToLower())
+            {
+                case "beforebegin":
+                    _node.ParentNode.InsertBefore(span.FirstChild, _node);
+                    break;
+                case "afterend":
+                    _node.ParentNode.InsertAfter(span.FirstChild, _node);
+                    break;
+                default:
+                    throw new NotImplementedException();
+
+            }
+            
+        }
+
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
             if (selectorText.Contains(">"))

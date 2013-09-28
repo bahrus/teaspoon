@@ -9,6 +9,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('body').layout();
+            
         });
     </script>
 </head>
@@ -16,15 +17,27 @@
     <!-- manually attach allowOverflow method to pane -->
     <div class="ui-layout-north">
 	    This is the north pane, closable, slidable and resizable
-    </div>    <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
+    </div>
+
+    <!-- allowOverflow auto-attached by option: west__showOverflowOnHover = true -->
     <div class="ui-layout-west">
 	    <iframe data-mode="server-side-only" src="toc_TreeView.tsp.html#treeContainer" id="toc"></iframe>
-    </div>    <div class="ui-layout-south">
+    </div>
+
+    <div class="ui-layout-south">
 	    This is the south pane, closable, slidable and resizable &nbsp;
 
 	    <!-- this button has its event added dynamically in document.ready -->
 	    <button class="south-toggler">Close</button>
-    </div>    <div class="ui-layout-east">
-	    This is the east pane, closable, slidable and resizable        <button class="east-toggler">Close</button>    </div>    <div class="ui-layout-center">        This CENTER pane auto-sizes to fit the space <i>between</i> the 'border-panes'    </div>
+    </div>
+
+    <div class="ui-layout-east">
+	    This is the east pane, closable, slidable and resizable
+        <button class="east-toggler">Close</button>
+    </div>
+
+    <div class="ui-layout-center">
+        This CENTER pane auto-sizes to fit the space <i>between</i> the 'border-panes'
+    </div>
 </body>
 </html>

@@ -193,6 +193,37 @@ namespace ClassGenMacros
             return string.Join("\\", sl.ToArray());
         }
 
+        public static string RemoveWhiteSpaceOutsideGroupings(this string stringToTrim, char[] openGroupChars, char[] closedGroupChars)
+        {
+            if (stringToTrim == null) return null;
+            int openGroupCount = 0;
+            List<Char> returnObj = new List<char>();
+            for (int index = 0, len = stringToTrim.Length; index < len; index++)
+            {
+                var c = stringToTrim[index];
+                if (openGroupChars.Contains(c))
+                {
+                    openGroupCount++;
+                }
+                else if(closedGroupChars.Contains(c))
+                {
+                    openGroupCount--;
+                }
+                if (openGroupCount == 0)
+                {
+                    if (!Char.IsWhiteSpace(c))
+                    {
+                        returnObj.Add(c);
+                    }
+                }
+                else
+                {
+                    returnObj.Add(c);
+                }
+            }
+            return new string(returnObj.ToArray());
+        }
+
         /// <summary>
         /// Splits the string passed in by the delimiters passed in.
         /// Quoted sections are not split, and all tokens have whitespace
