@@ -4,6 +4,7 @@
     <title></title>
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="Emmet/emmet.js" data-mode="both"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     <!--<link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>-->
@@ -21,7 +22,18 @@
     </style>
 </head>
 <body>
-    <iframe data-mode="server-side-only" src="baseTable6x10.html#myTable" id="myTable"></iframe>
+   <!-- <iframe data-mode="server-side-only" src="baseTable6x10.html#myTable" id="myTable"></iframe>-->
+
+    <script type="text/html" class="emmet withSpaces"  data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique">
+        table#myTable>(
+            (thead>tr>td{column $}*6)
+          + (tbody>
+                (tr>
+                    (td[data-rc=r,$]*6)
+                )*10
+            )
+        )
+    </script>
 </body>
 </html>
 
@@ -40,15 +52,4 @@
     
     tsp.applyRules(document);
 
-</script>
-
-<script>
-    //tcp._when('mousemove', {
-    //    selectorNodeTest: 'td',
-    //    handler: function (evt) {
-    //        var el = evt.srcElement;
-    //        //if (el.title) return;
-    //        el.title = el.innerText;
-    //    }
-    //});
 </script>

@@ -35,6 +35,11 @@ namespace tspHandler
 
         private static Func<HtmlNodeFacade, bool> _TestForServerSide =  node =>
         {
+            string type = node.getAttribute("type");
+            if (type != null && type.ToLower() == "text/html")
+            {
+                return false;
+            }
             string mode = node.getAttribute(ModeAttribute);
             if (string.IsNullOrEmpty(mode)) return false;
             return (mode == ServerSideMode || mode == BothMode);

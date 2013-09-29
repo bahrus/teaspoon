@@ -424,7 +424,12 @@ module tsp {
     }
 
     export function getOrCreateHiddenInput(el: HTMLElement, inputName: string, callBack: (hiddenFld: HTMLInputElement) => void) {
-        var frms = el.getAttribute('form').split(' ');
+        var frmAtts = el.getAttribute('form');
+        if (!frmAtts) {
+            frmAtts = el.id + '_form';
+            el.setAttribute('form', frmAtts);
+        }
+        var frms = frmAtts.split(' ');
         var body = document.body;
         for (var i = 0, n = frms.length; i < n; i++) {
             var frmID = frms[i];

@@ -12,21 +12,42 @@
 
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="Emmet/emmet.js" data-mode="both"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
 
     <script data-mode="both" data-model="[TestWebAppClassic.DataTableTestModel, TestWebAppClassic].GetTbl" id="dataTable"></script>
     
 
-      <script src="datagrid.js"></script>
+     <script src="datagrid.js"></script>
+     <style type="text/css">
+         #myTable {
+             width: 900px;
+         }
+        
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 150px;
+        }
+    </style>
+
+
 
 </head>
 <body>
-    <!--<form data-mode="both" id="myForm">
-        <input type="hidden" name="myTable_rowOffset" id="myTable_rowOffset" />
-    </form>-->
-    
-    <iframe data-mode="server-side-only" src="baseTable6x10.html#myTable" id="myTable"></iframe>
+
+    <script type="text/html" class="emmet withSpaces"  data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique">
+        table#myTable>(
+            (thead>tr>td{column $}*6)
+          + (tbody>
+                (tr>
+                    (td[data-rc=r,$]*6)
+                )*10
+            )
+        )
+    </script>
 
 </body>
 </html>
@@ -35,6 +56,7 @@
         call: tsp.applyPopulateTemplateWithRectCoords,
         'tsp-getDataTable': function (el) { return model.dataTable; },
         'tsp-supportRowSelection': true,
+        'tsp-supportToolTips': true,
     })._if('input.textFilter',
         tsp.createFilterRule({
             matchWholeString: true,
