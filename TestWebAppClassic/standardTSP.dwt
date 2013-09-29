@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <script src="Scripts/jquery-2.0.3.js"></script>
+    <script src="Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="Emmet/emmet.js" data-mode="both"></script>
+    <script src="tsp_script/tsp.js" data-mode="both"></script>
+    <script src="tsp_script/tcp.js"></script>
+    
+	<link rel="stylesheet" type="text/css" href="Content/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery.ui.theme.css" />
+    <link rel="stylesheet" type="text/css" href="tsp_script/tsp.css" />
+
+
+	<!-- #BeginEditable "doctitle" -->
+	<title>Untitled 1</title>
+	<!-- #EndEditable -->
+</head>
+
+<body>
+
+<!-- #BeginEditable "body" -->
+
+<!-- #EndEditable -->
+
+</body>
+
+</html>
+
+<!-- #BeginEditable "Rules" -->
+<script data-mode="server-side-only">
+	//tsp._if('body', {
+	//});
+</script>
+<!-- #EndEditable -->
+
+<script defer data-mode="both">
+	tsp.applyRules(document);
+</script
