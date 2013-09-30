@@ -133,7 +133,7 @@ module tsp {
     }
 
     export function applyRules(doc: HTMLDocument) {
-        var emmetSelector = 'script.emmet[data-mode="';
+        var emmetSelector = 'script[type="text/emmet"][data-mode="';
         if (isClientSideMode()) {
             emmetSelector +=   'client-side-only';
         } else {
@@ -151,7 +151,9 @@ module tsp {
                 content = fn(content);
             }
             nd.insertAdjacentHTML('beforebegin', content);
+            var prevSibling = <HTMLElement> nd.previousSibling;
             nd.parentNode.removeChild(nd);
+            
         }
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules

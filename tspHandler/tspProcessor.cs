@@ -36,7 +36,7 @@ namespace tspHandler
         private static Func<HtmlNodeFacade, bool> _TestForServerSide =  node =>
         {
             string type = node.getAttribute("type");
-            if (type != null && type.ToLower() == "text/html")
+            if (type != null && (type.ToLower() == "text/html" || type.ToLower() == "text/emmet"))
             {
                 return false;
             }
@@ -162,7 +162,7 @@ namespace tspHandler
 
         public static HtmlDocumentFacade ProcessEmmetSpaces(this HtmlDocumentFacade doc)
         {
-            var emmetTagsWithSpaces = doc.querySelectorAll("script.emmet.withSpaces").ToList();
+            var emmetTagsWithSpaces = doc.querySelectorAll("script[type='text/emmet']").ToList();
             emmetTagsWithSpaces.ForEach(node =>
             {
                 string content = node.innerHTML.Trim();

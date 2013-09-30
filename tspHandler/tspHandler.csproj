@@ -116,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Schemas\html\HTML_5.XSD">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="tsp_script\tcp.js.map" />
     <None Include="tsp_script\tsp.js.map" />
   </ItemGroup>

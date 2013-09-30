@@ -38,8 +38,8 @@
 </head>
 <body>
 
-    <script type="text/emmet" data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique" id="myTable">
-        table>(
+    <script type="text/emmet" data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique">
+        table#myTable>(
             (thead>tr>td{column $}*6)
           + (tbody>
                 (tr>
@@ -48,29 +48,8 @@
             )
         )
     </script>
-	<style data-mode="server-side-only" type="text/tsp">
 	
 	
-	
-	
-		#myTable{
-			call: tsp.applyPopulateTemplateWithRectCoords;
-			
-		}
-	</style>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<div id="myTable"></div>
 </body>
 </html>
 <script defer data-mode="both">
