@@ -551,6 +551,7 @@
                         <xsd:simpleType>
                             <xsd:restriction base="xsd:string">
                                 <xsd:enumeration value="text/css" />
+                                <xsd:enumeration value="text/tsp" />
                             </xsd:restriction>
                         </xsd:simpleType>
                         <xsd:simpleType>
@@ -567,6 +568,7 @@
                     </xsd:restriction>
                 </xsd:simpleType>
             </xsd:attribute>
+            <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
         </xsd:complexType>
     </xsd:element>
 
@@ -580,7 +582,8 @@
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
                         <xsd:enumeration value="text/ecmascript" />
-						<xsd:enumeration value="text/html"/>
+						            <xsd:enumeration value="text/html"/>
+                        <xsd:enumeration value="text/emmet"/>
                         <xsd:enumeration value="text/javascript" />
                         <xsd:enumeration value="text/javascript1.0" />
                         <xsd:enumeration value="text/javascript1.1" />
@@ -595,16 +598,14 @@
                     </xsd:restriction>
                 </xsd:simpleType>
             </xsd:attribute>
-			<xsd:attribute name="data-mode" vs:readonly="true">
+			<xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
+			<xsd:attribute name="data-template-processor" vs:readonly="true">
 				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="server-side-only" />
-						<xsd:enumeration value="client-side-only" />
-						<xsd:enumeration value="both" />
-					</xsd:restriction>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="tsp.MakeRCsUnique"/>
+          </xsd:restriction>
 				</xsd:simpleType>
 			</xsd:attribute>
-			
             <xsd:attribute name="src" type="xsd:anyURI" />
             <xsd:attribute name="defer" vs:standalone="true">
                 <xsd:simpleType>
@@ -989,6 +990,7 @@
                     </xsd:restriction>
                 </xsd:simpleType>
             </xsd:attribute>
+          <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
         </xsd:complexType>
     </xsd:element>
 
@@ -1257,6 +1259,7 @@
                 </xsd:simpleType>
             </xsd:attribute>
             <xsd:attribute name="target" type="browsingContext" />
+            <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
         </xsd:complexType>
     </xsd:element>
 
@@ -1901,4 +1904,11 @@
         <xsd:attributeGroup ref="commonAttributeGroup" />
     </xsd:complexType>
 
+  <xsd:simpleType name="modes">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="server-side-only" />
+      <xsd:enumeration value="client-side-only" />
+      <xsd:enumeration value="both" />
+    </xsd:restriction>
+  </xsd:simpleType>
 </xsd:schema>
