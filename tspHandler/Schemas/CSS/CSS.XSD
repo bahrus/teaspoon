@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Schema name="CSSMetaData" xmlns="urn:schemas-microsoft-com:xml-data"
+                           xmlns:dt="urn:schemas-microsoft-com:datatypes">
+  <AttributeType name="_locID" dt:type="id">
+    <description>The id of the node. For property-def nodes, its the name of the attribute.</description>
+  </AttributeType>
+
+  <AttributeType name="_locAttrData" dt:type="string">
+    <description>Localization type and syntax.</description>
+  </AttributeType>
+
+  <AttributeType name="type" dt:type="enumeration" dt:values="string composite enum length enum-length number url color font">
+    <description>The type of the property's value.</description>
+  </AttributeType>
+
+  <AttributeType name="description" dt:type="string">
+    <description>The description of the property.</description>
+  </AttributeType>
+
+  <AttributeType name="syntax" dt:type="string">
+    <description>The syntax of a property's value.</description>
+  </AttributeType>
+
+  <AttributeType name="enum" dt:type="string">
+    <description>The sorted list of space separated values applicable of the property when the type of the property is enum or enum-length.</description>
+  </AttributeType>
+
+  <AttributeType name="group" dt:type="string">
+    <description>The name of the group that the property belongs to.</description>
+  </AttributeType>
+
+  <AttributeType name="nonbrowseable" dt:type="boolean">
+    <description>Attribute is not displayed in Intellisense.</description>
+  </AttributeType>
+  
+  <AttributeType name="iscomposite" dt:type="boolean">
+    <description>Attribute is typed composite.</description>
+  </AttributeType>
+  
+  <ElementType name="property-def" content="empty" model="closed">
+    <attribute type="_locID" required="yes"/>
+    <attribute type="_locAttrData" required="no"/>
+    <attribute type="type" required="yes"/>
+    <attribute type="description" required="yes"/>
+    <attribute type="syntax" required="no"/>
+    <attribute type="nonbrowseable" required="no"/>
+    <attribute type="iscomposite" required="no"/>
+    <attribute type="enum" required="no"/>
+    <attribute type="group" required="no"/>
+    <description>The definition of a CSS attribute</description>
+  </ElementType>
+
+  <ElementType name="property-set" content="eltOnly" model="closed" order="one">
+    <element type="property-def" minOccurs="1" maxOccurs="*"/>
+    <description>The collection of known attributes.</description>
+  </ElementType>
+
+  <ElementType name="pseudoclass-def" content="empty" model="closed">
+    <attribute type="_locID" required="yes"/>
+    <attribute type="description" required="yes"/>
+    <description>The definition of a CSS pseudo-class</description>
+  </ElementType>
+  
+  <ElementType name="pseudoclass-set" content="eltOnly" model="closed" order="one">
+    <element type="pseudoclass-def" minOccurs="1" maxOccurs="*"/>
+    <description>The collection of known pseudo-classes.</description>
+  </ElementType>
+  
+  <AttributeType name="version" dt:type="enumeration" dt:values="VS8">
+    <description>The version of the metadata format. Currently the only format allowed is 'VS8'</description>
+  </AttributeType>
+
+  <AttributeType name="friendly-name" dt:type="string">
+    <description>The user-friendly name of the schema.</description>
+  </AttributeType>
+  
+  <ElementType name="cssmd" content="eltOnly" model="closed" order="seq">
+    <attribute type="version" required="yes"/>
+    <attribute type="friendly-name" required="no"/>
+    <attribute type="description" required="no"/>
+    <element type="property-set" minOccurs="1" maxOccurs="1"/>
+    <element type="pseudoclass-set" minOccurs="0" maxOccurs="1"/>
+    <description>The CSS metadata to be used.</description>
+  </ElementType>
+</Schema>
