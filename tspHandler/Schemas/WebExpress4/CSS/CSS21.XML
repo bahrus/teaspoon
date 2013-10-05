@@ -746,7 +746,9 @@
 			group="Layout"
 			/>
 		<cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string" description="Javascript Function to call" syntax="One of the call values" 
-			enum="tsp.fillGrid tsp.lazyLoad" group="tsp"/>
+			enum="tsp.action tsp.fillGrid tsp.lazyLoad" group="tsp"/>
+		<cssmd:property-def _locID="tsp-action" _locAttrData="description,syntax" type="string" description="Javascript Function to call" 
+			syntax="One of the call values" group="tsp"/>
 		<cssmd:property-def _locID="tsp-getDataTable" _locAttrData="description,syntax" type="string" 
 			description="Javascript Function which provides json array of data" group="tsp"/>
 		<cssmd:property-def _locID="tsp-rowSelection" _locAttrData="description,syntax" type="enum-list" description="Row Selection Options" 

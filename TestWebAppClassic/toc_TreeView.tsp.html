@@ -14,17 +14,20 @@
     <script src="dynatree/jquery.dynatree-1.2.4.js"></script>
     <!-- Add code to initialize the tree when the document is loaded: -->
     <script>
-        tsp._if('.tree', {
-            'tsp-action': function (el) {
-                $(el).dynatree({
-                    checkbox: true,
-                    selectMode: 3,
-                });
-            },
-            'call': tsp.applyActionRule
-        });
+    	function createDynaTree(el){
+	    	$(el).dynatree({
+	            checkbox: true,
+	            selectMode: 3,
+	        });
+    	}
     </script>
-    
+    <style data-mode="client-side-only" type="text/tsp">
+	
+    	.tree{
+			call:	tsp.action;
+			tsp-action: createDynaTree;
+		}
+    </style>
 </head>
 <body>
     <div id="treeContainer">

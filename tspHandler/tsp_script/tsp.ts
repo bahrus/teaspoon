@@ -344,7 +344,7 @@ module tsp {
         action: (el: HTMLElement) => void;
     }
 
-    export function applyActionRule(el: HTMLElement, props: { [key: string]: any; }) {
+    export function action(el: HTMLElement, props: { [key: string]: any; }) {
         var actionRule = <IAction> evalRulesSubset(props, prefix);
         actionRule.action(el);
     }

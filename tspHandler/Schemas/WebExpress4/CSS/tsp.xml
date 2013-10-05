@@ -4,7 +4,13 @@
     <cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string"
       description="Javascript Function to call"
       syntax="One of the call values"
-      enum="tsp.fillGrid tsp.lazyLoad"
+      enum="tsp.action tsp.fillGrid tsp.lazyLoad"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="tsp-action" _locAttrData="description,syntax" type="string"
+      description="Javascript Function to call"
+      syntax="One of the call values"
       group="tsp"
       xdt:Transform="Insert"
       />

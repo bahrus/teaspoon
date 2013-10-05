@@ -22,8 +22,7 @@
     </style>
 </head>
 <body>
-   <!-- <iframe data-mode="server-side-only" src="baseTable6x10.html#myTable" id="myTable"></iframe>-->
-
+   
     <script type="text/emmet" data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique">
         table#myTable>(
             (thead>tr>td{column $}*6)
@@ -34,13 +33,8 @@
             )
         )
     </script>
+    
     <style data-mode="both" type="text/tsp">
-	
-	
-	
-	
-	
-	
 	
     	#myTable{
 			call:				tsp.fillGrid;
