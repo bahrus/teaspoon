@@ -145,6 +145,7 @@ namespace tspHandler
         public static void Process(this HtmlDocumentFacade doc)
         {
             ProcessEmmetSpaces(doc);
+            ProcessTSPStyles(doc);
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
             {
@@ -160,6 +161,44 @@ namespace tspHandler
             
         }
 
+        public static HtmlDocumentFacade ProcessTSPStyles(this HtmlDocumentFacade doc){
+            var tspStyles = doc.querySelectorAll("style[type='text/tsp']").ToList();
+            tspStyles.ForEach(node =>
+            {
+                string content = node.innerHTML.Trim();
+                var styleSheet = HtmlDocumentFacade.processCssContent(content);
+                var sb = new StringBuilder();
+                var first = true;
+                foreach (var rule in styleSheet.rules)
+                {
+                    if (first)
+                    {
+                        sb.Append("tsp");
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append("})");
+                    }
+                    sb.AppendLine("._if('" + rule.selectorText + "', {");
+                    foreach (var kvp in rule.style)
+                    {
+                        sb.AppendLine("'" + kvp.Key + "': " + kvp.Value + ",");
+                    }
+                    sb.AppendLine("});");
+                }
+                var mode = node.getAttribute("data-mode");
+                var newNode = doc.createElement("script");
+                newNode.setAttribute("data-mode", mode);
+                newNode.setAttribute("defer", null);
+                var script = sb.ToString();
+                newNode.innerHTML = script;
+                node.parentNode.insertBefore(newNode, node);
+                node.parentNode.removeChild(node);
+            });
+            return doc;
+        }
+        
         public static HtmlDocumentFacade ProcessEmmetSpaces(this HtmlDocumentFacade doc)
         {
             var emmetTagsWithSpaces = doc.querySelectorAll("script[type='text/emmet']").ToList();

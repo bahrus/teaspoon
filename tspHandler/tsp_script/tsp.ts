@@ -500,7 +500,7 @@ module tsp {
         var expanded = {};
         var treeFldIdx = getNodeFldIdx(dt);
         if (treeFldIdx == -1) {
-            populateRule.supportTreeColumn = false;
+            populateRule.treeColumn = TreeType.none;
             return;
         }
         data(templEl).treeNodeIndex = treeFldIdx;
@@ -535,14 +535,34 @@ module tsp {
         footer?: string;
     }
 
+    
+
+    export enum SelectionOptions {
+        none,
+        single,
+        multiple,
+    }
+
+    export enum TitleFillOptions {
+        none,
+        text,
+    }
+
+    export enum TreeType {
+        none,
+        simple,
+    }
+
     export interface IPopulateRectCoordinates {
         //templateSelector: string;
         //verticalOffsetCtlSelector?: 
         getDataTable?: (el: HTMLElement) => IDataTable;
         suppressVerticalVirtualization?: boolean;
-        supportRowSelection?: boolean;
-        supportTreeColumn?: boolean;
-        supportToolTips?: boolean;
+        //supportRowSelection?: boolean;
+        rowSelection?: SelectionOptions;
+        treeColumn?: TreeType;
+        //supportToolTips?: boolean;
+        titleFill?: TitleFillOptions;
     }
 
 
@@ -580,8 +600,10 @@ module tsp {
         var dt = dataTable.data;
         var view = dataTable.rowView;
         var tnIdx = -1;
-        if (rule.supportTreeColumn) {
-            tnIdx = <number> data(el).treeNodeIndex;
+        switch (rule.treeColumn) {
+            case TreeType.simple:
+                tnIdx = <number> data(el).treeNodeIndex;
+                break;
         }
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
@@ -611,33 +633,40 @@ module tsp {
         }
     }
 
-    export function applyPopulateTemplateWithRectCoords(el: HTMLElement, props: { [key: string]: any; }) {
+    export function fillGrid(el: HTMLElement, props: { [key: string]: any; }) {
         var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
         getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
             tsp.data(el).populateRule = populateRule;
             if (isClientSideMode()) {
-                if (populateRule.supportRowSelection) {
-                    tcp.addRowSelection(el);
+                switch(populateRule.rowSelection){
+                    case SelectionOptions.single:
+                        tcp.addRowSelection(el);
+                        break;
                 }
-                if (populateRule.supportTreeColumn) {
-                    applyTreeView(el, populateRule);
-                    tcp.addTreeNodeToggle(el);
+                switch (populateRule.treeColumn) {
+                    case TreeType.simple:
+                        applyTreeView(el, populateRule);
+                        tcp.addTreeNodeToggle(el);
                 }
                 if (!populateRule.suppressVerticalVirtualization) {
                     tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
                 }
-                if (populateRule.supportToolTips) {
-                    tcp._when('mousemove', {
-                        selectorNodeTest: 'td',
-                        handler: function (evt) {
-                            var el = evt.srcElement;
-                            el.title = el.innerText;
-                        }
-                    });
+                switch(populateRule.titleFill){
+                    case TitleFillOptions.text:
+                        tcp._when('mousemove', {
+                            selectorNodeTest: 'td',
+                            handler: function (evt) {
+                                var el = evt.srcElement;
+                                el.title = el.innerText;
+                            }
+                        });
+                        break;
                 }
             } else {
-                if (populateRule.supportTreeColumn) {
-                    applyTreeView(el, populateRule);
+                switch (populateRule.treeColumn) {
+                    case TreeType.simple:
+                        applyTreeView(el, populateRule);
+                        break;
                 }
                 refreshTemplateWithRectCoords(el, hiddenFld, populateRule);
             }

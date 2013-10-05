@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -71,7 +72,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Console.cs" />
+    <Compile Include="tsp_script\Console.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="HtmlAttributeFacade.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
@@ -104,6 +105,16 @@
   <ItemGroup>
     <TypeScriptCompile Include="tsp_script\tcp.ts" />
     <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS-IE60.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS-IE70.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS-IE80.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS10.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS20.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\Original_CSS21.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\CSS30.XML" />
+    <Content Include="Schemas\WebExpress4\CSS\tsp.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
@@ -116,21 +127,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Schemas\html\HTML_5.XSD">
+    <None Include="Schemas\WebExpress4\CSS\CSS.XSD">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\WebExpress4\HTML\HTML_5.XSD">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\WebExpress4\HTML\Original_HTML_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\WebExpress4\HTML\tsp.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="tsp_script\tcp.js.map" />
     <None Include="tsp_script\tsp.js.map" />
+    <None Include="tsp_script\tsp.min.js.map">
+      <DependentUpon>tsp.js</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target>-->
   <Target Name="AfterBuild">
+    <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\WebExpress4\HTML\tsp.xsd" Destination="$(ProjectDir)Schemas\WebExpress4\HTML\HTML_5.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\CSS\Original_CSS21.XML" Transform="$(ProjectDir)Schemas\WebExpress4\CSS\tsp.xml" Destination="$(ProjectDir)Schemas\WebExpress4\CSS\CSS21.XML" />
   </Target>
-  -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>

@@ -182,13 +182,13 @@ namespace tspHandler
                     })
                     .Select(node => node.getAttribute("href"))
                     .Select(href => this._host.GetContentOfRelativeResource(href))
-                    .Select(cssContent => this.processCssContent(cssContent))
+                    .Select(cssContent => processCssContent(cssContent))
                     .ToList();
                     #endregion
                     #region get css from actual document
                     var inlineStyles = this.getElementsByTagName("style")
                         .Select(node => node.innerHTML).ToArray();
-                    styleSheets.Add(this.processCssContent(String.Join("\n\r", inlineStyles)));
+                    styleSheets.Add(processCssContent(String.Join("\n\r", inlineStyles)));
                     #endregion
                     this._styleSheets = styleSheets.ToArray();
 
@@ -197,7 +197,7 @@ namespace tspHandler
             }
         }
 
-        private StyleSheet processCssContent(string cssContent)
+        public static StyleSheet processCssContent(string cssContent)
         {
             var lines = CurlyBraceParser.Parser.Parse(cssContent);
             var list = new List<CssRule>();
@@ -212,7 +212,7 @@ namespace tspHandler
                 return new CssRule
                 {
                     selectorText = selectorText,
-                    style = this.processStyle(obs.Children),
+                    style = processStyle(obs.Children),
                 };
             });
             return new StyleSheet
@@ -221,7 +221,7 @@ namespace tspHandler
             };
         }
 
-        private Dictionary<string, string> processStyle(List<ILine> Children)
+        private static Dictionary<string, string> processStyle(List<ILine> Children)
         {
             var returnObj = new Dictionary<string, string>();
             Children.ForEach(child =>

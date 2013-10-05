@@ -48,13 +48,33 @@
             )
         )
     </script>
+    
+    <style data-mode="both" type="text/tsp">
 	
+		#myTable{
+			call:               tsp.fillGrid;
+	        tsp-getDataTable:   function (el) { return model.dataTable; };
+	        tsp-rowSelection:   tsp.SelectionOptions.single;
+	        tsp-titleFill:      tsp.TitleFillOptions.text;
+	   }
+	</style>
 	
+	<script data-mode="both" defer>
+    	tsp.applyRules(document);
+	</script>
 </body>
+	
+	
+
+
 </html>
-<script defer data-mode="both">
+
+
+
+
+<!--<script defer data-mode="both">
     tsp._if('#myTable', {
-        call: tsp.applyPopulateTemplateWithRectCoords,
+        call: tsp.fillGrid,
         'tsp-getDataTable': function (el) { return model.dataTable; },
         'tsp-supportRowSelection': true,
         'tsp-supportToolTips': true,
@@ -65,7 +85,7 @@
     );
     tsp.applyRules(document);
     
-</script>
+</script>-->
 <!--<script defer>
     populate(model.dataTable, document.getElementById('myTable_rowOffset'), document.getElementById('myTable'));
 </script>-->

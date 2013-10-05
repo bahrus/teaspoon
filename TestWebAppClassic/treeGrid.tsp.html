@@ -8,9 +8,9 @@
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     <!--<link rel='stylesheet' type='text/css' href='skin/ui.dynatree.css'>-->
-    <link rel="stylesheet" type="text/css" href="Content/themes/smoothness/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery.ui.theme.css" />
-    <link rel="stylesheet" type="text/css" href="tsp_script/tsp.css"
+    <link rel="stylesheet" type="text/css" href="Content/themes/smoothness/jquery-ui.css" >
+    <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery.ui.theme.css" >
+    <link rel="stylesheet" type="text/css" href="tsp_script/tsp.css" >
     <script data-mode="both" data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeGridData"></script>
     <style type="text/css">
         td {
@@ -34,12 +34,31 @@
             )
         )
     </script>
+    <style data-mode="both" type="text/tsp">
+	
+	
+	
+	
+	
+	
+	
+    	#myTable{
+			call:				tsp.fillGrid;
+			tsp-getDataTable: 	function (el) { return model.treeGridData; };
+			tsp-rowSelection:	tsp.SelectionOptions.single;
+			tsp-titleFill:		tsp.TitleFillOptions.text;
+			tsp-treeColumn:		tsp.TreeType.simple;
+		}
+    </style>
+    <script data-mode="both" defer>
+    	tsp.applyRules(document);
+    </script>
 </body>
 </html>
 
-<script defer data-mode="both">
+<!--<script defer data-mode="both">
     tsp._if('#myTable', {
-        call: tsp.applyPopulateTemplateWithRectCoords,
+        call: tsp.fillGrid,
         'tsp-getDataTable': function (el) { return model.treeGridData; },
         'tsp-supportRowSelection': true,
         'tsp-supportTreeColumn': true,
@@ -53,3 +72,4 @@
     tsp.applyRules(document);
 
 </script>
+-->
