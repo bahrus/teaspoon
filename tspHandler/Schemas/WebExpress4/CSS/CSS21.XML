@@ -746,11 +746,25 @@
 			group="Layout"
 			/>
 		<cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string" description="Javascript Function to call" syntax="One of the call values" 
-			enum="tsp.action tsp.fillGrid tsp.lazyLoad" group="tsp"/>
+			enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad" group="tsp"/>
+		<cssmd:property-def _locID="event" _locAttrData="description,syntax" type="enum-list" description="Javascript Function to call" 
+			syntax="One of the event values" 
+			enum="click dblclick mousedown mousup mouseover mousemove mouseout dragstart drag dragenter dragleave dragover drop dragend keydown keypress keyup load unload abort error resize scroll select change submit reset focus blur focusin focusout propertychange" 
+			group="tcp"/>
+		<cssmd:property-def _locID="handler" _locAttrData="description,syntax" type="string" description="Javascript Function to handle event" 
+			syntax="One of the call values" group="tcp"/>
 		<cssmd:property-def _locID="tsp-action" _locAttrData="description,syntax" type="string" description="Javascript Function to call" 
 			syntax="One of the call values" group="tsp"/>
+		<cssmd:property-def _locID="tsp-actionIfTrue" _locAttrData="description,syntax" type="string" description="Action if Condition is True" 
+			syntax="Javascript Function on an Element" group="tsp"/>
+		<cssmd:property-def _locID="tsp-actionIfFalse" _locAttrData="description,syntax" type="string" description="Action if Condition is False" 
+			syntax="Javascript Function on an Element" group="tsp"/>
+		<cssmd:property-def _locID="tsp-condition" _locAttrData="description,syntax" type="string" description="Condition check to apply call" 
+			syntax="Javascript Function which returns a boolean" group="tsp"/>
 		<cssmd:property-def _locID="tsp-getDataTable" _locAttrData="description,syntax" type="string" 
 			description="Javascript Function which provides json array of data" group="tsp"/>
+		<cssmd:property-def _locID="tsp-lazyLoadCondition" _locAttrData="description,syntax" type="string" description="Condition check to apply lazy loading" 
+			syntax="Javascript Function which returns a boolean" group="tsp"/>
 		<cssmd:property-def _locID="tsp-rowSelection" _locAttrData="description,syntax" type="enum-list" description="Row Selection Options" 
 			syntax="One of the row selection values" enum="tsp.SelectionOptions.none tsp.SelectionOptions.single tsp.SelectionOptions.multiple" group="tsp"/>
 		<cssmd:property-def _locID="tsp-titleFill" _locAttrData="description,syntax" type="enum-list" description="Auto populate tooltip text" 

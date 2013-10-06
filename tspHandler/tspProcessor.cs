@@ -146,6 +146,7 @@ namespace tspHandler
         {
             ProcessEmmetSpaces(doc);
             ProcessTSPStyles(doc);
+            ProcessTCPStyles(doc);
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
             {
@@ -168,6 +169,7 @@ namespace tspHandler
                 string content = node.innerHTML.Trim();
                 var styleSheet = HtmlDocumentFacade.processCssContent(content);
                 var sb = new StringBuilder();
+                sb.AppendLine("");
                 var first = true;
                 foreach (var rule in styleSheet.rules)
                 {
@@ -183,14 +185,18 @@ namespace tspHandler
                     sb.AppendLine("._if('" + rule.selectorText + "', {");
                     foreach (var kvp in rule.style)
                     {
-                        sb.AppendLine("'" + kvp.Key + "': " + kvp.Value + ",");
+                        sb.AppendLine("\t'" + kvp.Key + "': " + kvp.Value + ",");
                     }
-                    sb.AppendLine("});");
+                    
                 }
+                sb.AppendLine("});");
                 var mode = node.getAttribute("data-mode");
                 var newNode = doc.createElement("script");
-                newNode.setAttribute("data-mode", mode);
-                newNode.setAttribute("defer", null);
+                if (!string.IsNullOrEmpty(mode))
+                {
+                    newNode.setAttribute("data-mode", mode);
+                }
+                //newNode.setAttribute("defer", null);
                 var script = sb.ToString();
                 newNode.innerHTML = script;
                 node.parentNode.insertBefore(newNode, node);
@@ -198,7 +204,32 @@ namespace tspHandler
             });
             return doc;
         }
-        
+
+        public static HtmlDocumentFacade ProcessTCPStyles(this HtmlDocumentFacade doc)
+        {
+            var tcpStyles = doc.querySelectorAll("style[type='text/tcp']").ToList();
+            tcpStyles.ForEach(node =>
+            {
+                string content = node.innerHTML.Trim();
+                var styleSheet = HtmlDocumentFacade.processCssContent(content);
+                var sb = new StringBuilder();
+                sb.AppendLine(string.Empty);
+                foreach (CssRule rule in styleSheet.rules)
+                {
+                    sb.AppendLine("tcp.when('" + rule.style["event"] + "', {");
+                    sb.AppendLine("\tselectorNodeTest: '" + rule.selectorText + "',");
+                    sb.AppendLine("\thandler:" + rule.style["handler"]);
+                    sb.AppendLine("});");
+                }
+                var newNode = doc.createElement("script");
+                var script = sb.ToString();
+                newNode.innerHTML = script;
+                node.parentNode.insertBefore(newNode, node);
+                node.parentNode.removeChild(node);
+            });
+            return doc;
+        }
+
         public static HtmlDocumentFacade ProcessEmmetSpaces(this HtmlDocumentFacade doc)
         {
             var emmetTagsWithSpaces = doc.querySelectorAll("script[type='text/emmet']").ToList();

@@ -1,35 +1,42 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title></title>
     <script type="text/javascript" src="Scripts/jquery-2.0.3.js"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
-    
-    
+    <script src="form1.js"></script>
+    <style type="text/tcp">
+	
+	
+   		input{
+			event: change;
+			handler: form1.changeHandler;        
+		}
+    </style>
 </head>
 <body>
     <form name="myForm" data-mode="both" id="myForm">
         
         <span id="msg"></span>
-        <input type="hidden" name="myHiddenField" data-design-type="datalist" list="browsers" />
-
+        <input type="hidden" name="myHiddenField" data-design-type="datalist" list="browsers" >
+		
         <datalist id="browsers" data-mode="design-time-only">
-            <option value="Internet Explorer"/>
-            <option value="Firefox"/>
-            <option value="Chrome"/>
-            <option value="Opera"/>
-            <option value="Safari"/>
+            <option value="Internet Explorer">
+            <option value="Firefox">
+            <option value="Chrome">
+            <option value="Opera">
+            <option value="Safari">
         </datalist>
 
-        <input type="submit" value="button1" name="submits" />
-        <input type="submit" value="button2" id="button2" name="submits" />
-        <input type="submit" value="button3" name="submits2" />
-        <input type="submit" value="button4" name="submits2"/>
+        <input type="submit" value="button1" name="submits" >
+        <input type="submit" value="button2" id="button2" name="submits" >
+        <input type="submit" value="button3" name="submits2" >
+        <input type="submit" value="button4" name="submits2">
 
         
     </form>
-    <input type="text" name="myTextBox" id="myTextBox" form="myForm"/>
+    <input type="text" name="myTextBox" id="myTextBox" form="myForm">
     <form name="tcp_urlBuilder_form">
         <textarea id="tcp_urlBuilder"></textarea>
     </form>
@@ -44,13 +51,8 @@
             $('#msg').html($('#myTextBox').val());
         }
         var s = "12345   ";
-        //var t = $.trim(s);
-        //$('#msg').html(t);
         $('#msg').html($.trim(s));
     </script>
 </body>
-    <script src="form1.js"></script>
-    <script defer>
-        tsp.applyRules(document);
-    </script>
+    
 </html>

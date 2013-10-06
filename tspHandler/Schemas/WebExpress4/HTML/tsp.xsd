@@ -14,9 +14,31 @@
     vs:cssschema="CSS 2.1"
     vs:SuccinctFriendlyName="HTML 5"
     vs:customattrprefix="data-">
+  <xsd:element name="datalist" xdt:Locator="Match(name)">
+    <xsd:complexType>
+      <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="form" vs:disallowedancestor="form"  xdt:Locator="Match(name)">
+    <xsd:complexType mixed="true">
+      <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+    </xsd:complexType>
+  </xsd:element>
   <xsd:element name="iframe" vs:disallowedancestor="button" xdt:Locator="Match(name)">
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="input" vs:disallowedancestor="button" xdt:Locator="Match(name)">
+    <xsd:complexType>
+      <xsd:attribute name="name" xdt:Transform="Insert" />
+      <xsd:attribute name="data-design-type" xdt:Transform="Insert" vs:help="Allows hidden input to provide design time hint for allowed values">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="datalist" vs:help="Provide List of Options"/>
+          </xsd:restriction>
+        </xsd:simpleType>  
+      </xsd:attribute>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="script" xdt:Locator="Match(name)">
@@ -68,6 +90,7 @@
               <xsd:restriction base="xsd:string" xdt:Transform="Replace">
                 <xsd:enumeration value="text/css" />
                 <xsd:enumeration value="text/tsp" />
+                <xsd:enumeration value="text/tcp"/>
               </xsd:restriction>
             </xsd:simpleType>
           </xsd:union>
@@ -82,6 +105,7 @@
       <xsd:enumeration value="server-side-only" />
       <xsd:enumeration value="client-side-only" />
       <xsd:enumeration value="both" />
+      <xsd:enumeration value="design-time-only"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

@@ -5,7 +5,7 @@
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
-    <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery-ui.css">
     <script>
         $(function () {
             $("#tabs").tabs();
@@ -26,25 +26,34 @@
                 }
             }
         };
+        function test(a, b){
+        	debugger;
+        }
     </script>
-    <script data-mode="server-side-only">
-        tsp._if('.tab1', {
-            'tsp-condition': function () { return model.tabsVisibility.tab1; },
-            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab1 && !model.tabsVisibility.isFirst('tab1') },
-        })._if('.tab2', {
-            'tsp-condition': function () { return model.tabsVisibility.tab2; },
-            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab2 && !model.tabsVisibility.isFirst('tab2') },
-        })._if('.tab3', {
-            'tsp-condition': function () { return model.tabsVisibility.tab3; },
-            'tsp-applyLazyConditionCheck': function () { return model.tabsVisibility.tab3 && !model.tabsVisibility.isFirst('tab3') },
-        })._if('.conditional', {
-            'call': tsp.applyConditionalRule,
-            'tsp-actionIfFalse': function (el) { el.parentNode.removeChild(el); },
-        })._if('.content', {
-            'call': tsp.lazyLoad,
-        });
-    </script>
-    
+    <style type="text/tsp" data-mode="both">
+	
+.tab1{
+	tsp-condition: function () { return model.tabsVisibility.tab1; };
+	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab1 && !model.tabsVisibility.isFirst('tab1') };
+}
+.tab2{
+	tsp-condition:function () { return model.tabsVisibility.tab2; };
+/*	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab2 && !model.tabsVisibility.isFirst('tab2') };*/
+	tsp-lazyLoadCondition: test;
+}
+.tab3{
+	tsp-condition: function () { return model.tabsVisibility.tab3; };
+	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab3 && !model.tabsVisibility.isFirst('tab3') };
+}
+.conditional{
+	call:tsp.conditionalRule;
+	tsp-actionIfFalse: function (el) { el.parentNode.removeChild(el); };
+}
+.content{
+	call:tsp.lazyLoad;
+}
+    </style>
+        
     <style>
         .content{
             width:100%;

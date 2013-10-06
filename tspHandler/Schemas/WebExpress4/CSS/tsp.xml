@@ -1,11 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <cssmd:cssmd xmlns:cssmd="http://schemas.microsoft.com/CSS-Intellisense" xmlns:xdt = 'http://schemas.microsoft.com/XML-Document-Transform' version="VS8" description="CSS2.1 validation data" friendly-name="CSS 2.1">
   <cssmd:property-set>
+    
     <cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string"
       description="Javascript Function to call"
       syntax="One of the call values"
-      enum="tsp.action tsp.fillGrid tsp.lazyLoad"
+      enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad"
       group="tsp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="event" _locAttrData="description,syntax" type="enum-list"
+      description="Javascript Function to call"
+      syntax="One of the event values"
+      enum="click dblclick mousedown mousup mouseover mousemove mouseout dragstart drag dragenter dragleave dragover drop dragend keydown keypress keyup load unload abort error resize scroll select change submit reset focus blur focusin focusout propertychange"
+      group="tcp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="handler" _locAttrData="description,syntax" type="string"
+      description="Javascript Function to handle event"
+      syntax="One of the call values"
+      group="tcp"
       xdt:Transform="Insert"
       />
     <cssmd:property-def _locID="tsp-action" _locAttrData="description,syntax" type="string"
@@ -14,8 +28,32 @@
       group="tsp"
       xdt:Transform="Insert"
       />
+    <cssmd:property-def _locID="tsp-actionIfTrue" _locAttrData="description,syntax" type="string"
+      description="Action if Condition is True"
+      syntax="Javascript Function on an Element"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="tsp-actionIfFalse" _locAttrData="description,syntax" type="string"
+      description="Action if Condition is False"
+      syntax="Javascript Function on an Element"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="tsp-condition" _locAttrData="description,syntax" type="string"
+      description="Condition check to apply call"
+      syntax="Javascript Function which returns a boolean"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
     <cssmd:property-def _locID="tsp-getDataTable" _locAttrData="description,syntax" type="string"
       description="Javascript Function which provides json array of data"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
+    <cssmd:property-def _locID="tsp-lazyLoadCondition" _locAttrData="description,syntax" type="string"
+      description="Condition check to apply lazy loading"
+      syntax="Javascript Function which returns a boolean"
       group="tsp"
       xdt:Transform="Insert"
       />

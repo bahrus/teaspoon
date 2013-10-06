@@ -67,7 +67,7 @@ module tsp {
     }
 
     export interface ILazyLoadRule {
-        applyLazyConditionCheck?: (el: HTMLElement) => boolean;
+        lazyLoadCondition?: (el: HTMLElement) => boolean;
     }
 
     export interface IObjectMerge {
@@ -251,8 +251,8 @@ module tsp {
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
         if (isClientSideMode()) return;
         var lazyRule = <ILazyLoadRule> evalRulesSubset(props, prefix);
-        if (lazyRule.applyLazyConditionCheck) {
-            if (!lazyRule.applyLazyConditionCheck(el)) return;
+        if (lazyRule.lazyLoadCondition) {
+            if (!lazyRule.lazyLoadCondition(el)) return;
         }
         var ndHidden = doc.createElement('script');
         var sOriginalID = el.id;
@@ -269,11 +269,11 @@ module tsp {
 
     
 
-    export function createConditionalRule(conditionalRule: IConditionalRule) {
+    export function createConditionalRule(conditionalRuleOptions: IConditionalRule) {
         var conditionObj = tsp.beginMerge<tsp.IConditionalRule>({
-            call: applyConditionalRule,
+            call: conditionalRule,
             prefix: prefix,
-            options: conditionalRule,
+            options: conditionalRuleOptions,
         });
         return conditionObj;
     }
@@ -328,7 +328,7 @@ module tsp {
         
     }
 
-    export function applyConditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
+    export function conditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
         var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
         if (!conditionalRule.condition) return;
         

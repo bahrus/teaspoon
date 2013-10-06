@@ -552,6 +552,7 @@
               <xsd:restriction base="xsd:string">
                 <xsd:enumeration value="text/css"/>
                 <xsd:enumeration value="text/tsp"/>
+                <xsd:enumeration value="text/tcp"/>
               </xsd:restriction>
             </xsd:simpleType>
             <xsd:simpleType>
@@ -1267,6 +1268,7 @@
         </xsd:simpleType>
       </xsd:attribute>
       <xsd:attribute name="target" type="browsingContext" />
+      <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -1388,6 +1390,14 @@
       <xsd:attribute name="width" vs:inputtype="image" />
       <xsd:attribute name="files" vs:inputtype="file" />
       <xsd:attribute name="value" />
+      <xsd:attribute name="name"/>
+      <xsd:attribute name="data-design-type" vs:help="Allows hidden input to provide design time hint for allowed values">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="datalist" vs:help="Provide List of Options"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
     </xsd:complexType>
   </xsd:element>
 
@@ -1497,6 +1507,7 @@
         <xsd:group ref="phrasingContent" />
       </xsd:choice>
       <xsd:attributeGroup ref="commonAttributeGroup" />
+      <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -1915,6 +1926,7 @@
       <xsd:enumeration value="server-side-only"/>
       <xsd:enumeration value="client-side-only"/>
       <xsd:enumeration value="both"/>
+      <xsd:enumeration value="design-time-only"/>
     </xsd:restriction>
   </xsd:simpleType>
 
