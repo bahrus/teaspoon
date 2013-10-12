@@ -6,14 +6,15 @@
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     <script src="form1.js"></script>
-    <style type="text/tcp">
-	
-	
+    <style type="text/css" data-js-compiler="tsp.event-handlers">
    		input{
 			event: change;
 			handler: form1.changeHandler;        
 		}
     </style>
+    <script data-mode="both">
+        tsp.applyRules();
+    </script>
 </head>
 <body>
     <form name="myForm" data-mode="both" id="myForm">
@@ -40,9 +41,7 @@
     <form name="tcp_urlBuilder_form">
         <textarea id="tcp_urlBuilder"></textarea>
     </form>
-    <script data-mode="both" defer>
-        tsp.applyRules(document);
-    </script>
+    
     <script data-mode="server-side-only">
         var $ = tsp.$;
         
@@ -53,6 +52,7 @@
         var s = "12345   ";
         $('#msg').html($.trim(s));
     </script>
+    
 </body>
     
 </html>

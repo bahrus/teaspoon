@@ -6,12 +6,7 @@
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     <link rel="stylesheet" type="text/css" href="Content/themes/base/jquery-ui.css">
-    <script>
-        $(function () {
-            $("#tabs").tabs();
-        });
-    </script>
-    <script data-mode="both">
+	<script data-mode="both">
         var model = {};
         model.tabsVisibility = {
             'tab1': false,
@@ -26,44 +21,51 @@
                 }
             }
         };
-        function test(a, b){
-        	debugger;
+        function enableLazyLoad(tabID){
+        	return model.tabsVisibility[tabID] && !model.tabsVisibility.isFirst(tabID);
         }
     </script>
-    <style type="text/tsp" data-mode="both">
-	
+<style type="text/css" data-mode="both" data-js-compiler="tsp.script-rules">
 .tab1{
-	tsp-condition: function () { return model.tabsVisibility.tab1; };
-	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab1 && !model.tabsVisibility.isFirst('tab1') };
+	tsp-condition: 			() => model.tabsVisibility.tab1;
+	tsp-lazyLoadCondition: 	() => enableLazyLoad('tab1');
 }
 .tab2{
-	tsp-condition:function () { return model.tabsVisibility.tab2; };
-/*	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab2 && !model.tabsVisibility.isFirst('tab2') };*/
-	tsp-lazyLoadCondition: test;
+	tsp-condition: 			() => model.tabsVisibility.tab2;
+	tsp-lazyLoadCondition: 	() => enableLazyLoad('tab2');
 }
 .tab3{
-	tsp-condition: function () { return model.tabsVisibility.tab3; };
-	tsp-lazyLoadCondition: function () { return model.tabsVisibility.tab3 && !model.tabsVisibility.isFirst('tab3') };
+	tsp-condition: 			() => model.tabsVisibility.tab3;
+	tsp-lazyLoadCondition: 	() => enableLazyLoad('tab3');
 }
 .conditional{
-	call:tsp.conditionalRule;
-	tsp-actionIfFalse: function (el) { el.parentNode.removeChild(el); };
+	call:					tsp.conditionalRule;
+	tsp-actionIfFalse: 		(el) => el.parentNode.removeChild(el);
 }
 .content{
-	call:tsp.lazyLoad;
+	call:					tsp.lazyLoad;
 }
     </style>
-        
-    <style>
-        .content{
-            width:100%;
-            height:100%
-        }
-        iframe{
-            width:100%;
-            height:100%;
-        }
+    
+    <style type="text/css" data-mode="client-side-only" data-js-compiler="tsp.script-rules">	
+#tabs{
+	call: (el) => $(el).tabs();
+}	
     </style>
+        
+    <style type="text/css">
+.content{
+    width:100%;
+    height:100%
+}
+iframe{
+    width:100%;
+    height:100%;
+}
+    </style>
+    <script data-mode="both">
+        tsp.applyRules();
+    </script>
 </head>
 <body>
     <div id="tabs" style="width:100%; height:100%">
@@ -82,8 +84,6 @@
         <iframe src="tsp.tsp.html"></iframe>
       </div>
     </div>
-    <script data-mode="both" defer>
-        tsp.applyRules(document);
-    </script>
+    
 </body>
 </html>

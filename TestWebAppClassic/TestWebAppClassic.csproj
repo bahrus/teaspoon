@@ -73,7 +73,6 @@
     <Content Include="Emmet\emmet.min.js" />
     <Content Include="Emmet\index.html" />
     <Content Include="form1.tsp.html" />
-    <Content Include="Lorem.html" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scratch2.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />

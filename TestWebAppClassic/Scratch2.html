@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title></title>
     <script>
@@ -13,11 +13,26 @@
             hid.value = "new value";
             hid.setAttribute('value', 'new value');
         }
+
+        function reloadScript() {
+            var myS = document.getElementById('myScript');
+            myS.src = 'tsp_script/tsp.js?ts=2';
+        }
     </script>
 </head>
 <body>
-    <input type="hidden" onchange="changed()" name="hidden" id ="hidden" />
-
-    <input type="button" value="click" onclick="changeHiddenelement()">
+    <script src="Scripts/jquery-2.0.3.js"></script>
+    <script src="tsp_script/tsp.js" async id="myScript"></script>
+    <script>
+        var scripts = document.querySelectorAll('script[async]');
+        for (var i = 0, n = scripts.length; i < n; i++) {
+            var script = scripts[i];
+            script.addEventListener('load', function (a, b, c) {
+                alert('iah');
+            });
+        }
+        
+    </script>
+    <input type="button" value="reload" onclick="reloadScript()" />
 </body>
 </html>

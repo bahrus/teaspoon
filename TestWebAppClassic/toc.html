@@ -11,75 +11,86 @@
     <li>Maximize use of universally supported standards - Html, Ecmascript, CSS
         <ul>
             <li class="selected">Prototyping can be done with any web server (Apache, File server etc.)</li>
+            <ul>
+                <li>Static Json gets replaced by dynamic json (model)</li>
+            </ul>
             <li class="selected">Maximize utility of HTML / css editors - markup directives must not hamper visual designer</li>
-            <li class="selected">Build on the good parts of html / css</li>
-            <li class="selected">As much as possible rely on directives rather than code.</li>
-            <li>"Declarative" getting blurry</li>
-            <li>Code is Directive based if:
+            <ul>
+                <li>Schema xml transformers for major html editors</li>
+                <li class="selected">As much as possible rely on directives rather than code.</li>
                 <ul>
-                    <li>It is declarative</li>
-                    <li>Directiveness of code: (1 -  # of parenthesis / lines of text) > 0.95 </li>
-                </ul>
-            </li>
-            <li>Code is Redundant if it can be greatly reduced in size by zipping</li>
-            <li>List of JS Directives modeled after css
-                <ul>
-                    <li class="selected">Rules applied based on css selector (like JQuery), but...</li>
-                    <li>Rules adhere to same inheritance rules as css (and more)</li>
-                    <li>Apply rules according to css specificity</li>
-                    <li>Every rule will allow for a flat list of properties (with namespaced prefix)</li>
-                    <li class="selected">Rule properties can be primitive (number, string, date, arrays of said) - they get overridden by higher specificity css with same property</li>
-                    <li class="selected">Rule properties can be functions - they also get completely overridden</li>
-                    <li class="selected">Rule properties can be ordinary objects - also get overridden</li>
-                    <li>Rule properties can be special objects:
+                    <li>Code is Directive if:
                         <ul>
-                            <li>function composer object
-                                <ul> 
-                                    <li>objectType = 'tsp.functionComposer'</li>
-                                    <li>points to funtion which describes type</li>
-                                    <li>with optional properties:
-                                        <ul>
-                                            <li>
-                                                postEval: function(el, inheritedVal);
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>object merger object
-                                <ul>
-                                    <li>objectType = 'tsp.objectMerger'</li>
-                                    <li>with optional properties:
-                                        <ul>
-                                            <li>mergeProps</li>
-                                        </ul>
-                                    </li>
-                                
-                                </ul>
-                            </li>
+                            <li>It is declarative</li>
+                            <li>Directiveness of code: (1 -  # of parenthesis / lines of text) > 0.95 </li>
                         </ul>
                     </li>
-                    <li>Can add global or local events, e.g. click, which also filters for css like selectors.  This means newly created elements will subscribe to events</li>
-                    <li>Rules can be reapplied when model property changes, and also used for validation</li>
+                    <li>Structure of JS Directives modeled after css
+                        <ul>
+                        <li class="selected">Syntax looks just like css, so nice and compact</li>
+                        <li class="selected">Compiles to Javascript</li>
+                        <li class="selected">Rules applied based on css selector (like JQuery), but...</li>
+                        <ul>
+                            <li>Rules adhere to same inheritance rules as css (and more)</li>
+                            <li>Apply rules according to css specificity</li>
+                        </ul>
+                        <li>Every rule will allow for a flat list of properties (with namespaced prefix)</li>
+                        <li class="selected">Rule properties can be primitive (number, string, date, arrays of said) - they get overridden by higher specificity css with same property</li>
+                        <li class="selected">Rule properties can be functions - they also get completely overridden</li>
+                        <li class="selected">Rule properties can be ordinary objects - also get overridden</li>
+                        <li>Rule properties can be special objects:
+                            <ul>
+                                <li>function composer object
+                                    <ul> 
+                                        <li>objectType = 'tsp.functionComposer'</li>
+                                        <li>points to funtion which describes type</li>
+                                        <li>with optional properties:
+                                            <ul>
+                                                <li>
+                                                    postEval: function(el, inheritedVal);
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>object merger object
+                                    <ul>
+                                        <li>objectType = 'tsp.objectMerger'</li>
+                                        <li>with optional properties:
+                                            <ul>
+                                                <li>mergeProps</li>
+                                            </ul>
+                                        </li>
+                                
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Can add global or local events, e.g. click, which also filters for css like selectors.  This means newly created elements will subscribe to events</li>
+                        <li>Rules can be reapplied when model property changes, and also used for validation</li>
+                    </ul>
+                    </li>
                 </ul>
-            </li>
+            </ul>
+            
+            
         </ul>
     </li>
     <li id="universalLanguage">Server-Side Scripting
         <ul>
-        <li class="selected">Model can be generated in server based language, but automatically generate interface stubs for Typescript / Javascript</li>
-        <li>tag can contain sample markup, which will be replaced</li>
-        <li class="selected" id="scripting">Script tags can execute in client, in server, or both</li>
+            <li class="selected">Model can be generated in server based language, but automatically generate interface stubs for Typescript / Javascript</li>
+            <li>tag can contain sample markup, which will be replaced</li>
+            <li class="selected" id="scripting">Script tags can execute in client, in server, or both</li>
             <li class="selected">Server side script will have full access to the DOM</li>
             <li>Server side script will have access to a jQuery facade (with limited functionality)</li>
-        <li>Document can be stored in session, events on client applied to server.
+            <li>Document can be stored in session, events on client applied to server.
                 <ul>
                     <li>native method to monitor for changes, specify property</li>
                     <li>native button which submits changes, then clears on successful response - response can also send changes back.</li>
                     <li>ajax call made via script tag with src set to async</li>
                 </ul>
             </li>
-    </ul>
+        </ul>
     </li>
         <li id="iframes">Serverside Components<ul>
             <li id="iframes">"Embedded Iframes" is the route to reusable components (similar to "user controls" in asp.net).

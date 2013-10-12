@@ -746,7 +746,7 @@
 			group="Layout"
 			/>
 		<cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string" description="Javascript Function to call" syntax="One of the call values" 
-			enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad" group="tsp"/>
+			enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad tsp.setAttr" group="tsp"/>
 		<cssmd:property-def _locID="event" _locAttrData="description,syntax" type="enum-list" description="Javascript Function to call" 
 			syntax="One of the event values" 
 			enum="click dblclick mousedown mousup mouseover mousemove mouseout dragstart drag dragenter dragleave dragover drop dragend keydown keypress keyup load unload abort error resize scroll select change submit reset focus blur focusin focusout propertychange" 
@@ -765,12 +765,16 @@
 			description="Javascript Function which provides json array of data" group="tsp"/>
 		<cssmd:property-def _locID="tsp-lazyLoadCondition" _locAttrData="description,syntax" type="string" description="Condition check to apply lazy loading" 
 			syntax="Javascript Function which returns a boolean" group="tsp"/>
+		<cssmd:property-def _locID="tsp-name" _locAttrData="description,syntax" type="string" description="Name of attribute to set" 
+			syntax="String name of attribute" group="tsp"/>
 		<cssmd:property-def _locID="tsp-rowSelection" _locAttrData="description,syntax" type="enum-list" description="Row Selection Options" 
 			syntax="One of the row selection values" enum="tsp.SelectionOptions.none tsp.SelectionOptions.single tsp.SelectionOptions.multiple" group="tsp"/>
 		<cssmd:property-def _locID="tsp-titleFill" _locAttrData="description,syntax" type="enum-list" description="Auto populate tooltip text" 
 			syntax="One of the titleFill selection values" enum="tsp.TitleFillOptions.none tsp.TitleFillOptions.text" group="tsp"/>
 		<cssmd:property-def _locID="tsp-treeColumn" _locAttrData="description,syntax" type="enum-list" description="Render first column" 
 			syntax="One of the treeColumn selection values" enum="tsp.TreeType.none tsp.TreeType.simple" group="tsp"/>
+		<cssmd:property-def _locID="tsp-value" _locAttrData="description,syntax" type="string" description="Value for attribute" syntax="String value of attribute" 
+			group="tsp"/>
     
     
 

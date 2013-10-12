@@ -5,7 +5,7 @@
     <cssmd:property-def _locID="call" _locAttrData="description,syntax" type="string"
       description="Javascript Function to call"
       syntax="One of the call values"
-      enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad"
+      enum="tsp.action tsp.conditionalRule tsp.fillGrid tsp.lazyLoad tsp.setAttr"
       group="tsp"
       xdt:Transform="Insert"
       />
@@ -57,6 +57,12 @@
       group="tsp"
       xdt:Transform="Insert"
       />
+    <cssmd:property-def _locID="tsp-name" _locAttrData="description,syntax" type="string"
+      description="Name of attribute to set"
+      syntax="String name of attribute"
+      group="tsp"
+      xdt:Transform="Insert"
+      />
     <cssmd:property-def _locID="tsp-rowSelection" _locAttrData="description,syntax" type="enum-list"
       description="Row Selection Options"
       syntax="One of the row selection values"
@@ -77,6 +83,12 @@
         enum="tsp.TreeType.none tsp.TreeType.simple"
         group="tsp"
         xdt:Transform="Insert"
+      />
+  <cssmd:property-def _locID="tsp-value" _locAttrData="description,syntax" type="string"
+      description="Value for attribute"
+      syntax="String value of attribute"
+      group="tsp"
+      xdt:Transform="Insert"
       />
   </cssmd:property-set>
 </cssmd:cssmd>

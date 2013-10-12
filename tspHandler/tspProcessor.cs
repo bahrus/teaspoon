@@ -162,8 +162,19 @@ namespace tspHandler
             
         }
 
+        private const string Lambda = "=>";
+
+        private static string convertLambdaExpressionToFunction(string expression)
+        {
+            if (!expression.Contains(Lambda)) return expression;
+            string LHS = expression.SubstringBefore(Lambda).Trim();
+            if (!LHS.StartsWith("(") || !LHS.EndsWith(")")) return expression;
+            string RHS = expression.SubstringAfter(Lambda).Trim();
+            return "function" + LHS + "{ return " + RHS + ";}";
+        }
+
         public static HtmlDocumentFacade ProcessTSPStyles(this HtmlDocumentFacade doc){
-            var tspStyles = doc.querySelectorAll("style[type='text/tsp']").ToList();
+            var tspStyles = doc.querySelectorAll("style[data-js-compiler='tsp.script-rules']").ToList();
             tspStyles.ForEach(node =>
             {
                 string content = node.innerHTML.Trim();
@@ -185,7 +196,7 @@ namespace tspHandler
                     sb.AppendLine("._if('" + rule.selectorText + "', {");
                     foreach (var kvp in rule.style)
                     {
-                        sb.AppendLine("\t'" + kvp.Key + "': " + kvp.Value + ",");
+                        sb.AppendLine("\t'" + kvp.Key + "': " + convertLambdaExpressionToFunction( kvp.Value ) + ",");
                     }
                     
                 }
@@ -207,7 +218,7 @@ namespace tspHandler
 
         public static HtmlDocumentFacade ProcessTCPStyles(this HtmlDocumentFacade doc)
         {
-            var tcpStyles = doc.querySelectorAll("style[type='text/tcp']").ToList();
+            var tcpStyles = doc.querySelectorAll("style[data-js-compiler='tsp.event-handlers']").ToList();
             tcpStyles.ForEach(node =>
             {
                 string content = node.innerHTML.Trim();
@@ -216,7 +227,7 @@ namespace tspHandler
                 sb.AppendLine(string.Empty);
                 foreach (CssRule rule in styleSheet.rules)
                 {
-                    sb.AppendLine("tcp.when('" + rule.style["event"] + "', {");
+                    sb.AppendLine("tcp._when('" + rule.style["event"] + "', {");
                     sb.AppendLine("\tselectorNodeTest: '" + rule.selectorText + "',");
                     sb.AppendLine("\thandler:" + rule.style["handler"]);
                     sb.AppendLine("});");

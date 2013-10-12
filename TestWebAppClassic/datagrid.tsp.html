@@ -32,13 +32,24 @@
             width: 150px;
         }
     </style>
-
+	<style data-mode="both" type="text/css" data-js-compiler="tsp.script-rules">	
+		#myTable{
+			call:               tsp.fillGrid;
+	        tsp-getDataTable:   () => model.dataTable;
+	        tsp-rowSelection:   tsp.SelectionOptions.single;
+	        tsp-titleFill:      tsp.TitleFillOptions.text;
+	   }
+	</style>
+	
+	<script data-mode="both">
+    	tsp.applyRules();
+	</script>
 
 
 </head>
 <body>
 
-    <script type="text/emmet" data-mode="server-side-only" data-template-processor="tsp.MakeRCsUnique">
+    <script type="text/emmet" data-mode="server-side-only" data-processor="tsp.MakeRCsUnique">
         table#myTable>(
             (thead>tr>td{column $}*6)
           + (tbody>
@@ -49,19 +60,7 @@
         )
     </script>
     
-    <style data-mode="both" type="text/tsp">
-	
-		#myTable{
-			call:               tsp.fillGrid;
-	        tsp-getDataTable:   function (el) { return model.dataTable; };
-	        tsp-rowSelection:   tsp.SelectionOptions.single;
-	        tsp-titleFill:      tsp.TitleFillOptions.text;
-	   }
-	</style>
-	
-	<script data-mode="both" defer>
-    	tsp.applyRules(document);
-	</script>
+    
 </body>
 	
 	

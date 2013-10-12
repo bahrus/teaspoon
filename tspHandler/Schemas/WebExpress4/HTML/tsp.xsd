@@ -45,7 +45,7 @@
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
       <xsd:attribute name="data-model" xdt:Transform="Insert"/>
-      <xsd:attribute name="data-template-processor" vs:readonly="true" xdt:Transform="Insert">
+      <xsd:attribute name="data-processor" vs:readonly="true" xdt:Transform="Insert">
 				<xsd:simpleType>
           <xsd:union>
             <xsd:simpleType>
@@ -82,22 +82,16 @@
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="style" xdt:Locator="Match(name)">
-    <xsd:complexType mixed="true">
-      <xsd:attribute name="type" vs:readonly="true">
+    <xsd:complexType mixed="true">      
+      <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+      <xsd:attribute name="data-js-compiler" vs:readonly="true" xdt:Transform="Insert">
         <xsd:simpleType>
-          <xsd:union>
-            <xsd:simpleType xdt:Locator="Condition(xsd:restriction/xsd:enumeration)">
-              <xsd:restriction base="xsd:string" xdt:Transform="Replace">
-                <xsd:enumeration value="text/css" />
-                <xsd:enumeration value="text/tsp" />
-                <xsd:enumeration value="text/tcp"/>
-              </xsd:restriction>
-            </xsd:simpleType>
-          </xsd:union>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="tsp.script-rules"/>
+              <xsd:enumeration value="tsp.event-handlers"/>
+            </xsd:restriction>
         </xsd:simpleType>
       </xsd:attribute>
-      
-      <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
     </xsd:complexType>
   </xsd:element>
   <xsd:simpleType name="modes" xdt:Transform="Insert">

@@ -6,6 +6,11 @@ module tcp {
 
     var prefix = 'tcp-';
 
+    export var pageisloaded = 0;
+    window.addEventListener('load', function () {
+        pageisloaded = 1;
+    });
+
     export interface ICascadingHandler {
         selectorNodeTest?: string;
         handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
@@ -248,6 +253,13 @@ module tcp {
     } 
 
     export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
+        if (!pageisloaded) {
+            window.addEventListener('load', function () {
+                pageisloaded = 1;
+                _when(eventName, cascadingHandler);
+            });
+            return;
+        }
         var el: HTMLElement;
         if (cascadingHandler.containerID) {
             el = document.getElementById(cascadingHandler.containerID);
@@ -328,7 +340,7 @@ module tcp {
         el.parentNode.removeChild(el);
     }
 
-    export function performReservedRules(doc: HTMLDocument) {
+    export function performReservedRules(doc: NodeSelector) {
         var nds = doc.querySelectorAll('.' + tsp.reserved_lazyLoad);
         for (var j = 0, n = nds.length; j < n; j++) {
             var nd = <HTMLElement> nds[j];

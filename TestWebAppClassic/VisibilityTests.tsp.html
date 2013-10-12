@@ -14,14 +14,21 @@
 
     </script>
     <script data-model="[tsp.Http].GetContext" data-mode="both" id="context"></script>
-    <script data-mode="server-side-only">
+    <style type="text/css" data-js-compiler="tsp.script-rules">
+.content1{
+	call				:	tsp.conditionalRule;
+	tsp-condition		:   ()   => model.product.Name !== 'Harry Potter';
+	tsp-actionIfTrue	:	(el) => el.parentNode.removeChild(el);
+}
+    </style>
+    <!--<script data-mode="server-side-only">
         tsp._if('.content1', {
             'tsp-condition': function () {return model.product.Name !== 'Harry Potter';},
                 'tsp-actionIfTrue': function(el){el.parentNode.removeChild(el);},
                 'call':tsp.applyConditionalRule,
         });
     </script>
-    <script data-mode="server-side-only" src="file1.js"></script>
+-->    <script data-mode="server-side-only" src="file1.js"></script>
     <title></title>
 </head>
 <body>

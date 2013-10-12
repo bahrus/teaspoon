@@ -11,6 +11,7 @@ declare var jQueryServerSideFacade: JQueryStaticFacade;
 
 module tsp {
 
+
     export var prefix = 'tsp-';
 
     export var $: JQueryStaticFacade;
@@ -132,10 +133,46 @@ module tsp {
         return spl.join('data-rc=\"');
     }
 
-    export function applyRules(doc: HTMLDocument) {
+    export interface ruleOptions {
+        rootNode?: NodeSelector;
+        trigger?: ruleEvalTrigger;
+    }
+
+    export enum ruleEvalTrigger {
+        onPageLoad = 1,
+        onAsyncScriptLoad = 2,
+        onFormElementChange = 4
+    }
+
+    function setRuleOptionDefaults(ruleOpts: ruleOptions) {
+        if (!ruleOpts) ruleOpts = {};
+        if (!ruleOpts.rootNode) ruleOpts.rootNode = document;
+        if (!ruleOpts.trigger) ruleOpts.trigger = ruleEvalTrigger.onPageLoad;
+        return ruleOpts;
+    }
+
+    export function applyRules(options?: ruleOptions) {
+        options = setRuleOptionDefaults(options);
+        if (options.trigger | ruleEvalTrigger.onPageLoad) {
+            if (isClientSideMode()) {
+                if (tcp.pageisloaded) {
+                    doRules(options);
+                } else {
+                    window.addEventListener('load', function () {
+                        doRules(options);
+                    });
+                }
+            } else {
+                doRules(options);
+            }
+        }
+    }
+
+    function doRules(options: ruleOptions) {
+        var doc = options.rootNode;
         var emmetSelector = 'script[type="text/emmet"][data-mode="';
         if (isClientSideMode()) {
-            emmetSelector +=   'client-side-only';
+            emmetSelector += 'client-side-only';
         } else {
             emmetSelector += 'server-side-only'
         }
@@ -145,7 +182,7 @@ module tsp {
             var nd = <HTMLElement> emmetNodes[i];
             var inner = $.trim(nd.innerHTML);
             var content = emmet.expandAbbreviation(inner, 'html', 'html', null).split('${0}').join('');
-            var templ = nd.getAttribute('data-template-processor');
+            var templ = nd.getAttribute('data-processor');
             if (templ) {
                 var fn = eval(templ);
                 content = fn(content);
@@ -153,7 +190,7 @@ module tsp {
             nd.insertAdjacentHTML('beforebegin', content);
             var prevSibling = <HTMLElement> nd.previousSibling;
             nd.parentNode.removeChild(nd);
-            
+
         }
         var affectedEls: { [key: string]: HTMLElement; } = {};
         //#region apply cascading rules
@@ -164,7 +201,7 @@ module tsp {
             var nds = doc.querySelectorAll(rule.selectorText);
             for (var j = 0, n = nds.length; j < n; j++) {
                 //#region iterate over all the matching elements
-                
+
                 var nd = <HTMLElement> nds[j];
                 if (!nd.id) {
                     nd.id = 'tsp_' + uidIdx++;
@@ -173,8 +210,8 @@ module tsp {
                 var tsp_props: { [key: string]: any; } = data(nd).tsp;
                 if (!tsp_props) {
                     tsp_props = {};
-                    data(nd).tsp = tsp_props; 
-                    
+                    data(nd).tsp = tsp_props;
+
                 }
                 var exe_props: { [key: string]: any; } = data(nd).exe;// data(nd).exe;
                 if (!exe_props) {
@@ -221,12 +258,14 @@ module tsp {
         //#region perform reserved rules
         if (isClientSideMode()) {
             tcp.performReservedRules(doc);
-            
+
         } else {
         }
         
         //#endregion
     }
+
+    
 
     function isClientSideMode() {
         return typeof (mode) == 'undefined' || mode !== 'server'
@@ -678,7 +717,7 @@ module tsp {
 
     //#endregion
 
-    export function applyAttributeRule(el: HTMLElement, props: { [key: string]: any; }) {
+    export function setAttr(el: HTMLElement, props: { [key: string]: any; }) {
         var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);
         var sVal = attrRule.value;
         if (typeof (sVal) == 'function') {

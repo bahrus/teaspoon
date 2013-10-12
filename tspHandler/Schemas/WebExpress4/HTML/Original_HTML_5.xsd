@@ -551,7 +551,6 @@
             <xsd:simpleType>
               <xsd:restriction base="xsd:string">
                 <xsd:enumeration value="text/css" />
-                <xsd:enumeration value="text/tsp" />
               </xsd:restriction>
             </xsd:simpleType>
             <xsd:simpleType>

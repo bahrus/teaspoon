@@ -550,9 +550,7 @@
           <xsd:union>
             <xsd:simpleType>
               <xsd:restriction base="xsd:string">
-                <xsd:enumeration value="text/css"/>
-                <xsd:enumeration value="text/tsp"/>
-                <xsd:enumeration value="text/tcp"/>
+                <xsd:enumeration value="text/css" />
               </xsd:restriction>
             </xsd:simpleType>
             <xsd:simpleType>
@@ -570,6 +568,14 @@
         </xsd:simpleType>
       </xsd:attribute>
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
+      <xsd:attribute name="data-js-compiler" vs:readonly="true">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="tsp.script-rules"/>
+            <xsd:enumeration value="tsp.event-handlers"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
     </xsd:complexType>
   </xsd:element>
 
@@ -616,7 +622,7 @@
       </xsd:attribute>
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
       <xsd:attribute name="data-model"/>
-      <xsd:attribute name="data-template-processor" vs:readonly="true">
+      <xsd:attribute name="data-processor" vs:readonly="true">
         <xsd:simpleType>
           <xsd:union>
             <xsd:simpleType>
