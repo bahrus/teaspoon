@@ -20,6 +20,18 @@
             max-width: 70px;
         }
     </style>
+    <style data-mode="both" type="text/css" data-js-compiler="tsp.script-rules">
+    	#myTable{
+			call:				tsp.fillGrid;
+			tsp-getDataTable: 	(el) => model.treeGridData;
+			tsp-rowSelection:	tsp.SelectionOptions.single;
+			tsp-titleFill:		tsp.TitleFillOptions.text;
+			tsp-treeColumn:		tsp.TreeType.simple;
+		}
+    </style>
+    <script data-mode="both">
+    	tsp.applyRules();
+    </script>
 </head>
 <body>
    
@@ -34,18 +46,7 @@
         )
     </script>
     
-    <style data-mode="both" type="text/css" data-js-compiler="tsp.script-rules">
-    	#myTable{
-			call:				tsp.fillGrid;
-			tsp-getDataTable: 	(el) => model.treeGridData;
-			tsp-rowSelection:	tsp.SelectionOptions.single;
-			tsp-titleFill:		tsp.TitleFillOptions.text;
-			tsp-treeColumn:		tsp.TreeType.simple;
-		}
-    </style>
-    <script data-mode="both" defer>
-    	tsp.applyRules(document);
-    </script>
+    
 </body>
 </html>
 

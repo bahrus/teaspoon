@@ -12,7 +12,7 @@
     <cssmd:property-def _locID="event" _locAttrData="description,syntax" type="enum-list"
       description="Javascript Function to call"
       syntax="One of the event values"
-      enum="click dblclick mousedown mousup mouseover mousemove mouseout dragstart drag dragenter dragleave dragover drop dragend keydown keypress keyup load unload abort error resize scroll select change submit reset focus blur focusin focusout propertychange"
+      enum="click dblclick mousedown mouseup mouseover mousemove mouseout dragstart drag dragenter dragleave dragover drop dragend keydown keypress keyup load unload abort error resize scroll select change submit reset focus blur focusin focusout propertychange"
       group="tcp"
       xdt:Transform="Insert"
       />
@@ -78,7 +78,7 @@
       xdt:Transform="Insert"
       />
       <cssmd:property-def _locID="tsp-treeColumn" _locAttrData="description,syntax" type="enum-list"
-        description="Render first column"
+        description="Render first column as a tree"
         syntax="One of the treeColumn selection values"
         enum="tsp.TreeType.none tsp.TreeType.simple"
         group="tsp"

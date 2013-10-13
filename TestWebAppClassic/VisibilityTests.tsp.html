@@ -3,7 +3,7 @@
 <head>
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
-    
+    <script src="tsp_script/tcp.js"></script>
     
     <script data-model="[TestWebAppClassic.ProductManager, TestWebAppClassic].RetrieveProduct" data-mode="both" id="product">
         var model = {};
@@ -14,7 +14,7 @@
 
     </script>
     <script data-model="[tsp.Http].GetContext" data-mode="both" id="context"></script>
-    <style type="text/css" data-js-compiler="tsp.script-rules">
+    <style type="text/css" data-js-compiler="tsp.script-rules" data-mode="server-side-only">
 .content1{
 	call				:	tsp.conditionalRule;
 	tsp-condition		:   ()   => model.product.Name !== 'Harry Potter';
@@ -29,6 +29,9 @@
         });
     </script>
 -->    <script data-mode="server-side-only" src="file1.js"></script>
+	<script data-mode="both">
+        tsp.applyRules();
+    </script>
     <title></title>
 </head>
 <body>
@@ -38,8 +41,6 @@
 
         <iframe src="LazyLoadTest1.tsp.html" style="height: 120px; width: 501px"></iframe>
 
-    <script data-mode="both">
-        tsp.applyRules(document);
-    </script>
+    
 </body>
 </html>

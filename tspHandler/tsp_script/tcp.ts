@@ -91,7 +91,6 @@ module tcp {
     }
 
     function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
-        //debugger;
         var evtEl = evt.srcElement;
         var $evtEl = $(evtEl);
         $evtEl.toggleClass('plus').toggleClass('minus');

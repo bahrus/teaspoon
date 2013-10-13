@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CssSchema description="Microsoft Visual Studio 11 CSS validation data" xmlns:xdt = 'http://schemas.microsoft.com/XML-Document-Transform'>
+  <CssModuleRef xdt:Transform="Insert" file="tsp.xml" />
+</CssSchema>

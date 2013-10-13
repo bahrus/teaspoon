@@ -14,13 +14,14 @@
 	tsp-value:	'toc.html#' + model.context.Request.Params.Section	
 }
 	</style>
+	<script data-mode="both">
+	    tsp.applyRules();
+	</script>
 </head>
 
 <body>
     <input type="hidden" name="Section">
     <iframe data-mode="server-side-only" src="toc.html#iframes" id="Section"></iframe> 
-	<script data-mode="both" defer>
-	    tsp.applyRules(document);
-	</script>      
+	      
 </body>
 </html>

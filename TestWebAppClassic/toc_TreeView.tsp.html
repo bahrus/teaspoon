@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title></title>
     <script src="Scripts/jquery-2.0.3.js"></script>
@@ -24,13 +24,14 @@
 	tsp-action: createDynaTree;
 }
     </style>
+    <script>
+        tsp.applyRules(document);
+    </script>
 </head>
 <body>
     <div id="treeContainer">
         <iframe data-mode="server-side-only" src="toc.html#overview" class="tree"></iframe>
     </div>
-    <script defer>
-        tsp.applyRules(document);
-    </script>
+    
 </body>
 </html>

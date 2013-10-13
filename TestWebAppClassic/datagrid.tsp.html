@@ -9,15 +9,12 @@
             width: 100%;
         }
     </style>
-
     <script src="Scripts/jquery-2.0.3.js"></script>
     <script src="Scripts/jquery-ui-1.10.3.js"></script>
     <script src="Emmet/emmet.js" data-mode="both"></script>
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
-
     <script data-mode="both" data-model="[TestWebAppClassic.DataTableTestModel, TestWebAppClassic].GetTbl" id="dataTable"></script>
-    
 
      <script src="datagrid.js"></script>
      <style type="text/css">
@@ -59,32 +56,7 @@
             )
         )
     </script>
-    
-    
 </body>
-	
-	
-
-
 </html>
 
 
-
-
-<!--<script defer data-mode="both">
-    tsp._if('#myTable', {
-        call: tsp.fillGrid,
-        'tsp-getDataTable': function (el) { return model.dataTable; },
-        'tsp-supportRowSelection': true,
-        'tsp-supportToolTips': true,
-    })._if('input.textFilter',
-        tsp.createFilterRule({
-            matchWholeString: true,
-        }).mergedObject
-    );
-    tsp.applyRules(document);
-    
-</script>-->
-<!--<script defer>
-    populate(model.dataTable, document.getElementById('myTable_rowOffset'), document.getElementById('myTable'));
-</script>-->

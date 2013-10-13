@@ -105,6 +105,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="tsp_script\tcp.ts" />
     <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
+    <Content Include="Schemas\VS2012\CSS\css-main.xml" />
+    <Content Include="Schemas\VS2012\CSS\original_css-main.xml" />
+    <Content Include="Schemas\VS2012\CSS\tsp.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Schemas\VS2012\CSS\tsp_diff.xml" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE60.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE70.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE80.XML" />
@@ -127,6 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Schemas\VS2012\HTML\HTML_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2012\HTML\original_html_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2012\HTML\tsp.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Schemas\WebExpress4\CSS\CSS.XSD">
       <SubType>Designer</SubType>
     </None>
@@ -154,6 +169,8 @@
   <Target Name="AfterBuild">
     <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\WebExpress4\HTML\tsp.xsd" Destination="$(ProjectDir)Schemas\WebExpress4\HTML\HTML_5.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\CSS\Original_CSS21.XML" Transform="$(ProjectDir)Schemas\WebExpress4\CSS\tsp.xml" Destination="$(ProjectDir)Schemas\WebExpress4\CSS\CSS21.XML" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\HTML_5.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2012\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2012\CSS\css-main.xml" />
   </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
