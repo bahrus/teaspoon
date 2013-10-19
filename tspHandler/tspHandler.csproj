@@ -153,6 +153,12 @@
     <None Include="Schemas\VS2012\HTML\tsp_vs_html_5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Schemas\VS2013\HTML\original_commonHTML5Types.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2013\HTML\original_html_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Schemas\WebExpress4\CSS\CSS.XSD">
       <SubType>Designer</SubType>
     </None>
@@ -171,6 +177,7 @@
       <DependentUpon>tsp.js</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
