@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace tspHandler
 {
-    public class HtmlNodeFacade
+    public class HtmlNodeFacade : INodeSelector
     {
         private HtmlNode _node;
 

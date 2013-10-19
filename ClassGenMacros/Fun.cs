@@ -20,6 +20,11 @@ namespace ClassGenMacros
         public static Func<TSrc1, TSrc2,  TResult> InferType<TSrc1, TSrc2, TResult>(Func<TSrc1, TSrc2, TResult> fun)
         {
             return fun;
-        } 
+        }
+
+        public static TResult Val<TResult>(Func<TResult> eval)
+        {
+            return eval();
+        }
     }
 }

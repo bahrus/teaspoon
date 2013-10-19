@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema
+	xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+	xmlns:vs='http://schemas.microsoft.com/Visual-Studio-Intellisense'
+  xmlns:xdt = 'http://schemas.microsoft.com/XML-Document-Transform'
+>
+
+  <xsd:attributeGroup name="commonHTML5coreAttributeGroup" xdt:Locator="Match(name)">
+    <xsd:attribute name="data-xmerge" xdt:Transform="Insert">
+      <xsd:simpleType >
+        <xsd:restriction base="xsd:NMTOKEN">
+          <xsd:enumeration value="Append"/>
+          <xsd:enumeration value="Remove"/>
+          <xsd:enumeration value="RemoveChildren"/>
+          <xsd:enumeration value="Replace"/>
+          <xsd:enumeration value="ReplaceAttributes"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="data-xmerge-InsertAfter" xdt:Transform="Insert"/>
+    <xsd:attribute name="data-xmerge-InsertBefore" xdt:Transform="Insert"/>
+    <xsd:attribute name="data-xmatch" xdt:Transform="Insert"/>
+  </xsd:attributeGroup>
+
+  <xsd:simpleType name="metaNameType" xdt:Locator="Match(name)">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="inherits" xdt:Transform="Insert" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+</xsd:schema>

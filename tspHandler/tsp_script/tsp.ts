@@ -153,7 +153,7 @@ module tsp {
 
     export function applyRules(options?: ruleOptions) {
         options = setRuleOptionDefaults(options);
-        if (options.trigger | ruleEvalTrigger.onPageLoad) {
+        if ((options.trigger & ruleEvalTrigger.onPageLoad) == ruleEvalTrigger.onPageLoad) {
             if (isClientSideMode()) {
                 if (tcp.pageisloaded) {
                     doRules(options);
@@ -164,6 +164,21 @@ module tsp {
                 }
             } else {
                 doRules(options);
+            }
+        }
+        if (isClientSideMode()) {
+            if ((options.trigger & ruleEvalTrigger.onAsyncScriptLoad) == ruleEvalTrigger.onAsyncScriptLoad) {
+                var scripts = document.querySelectorAll('script[async]');
+                for (var i = 0, n = scripts.length; i < n; i++) {
+                    var scr = <HTMLScriptElement> scripts[i];
+                    if (scr.readyState === 'complete') {
+                        doRules(options);
+                    } else {
+                        scr.addEventListener('load', function () {
+                            doRules(options);
+                        });
+                    }
+                }
             }
         }
     }
@@ -673,9 +688,19 @@ module tsp {
     }
 
     export function fillGrid(el: HTMLElement, props: { [key: string]: any; }) {
+        if (tsp.data(el).initialized) return;
         var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
         getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
             tsp.data(el).populateRule = populateRule;
+            if (!el.getAttribute('data-populated')) {
+                switch (populateRule.treeColumn) {
+                    case TreeType.simple:
+                        applyTreeView(el, populateRule);
+                        break;
+                }
+                refreshTemplateWithRectCoords(el, hiddenFld, populateRule);
+                el.setAttribute('data-populated', 'yes');
+            }
             if (isClientSideMode()) {
                 switch(populateRule.rowSelection){
                     case SelectionOptions.single:
@@ -701,16 +726,9 @@ module tsp {
                         });
                         break;
                 }
-            } else {
-                switch (populateRule.treeColumn) {
-                    case TreeType.simple:
-                        applyTreeView(el, populateRule);
-                        break;
-                }
-                refreshTemplateWithRectCoords(el, hiddenFld, populateRule);
-            }
+            } 
         });
-        //var rowOffsetFld = <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
+        tsp.data(el).initialized = true;
         
             
     }

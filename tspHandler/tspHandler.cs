@@ -12,7 +12,7 @@ namespace tspHandler
         private string _documentFilePath;
         public bool IsReusable
         {
-            get { return true; }
+            get { return false; }
         }
 
         public bool IsDesignMode()
@@ -38,8 +38,8 @@ namespace tspHandler
         public HtmlDocumentFacade ProcessFile()
         {
             var doc = new HtmlDocumentFacade(this);
-            doc.Process();
-            return doc;
+            return doc.Process();
+            
         }
 
         public string GetContentOfRelativeResource(string path)

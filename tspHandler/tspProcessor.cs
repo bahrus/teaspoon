@@ -24,7 +24,7 @@ namespace tspHandler
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
         
 
-        private static object InvokeServerSideMethod(string StaticMethodString, object[] args)
+        public static object InvokeServerSideMethod(string StaticMethodString, object[] args)
         {
             var typeString = StaticMethodString.SubstringBeforeLast(".").SubstringAfter("[").SubstringBeforeLast("]");
             var methodString = StaticMethodString.SubstringAfterLast(".");
@@ -142,8 +142,24 @@ namespace tspHandler
         }
 
         #region Process Methods
-        public static void Process(this HtmlDocumentFacade doc)
+        public static HtmlDocumentFacade Process(this HtmlDocumentFacade doc)
         {
+            var docInherits = doc.querySelectorAll("html>head>meta[name='inherits']");
+            if (docInherits.Count > 0)
+            {
+                if (docInherits.Count > 1)
+                {
+                    throw new ArgumentException("Cannot inherit from more than one page");
+                }
+                var metaEl = docInherits[0];
+                var baseDocRelativeURL = metaEl.getAttribute("content");
+                if (string.IsNullOrEmpty(baseDocRelativeURL)) throw new ArgumentException("No Content Attribute found");
+                var inheritedContentFilePath = doc.GetHostContentFilePath(baseDocRelativeURL);
+                var superHandler = new tspHandler(inheritedContentFilePath);
+                var superDoc = superHandler.ProcessFile();
+                ProcessDifferences(superDoc, doc);
+                return superDoc;
+            }
             ProcessEmmetSpaces(doc);
             ProcessTSPStyles(doc);
             ProcessTCPStyles(doc);
@@ -152,16 +168,126 @@ namespace tspHandler
             {
                 ProcessServerSideScripts(doc);
                 DisplayDesignMode(doc);
-                return;
             }
             else
             {
                 ProcessServerSideIncludes(doc);
                 ProcessServerSideScripts(doc);
             }
-            
+            return doc;
         }
 
+        #region Process Differences
+
+        public static void ProcessDifferences(HtmlDocumentFacade superDoc, HtmlDocumentFacade diffDoc)
+        {
+            //var nodeDiffs = new NodeDifference();
+            var nodeHierarchy = new Stack<HtmlNodeFacade>();
+            nodeHierarchy.Push(diffDoc.html);
+            var differenceStack = new Stack<NodeDifference>();
+            var differences = new List<NodeDifference>();
+            ProcessNode(nodeHierarchy, differenceStack, differences);
+            MergeDifferences(superDoc, differences);
+
+        }
+
+        private static void ProcessNode(Stack<HtmlNodeFacade> nodeHierarchy, Stack<NodeDifference> differenceStack, List<NodeDifference> result)
+        {
+            var currNode = nodeHierarchy.Peek();
+            if (currNode.tagName == "#text") return;
+            var merge = currNode.getAttribute("data-xmerge");
+            if (string.IsNullOrEmpty(merge))
+            {
+                foreach (var child in currNode.ChildNodes)
+                {
+                    nodeHierarchy.Push(child);
+                    ProcessNode(nodeHierarchy, differenceStack, result);
+                    nodeHierarchy.Pop();
+                }
+            }
+            else
+            {
+                var selector = getSelector(nodeHierarchy);
+
+                var ndDiff = new NodeDifference
+                {
+                    Node = currNode,
+                    Action = (NodeDiffAction)Enum.Parse(typeof(NodeDiffAction), merge),
+                };
+                if (differenceStack.Count > 0)
+                {
+                    var parent = differenceStack.Peek();
+                    selector = selector.Substring(parent.MatchSelector.Length);
+                    if (parent.Children == null) parent.Children = new List<NodeDifference>();
+                    parent.Children.Add(ndDiff);
+                }
+                else
+                {
+                    result.Add(ndDiff);
+                }
+                ndDiff.MatchSelector = selector;
+                differenceStack.Push(ndDiff);
+                foreach (var child in currNode.ChildNodes)
+                {
+                    nodeHierarchy.Push(child);
+                    ProcessNode(nodeHierarchy, differenceStack, result);
+                }
+                differenceStack.Pop();
+
+            }
+        }
+
+
+        private static void MergeDifferences(INodeSelector source, List<NodeDifference> differences)
+        {
+            foreach (var diff in differences)
+            {
+                string selector = Fun.Val(() =>
+                {
+                    switch (diff.Action)
+                    {
+                        case NodeDiffAction.Append:
+                            return diff.MatchSelector.SubstringBeforeLast(">");
+                            break;
+                        default:
+                            throw new Exception();
+                    }
+                });
+                var nodes = source.querySelectorAll(selector);
+                if (nodes.Count != 1)
+                {
+                    throw new Exception("No Matching Single Node Found: " + diff.MatchSelector);
+                }
+                var node = nodes[0];
+                switch (diff.Action)
+                {
+                    case NodeDiffAction.Append:
+                        node.parentNode.appendChild(diff.Node);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+                if (diff.Children != null)
+                {
+                    MergeDifferences(node, diff.Children);
+                }
+            }
+        }
+
+        #endregion
+
+        private static string getSelector(Stack<HtmlNodeFacade> nodeHierarchy)
+        {
+            var lst = nodeHierarchy.ToList()
+                .Select(nd =>
+                {
+                    string tagSelector = nd.tagName + nd.getAttribute("xmatch");
+                    return tagSelector;
+                });
+              return string.Join(">", lst.Reverse().ToArray());
+        }
+
+        
         private const string Lambda = "=>";
 
         private static string convertLambdaExpressionToFunction(string expression)
@@ -307,14 +433,23 @@ tsp.createInputAutoFillRule(model);
                 var id = model.id;
                 if (string.IsNullOrEmpty(id)) throw new Exception("model script tags must have an id");
                 var staticMethodString = model.getAttribute(ModelAttribute);
-                var result = InvokeServerSideMethod(staticMethodString, null);
-                string json = JsonConvert.SerializeObject(result);
-
-                string modelScript = @"
+                var hasAsync = model.hasAttribute("async");
+                var server = HttpContext.Current.Server;
+                if (hasAsync)
+                {
+                    string src = "model.tsp.js?" + tspModelHandler.getMethod + "=" + server.UrlEncode(staticMethodString) + "&" + tspModelHandler.id + "=" + server.UrlEncode(id);
+                    model.innerHTML = string.Empty;
+                    model.setAttribute("src", src);
+                }
+                else
+                {
+                    var result = InvokeServerSideMethod(staticMethodString, null);
+                    string json = JsonConvert.SerializeObject(result);
+                    string modelScript = @"
 if(!model) var model = {};
 model['" + id + "'] = " + json + ";";
-                //sb.AppendLine(modelScript);
-                model.innerHTML = modelScript;
+                    model.innerHTML = modelScript;
+                }
             });
             //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
             var serverSideScriptsList = serverSideScripts.ToList();
@@ -489,5 +624,29 @@ model['" + id + "'] = " + json + ";";
 
     }
 
+
+    public class NodeDifference
+    {
+        //public NodeDifference Context { get; set; }
+
+        //private NodeDifference _parent { get; set; }
+
+        public string MatchSelector { get; set; }
+
+        public List<NodeDifference> Children { get; set; }
+
+        public HtmlNodeFacade Node { get; set; }
+
+        public NodeDiffAction Action { get; set; }
+    }
+
+    public enum NodeDiffAction
+    {
+        Append,
+        Remove,
+        RemoveChildren,
+        Replace,
+        ReplaceAttributes,
+    }
     
 }

@@ -10,7 +10,7 @@ using System.Web;
 
 namespace tspHandler
 {
-    public class HtmlDocumentFacade
+    public class HtmlDocumentFacade : INodeSelector
     {
         private HtmlDocument _htmlDoc;
 
@@ -37,7 +37,8 @@ namespace tspHandler
         {
             _htmlDoc = new HtmlDocument();
             _host = host;
-            _htmlDoc.LoadHtml(host.GetContentOfDocument());
+            string content = host.GetContentOfDocument();
+            _htmlDoc.LoadHtml(content);
         }
 
         
@@ -132,6 +133,14 @@ namespace tspHandler
             }
         }
 
+        public HtmlNodeFacade html
+        {
+            get
+            {
+                return this.getElementsByTagName("html")[0];
+            }
+        }
+
         public HtmlNodeFacade documentElement
         {
             get
@@ -152,10 +161,10 @@ namespace tspHandler
 
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
-            if (selectorText.Contains(">"))
-            {
-                throw new Exception("querySelectorAll implementation does not currently support the > operator");
-            }
+            //if (selectorText.Contains(">"))
+            //{
+            //    throw new Exception("querySelectorAll implementation does not currently support the > operator");
+            //}
             var returnObj = _htmlDoc.DocumentNode
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node))

@@ -72,6 +72,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="INodeSelector.cs" />
+    <Compile Include="tspModelHandler.cs" />
     <Compile Include="tsp_script\Console.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="HtmlAttributeFacade.cs" />
@@ -133,13 +135,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Schemas\VS2012\HTML\commonHTML5Types.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2012\HTML\original_commonHTML5Types.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Schemas\VS2012\HTML\HTML_5.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schemas\VS2012\HTML\original_html_5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\VS2012\HTML\tsp.xsd">
+    <None Include="Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2012\HTML\tsp_vs_html_5.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schemas\WebExpress4\CSS\CSS.XSD">
@@ -169,7 +180,8 @@
   <Target Name="AfterBuild">
     <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\WebExpress4\HTML\tsp.xsd" Destination="$(ProjectDir)Schemas\WebExpress4\HTML\HTML_5.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\WebExpress4\CSS\Original_CSS21.XML" Transform="$(ProjectDir)Schemas\WebExpress4\CSS\tsp.xml" Destination="$(ProjectDir)Schemas\WebExpress4\CSS\CSS21.XML" />
-    <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\HTML_5.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_html_5.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\HTML_5.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\original_commonHTML5Types.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\commonHTML5Types.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2012\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2012\CSS\css-main.xml" />
   </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
