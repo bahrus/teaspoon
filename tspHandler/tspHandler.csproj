@@ -113,6 +113,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Schemas\VS2012\CSS\tsp_diff.xml" />
+    <Content Include="Schemas\VS2013\CSS\css-main.xml" />
+    <Content Include="Schemas\VS2013\CSS\original_css-main.xml" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE60.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE70.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE80.XML" />
@@ -153,6 +155,12 @@
     <None Include="Schemas\VS2012\HTML\tsp_vs_html_5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Schemas\VS2013\HTML\commonHTML5Types.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\VS2013\HTML\HTML_5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Schemas\VS2013\HTML\original_commonHTML5Types.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -190,6 +198,9 @@
     <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_html_5.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\HTML_5.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2012\HTML\original_commonHTML5Types.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd" Destination="$(ProjectDir)Schemas\VS2012\HTML\commonHTML5Types.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2012\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2012\CSS\css-main.xml" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2013\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_html_5.xsd" Destination="$(ProjectDir)Schemas\VS2013\HTML\HTML_5.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2013\HTML\original_commonHTML5Types.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd" Destination="$(ProjectDir)Schemas\VS2013\HTML\commonHTML5Types.xsd" />
+    <TransformXml Source="$(ProjectDir)Schemas\VS2013\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2013\CSS\css-main.xml" />
   </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
