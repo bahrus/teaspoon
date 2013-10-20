@@ -11,6 +11,11 @@ module tcp {
         pageisloaded = 1;
     });
 
+    //#region Interfaces
+
+    export interface IAjaxFormInfo {
+    }
+
     export interface ICascadingHandler {
         selectorNodeTest?: string;
         handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
@@ -26,6 +31,17 @@ module tcp {
         //form?: string;
         ignoreIfFormAttrSupport?: boolean;
     }
+    //#endregion
+
+    //#region rule creators
+    export function createAjaxRule(ajaxRule: IAjaxFormInfo) {
+        var ajaxObj = tsp.beginMerge<IAjaxFormInfo>({
+            call: ajaxForm,
+            prefix: prefix,
+            options: ajaxRule,
+        });
+        return ajaxObj;
+    }
 
     export function createBindingRule(bindingRule: IUIBindingInfo) {
         var bindingObj = tsp.beginMerge<IUIBindingInfo>({
@@ -34,6 +50,26 @@ module tcp {
             options: bindingRule,
         });
         return bindingObj;
+    }
+
+    //#endregion
+
+    //#region grid helpers
+    export function addRowSelection(el: HTMLElement) {
+        //var sID = el.id;
+        _when('click', {
+            containerID : el.id,
+            handler: handleRowSelection,
+            selectorNodeTest: '*[data-rc]',
+        });
+    }
+
+    export function addTreeNodeToggle(el: HTMLElement) {
+        _when('click', {
+            containerID: el.id,
+            handler: handleTreeNodeToggle,
+            selectorNodeTest: 'span.treeNodeToggler', 
+        });
     }
 
     export function addVScroller(el: HTMLElement, dt: tsp.IDataTable, rowOffset: HTMLInputElement) {
@@ -66,72 +102,28 @@ module tcp {
         $el.css('display', 'block');
     }
 
-    
+    //#endregion
 
-    function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
-        var el = document.getElementById(cascadeInfo.containerID);
-        var $el = $(el);
-        var sel = evt.srcElement, $sel = $(sel);
-        tsp.getOrCreateHiddenInput(el, cascadeInfo.containerID + '_selectedRows', inp => {
-            //var selRowsInp = <HTMLInputElement> document.getElementById(cascadeInfo.containerID + '_selectedRows');
+    //#region rule application   
 
-            //var selRows = selRowsInp.value.split(',');
-            var selRows = inp.value.split(',');
-            for (var i = 0, n = selRows.length; i < n; i++) {
-                var selRow = selRows[i];
-                $el.find('[data-rc^="' + selRow + ',"]').css('backgroundColor', 'white');
-            }
-            var r = $sel.attr('data-rc').split(',')[0];
-            //selRowsInp.value = r;
-            inp.value = r;
-            $el.find('[data-rc^="' + r + ',"]').css('backgroundColor', 'blue');
-        });
-        
-        
-    }
+    export function ajaxForm(el: HTMLElement, props: { [key: string]: any; }) {
+        $(el).submit(function () {
 
-    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
-        var evtEl = evt.srcElement;
-        var $evtEl = $(evtEl);
-        $evtEl.toggleClass('plus').toggleClass('minus');
-        var dataCell = evtEl;
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    alert('Form is successfully submitted');
+                },
+                error: function () {
+                    alert('Something wrong');
+                }
+            });
 
-        var rc = dataCell.getAttribute('data-rc');
-        while (dataCell && !rc) {
-            dataCell = <Element> dataCell.parentNode;
-            rc = dataCell.getAttribute('data-rc');
-        }
-        if (!dataCell) return;
-        var rowNo = parseInt( rc.split(',')[0]) - 1;
-        var templEl = document.getElementById(cascadeInfo.containerID);
-        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templEl).populateRule;
-        var dt = rule.getDataTable(templEl);
-        var dtRow = dt.data[rowNo];
-        var ndFldIdx = tsp.getNodeFldIdx(dt);
-        var nd = dtRow[ndFldIdx];
-        var numChildren = nd[tsp.nodeIdxes.numChildren];
-        nd[tsp.nodeIdxes.numChildren] = -1 * numChildren;
-        tsp.applyTreeView(templEl, rule);
-        tsp.refreshTemplateWithRectCoords(templEl, null, rule);
-    }
-
-    export function addRowSelection(el: HTMLElement) {
-        //var sID = el.id;
-        _when('click', {
-            containerID : el.id,
-            handler: handleRowSelection,
-            selectorNodeTest: '*[data-rc]',
+            return false;
         });
     }
-
-    export function addTreeNodeToggle(el: HTMLElement) {
-        _when('click', {
-            containerID: el.id,
-            handler: handleTreeNodeToggle,
-            selectorNodeTest: 'span.treeNodeToggler', 
-        });
-    }
-
 
     export function applyBindingRule(el: HTMLElement, props: { [key: string]: any; }) {
         var bindingRule = <IUIBindingInfo> tsp.evalRulesSubset(props, prefix);
@@ -145,40 +137,9 @@ module tcp {
         
     }
 
-    
+    //#endregion
 
-    function handleBindingChange(ev: Event) {
-        var el = <HTMLElement> ev.srcElement, elPropVal;
-        var br = <IUIBindingInfo> $.data(el).bindingRule;
-        var sPropertyName = br.propertyToMonitor;
-        elPropVal = el[sPropertyName];
-        if (br.subPropertyToMonitor) {
-            sPropertyName += '.' + br.subPropertyToMonitor;
-            elPropVal = elPropVal[br.subPropertyToMonitor];
-        }
-        if (ev['propertyName'] !== sPropertyName) return;
-        var sName = el.getAttribute('name');
-        if (!sName) sName = el.id; 
-        var sControlID = sName + '_' + sPropertyName.replace('.', '_');
-        tsp.data(el).shadowElClass = sControlID;
-        tsp.getOrCreateHiddenInput(el, sControlID, inpFld => $(inpFld).addClass(el.className).val(elPropVal));
-        //var frms = el.getAttribute('form').split(' ');
-        //for (var i = 0, n = frms.length; i < n; i++) {
-        //    var frmID = frms[i];
-        //    var frm = $('#' + frmID);
-        //    if (frm.length == 0) continue;
-        //    var $inpFld = frm.find('.' + sControlID);
-        //    if ($inpFld.length == 0) {
-        //        frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID).addClass(el.className));
-        //        $inpFld = frm.find('.' + sControlID);
-        //    }
-        //    $inpFld.val(elPropVal);
-        //}
-        
-    }
-
-    //var handlers: { [key: string]: ICascadingHandler[]; } = {};
-
+    //#region utils
     var matchesSelector = function (node, selector) {
         var nodeList = node.parentNode.querySelectorAll(selector),
             length = nodeList.length,
@@ -212,7 +173,155 @@ module tcp {
         _supportsTestFormAttribute = res ? 1 : 0;
         return res;
     }
+
+    //#endregion
     
+    //#region Main
+    
+
+    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
+        if (!pageisloaded) {
+            window.addEventListener('load', function () {
+                pageisloaded = 1;
+                _when(eventName, cascadingHandler);
+            });
+            return;
+        }
+        var el: HTMLElement;
+        if (cascadingHandler.containerID) {
+            el = document.getElementById(cascadingHandler.containerID);
+        } else if (cascadingHandler.container) {
+            el = cascadingHandler.container;
+        }  else {
+            el = document.body;
+        }
+        //var eventHandlers = handlers[eventName];
+        var eventHandlers: { [key: string]: ICascadingHandler[]; }  = tsp.data(el).handlers;
+        if (!eventHandlers) {
+            eventHandlers = {};
+            tsp.data(el).handlers = eventHandlers;
+        }
+        var eventHandler = eventHandlers[eventName];
+        if (!eventHandler) {
+            eventHandler = [];
+            eventHandlers[eventName] = eventHandler;
+            if (el.attachEvent) {
+                el.attachEvent('on' + eventName, handleCascadingEvent);
+            } else {
+                el.addEventListener(eventName, handleCascadingEvent);
+            }
+        }
+        eventHandler[eventHandler.length] = cascadingHandler;
+    }
+
+    //#endregion
+
+    //#region event handlers
+
+    //#region grid handlers
+    function handleRowSelection(evt: Event, cascadeInfo: ICascadingHandler) {
+        var el = document.getElementById(cascadeInfo.containerID);
+        var $el = $(el);
+        var sel = evt.srcElement, $sel = $(sel);
+        tsp.getOrCreateHiddenInput(el, cascadeInfo.containerID + '_selectedRows', inp => {
+            //var selRowsInp = <HTMLInputElement> document.getElementById(cascadeInfo.containerID + '_selectedRows');
+
+            //var selRows = selRowsInp.value.split(',');
+            var selRows = inp.value.split(',');
+            for (var i = 0, n = selRows.length; i < n; i++) {
+                var selRow = selRows[i];
+                $el.find('[data-rc^="' + selRow + ',"]').css('backgroundColor', 'white');
+            }
+            var r = $sel.attr('data-rc').split(',')[0];
+            //selRowsInp.value = r;
+            inp.value = r;
+            $el.find('[data-rc^="' + r + ',"]').css('backgroundColor', 'blue');
+        });
+        
+        
+    }
+
+
+    export function handleTextFilterChange(evt: Event, cascHandler: tcp.ICascadingHandler) {
+        var el = <HTMLInputElement> evt.srcElement;
+        var oldValue = <string> tsp.data(el).oldValue;
+        var newValue = el.value;
+        if (oldValue == newValue) return;
+        tsp.data(el).oldValue = el.value;
+        var filterOptions = <tsp.IFilterOptions> tsp.evalRulesSubset( tsp.data(el).tsp, tsp.prefix);
+        var shadowClass = tsp.data(el).shadowElClass;
+        var shadowEls = document.querySelectorAll('.' + shadowClass);
+        for (var i = 0, n = shadowEls.length; i < n; i++) {
+            tsp.data(<HTMLElement> shadowEls[i]).filterOptions = filterOptions;
+        }
+        var elIDTokens = el.name.split('_');
+        var templ = document.getElementById(elIDTokens[0]);
+        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templ).populateRule;
+        
+        if (!oldValue || (newValue.length > oldValue.length && newValue.substr(0, oldValue.length) == oldValue)) {
+            tsp.filterColumn(rule.getDataTable(templ), parseInt(elIDTokens[3]) - 1, el.value);
+        } else {
+            tsp.applyAllFilters(templ, rule);
+        }
+        tsp.refreshTemplateWithRectCoords(templ);
+    }
+
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
+        var evtEl = evt.srcElement;
+        var $evtEl = $(evtEl);
+        $evtEl.toggleClass('plus').toggleClass('minus');
+        var dataCell = evtEl;
+
+        var rc = dataCell.getAttribute('data-rc');
+        while (dataCell && !rc) {
+            dataCell = <Element> dataCell.parentNode;
+            rc = dataCell.getAttribute('data-rc');
+        }
+        if (!dataCell) return;
+        var rowNo = parseInt( rc.split(',')[0]) - 1;
+        var templEl = document.getElementById(cascadeInfo.containerID);
+        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templEl).populateRule;
+        var dt = rule.getDataTable(templEl);
+        var dtRow = dt.data[rowNo];
+        var ndFldIdx = tsp.getNodeFldIdx(dt);
+        var nd = dtRow[ndFldIdx];
+        var numChildren = nd[tsp.nodeIdxes.numChildren];
+        nd[tsp.nodeIdxes.numChildren] = -1 * numChildren;
+        tsp.applyTreeView(templEl, rule);
+        tsp.refreshTemplateWithRectCoords(templEl, null, rule);
+    }
+
+    //#endregion
+    
+    function handleBindingChange(ev: Event) {
+        var el = <HTMLElement> ev.srcElement, elPropVal;
+        var br = <IUIBindingInfo> $.data(el).bindingRule;
+        var sPropertyName = br.propertyToMonitor;
+        elPropVal = el[sPropertyName];
+        if (br.subPropertyToMonitor) {
+            sPropertyName += '.' + br.subPropertyToMonitor;
+            elPropVal = elPropVal[br.subPropertyToMonitor];
+        }
+        if (ev['propertyName'] !== sPropertyName) return;
+        var sName = el.getAttribute('name');
+        if (!sName) sName = el.id; 
+        var sControlID = sName + '_' + sPropertyName.replace('.', '_');
+        tsp.data(el).shadowElClass = sControlID;
+        tsp.getOrCreateHiddenInput(el, sControlID, inpFld => $(inpFld).addClass(el.className).val(elPropVal));
+        //var frms = el.getAttribute('form').split(' ');
+        //for (var i = 0, n = frms.length; i < n; i++) {
+        //    var frmID = frms[i];
+        //    var frm = $('#' + frmID);
+        //    if (frm.length == 0) continue;
+        //    var $inpFld = frm.find('.' + sControlID);
+        //    if ($inpFld.length == 0) {
+        //        frm.append($('<input/>').attr('type', 'hidden').attr('name', sControlID.replace('_value', '')).addClass(sControlID).addClass(el.className));
+        //        $inpFld = frm.find('.' + sControlID);
+        //    }
+        //    $inpFld.val(elPropVal);
+        //}
+        
+    }
 
     function handleCascadingEvent(evt: Event) {
         var el = <HTMLElement> evt.srcElement;
@@ -251,68 +360,6 @@ module tcp {
         
     } 
 
-    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
-        if (!pageisloaded) {
-            window.addEventListener('load', function () {
-                pageisloaded = 1;
-                _when(eventName, cascadingHandler);
-            });
-            return;
-        }
-        var el: HTMLElement;
-        if (cascadingHandler.containerID) {
-            el = document.getElementById(cascadingHandler.containerID);
-        } else if (cascadingHandler.container) {
-            el = cascadingHandler.container;
-        }  else {
-            el = document.body;
-        }
-        //var eventHandlers = handlers[eventName];
-        var eventHandlers: { [key: string]: ICascadingHandler[]; }  = tsp.data(el).handlers;
-        if (!eventHandlers) {
-            eventHandlers = {};
-            tsp.data(el).handlers = eventHandlers;
-        }
-        var eventHandler = eventHandlers[eventName];
-        if (!eventHandler) {
-            eventHandler = [];
-            eventHandlers[eventName] = eventHandler;
-            if (el.attachEvent) {
-                el.attachEvent('on' + eventName, handleCascadingEvent);
-            } else {
-                el.addEventListener(eventName, handleCascadingEvent);
-            }
-        }
-        eventHandler[eventHandler.length] = cascadingHandler;
-    }
-
-    
-
-    export function handleTextFilterChange(evt: Event, cascHandler: tcp.ICascadingHandler) {
-        var el = <HTMLInputElement> evt.srcElement;
-        var oldValue = <string> tsp.data(el).oldValue;
-        var newValue = el.value;
-        if (oldValue == newValue) return;
-        tsp.data(el).oldValue = el.value;
-        var filterOptions = <tsp.IFilterOptions> tsp.evalRulesSubset( tsp.data(el).tsp, tsp.prefix);
-        var shadowClass = tsp.data(el).shadowElClass;
-        var shadowEls = document.querySelectorAll('.' + shadowClass);
-        for (var i = 0, n = shadowEls.length; i < n; i++) {
-            tsp.data(<HTMLElement> shadowEls[i]).filterOptions = filterOptions;
-        }
-        var elIDTokens = el.name.split('_');
-        var templ = document.getElementById(elIDTokens[0]);
-        var rule = <tsp.IPopulateRectCoordinates> tsp.data(templ).populateRule;
-        
-        if (!oldValue || (newValue.length > oldValue.length && newValue.substr(0, oldValue.length) == oldValue)) {
-            tsp.filterColumn(rule.getDataTable(templ), parseInt(elIDTokens[3]) - 1, el.value);
-        } else {
-            tsp.applyAllFilters(templ, rule);
-        }
-        tsp.refreshTemplateWithRectCoords(templ);
-    }
-    
-
     export function handleOnPropertyChange(ev: Event) {
         if (ev['propertyName'] !== 'style.display') return;
         handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> ev.srcElement);
@@ -339,7 +386,10 @@ module tcp {
         el.parentNode.removeChild(el);
     }
 
+    //#endregion
+
     export function performReservedRules(doc: NodeSelector) {
+        //#region lazy load
         var nds = doc.querySelectorAll('.' + tsp.reserved_lazyLoad);
         for (var j = 0, n = nds.length; j < n; j++) {
             var nd = <HTMLElement> nds[j];
@@ -362,6 +412,7 @@ module tcp {
                 nd.attachEvent('onpropertychange', tcp.handleOnPropertyChange);
             }
         }
+        //#endregion
     }
 }
 
@@ -370,4 +421,6 @@ tsp._if('input[form]',
         ignoreIfFormAttrSupport: true,
         propertyToMonitor: 'value',
     }).mergedObject
+)._if('form[mode="client-side-only"]', 
+    tcp.createAjaxRule({}).mergedObject
 );

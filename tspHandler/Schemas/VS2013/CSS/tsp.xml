@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CssModule name="tsp">
+  <CssProperty _locID="call"
+                 _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Javascript Function to call."
+                 
+>
+    <entry value="tsp.action" />
+    <entry value="tsp.conditionalRule" />
+    <entry value="tsp.fillGrid" />
+    <entry value="tsp.lazyLoad" />
+    <entry value="tsp.setAttr" />
+  </CssProperty>
+  <CssProperty _locID="event"
+               _locAttrData="description, syntax"
+               syntax="div { $(name): 2; }"
+               version="3.0"
+               description="Triggering Event"
+   >
+    <entry value="click"/>  
+    <entry value="dblclick"/>
+    <entry value="mousedown"/>
+    <entry value="mouseup"/>
+    <entry value="mouseover"/>
+    <entry value="mousemove"/>
+    <entry value="mouseout"/>
+    <entry value="dragstart"/>
+    <entry value="drag"/>
+    <entry value="dragenter"/> 
+    <entry value="dragleave"/>
+    <entry value="dragover"/>
+    <entry value="drop"/>
+    <entry value="dragend"/>
+    <entry value="keydown"/>
+    <entry value="keypress"/>
+    <entry value="keyup"/>
+    <entry value="load"/>
+    <entry value="unload"/>
+    <entry value="abort"/>
+    <entry value="error"/>
+    <entry value="resize"/>
+    <entry value="scroll"/>
+    <entry value="select"/>
+    <entry value="change"/>
+    <entry value="submit"/>
+    <entry value="reset"/>
+    <entry value="focus"/>
+    <entry value="blur"/>
+    <entry value="focusin"/>
+    <entry value="focusout"/>
+    <entry value="propertychange"/>
+   </CssProperty>
+  <CssProperty _locID="handler"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Javascript function to handle event"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-action"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Javascript Function to call"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-actionIfTrue"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Action if Condition is True"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-actionIfFalse"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Action if Condition is False"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-condition"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Condition check to apply call"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-getDataTable"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Javascript Function which provides json array of data"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-lazyLoadCondition"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Condition check to apply lazy loading"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-name"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Name of attribute to set"       
+    >
+    
+  </CssProperty>
+  <CssProperty _locID="tsp-rowSelection"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Row Selection Options"       
+    >
+    <entry value="tsp.SelectionOptions.none"/>
+    <entry value="tsp.SelectionOptions.single"/>
+    <entry value="tsp.SelectionOptions.multiple"/>
+  </CssProperty>
+  <CssProperty _locID="tsp-titleFill"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Auto populate tooltip text"       
+    >
+    <entry value="tsp.TitleFillOptions.none"/>
+    <entry value="tsp.TitleFillOptions.text"/>
+  </CssProperty>
+  <CssProperty _locID="tsp-treeColumn"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Render first column as a tree"
+    >
+    <entry value="tsp.TreeType.none"/>
+    <entry value="tsp.TreeType.simple"/>
+  </CssProperty>
+  <CssProperty _locID="tsp-value"
+        _locAttrData="description, syntax"
+                 syntax="div { $(name): 2; }"
+                 version="3.0"
+                 description="Value for attribute"       
+    >
+    
+  </CssProperty>
+  </CssModule>
+

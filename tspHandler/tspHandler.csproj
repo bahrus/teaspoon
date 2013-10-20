@@ -115,6 +115,7 @@
     <Content Include="Schemas\VS2012\CSS\tsp_diff.xml" />
     <Content Include="Schemas\VS2013\CSS\css-main.xml" />
     <Content Include="Schemas\VS2013\CSS\original_css-main.xml" />
+    <Content Include="Schemas\VS2013\CSS\tsp.xml" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE60.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE70.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE80.XML" />
@@ -201,6 +202,8 @@
     <TransformXml Source="$(ProjectDir)Schemas\VS2013\HTML\Original_HTML_5.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_html_5.xsd" Destination="$(ProjectDir)Schemas\VS2013\HTML\HTML_5.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2013\HTML\original_commonHTML5Types.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd" Destination="$(ProjectDir)Schemas\VS2013\HTML\commonHTML5Types.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2013\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2013\CSS\css-main.xml" />
+    <Copy SourceFiles="$(ProjectDir)Schemas\VS2012\CSS\tsp.xml" DestinationFolder="$(ProjectDir)Schemas\VS2013\CSS\" />
+    
   </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES3</TypeScriptTarget>

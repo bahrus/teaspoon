@@ -67,6 +67,7 @@
     <TypeScriptCompile Include="form1.ts" />
     <TypeScriptCompile Include="datagrid.ts" />
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
+    <Content Include="datagrid.query1.tsp.html" />
     <Content Include="datagrid.tsp.html" />
     <Content Include="Emmet.tsp.html" />
     <Content Include="Emmet\emmet.js" />
