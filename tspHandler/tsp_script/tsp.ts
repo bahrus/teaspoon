@@ -11,8 +11,9 @@ declare var jQueryServerSideFacade: JQueryStaticFacade;
 
 module tsp {
 
-
     export var prefix = 'tsp-';
+
+    //#region jquery facade
 
     export var $: JQueryStaticFacade;
 
@@ -46,18 +47,44 @@ module tsp {
         if(!cache[nCacheIndex]) cache[nextCacheIndex] = {};
         return cache[nCacheIndex];
     }
+
+    //#endregion
     
+    //#region Interfaces
+
+    export interface IAction {
+        action: (el: HTMLElement) => void;
+    }
+
+    export interface IAttributeSet {
+        name: string;
+        value: any;
+    }
+
     export interface ICascadingRule {
         selectorText: string;
         properties: { [key: string]: any; };
         docOrder: number;
     }
 
-
     export interface IConditionalRule {
         condition?: (el: HTMLElement) => boolean;
         actionIfTrue?: (el: HTMLElement) => void;
         actionIfFalse?: (el: HTMLElement) => void;
+    }
+
+    export interface IDataField {
+        name?: string;
+        isPrimaryKey?: boolean;
+        isTreeNodeInfo?: boolean;
+        header?: string;
+        footer?: string;
+    }
+
+    export interface IFill<TModel> {
+        valProp?: string; //example:  'value', 'innerHTML', 'class'
+        modelRootElement?: TModel;
+        fill?: (el: HTMLElement, model: TModel) => string;
     }
 
     export interface IMergeCallOptions<T> {
@@ -76,6 +103,14 @@ module tsp {
         merge<T>(prifix: string, obj: T);
     }
 
+    export interface ruleOptions {
+        rootNode?: NodeSelector;
+        trigger?: ruleEvalTrigger;
+    }
+ 
+    //#endregion
+
+    //#region Merging
     export class ObjectMerge implements IObjectMerge {
         mergedObject: { [key: string]: any; };
         merge<T>(callOpts: IMergeCallOptions<T>) {
@@ -95,20 +130,24 @@ module tsp {
         }
     }
 
-    export function beginMerge<T>(callOpts: IMergeCallOptions<T>) : ObjectMerge {
+    export function beginMerge<T>(callOpts: IMergeCallOptions<T>): ObjectMerge {
         var mergedObject: { [key: string]: any; } = {};
         var om = new ObjectMerge(mergedObject);
         om.merge(callOpts);
         return om;
     }
-
+    //#endregion
     
-
+    //#region Module Level Data
 
     var rules: ICascadingRule[] = [];
     var rulesIdx = 0;
 
     var uidIdx = 0;
+
+    //#endregion
+
+    //#region Main
 
     export function _if(selectorText: string, props: { [key: string]: any; }) : typeof tsp {
         rules[rulesIdx++] = {
@@ -117,38 +156,6 @@ module tsp {
             docOrder: rulesIdx,
         };
         return tsp;
-    }
-
-
-    export function MakeRCsUnique(content: string) {
-        var spl = content.split('data-rc=\"r,');
-        var count = 0;
-        for (var i = 0, n = spl.length; i < n - 1; i++) {
-            var aft = spl[i + 1];
-            if (aft.substr(0, 2) == '1"') {
-                count++;
-            }
-            spl[i + 1] = count + ',' + aft;
-        }
-        return spl.join('data-rc=\"');
-    }
-
-    export interface ruleOptions {
-        rootNode?: NodeSelector;
-        trigger?: ruleEvalTrigger;
-    }
-
-    export enum ruleEvalTrigger {
-        onPageLoad = 1,
-        onAsyncScriptLoad = 2,
-        onFormElementChange = 4
-    }
-
-    function setRuleOptionDefaults(ruleOpts: ruleOptions) {
-        if (!ruleOpts) ruleOpts = {};
-        if (!ruleOpts.rootNode) ruleOpts.rootNode = document;
-        if (!ruleOpts.trigger) ruleOpts.trigger = ruleEvalTrigger.onPageLoad;
-        return ruleOpts;
     }
 
     export function applyRules(options?: ruleOptions) {
@@ -182,6 +189,45 @@ module tsp {
             }
         }
     }
+
+    //#endregion
+
+    //#region Grid Helpers
+    export function MakeRCsUnique(content: string) {
+        var spl = content.split('data-rc=\"r,');
+        var count = 0;
+        for (var i = 0, n = spl.length; i < n - 1; i++) {
+            var aft = spl[i + 1];
+            if (aft.substr(0, 2) == '1"') {
+                count++;
+            }
+            spl[i + 1] = count + ',' + aft;
+        }
+        return spl.join('data-rc=\"');
+    }
+
+    //#endregion
+
+    //#region Enums
+
+    export enum ruleEvalTrigger {
+        onPageLoad = 1,
+        onAsyncScriptLoad = 2,
+        onFormElementChange = 4
+    }
+
+    //#endregion
+
+    //#region Rules Application
+
+    function setRuleOptionDefaults(ruleOpts: ruleOptions) {
+        if (!ruleOpts) ruleOpts = {};
+        if (!ruleOpts.rootNode) ruleOpts.rootNode = document;
+        if (!ruleOpts.trigger) ruleOpts.trigger = ruleEvalTrigger.onPageLoad;
+        return ruleOpts;
+    }
+
+    
 
     function doRules(options: ruleOptions) {
         var doc = options.rootNode;
@@ -280,15 +326,7 @@ module tsp {
         //#endregion
     }
 
-    
-
-    function isClientSideMode() {
-        return typeof (mode) == 'undefined' || mode !== 'server'
-    }
-
-    
-
-    export function evalRulesSubset(props: { [key: string]: any; }, prefix: string) : any {
+    export function evalRulesSubset(props: { [key: string]: any; }, prefix: string): any {
         var returnObj = {};
         for (var key in props) {
             if (props.hasOwnProperty(key)) {
@@ -301,7 +339,85 @@ module tsp {
         }
         return returnObj;
     }
-   
+    
+    //#endregion
+
+    function isClientSideMode() {
+        return typeof (mode) == 'undefined' || mode !== 'server'
+    }
+
+    
+
+    //#region TSP Rules
+
+    export function action(el: HTMLElement, props: { [key: string]: any; }) {
+        var actionRule = <IAction> evalRulesSubset(props, prefix);
+        actionRule.action(el);
+    }
+
+    //#region Conditional
+    export function conditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
+        var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
+        if (!conditionalRule.condition) return;
+
+        var test = conditionalRule.condition(el);
+        if (test && conditionalRule.actionIfTrue) {
+            conditionalRule.actionIfTrue(el);
+        } else if (!test && conditionalRule.actionIfFalse) {
+            conditionalRule.actionIfFalse(el);
+        }
+    }
+    export function createConditionalRule(conditionalRuleOptions: IConditionalRule) {
+        var conditionObj = tsp.beginMerge<tsp.IConditionalRule>({
+            call: conditionalRule,
+            prefix: prefix,
+            options: conditionalRuleOptions,
+        });
+        return conditionObj;
+    }
+    //#endregion
+
+    export function createFilterRule(filterRule: IFilterOptions) {
+        return tsp.beginMerge({
+            prefix: prefix,
+            options: filterRule,
+        });
+    }
+
+    //#region fill
+    export function applyFillRule<TModel>(el: HTMLElement, props: { [key: string]: any; }) {
+        var fillRule = <IFill<TModel>> evalRulesSubset(props, prefix);
+        var model = fillRule.modelRootElement;
+        var val = fillRule.fill(el, model);
+        var valProp = fillRule.valProp;
+
+        if (isClientSideMode()) {
+            switch (valProp) {
+                case 'innerHTML':
+                    el.innerHTML = val;
+                    break;
+                case 'value':
+                    el[valProp] = val;
+                    break;
+                default:
+                    el.setAttribute(valProp, val);
+            }
+        } else {
+            //can't get el[valProp] to work in HtmlNodeFacade
+            el.setAttribute(valProp, val);
+        }
+
+
+    }
+    export function createFillRule<TModel>(fillRule: IFill<TModel>) {
+        return tsp.beginMerge<IFill<TModel>>({
+            call: applyFillRule,
+            prefix: prefix,
+            options: fillRule,
+        });
+    }
+    //#endregion
+
     export function lazyLoad(el: HTMLElement, props: { [key: string]: any; }, doc: HTMLDocument) {
         if (isClientSideMode()) return;
         var lazyRule = <ILazyLoadRule> evalRulesSubset(props, prefix);
@@ -320,17 +436,19 @@ module tsp {
         inserted.id = sOriginalID;
     }
 
-
-    
-
-    export function createConditionalRule(conditionalRuleOptions: IConditionalRule) {
-        var conditionObj = tsp.beginMerge<tsp.IConditionalRule>({
-            call: conditionalRule,
-            prefix: prefix,
-            options: conditionalRuleOptions,
-        });
-        return conditionObj;
+    export function setAttr(el: HTMLElement, props: { [key: string]: any; }) {
+        var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);
+        var sVal = attrRule.value;
+        if (typeof (sVal) == 'function') {
+            sVal = sVal();
+        } else if (typeof (sVal) != 'string') {
+            sVal = '' + sVal;
+        }
+        if (el.getAttribute(attrRule.name) != sVal) {
+            el.setAttribute(attrRule.name, sVal);
+        }
     }
+    //#endregion
 
     export function createInputAutoFillRule(model: any) {
         var modelRoot = <IHttpContext> model['httpContext'];
@@ -340,82 +458,6 @@ module tsp {
             fill: (el: HTMLElement , mdl : IHttpContext) => getValFromRequest(<HTMLInputElement> el, mdl.Request),
         };
         _if('input[type="text"],input[type="hidden"]', createFillRule<IHttpContext>(fillRule).mergedObject)
-    }
-
-    export function createFillRule<TModel>(fillRule: IFill<TModel>) {
-        return tsp.beginMerge<IFill<TModel>>({
-            call: applyFillRule,
-            prefix: prefix,
-            options: fillRule,
-        });
-    }
-
-    export function createFilterRule(filterRule: IFilterOptions) {
-        return tsp.beginMerge({
-            prefix: prefix,
-            options: filterRule,
-        });
-    }
-
-    export function applyFillRule<TModel>(el: HTMLElement, props: { [key: string]: any; }) {
-        var fillRule = <IFill<TModel>> evalRulesSubset(props, prefix);
-        var model = fillRule.modelRootElement;
-        var val = fillRule.fill(el, model);
-        var valProp = fillRule.valProp;
-        
-        if (isClientSideMode()) {
-            switch (valProp) {
-                case 'innerHTML':
-                    el.innerHTML = val;
-                    break;
-                case 'value':
-                    el[valProp] = val;
-                    break;
-                default:
-                    el.setAttribute(valProp, val);
-            }
-        } else {
-            //can't get el[valProp] to work in HtmlNodeFacade
-            el.setAttribute(valProp, val);
-        }
-        
-        
-    }
-
-    export function conditionalRule(el: HTMLElement, props: { [key: string]: any; }) {
-        var conditionalRule = <IConditionalRule> evalRulesSubset(props, prefix);
-        if (!conditionalRule.condition) return;
-        
-        var test = conditionalRule.condition(el);
-        if (test && conditionalRule.actionIfTrue) {
-            conditionalRule.actionIfTrue(el);
-        } else if (!test && conditionalRule.actionIfFalse) {
-            conditionalRule.actionIfFalse(el);
-        }
-    }
-
-    export interface IAction {
-        action: (el: HTMLElement) => void;
-    }
-
-    export function action(el: HTMLElement, props: { [key: string]: any; }) {
-        var actionRule = <IAction> evalRulesSubset(props, prefix);
-        actionRule.action(el);
-    }
-
-    export interface IAttributeSet {
-        name: string;
-        value: any;
-    }
-
-    
-
-    
-
-    export interface IFill<TModel> {
-        valProp?: string; //example:  'value', 'innerHTML', 'class'
-        modelRootElement?: TModel;
-        fill?: (el: HTMLElement, model: TModel) => string;
     }
 
     //#region data grid support
@@ -581,14 +623,6 @@ module tsp {
         if (vSlider) vSlider.slider('option', 'max', view.length);
     }
 
-    export interface IDataField {
-        name?: string;
-        isPrimaryKey?: boolean;
-        isTreeNodeInfo?: boolean;
-        header?: string;
-        footer?: string;
-    }
-
     
 
     export enum SelectionOptions {
@@ -619,9 +653,6 @@ module tsp {
         titleFill?: TitleFillOptions;
     }
 
-
-
-
     export function TreeGridColumnRenderer(node: any[]) : string {
         var sR;
         //var nd4 = node[4];
@@ -637,7 +668,6 @@ module tsp {
         }
         return sp + sR + node[nodeIdxes.text];
     }
-
 
     export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IPopulateRectCoordinates) {
         var rowOffsetFld2;
@@ -733,20 +763,7 @@ module tsp {
             
     }
 
-    //#endregion
-
-    export function setAttr(el: HTMLElement, props: { [key: string]: any; }) {
-        var attrRule = <IAttributeSet> evalRulesSubset(props, prefix);
-        var sVal = attrRule.value;
-        if (typeof (sVal) == 'function') {
-            sVal = sVal();
-        } else if (typeof (sVal) != 'string') {
-            sVal = '' + sVal;
-        }
-        if (el.getAttribute(attrRule.name) != sVal) {
-            el.setAttribute(attrRule.name, sVal);
-        }
-    }
+    //#endregion   
 
     function getValFromRequest(ie: HTMLInputElement, req: IHttpRequest): string {
         return req.Params[ie.name];
@@ -774,6 +791,8 @@ module tsp.util {
         // sample output is ['div', 'p', '.foo', 'span', '.bar']
         return simple_selectors;
     }
+
+    
 
     interface ISelectorCount {
         isInline: boolean;
