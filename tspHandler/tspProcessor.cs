@@ -446,7 +446,7 @@ tsp.createInputAutoFillRule(model);
                     var result = InvokeServerSideMethod(staticMethodString, null);
                     string json = JsonConvert.SerializeObject(result);
                     string modelScript = @"
-if(!model) var model = {};
+if(typeof(model)=='undefined') model = {};
 model['" + id + "'] = " + json + ";";
                     model.innerHTML = modelScript;
                 }

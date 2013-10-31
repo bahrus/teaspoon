@@ -62,6 +62,35 @@ namespace TestWebAppClassic
             }
             return dt;
         }
+
+        public static DataTbl GetTblQuery1()
+        {
+            var dt = new DataTbl
+            {
+                fields = new List<tspField>(),
+                data = new List<object[]>(),
+            };
+            int iColumns = 10;
+            for (int i = 0; i < iColumns; i++)
+            {
+                var dc = new tspField
+                {
+                    name = "Column " + i,
+                };
+                dt.fields.Add(dc);
+            }
+            int iRows = 50;
+            for (int i = iRows; i < iRows * 2; i++)
+            {
+                var dataRow = new object[iColumns];
+                for (int j = 0; j < iColumns; j++)
+                {
+                    dataRow[j] = "Row " + i + ", Column " + j;
+                }
+                dt.data.Add(dataRow);
+            }
+            return dt;
+        }
     }
 
     public class DataTbl

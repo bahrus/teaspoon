@@ -7,6 +7,8 @@ module tcp {
     var prefix = 'tcp-';
 
     export var pageisloaded = 0;
+    export var reapplyRulesOnFormSubmit = false;
+
     window.addEventListener('load', function () {
         pageisloaded = 1;
     });
@@ -113,8 +115,23 @@ module tcp {
                 url: $(this).attr('action'),
                 type: $(this).attr('method'),
                 data: $(this).serialize(),
+                dataType: 'html',
                 success: function (data) {
-                    alert('Form is successfully submitted');
+                    var parsed = jQuery(data);
+                    for (var i = 0, n = parsed.length; i < n; i++) {
+                        var tg = parsed[i];
+                        if (tg.tagName == 'SCRIPT' && tg.getAttribute('data-model').length > 0) {
+                            eval(tg.innerHTML);
+                            if (tcp.reapplyRulesOnFormSubmit) {
+                                $('[data-populated]').attr('data-populated', false).each((indx, el : HTMLElement) => {
+                                    tsp.data(el).repopulate = true;
+                                });
+                                tsp.applyRules();
+                            }
+                        }
+                    }
+                    
+                    
                 },
                 error: function () {
                     alert('Something wrong');
@@ -124,6 +141,15 @@ module tcp {
             return false;
         });
     }
+
+    //function processDifferences(superDoc, diffDoc) {
+    //    var nodeHierarchy: HTMLElement[] = [];
+    //    nodeHierarchy.push(diffDoc.html);
+    //    var differenceStack = new Stack<NodeDifference>();
+    //    var differences = new List<NodeDifference>();
+    //    ProcessNode(nodeHierarchy, differenceStack, differences);
+    //    MergeDifferences(superDoc, differences);
+    //}
 
     export function applyBindingRule(el: HTMLElement, props: { [key: string]: any; }) {
         var bindingRule = <IUIBindingInfo> tsp.evalRulesSubset(props, prefix);
@@ -421,6 +447,6 @@ tsp._if('input[form]',
         ignoreIfFormAttrSupport: true,
         propertyToMonitor: 'value',
     }).mergedObject
-)._if('form[mode="client-side-only"]', 
+)._if('form[data-mode="client-side-only"]', 
     tcp.createAjaxRule({}).mergedObject
 );

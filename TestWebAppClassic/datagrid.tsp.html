@@ -40,14 +40,16 @@
 	
 	<script data-mode="both">
 	    tsp.applyRules({
-            trigger: tsp.ruleEvalTrigger.onAsyncScriptLoad | tsp.ruleEvalTrigger.onPageLoad
+	        trigger: tsp.ruleEvalTrigger.onAsyncScriptLoad | tsp.ruleEvalTrigger.onPageLoad | tsp.ruleEvalTrigger.onClientSideFormSubmit
 	    });
 	</script>
 
 
 </head>
 <body>
-	<form id="query1" action="datagrid.query1.tsp.html" data-mode="client-side-only"></form>
+	<form id="query1" action="datagrid.query1.tsp.html" data-mode="client-side-only">
+        <input type="submit" value="refresh" />
+	</form>
     <script type="text/emmet" data-mode="server-side-only" data-processor="tsp.MakeRCsUnique">
         table#myTable>(
             (thead>tr>td{column $}*6)

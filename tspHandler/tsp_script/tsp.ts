@@ -187,6 +187,9 @@ module tsp {
                     }
                 }
             }
+            if (options.trigger & ruleEvalTrigger.onClientSideFormSubmit) {
+                tcp.reapplyRulesOnFormSubmit = true;
+            }
         }
     }
 
@@ -213,7 +216,8 @@ module tsp {
     export enum ruleEvalTrigger {
         onPageLoad = 1,
         onAsyncScriptLoad = 2,
-        onFormElementChange = 4
+        onFormElementChange = 4,
+        onClientSideFormSubmit = 8,
     }
 
     //#endregion
@@ -718,7 +722,13 @@ module tsp {
     }
 
     export function fillGrid(el: HTMLElement, props: { [key: string]: any; }) {
-        if (tsp.data(el).initialized) return;
+        if (tsp.data(el).initialized) {
+            if (tsp.data(el).repopulate) {
+                tsp.data(el).repopulate = false;
+                refreshTemplateWithRectCoords(el);
+            }
+            return;
+        }
         var populateRule = <IPopulateRectCoordinates> evalRulesSubset(props, prefix);
         getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
             tsp.data(el).populateRule = populateRule;
