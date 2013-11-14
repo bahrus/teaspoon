@@ -144,22 +144,8 @@ namespace tspHandler
         #region Process Methods
         public static HtmlDocumentFacade Process(this HtmlDocumentFacade doc)
         {
-            var docInherits = doc.querySelectorAll("html>head>meta[name='inherits']");
-            if (docInherits.Count > 0)
-            {
-                if (docInherits.Count > 1)
-                {
-                    throw new ArgumentException("Cannot inherit from more than one page");
-                }
-                var metaEl = docInherits[0];
-                var baseDocRelativeURL = metaEl.getAttribute("content");
-                if (string.IsNullOrEmpty(baseDocRelativeURL)) throw new ArgumentException("No Content Attribute found");
-                var inheritedContentFilePath = doc.GetHostContentFilePath(baseDocRelativeURL);
-                var superHandler = new tspHandler(inheritedContentFilePath);
-                var superDoc = superHandler.ProcessFile();
-                ProcessDifferences(superDoc, doc);
-                return superDoc;
-            }
+            var mergedDoc = ProcessDifferences(doc);
+            if (mergedDoc != null) return mergedDoc;
             ProcessEmmetSpaces(doc);
             ProcessTSPStyles(doc);
             ProcessTCPStyles(doc);
@@ -179,8 +165,27 @@ namespace tspHandler
 
         #region Process Differences
 
-        public static void ProcessDifferences(HtmlDocumentFacade superDoc, HtmlDocumentFacade diffDoc)
+        public static HtmlDocumentFacade ProcessDifferences(HtmlDocumentFacade doc)
         {
+            var urlSource = HttpContext.Current.Request["tsp-src"];
+            if (urlSource != null)
+            {
+                return null;
+            }
+            HtmlDocumentFacade diffDoc = doc;
+            var docInherits = doc.querySelectorAll("html>head>meta[name='inherits']");
+            if (docInherits.Count == 0) return null;
+            if (docInherits.Count > 1)
+            {
+                throw new ArgumentException("Cannot inherit from more than one page");
+            }
+            var metaEl = docInherits[0];
+            var baseDocRelativeURL = metaEl.getAttribute("content");
+            if (string.IsNullOrEmpty(baseDocRelativeURL)) throw new ArgumentException("No Content Attribute found");
+            var inheritedContentFilePath = doc.GetHostContentFilePath(baseDocRelativeURL);
+            var superHandler = new tspHandler(inheritedContentFilePath);
+            HtmlDocumentFacade superDoc = superHandler.ProcessFile();
+            
             //var nodeDiffs = new NodeDifference();
             var nodeHierarchy = new Stack<HtmlNodeFacade>();
             nodeHierarchy.Push(diffDoc.html);
@@ -188,7 +193,7 @@ namespace tspHandler
             var differences = new List<NodeDifference>();
             ProcessNode(nodeHierarchy, differenceStack, differences);
             MergeDifferences(superDoc, differences);
-
+            return superDoc;
         }
 
         private static void ProcessNode(Stack<HtmlNodeFacade> nodeHierarchy, Stack<NodeDifference> differenceStack, List<NodeDifference> result)

@@ -106,7 +106,47 @@ module tcp {
 
     //#endregion
 
-    //#region rule application   
+    //#region rule application
+    function groupElsByTagName(groupings: { [key: string]: HTMLElement[]; }, node: Node) {
+        var srcChildren = node.childNodes;
+        for (var i = 0, n = srcChildren.length; i < n; i++) {
+            var srcChld = <HTMLElement> srcChildren[i];
+            var nn = srcChld.nodeName;
+            if (nn == '#text') continue;
+            var nns = groupings[nn];
+            if (!nns) {
+                nns = [];
+                groupings[nn] = nns;
+            }
+            nns[nns.length] = srcChld;
+        }
+    }
+    function processDifferences(srcDiffNode: Node, destDiffNode: Node) {
+        if (!srcDiffNode) return;
+        if (!destDiffNode) return;
+        if (srcDiffNode.nodeName == 'SCRIPT') return;
+        var srcNodesByTagName: { [key: string]: HTMLElement[]; } = {};
+        var destNodesByTagName: { [key: string]: HTMLElement[]; } = {};
+        groupElsByTagName(srcNodesByTagName, srcDiffNode);
+        groupElsByTagName(destNodesByTagName, destDiffNode);
+        for (var tagName in srcNodesByTagName) {
+            var reducedNodes: HTMLElement[] = [];
+            var elems = srcNodesByTagName[tagName];
+            for (var i = 0, n = elems.length; i < n; i++) {
+                var elem = elems[i];
+                var mergeAttrib = elem.getAttribute('data-xmerge');
+                if (mergeAttrib) {
+                    switch (mergeAttrib) {
+                        case 'Append':
+                            destDiffNode.appendChild(elem);
+                            debugger;
+                            break;
+                    }
+                } else {
+                }
+            }
+        }
+    }      
 
     export function ajaxForm(el: HTMLElement, props: { [key: string]: any; }) {
         $(el).submit(function () {
@@ -114,23 +154,40 @@ module tcp {
             $.ajax({
                 url: $(this).attr('action'),
                 type: $(this).attr('method'),
-                data: $(this).serialize(),
+                data: $(this).serialize() + '&tsp-src=ajaxForm&ts=' + (new Date()).getUTCMilliseconds(),
                 dataType: 'html',
                 success: function (data) {
-                    var parsed = jQuery(data);
-                    for (var i = 0, n = parsed.length; i < n; i++) {
-                        var tg = parsed[i];
-                        if (tg.tagName == 'SCRIPT' && tg.getAttribute('data-model').length > 0) {
-                            eval(tg.innerHTML);
-                            if (tcp.reapplyRulesOnFormSubmit) {
-                                $('[data-populated]').attr('data-populated', false).each((indx, el : HTMLElement) => {
-                                    tsp.data(el).repopulate = true;
-                                });
-                                tsp.applyRules();
-                            }
+                    //var parsed = jQuery.parseHTML(data);
+                    var parsed = $('<html>').html(data);
+                    var bProcessedHead = false;
+                    var bProcessedBody = false;
+                    var root = parsed[0];
+                    var dataModelScripts = root.querySelectorAll('script[data-model]');
+                    for (var i = 0, n = dataModelScripts.length; i < n; i++) {
+                        var tg = <HTMLScriptElement> dataModelScripts[i];
+                        eval(tg.innerHTML);
+                        if (tcp.reapplyRulesOnFormSubmit) {
+                            $('[data-populated]').attr('data-populated', false).each((indx, el: HTMLElement) => {
+                                tsp.data(el).repopulate = true;
+                            });
+                            tsp.applyRules();
                         }
+                            //debugger;
+                            //var p = tg.parentNode;
+                            //if (!bProcessedHead && p.nodeName == 'HEAD') {
+                            //    processDifferences(<HTMLElement>p, <HTMLElement>document.head);
+                            //    bProcessedHead = true;
+                            //} else if (!bProcessedBody && p.nodeName == 'BODY') {
+                            //    processDifferences(<HTMLElement>p, <HTMLElement>document.body);
+                            //    bProcessedBody = true;
+                            //}
+
+                        
                     }
-                    
+                    var head = root.querySelector('head');
+                    var bod = root.querySelector('body');
+                    processDifferences(head, document.head);
+                    processDifferences(bod, document.body); 
                     
                 },
                 error: function () {
