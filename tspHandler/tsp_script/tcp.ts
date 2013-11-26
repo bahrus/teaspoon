@@ -132,17 +132,56 @@ module tcp {
         for (var tagName in srcNodesByTagName) {
             var reducedNodes: HTMLElement[] = [];
             var elems = srcNodesByTagName[tagName];
+            var destElems = destNodesByTagName[tagName];
             for (var i = 0, n = elems.length; i < n; i++) {
-                var elem = elems[i];
-                var mergeAttrib = elem.getAttribute('data-xmerge');
+                var srcElem = elems[i];
+                var mergeAttrib = srcElem.getAttribute('data-xmerge');
                 if (mergeAttrib) {
+                    //#region Merge Nodes
                     switch (mergeAttrib) {
                         case 'Append':
-                            destDiffNode.appendChild(elem);
-                            debugger;
+                            destDiffNode.appendChild(srcElem);
+                            break;
+                        case 'Replace':
+                            var elemId = srcElem.id;
+                            if (elemId) {
+                                var destEl = <HTMLElement> document.getElementById(elemId);
+                                if (destEl) {
+                                    var ndP = destEl.parentNode;
+                                    ndP.replaceChild(srcElem, destEl);
+                                }
+                            } else {
+                                var matches = srcElem.getAttribute('data-xmatch');
+                                if (matches) {
+                                    var matchesArr = matches.split(' ');
+                                    var qry: string[] = [];
+                                    for (var j = 0, n = matchesArr.length; j < n; j++) {
+                                        var match = matchesArr[j];
+                                        qry.push(match + '="' + srcElem.getAttribute(match) + '"');
+                                    }
+                                    var qry2 = qry.join(' and ');
+                                    var hNode = <HTMLElement> destDiffNode;
+                                    qry2 = srcElem.nodeName.toLowerCase() + '[' + qry2 + ']';
+                                    var matchingNd = hNode.querySelectorAll(qry2);
+
+                                }
+                            }
+                            
                             break;
                     }
+                    //#endregion
                 } else {
+                    var elemId = srcElem.id;
+                    if (elemId) {
+                        var destEl = document.getElementById(elemId);
+                        if (destEl) {
+                            processDifferences(srcElem, destEl);
+                        }
+                    } else { //TODO:  look for match
+                        if (destElems && (destElems.length > i)) {
+                            processDifferences(srcElem, destElems[i]);
+                        }
+                    }
                 }
             }
         }

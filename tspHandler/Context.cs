@@ -41,6 +41,7 @@ namespace tsp
             var req = HttpContext.Current.Request;
             foreach (string par in HttpContext.Current.Request.QueryString)
             {
+                if (par == null) continue;
                 returnObj[par] = req[par];
             }
             return returnObj;
