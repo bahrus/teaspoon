@@ -52,8 +52,7 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net20\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Noesis.Javascript, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -105,6 +104,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="tsp_script\tcp.ts" />
     <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
     <Content Include="Schemas\VS2012\CSS\css-main.xml" />
@@ -126,8 +127,6 @@
     <Content Include="Schemas\WebExpress4\CSS\tsp.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
-    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
@@ -203,7 +202,6 @@
     <TransformXml Source="$(ProjectDir)Schemas\VS2013\HTML\original_commonHTML5Types.xsd" Transform="$(ProjectDir)Schemas\VS2012\HTML\tsp_vs_commonHTML5Types.xsd" Destination="$(ProjectDir)Schemas\VS2013\HTML\commonHTML5Types.xsd" />
     <TransformXml Source="$(ProjectDir)Schemas\VS2013\CSS\original_css-main.xml" Transform="$(ProjectDir)Schemas\VS2012\CSS\tsp_diff.xml" Destination="$(ProjectDir)Schemas\VS2013\CSS\css-main.xml" />
     <Copy SourceFiles="$(ProjectDir)Schemas\VS2012\CSS\tsp.xml" DestinationFolder="$(ProjectDir)Schemas\VS2013\CSS\" />
-    
   </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES3</TypeScriptTarget>

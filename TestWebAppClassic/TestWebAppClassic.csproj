@@ -79,8 +79,7 @@
     <Content Include="Scratch2.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
-    <Content Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
-    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
+    <Content Include="StandardsDetail.html" />
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
@@ -175,8 +174,6 @@
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
-    <Content Include="Scripts\typings\jquery.dynatree\jquery.dynatree.d.ts" />
-    <Content Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <Content Include="toc_Subsection.tsp.html" />
     <Content Include="toc_TreeView.tsp.html" />
     <Content Include="skin\icons-rtl.gif" />
@@ -190,6 +187,10 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <TypeScriptCompile Include="Scripts\typings\jquery.dynatree\jquery.dynatree.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableTestModel.cs" />
@@ -235,7 +236,7 @@
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptTarget>ES3</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
   </PropertyGroup>

@@ -760,7 +760,7 @@ module tsp {
                         tcp._when('mousemove', {
                             selectorNodeTest: 'td',
                             handler: function (evt) {
-                                var el = evt.srcElement;
+                                var el = <HTMLElement> evt.srcElement;
                                 el.title = el.innerText;
                             }
                         });

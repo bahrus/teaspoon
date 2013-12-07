@@ -20,6 +20,11 @@ namespace tspHandler
             return HttpContext.Current.Request[tspProcessor.modeParameter] == "design";
         }
 
+        public bool IsTraceMode()
+        {
+            return HttpContext.Current.Request[tspProcessor.modeParameter] == "trace";
+        }
+
         public tspHandler() { }
 
         public tspHandler(string filePath)
@@ -37,6 +42,7 @@ namespace tspHandler
 
         public HtmlDocumentFacade ProcessFile()
         {
+            
             var doc = new HtmlDocumentFacade(this);
             return doc.Process();
             
@@ -74,5 +80,7 @@ namespace tspHandler
         string GetRelativePathOfFilePath(string path);
 
         bool IsDesignMode();
+
+        bool IsTraceMode();
     }
 }

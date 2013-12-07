@@ -11,11 +11,11 @@ interface JQuery {
     dynatree(option?: string, ...rest: any[]): any;
 }
 
-interface JQueryStatic {
-    ui: {
-        dynatree: DynatreeNamespace;
-    };
-}
+//interface JQueryStatic {
+//    ui: {
+//        dynatree: DynatreeNamespace;
+//    };
+//}
 
 interface DynaTree {
     activateKey(key: string): DynaTreeNode;

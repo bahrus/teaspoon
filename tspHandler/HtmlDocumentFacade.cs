@@ -35,10 +35,13 @@ namespace tspHandler
 
         public HtmlDocumentFacade(IDocumentHost host)
         {
-            _htmlDoc = new HtmlDocument();
             _host = host;
+            this.Trace("createHTMLDocument");
+            _htmlDoc = new HtmlDocument();
+            
             string content = host.GetContentOfDocument();
             _htmlDoc.LoadHtml(content);
+            this.Trace("endCreateHTMLDocument");
         }
 
         

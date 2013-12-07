@@ -22,6 +22,7 @@ namespace tspHandler
         public const string ClientSideMode = "client-side-only";
         public const string BothMode = "both";
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
+
         
 
         public static object InvokeServerSideMethod(string StaticMethodString, object[] args)
@@ -141,14 +142,26 @@ namespace tspHandler
             return doc;
         }
 
+        public static void Trace(this HtmlDocumentFacade doc, string key)
+        {
+            if (!doc.Host.IsTraceMode()) return;
+            var nd = DateTime.Now;
+            HttpContext.Current.Response.AddHeader(key, (nd.Ticks / 10000000d).ToString());
+        }
+
         #region Process Methods
         public static HtmlDocumentFacade Process(this HtmlDocumentFacade doc)
         {
+            Trace(doc, "ProcessDifferences");
             var mergedDoc = ProcessDifferences(doc);
             if (mergedDoc != null) return mergedDoc;
+            Trace(doc, "ProcessEmmetSpaces");
             ProcessEmmetSpaces(doc);
+            Trace(doc, "ProcessTSPStyles");
             ProcessTSPStyles(doc);
+            Trace(doc, "ProcessTCPStyles");
             ProcessTCPStyles(doc);
+            Trace(doc, "ProcessServerSideForms");
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
             {
@@ -160,6 +173,7 @@ namespace tspHandler
                 ProcessServerSideIncludes(doc);
                 ProcessServerSideScripts(doc);
             }
+            Trace(doc, "EndProcess");
             return doc;
         }
 
@@ -173,7 +187,9 @@ namespace tspHandler
                 return null;
             }
             HtmlDocumentFacade diffDoc = doc;
+            doc.Trace("begindocInherits");
             var docInherits = doc.querySelectorAll("html>head>meta[name='inherits']");
+            doc.Trace("enddocInherits");
             if (docInherits.Count == 0) return null;
             if (docInherits.Count > 1)
             {

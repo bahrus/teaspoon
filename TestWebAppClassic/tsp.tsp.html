@@ -12,6 +12,25 @@
             
         });
     </script>
+    <script src="tsp_script/tsp.js" data-mode="both"></script>
+    <script src="tsp_script/tcp.js"></script>
+    <script>
+        function openDetail(evt, selector) {
+            var lnk = evt.srcElement;
+            var h = lnk.getAttribute('href');
+            var t = document.querySelectorAll('iframe[name="detail"]');
+            t[0].src = h;
+        }
+    </script>
+    <style type="text/css" data-js-compiler="tsp.event-handlers">
+        a.dynatree-title {
+            event: click;
+            handler: openDetail;
+        }
+    </style>
+    <script>
+        tsp.applyRules(document);
+    </script>
 </head>
 <body>
     <!-- manually attach allowOverflow method to pane -->
@@ -37,7 +56,7 @@
     </div>
 
     <div class="ui-layout-center">
-        This CENTER pane auto-sizes to fit the space <i>between</i> the 'border-panes'
+        <iframe name="detail" width="100%" height="100%"></iframe>
     </div>
 </body>
 </html>
