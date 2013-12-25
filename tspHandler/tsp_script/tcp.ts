@@ -516,19 +516,19 @@ module tcp {
         for (var j = 0, n = nds.length; j < n; j++) {
             var nd = <HTMLElement> nds[j];
             if (typeof (MutationObserver) !== 'undefined') {
-                //var observer = new MutationObserver( (mrs : MutationRecord[]) => {
-                //    // Handle mutations
-                //    for (var i = 0, n = mrs.length; i < n; i++) {
-                //        var mr = mrs[i];
-                //        if (mr.attributeName !== 'style') continue;
+                var observer = new MutationObserver( (mrs : MutationRecord[]) => {
+                    // Handle mutations
+                    for (var i = 0, n = mrs.length; i < n; i++) {
+                        var mr = mrs[i];
+                        if (mr.attributeName !== 'style') continue;
 
-                //        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
-                //        break;
-                //    }
-                //});
-                //observer.observe(el, {  
-                //    attributes: true,
-                //});
+                        handleStyleDisplayChangeEventForLazyLoadedElement(<HTMLElement> mr.target);
+                        break;
+                    }
+                });
+                observer.observe(nd, {  
+                    attributes: true,
+                });
             } else if (nd.attachEvent) {
                 //TODO:  deprecate eventually - ie 10 and earlier
                 nd.attachEvent('onpropertychange', tcp.handleOnPropertyChange);

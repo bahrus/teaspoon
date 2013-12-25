@@ -75,6 +75,8 @@
     <Content Include="Emmet\index.html" />
     <Content Include="form1.submitA.tsp.html" />
     <Content Include="form1.tsp.html" />
+    <Content Include="HelloWorld.tsp.html" />
+    <Content Include="Images\HelloWorld.png" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scratch2.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />

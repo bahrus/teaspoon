@@ -350,7 +350,6 @@ module tsp {
         return typeof (mode) == 'undefined' || mode !== 'server'
     }
 
-    
 
     //#region TSP Rules
 

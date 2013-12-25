@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title> Specification</title>
 	<style type="text/css">
 	.auto-style1 {
 		margin-left: 40px;
@@ -9,21 +9,35 @@
 	TD.modesTD{
 		width:120px;
 	}
+	    .auto-style2 {
+            width: 100%;
+        }
+	    .auto-style4 {
+            width: 178px;
+        }
 	</style>
+	<title>
+	Typed Server Pages, a Dual Browser Framework
+	</title>
 </head>
 <body>
+
     <div id="nutshell"><h3>In a nutshell</h3>
-    <p>TSP ("teaspoon") stands for Typed Server Pages. It is a framework for 
-	building web pages. TSP content is built using files containing static HTML5 
-	compliant markup as a base, but modified dynamically using 
-    JavaScript combined with JSON or other data.&nbsp; But the twist is the same 
-	JavaScript code can execute on the server and/or the client.&nbsp; The 
-	JavaScript of the supporting TSP framework is compiled from Typescript (hence the "Typed" 
+    <p>Typed Server Pages (TSP) is an implementation of the "Dual Browser Specification" (DBS) for 
+	building web pages. DBS content is built using files containing static HTML5-compliant 
+	markup as a base, but modified dynamically using 
+    JavaScript, combined with data in JSON or other formats.&nbsp; But the twist is the same 
+	JavaScript code can execute on the server and/or the client.&nbsp; 
+	
+		</p>
+		<p>TSP is implemented as an asp.net handler.&nbsp; The 
+	JavaScript of the supporting TSP implentation is compiled from Typescript (hence the "Typed" 
 	in the name), and applications built using the TypeScript compiler / IDE 
-	tools could benefit from the added type safety. But custom application logic may be written entirely in 
+	tools could benefit from the added type safety when integrating with the API. But custom application logic may be written directly in 
 	JavaScript if preferred (or other languages which compile to JavaScript).&nbsp; 
-	While JavaScript becomes a primary vehicle for devlivering content both on 
-	the client on the server, there is one island of functionality 
+		</p>
+		<p>While JavaScript becomes a primary vehicle for devlivering content both on 
+	the client on the server in the Dual Browser Framework, there is one island of functionality 
 	implementation left where a more mature language (from a server point of 
 	view) can be used - in generating the data model.&nbsp; </p>  
     
@@ -38,7 +52,7 @@
 		limited access to a server-side representation of DOM, as the script will be executed in an environment 
 		where the base html has been parsed in a "virtual browser". It is 
 		limited in that it will not have access to the brower, window or event 
-		objects, which only make sense in a true browser environment.&nbsp; In a a host 
+		objects, which only make sense in a true browser environment.&nbsp; In a host 
 		environment where the custom attribute tags is not recognized by the 
 		server-side processor, such as a plain vanilla Apache web server, or a 
 		local file server, 
@@ -53,24 +67,23 @@
 			<li>Uniformity of JavaScript engine.</li>
 			<li>Targeting client devices where the JavaScript engine cannot be 
 			guaranted to be very powerful or comply to the latest standards, or 
-			where JavaScript might be disabled completely.</li>
+			where JavaScript might be disabled completely (such as Lync).</li>
 		</ul>
     </div>
 	<div id="prototyping"><h3>Prototyping</h3>
 	The ease with which a developer can finesse in which tier (server vs. 
 		client) dynamic logic gets applied means that, with a few minor 
 		adjutments, one can turn a high fidelity prototype -- running on a 
-		simple out-of-the-box Apache web, or local file server, where all the 
-		logic executes in a cutting edge browser of the developer's choosing, 
+		simple out-of-the-box web server, or even a local file server, where all the 
+		logic executes in a browser of the developer's choosing, 
 		using static data -- into a fully functioning production application 
 		with real business data, targeting a large assortment of devices.&nbsp; In 
 		fact, the migration can be so seamless and non intrusive that development could continue between 
 		UI specialists and nitty gritty "engineering" programmers in parallel.&nbsp; 
-		Supporting this kind of development is an important guiding principle 
-		for this principle</div>
+		Supporting this kind of development pattern is an important guiding principle for this framework.</div>
 	<div id="modes">
 		<h3>Modes</h3>
-		<a href="#nutshell">As we've seen</a>, a central custom attribute is introduced in TSP:  data-mode, which can be set, 
+		<a href="#nutshell">As we've seen</a>, a central custom attribute is introduced in DBS:  <em>data-mode</em>, which can be set, 
 		for example, to 'server-side-only'.&nbsp;&nbsp; 
 		This attribute is applicable to &lt;script/&gt;, &lt;iframe/&gt;, &lt;form/&gt;, &lt;style/&gt;.&nbsp; 
 		The following table lists all the possible values, the meaning, and the 
@@ -93,7 +106,7 @@
 									</tr>
 									<tr>
 										<td>server-side-only</td>
-										<td>Script only executes within "virtual 
+										<td>Script only executes within a "virtual 
 										browser" on server.&nbsp; After 
 										processing, this virtual 
 										browser is then "DOM-serialized" to html, which is 
@@ -105,6 +118,14 @@
 										browser and the virtual browser on 
 										server.</td>
 									</tr>
+                                    <tr>
+                                        <td>depends</td>
+                                        <td>
+                                            Custom logic can be used to determine in which tier the code should execute.  
+                                            The custom attribute data-dynamic-mode will call a server side function / method, which will return
+                                            one of the other three values.
+                                        </td>
+                                    </tr>
 				</table>
 								</td>
 				<td>client-side-only (except in case of Model script tags)</td>
@@ -124,6 +145,14 @@
 						<td>Content from referenced page is merged into parent 
 						document.</td>
 					</tr>
+                    <tr>
+                        <td>depends</td>
+                        <td>
+                            Custom logic can be used to determine in which tier the code should execute.  
+                            The custom attribute data-dynamic-mode will call a server side function / method, which will return
+                            one of the other three values.
+                        </td>
+                    </tr>
 				</table>
 				</td>
 				<td>client-side-only</td>
@@ -136,13 +165,13 @@
 					<tr>
 						<td class="modesTD">client-side-only</td>
 						<td>On form submit, form fields are set via AJAX request to server, 
-						without redrawing the page. HTML returned, which is merged into DOM document</td>
+						without redrawing the page. HTML markup is returned, which is merged into DOM document</td>
 					</tr>
 					<tr>
 						<td><strong>server-side-only</strong></td>
 						<td>Standard form.&nbsp; On submit, form fields are sent 
 						to server, which processes the user inputs, and page is 
-						replaced by a new page.</td>
+						replaced by a new page (barring specification of target).</td>
 					</tr>
 				</table>
 				</td>
@@ -151,8 +180,8 @@
 			</tr>
 		</table>
 		
-		In the case of the style attribute, if the custom attribute data-js-compiler is set, then the style attribute will be compiled into javascript, 
-		and the data-mode attribute then becomes applicable, taking on the same meaning and default as for the script tag.  For example, 
+		In the case of the style attribute, if the custom attribute <em>data-js-compiler</em> is set, then the style attribute will be compiled into javascript, 
+		and the <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.  For example, 
 		as discussed in more detail later, the example below:
 	
 <br>&nbsp;		
@@ -220,34 +249,23 @@
 </div>
 	
 	
-	</div>
+	
 	<p>&nbsp;</p>
-	<p>The JavaScript code inside the script tag will in this case be discarded 
-	on the server side during run time in the context of a functioning TSP 
-	container.&nbsp; The dummy data is there for two purposes -- it allows 
-	prototyping in a simple file server enviornment to provide a rudimentary 
-	representation of how it will look with actual data. Secondly, if the 
-	developer tests out some JavaScript&nbsp; by directly embedded it in the 
+	<p>The JavaScript code inside this kind of modeling script tag will be discarded on the server side during run time in the context of a functioning DBS container.&nbsp; The dummy data is there for two purposes -- it allows prototyping in a simple file server enviornment to provide a rudimentary representation of how it will look with actual data. Secondly, if the developer tests out some JavaScript&nbsp; by directly embedding it in the 
 	page, then references to the model will benefit from intellisense, and 
-	rudimentary inconsistency checks, at least in sophisticated enough IDE's.</p>
-	<p>The key new attribute here is the <span style="background:#ffffff;color:#ff0000">data-model</span> 
-	attribute.&nbsp; Constructin the model data / structure is the one place 
-	where the application logic we can move utlize platforms other than a 
-	JavaScript runtime, if we wish.&nbsp; The attribute specifies a static 
-	method in a static class.&nbsp; This method may be defined in one of two 
-	languages:&nbsp; JavaScript, or in whatever specific implementation of the 
-	TSP framework is running.&nbsp; The example above wraps the class identifier 
+	rudimentary inconsistency checks, at least in sophisticated enough IDE's.&nbsp; There is only a small performance hit from including dummy data inside the script tag - the server will spend slightly more time parsing the dom file, particularly if the dummy data is extraordinarily large.</p>
+	<p>The key new attribute here is the <span style="background:#ffffff;color:#ff0000">data-model</span> attribute.&nbsp; Constructing the model (or &quot;view model&quot;) data structure is the one place in the application logic where we can utlize platforms other than a JavaScript runtime, if we wish.&nbsp; The attribute specifies a static method in a static class.&nbsp; This method may be defined in one of two language runtimes:&nbsp; i) JavaScript, or ii) in whatever specific implementation of the DBS framework is running.&nbsp; This string identifier for a server-side method will be referred to as the &quot;server-side method string&quot;.&nbsp; The example above wraps the class identifier 
 	in brackets, which signifies to look for a class in a .net assembly (for the 
 	.net based implementation of TSP).&nbsp; No brackets would indicate to use a 
 	JavaScript call (made on the server side, regardless of the data-mode 
 	attribute).&nbsp; The returned object from this static method is serialized 
-	into JSON by the TSP Container. The static method can access the http 
+	into JSON by the TSP Container, and added to the global &#39;model&#39; object, keyed according to the id of the script tag (&#39;product&#39; in the example above). The static method can access the http 
 	context object to gain access to any query string parameters, cookies, etc.</p>
-	<p>Like other script tags, the ones which contain the data-model attribute 
-	also support the data-mode attribute, but its meaning is a bit different 
+	<p>Like other script tags, the ones which contain the <em>data-model </em>attribute 
+	also support the <em>data-mode</em> attribute, but its meaning is a bit different 
 	here.&nbsp; Regardless of the value of data-mode, the data model will be 
 	generated by the server, and will wipe away the content inside the script 
-	tag.&nbsp; The only questions are whether 1) the data model needs to be 
+	tag.&nbsp; The only questions are whether 1) the data model JSON needs to be 
 	downloaded to the client and 2) if so, whether the download should be part 
 	of the payload of the original page, or instead should be downloaded 
 	separately from the page via a call-back ajax call.&nbsp; This is sorted out 
@@ -259,14 +277,14 @@
 		However, the data will be excluded from the output sent to the client.</li>
 		<li>If attribute <em>data-mode</em> is 'both' (the default in this 
 		special script tag case), this will do the same as the serer-side-only 
-		setting mentioned above, but it will transmit the the data to the 
+		setting mentioned above, but it will transmit the data to the 
 		client. If the HTML5 attribute 'async' is set for the script tag, 
 		however, the data which was retrieved for purposes of server side 
 		processing will be briefly cached, and instead of embedding the data in 
 		the main page payload, the client will make an ajax request to retrieve 
 		the data and merge it into the global object<em> model </em>(and in 
 		supported browsers, the async flag will allow other processing to 
-		continue while waiting.</li>
+		continue while waiting).&nbsp; This complex sequence of events will be managed by the TSP container.&nbsp; One other attribute comes into play when data-mode is &#39;both&#39;:&nbsp; The <em>data-csFilter</em> attribute.&nbsp; The value of such an attribute is also expected to be in the form of a server-side method string, and applies further filtering of the object derived from the data-model attribute.&nbsp; This allows the server-side processing to have access to a large object containing potentially sensitive information, but to whittle down the object to a subset which is relevant and public enough that it is appropriate to send this subset down to the client.</li>
 		<li>If attribute <em>data-mode</em> is 'client-side-only', the data will 
 		still ultimately be retrieved by the server.&nbsp; However, the act of 
 		retrieving the data will happen much later, and will not be made until 
@@ -274,23 +292,236 @@
 		request.&nbsp; The AJAX request will go to the server, which will still 
 		call the static method specified by the data-model attribute and pass 
 		the JSON serialized back to the client, which will merge the data into 
-		the global <em>model </em>object.</li>
+		the global <em>model </em>object.&nbsp; Again, this complex sequence will be managed by the TSP container behind the scenes.</li>
 	</ul>
-	<p>When data is retrieved asynchronously on the client, it will be up to the 
-	developer to ensure that any elements of the page which depend on this data, 
-	should get (re)evaluated following the retrieval of the data.&nbsp; The TSP 
-	framework will provide some support for such scenarios.</p>
+	<p>When data is retrieved asynchronously on the client, it will be up to the developer to ensure that any elements of the page which depend on this data, should get (re)evaluated following the retrieval of the data.&nbsp; The TSP framework provides support for some such scenarios.</p>
 	<p>&nbsp;</p>
-	
+	</div>
 	<div id="server-side-script">
 	<h3>Server side script tags</h3>
 	<h4>Implementation</h4>
 	
-		<p>Central to the TSP Framework is the concept of a "virtual browser" 
-		running in the server.&nbsp; This concept is a simple extension of the 
-		idea behind node.js and other server-side solutions which 
-		provide a wrapper around the Google Chrome V8 engine.  But while those solutions
-		 </p>
+		<p>Central to DBS is the concept of a &quot;virtual browser&quot; running in the server.&nbsp; This concept is a simple extension of the idea behind node.js and other server-side solutions which provide a wrapper around the Google Chrome V8 engine. But while those solutions can execute JavaScript, they do not emulate other critical aspects of what happens in a browser, starting with a DOM parser which can read a HTML compliant document, and query and manipulate the document using calls such as document.getElementById, or document.querySelectorAll, or node.appendChild.&nbsp; The following table provides a &quot;shopping list&quot; of functionality needed to implement a virtual browser with enough features to support the DBS.</p>
+
+        <table class="auto-style2">
+            <thead>
+                <tr>
+                    <th colspan="2">Virtual Browser Shopping List</th>
+                </tr>
+                <tr>
+                    <th style="width:200px">Functionality</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>JavaScript Engine</td>
+                <td>Ideally should have optimal performance, and be compatible with the JavaScript engine availalbe in modern browsers, 
+                    so that the same code can work both on the server as well as the client.
+
+                </td>
+            </tr>
+            <tr>
+                <td>HTML Parser to DOM Tree</td>
+                <td>Generally needs to be a bit more sophisticated than a simple xml parser, because HTML5 has more nuances than xml - 
+                    it needs to support tags with no closing tag, such as the br tag, for example.  Ideally, it would be as tolerant of malformed html as the major browsers are 
+                    (and interpret such non compliance in a similar way) </td>
+            </tr>
+            <tr>
+                <td>DOM API (HTML 4)</td>
+                <td>The DOM tree needs to support the equivalent of all the DOM methods available to HTML 4 browsers, including document.getElementById, document.getElementsByTagName, node.removeChild, etc.&nbsp; However, the method names may be called something different..</td>
+            </tr>
+            <tr>
+                <td>DOM API (HTML 5)</td>
+                <td>The DOM tree needs to support newer methods including document.querySelectorAll</td>
+            </tr>
+            <tr>
+                <td>DOM API Facade</td>
+                <td>Some DOM Parsers / Tree libraries may support the heavy-lifting functionality needed for the DOM API which JavaScript needs, but the method names may not perfectly match what JavaScript expects in the context of a browser.&nbsp; For example, getElementById might be called GetElementByID.&nbsp; A layer on top of the native api may then need to be built to provide seemless integration with JavaScript.</td>
+            </tr>
+            
+            <tr>
+                <td>JQuery Facade</td>
+                <td>Being that a significant portion of modern JavaScript manipulation of DOM is done with JQuery, ideally, a significant subset of the JQuery api should work when manipulating the DOM Tree.</td>
+            </tr>
+            
+        </table>
+
+        <br />
+
+        The TSP implementation of the DBS mixed the following components to achieve the virtual browser.  
+        Aternative options are mentioned also.<br />
+        <br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Functionality</th>
+                    <th class="auto-style4">Library</th>
+                    <th>Alternatives</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>JavaScript Engine</td>
+                <td class="auto-style4"><a href="http://javascriptdotnet.codeplex.com/">Javascipt .NET</a></td>
+                <td>
+                    <ul>
+                        <li><a href="https://github.com/Taritsyn/MsieJavaScriptEngine">MsieJavaScriptEngine (Chakra)</a></li>
+                        <li><a href="http://v8dotnet.codeplex.com/">V8.NET</a></li>
+                                    
+
+                    </ul>
+
+                </td>
+            </tr>
+            <tr>
+                <td>HTML Parser to DOM Tree</td>
+                <td class="auto-style4"><a href="http://htmlagilitypack.codeplex.com/">Html Agility Pack</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="http://www.codeproject.com/Articles/609053/AngleSharp">AngleSharp</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jamietre/csquery">CSQuery</a>
+                        </li>
+                        <li>
+                            <a href="http://www.geekonweb.com/86/jsoup-a-better-html-parser-than-htmlagilitypack">Jsoup</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>DOM API (HTML 4)</td>
+                <td class="auto-style4"><a href="http://htmlagilitypack.codeplex.com/">Html Agility Pack</a></td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>DOM API (HTML 5)</td>
+                <td><a href="https://code.google.com/p/fizzler/">Fizzler</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="https://github.com/jamietre/csquery">CSQuery</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>DOM API Facade</td>
+                <td>tspHandler.HtmlDocumentFacade</td>
+            </tr>
+            <tr>
+                <td>JQuery Facade</td>
+                <td>tspHandler.JQueryFacade</td>
+            </tr>        
+        </table>
+
+        Because some aspects of JavaScript make no sense in the context of a server-side virtual browser, such
+        as event handling in raw html or animations using JQuery, omly a subset of the common JavaScript api's will be availale.
+
+
 	</div>
+    <div id="helloWorldExample">
+    <p style="font-weight: 700">
+        Example 1:&nbsp; Hello world</p>
+    <p>
+        Let us now look at the simplest example which demonstrates the dual browser markup in action:</p>
+    <p>
+        Consider the following markup:</p>
+    <p>
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="1" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;!</span><span style="background:#ffffff;color:#800000">DOCTYPE</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">html</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">html</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">xmlns</span><span style="background:#ffffff;color:#0000ff">=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">head</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">title</span><span style="background:#ffffff;color:#0000ff">&gt;&lt;/</span><span style="background:#ffffff;color:#800000">title</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;server-side-only&quot;&gt;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> pss = document.getElementById(</span><span style="background:#ffffff;color:#a31515">&#39;populateServerSide&#39;</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li>        <span style="background:#ffffff;color:#000000">pss.innerHTML = </span><span style="background:#ffffff;color:#a31515">&#39;Hello, world, server side&#39;</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">head</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">body</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">div</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;populateClientSide&quot;/&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">div</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;populateServerSide&quot;/&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> pcs = document.getElementById(</span><span style="background:#ffffff;color:#a31515">&#39;populateClientSide&#39;</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000">pcs.innerHTML = </span><span style="background:#ffffff;color:#a31515">&#39;Hello, world, client side&#39;</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">body</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">html</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+    As expected, the page displays two hello statements, but if processed by a DBS container such as TSP, viewing the generated html shows quite a significant difference in how the statements are generated:</p>
+    <p>
+        <img src="Images/HelloWorld.png" alt="Hello World" />
+    </p>
+    <p>
+        Note that the script with attribute data-mode=&#39;server-side-only&#39; has been removed from the output sent to the client (since it is not needed on the client), and has already executed on the server, so that the div with id populateServerSide is already populated on the server.</p>
+    <p>
+        prove the same JavaScript functions for oth the client rowset, as well as the virtual brower on the server.&nbsp; This same page, if served by a host which does not understand the DBS markup, would render the same exact display in the browser, but now the the markup sent to the client would be identical between the client-side and server-side tags.&nbsp; It is an important design-goal for DBS that the user not see a difference whether the same script is executed on the server vs. the client.&nbsp; But the observant may have spotted that in fact this example would actually fail the test -- in standard browers, the markup as specified would fail, because the script tag in the head is searching for a dom element that does not yet exist.&nbsp; The virtual browser implemented by TSP does not have this limitation.&nbsp; In this case the entire dom is first first loaded prior to the execution of the JavaScript.&nbsp; It is debatable whether this difference in behavior should be tolerated.&nbsp; At any rate, the safe thing to do is to place the JavaScript so it wwill work im all environments.</p>
+    <p>
+        In many cases we will want to expose common functions both to the server as well as the client.&nbsp; For example, we may have a function that populates a grid, and we may choose to populate the first page on the server side, but populate subsequent pages on the client-side based on a cached data model.&nbsp; That is what the attribute value <em>both </em> for data-mode is there for. But sometimes this common code will need to do slightly diffferent things depending on whether the code is executing on the server or on the client.&nbsp; To determine in what mode the code is running, make use of the DBS reserved global variable mode:</p>
+    <p>
+        
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="353" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> isClientMode = (</span><span style="background:#ffffff;color:#0000ff">typeof</span><span style="background:#ffffff;color:#000000"> (mode) == </span><span style="background:#ffffff;color:#a31515">&#39;undefined&#39;</span><span style="background:#ffffff;color:#000000"> || mode !== </span><span style="background:#ffffff;color:#a31515">&#39;server&#39;</span><span style="background:#ffffff;color:#000000">);</span></li>
+</ol>
+</div>
+</div>
+
+
+
+    </p>
+    </div>
+    <div id="iFrame">
+	<h3>Server side iFrames</h3>
+    <p>
+        Most server-side template engines, such PHP or ASP.net, supports some notion of server-side includes, 
+        where content from one file can be shared or 
+        embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is quite elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
+        <p>
+           
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="43" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;server-side-only&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">src</span><span style="background:#ffffff;color:#0000ff">=&quot;toc_TreeView.tsp.html#treeContainer&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;toc&quot;&gt;&lt;/</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+
+        </p>
+        <p>
+            The page being referenced should consist of a fully-formed html document -- like the script tag, we should
+            be able to switch the attribute between client-side-only and server-side-only -- and get similar (but not identical) results, 
+            so the page should, as a matter of best practices, work as a standalone page.
+        </p>
+        <p>
+            But notice the hash tag in the src.&nbsp; This is expected to specify a unique id found in the referenced document.&nbsp; The DBS container will, on the server, remove all content outside the tag matching the id (with some important exceptions mentioned below), and will add the document fragment to the containing DOM document.&nbsp;
+        </p>
+        <p>
+            The DBS document will also merge all script and css references found in the referenced page.&nbsp; It will look for client-side identical refrences to js files or css files, and not duplicate them in the event it finds a matching reference.</p>
+        <p>
+            Prior to embedding the content of the page the iframe tag references, the usual DBS processing will be executed on the referenced page, most notably execuring any server-side script or nested server-side iframes.</p>
+        <p>
+            If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request on this document, and allow different parts of the DOM to be emedded in different locations of the page based on the hash tag identifier.</p>
+        <p>
+            When emedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending the id&#39;s with the id of the containing iframe tag separated by an underscore.</p>
+        <p>
+            &nbsp;</p>
+    </div>
+    <div id="style">
+        <h3>Style directives</h3>
+    </div>
 </body>
 </html>
