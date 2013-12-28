@@ -407,6 +407,7 @@ namespace tspHandler
             if (serversideForms.Count == 0) return doc;
             var context = doc.createElement("script");
             //<script data-model= data-mode="both" id="context"></script>
+            //TODO:  don't hard code this
             context.setAttribute("data-model", "[tsp.Http].GetContext");
             context.setAttribute(ModeAttribute, BothMode);
             context.id = "httpContext";

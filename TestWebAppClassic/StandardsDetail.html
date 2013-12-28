@@ -293,9 +293,33 @@
 		call the static method specified by the data-model attribute and pass 
 		the JSON serialized back to the client, which will merge the data into 
 		the global <em>model </em>object.&nbsp; Again, this complex sequence will be managed by the TSP container behind the scenes.</li>
+        <li>If attribute <em>data-mode</em> is not specified, it will default to &#39;both&#39;.</li>
 	</ul>
 	<p>When data is retrieved asynchronously on the client, it will be up to the developer to ensure that any elements of the page which depend on this data, should get (re)evaluated following the retrieval of the data.&nbsp; The TSP framework provides support for some such scenarios.</p>
-	<p>&nbsp;</p>
+	<p>A special reserved model can be added to the page, as follows:</p>
+        
+
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="18" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-model</span><span style="background:#ffffff;color:#0000ff">=&quot;[Http].GetContext&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;myContext&quot;&gt;</span></li>
+<li style="background: #f3f3f3">&nbsp;<span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+
+        This 
+    
+	    special model will provide a JSON representation of the basic request object (query string parameters, cookies, etc) in the following form:<br />
+        <br />
+        Just as with standard model script tags, this special model can contain sample mockup inside the script for intellisense / prototyping purposes, and additionally&nbsp; the <em>data-mode </em> attribute will follow the 
+        same standard rules for script model tags, and the <em>data-csFilter</em> will also be honored as before.
+        <br /><br />
+        Other objects often associated with a web session, such as session objects or application cache, need to be exposed to the browser via 
+	    custom model tags.
+
 	</div>
 	<div id="server-side-script">
 	<h3>Server side script tags</h3>
@@ -523,5 +547,46 @@
     <div id="style">
         <h3>Style directives</h3>
     </div>
+    <p>
+        &nbsp;</p>
+    <p>
+        JQuery has proven to be a very popular library.&nbsp; Some of this popularity is due to succesfully building on the power of css selectors.&nbsp; However, JQuery is still very much a programming API.&nbsp; While JQuery may tend to encourage &quot;Declarative&quot; coding styles, it is not a directive based syntax like AngularJS.&nbsp;
+    </p>
+    <p>
+        The distinction between directive-based configuration and declaritive-based programming is somewhat murky, particularly in common parlance.&nbsp; Declarative programming actually has a formal definition - programming without mutable values.&nbsp; But often in casual conversation the term declarative is used when really the more effective term would be directive - e.g. &quot;Hibernate provides a declarative approach to binding to a database&quot; would be more descriptive if &quot;declarative&quot; is replaced with &quot;directive&quot;.&nbsp; For our purposes, we define directives as syntax containing no (or at least very few) method calls (and it should also satisfy the declarative criteria - no mutable values).&nbsp; So, for example, a JSON object, used to configure a datagrid, would be considered a directive element, as pure JSON does not allow for methods.&nbsp; (Typically, however, the JSON concept is extended to allow for syntax involving method calls -- for example, inside event handlers).&nbsp; The more an 
+        api relies on such structures to define behavior (as opposed to programmatic method calls), the more we can call it a directive-based API.</p>
+    <p>
+&nbsp;AngularJS adds custom attributes to DOM elements for its directives.&nbsp; The advantage of this approach is that it is easy to associate the behavior to the element it is getting applied to.&nbsp; The disadvantages of this approach are that 1)&nbsp;&nbsp; these directives will tend to detract from the semantic nature of&nbsp; the html markup and clutter up the page, 2) a large number of directives applied, repetively, to many elements will tend to increase the bandwidth requirements of the page.&nbsp; These are the problems that JQuery solves quite effectively by applying method calls to all elements satisfying the css selector.&nbsp; But the disadvantage of the JQuery approach is it is difficult to find all the behaviors associated with an element, as the code can be scattered about.</p>
+    <p>
+        The DBS provides support for a directive-oriented way of associating behavior with elements without the pitfalls of the AngularJS approach:&nbsp; CSS styles which get compiled, on the server, to JavaScript.&nbsp; For example:</p>
+    <p>
+    
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="9" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;[tspHandler.tspProcessor, tspHandler].attachEvents&quot;&gt;</span></li>
+<li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#800000">input{</span></li>
+<li>            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">event</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">change</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">handler</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">form1.changeHandler</span><span style="background:#ffffff;color:#000000">;        </span></li>
+<li>        <span style="background:#ffffff;color:#000000">}</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+    
+    The <em>data-compiler</em> attribute is another example of an attribute expecting a &quot;server-side method&quot; string.&nbsp; The static method will get access to the DOM element containing the style (actually, the parsed CSS rules), and will generate, typically,&nbsp; JavaScript / JSON based on the contents of the tag.&nbsp; It may generate more than one tag.&nbsp; For example, it may generate one script tag consisting of JavaScript, and another style tag which retains those rules which are actually css rules.&nbsp; The DBS container replaces the original style with these generated tags.</p>
+    <p>
+        The static method, if written in C#, for example, must have signature:</p>
+    <p>
+        The advantages of using style directives like this are:</p>
+    <ul>
+        <li>Readability:  This ties into a familiar pattern for adding detailed enhancements 
+            to elements without cluttering the sematic html.
+
+        </li>
+        <li>Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector.&nbsp; But unlike JQuery, further code resuse can be accomplished by taking advantage of the same CSS cascading and specificity rules applied by browsers when applying styles.</li>
+        <li>IDE Support:&nbsp; Some IDE&#39;s (e.g. Microsoft Web Expression, Dreamweaver) provide special support for CSS.&nbsp; For example, if you navigate to a DOM element in the HTML Markup, which references a css class name, it may be possible to select the class, and allow the IDE to jump to the CSS rule for the class (at least if there is only one such class definition).&nbsp; This is not available with JQuery code associated with the class.</li>
+    </ul>
 </body>
 </html>

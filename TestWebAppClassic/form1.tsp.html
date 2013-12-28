@@ -6,7 +6,7 @@
     <script src="tsp_script/tsp.js" data-mode="both"></script>
     <script src="tsp_script/tcp.js"></script>
     <script src="form1.js"></script>
-    <style type="text/css" data-js-compiler="tsp.event-handlers">
+    <style type="text/css" data-js-compiler="[tspHandler.tspProcessor].processEvents">
    		input{
 			event: change;
 			handler: form1.changeHandler;        
@@ -14,6 +14,8 @@
     </style>
     <script data-mode="both">
         tsp.applyRules();
+    </script>
+    <script data-model="[Http].GetContext" id="myContext">
     </script>
 </head>
 <body>
