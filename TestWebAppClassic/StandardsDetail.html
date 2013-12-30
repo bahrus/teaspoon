@@ -21,32 +21,32 @@
 	</title>
 </head>
 <body>
-
+<h2>The Dual Browser Specification, version 1.0</h2>
     <div id="nutshell"><h3>In a nutshell</h3>
-    <p>Typed Server Pages (TSP) is an implementation of the "Dual Browser Specification" (DBS) for 
+    <p>Many recent innovations in the area of web development have been focusing on client-side frameworks based on JavaScript, such as JQuery or AngularJS.&nbsp; These frameworks have largely&nbsp;shunted the benefits which might derive from synergies with server-side processing.&nbsp; The server has been reduced to providing dumb static file server capabilities, with the exception of providing live JSON data feeds.</p>
+        <p>The "Dual Browser Specification" (DBS) is a set of HTML attributes, which provide a light-weight synergy between the server and a JavaScript-heavy client application, for 
 	building web pages. DBS content is built using files containing static HTML5-compliant 
 	markup as a base, but modified dynamically using 
     JavaScript, combined with data in JSON or other formats.&nbsp; But the twist is the same 
-	JavaScript code can execute on the server and/or the client.&nbsp; 
+	JavaScript code can usually execute on the server and/or the client, and produce identical results.&nbsp; 
 	
 		</p>
-		<p>TSP is implemented as an asp.net handler.&nbsp; The 
+		<p>Typed Server Pages (TSP) is the first implementation of the DBS.&nbsp; TSP is implemented as an asp.net handler.&nbsp; The 
 	JavaScript of the supporting TSP implentation is compiled from Typescript (hence the "Typed" 
 	in the name), and applications built using the TypeScript compiler / IDE 
 	tools could benefit from the added type safety when integrating with the API. But custom application logic may be written directly in 
 	JavaScript if preferred (or other languages which compile to JavaScript).&nbsp; 
 		</p>
-		<p>While JavaScript becomes a primary vehicle for devlivering content both on 
-	the client on the server in the Dual Browser Framework, there is one island of functionality 
+		<p>While JavaScript becomes a primary vehicle for devlivering content both on the client on the server in the Dual Browser Framework, there are a few islands of functionality 
 	implementation left where a more mature language (from a server point of 
-	view) can be used - in generating the data model.&nbsp; </p>  
+	view) can be used - for example, in generating the data model, and in providing support for compiling tags in one form into another..&nbsp; </p>  
     
     <p>Standard JavaScript tags (&lt;script&gt;...&lt;/script&gt;) will by default continue to execute on the 
-	DOM in the client browser.&nbsp; As such, we would expect it to execute the same regardless of the web server (but may 
+	DOM in the client browser.&nbsp; As such, we would expect it to execute the same regardless of the web server (but results may, unfortunately, 
 	differ based on different browser capabilities / quirks).&nbsp; However, 
 	JavaScript tags in the html markup adorned with the custom attribute: </p>
 		<p class="auto-style1">&lt;script <strong>data-mode='server-side-only'</strong>&gt;...&lt;/script&gt;</p>
-		<p>will, in an environment which supports TSP's, execute the JavaScript 
+		<p>will, in an environment which supports Tthe DBS, execute the JavaScript 
 		contained within the tag 
 		on the server.&nbsp; The JavaScript which executes on the server will continue to have 
 		limited access to a server-side representation of DOM, as the script will be executed in an environment 
@@ -80,7 +80,7 @@
 		with real business data, targeting a large assortment of devices.&nbsp; In 
 		fact, the migration can be so seamless and non intrusive that development could continue between 
 		UI specialists and nitty gritty "engineering" programmers in parallel.&nbsp; 
-		Supporting this kind of development pattern is an important guiding principle for this framework.</div>
+		Supporting this kind of development pattern is an important guiding principle for this specification.</div>
 	<div id="modes">
 		<h3>Modes</h3>
 		<a href="#nutshell">As we've seen</a>, a central custom attribute is introduced in DBS:  <em>data-mode</em>, which can be set, 
@@ -372,6 +372,10 @@
 
         <br />
 
+        While this dual browser model can allow for much code reuse between the client and server (or code shifting as the needs warrant), we hasten to caution that there are two significant areas of functionality where maintaining an exact replica between the server-side browser, and the client-side browser, is not easy or natural to achieve&nbsp; 1)&nbsp; Event handling, such as the onmousemove event, makes sense on the client, but supporting such event handling on the server side would be contrived and likely to cause more harm than good in terms of performance.&nbsp; The DBS will provide for lighter-weight, more basic approaches for coording events between the client and server.&nbsp; 2)&nbsp; The DOM Tree sits in memory in the client browser for the duration of having the page loaded.&nbsp; It is tempting to consider maintaining a shadow copy of the DOM Tree in memory on the server for each user / loaded page as well, and having some process in place to keep them in sync.&nbsp; But that 
+        is not the approach recommended by the DBS.&nbsp; While specific implementations of the DBS may take advantage of caching on the server, which may resemble such a solution to a certain degree, the assumption of the DBS is that the server will utilize mostly stateless approaches as a base, and will specify approaches which will work well with this approach.<br />
+        <br />
+
         The TSP implementation of the DBS mixed the following components to achieve the virtual browser.  
         Aternative options are mentioned also.<br />
         <br />
@@ -487,7 +491,8 @@
     <p>
         Note that the script with attribute data-mode=&#39;server-side-only&#39; has been removed from the output sent to the client (since it is not needed on the client), and has already executed on the server, so that the div with id populateServerSide is already populated on the server.</p>
     <p>
-        prove the same JavaScript functions for oth the client rowset, as well as the virtual brower on the server.&nbsp; This same page, if served by a host which does not understand the DBS markup, would render the same exact display in the browser, but now the the markup sent to the client would be identical between the client-side and server-side tags.&nbsp; It is an important design-goal for DBS that the user not see a difference whether the same script is executed on the server vs. the client.&nbsp; But the observant may have spotted that in fact this example would actually fail the test -- in standard browers, the markup as specified would fail, because the script tag in the head is searching for a dom element that does not yet exist.&nbsp; The virtual browser implemented by TSP does not have this limitation.&nbsp; In this case the entire dom is first first loaded prior to the execution of the JavaScript.&nbsp; It is debatable whether this difference in behavior should be tolerated.&nbsp; At any rate, the safe thing to do is to place the JavaScript so it wwill work im all environments.</p>
+        This same page, if served by a host which does not understand the DBS markup, would render the same exact display in the browser, but now the the markup sent to the client would be identical between the client-side and server-side tags.&nbsp; It is an important design-goal for DBS that the user not see a difference whether the same script is executed on the server vs. the client.&nbsp; But the observant reader may have spotted that in fact this example would actually fail the test -- in standard browers, the markup as specified would fail, because the script tag in the head is searching for a dom element that does not yet exist.&nbsp; The virtual browser implemented by TSP does not have this limitation.&nbsp; In this case the entire dom is first first loaded prior to the execution of the JavaScript.&nbsp; It is debatable whether this difference in behavior should be tolerated.&nbsp; At any rate, the safe thing to do is to place the JavaScript in a location so it will work im all environments. 
+        (TODO:&nbsp; JQuery&#39;s ready function)</p>
     <p>
         In many cases we will want to expose common functions both to the server as well as the client.&nbsp; For example, we may have a function that populates a grid, and we may choose to populate the first page on the server side, but populate subsequent pages on the client-side based on a cached data model.&nbsp; That is what the attribute value <em>both </em> for data-mode is there for. But sometimes this common code will need to do slightly diffferent things depending on whether the code is executing on the server or on the client.&nbsp; To determine in what mode the code is running, make use of the DBS reserved global variable mode:</p>
     <p>
@@ -509,9 +514,7 @@
     <div id="iFrame">
 	<h3>Server side iFrames</h3>
     <p>
-        Most server-side template engines, such PHP or ASP.net, supports some notion of server-side includes, 
-        where content from one file can be shared or 
-        embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is quite elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
+        Most server-side template engines, such PHP or ASP.net, supports some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
         <p>
            
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
@@ -527,7 +530,7 @@
         </p>
         <p>
             The page being referenced should consist of a fully-formed html document -- like the script tag, we should
-            be able to switch the attribute between client-side-only and server-side-only -- and get similar (but not identical) results, 
+            be able to switch the attribute between client-side-only (regular iframe) and server-side-only -- and get similar (but not identical) results, 
             so the page should, as a matter of best practices, work as a standalone page.
         </p>
         <p>
@@ -540,25 +543,25 @@
         <p>
             If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request on this document, and allow different parts of the DOM to be emedded in different locations of the page based on the hash tag identifier.</p>
         <p>
-            When emedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending the id&#39;s with the id of the containing iframe tag separated by an underscore.</p>
+            When emedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending the id&#39;s with the id of the containing iframe tag separated by an underscore.&nbsp; 
+            Styles containing references to these id&#39;s will also be correspondingly namespaced.</p>
         <p>
             &nbsp;</p>
     </div>
     <div id="style">
         <h3>Style directives</h3>
-    </div>
+    
     <p>
         &nbsp;</p>
-    <p>
-        JQuery has proven to be a very popular library.&nbsp; Some of this popularity is due to succesfully building on the power of css selectors.&nbsp; However, JQuery is still very much a programming API.&nbsp; While JQuery may tend to encourage &quot;Declarative&quot; coding styles, it is not a directive based syntax like AngularJS.&nbsp;
-    </p>
-    <p>
-        The distinction between directive-based configuration and declaritive-based programming is somewhat murky, particularly in common parlance.&nbsp; Declarative programming actually has a formal definition - programming without mutable values.&nbsp; But often in casual conversation the term declarative is used when really the more effective term would be directive - e.g. &quot;Hibernate provides a declarative approach to binding to a database&quot; would be more descriptive if &quot;declarative&quot; is replaced with &quot;directive&quot;.&nbsp; For our purposes, we define directives as syntax containing no (or at least very few) method calls (and it should also satisfy the declarative criteria - no mutable values).&nbsp; So, for example, a JSON object, used to configure a datagrid, would be considered a directive element, as pure JSON does not allow for methods.&nbsp; (Typically, however, the JSON concept is extended to allow for syntax involving method calls -- for example, inside event handlers).&nbsp; The more an 
+    <JQuery has proven to be a very popular library.&nbsp; Some of this popularity is due to succesfully building on the power of css selectors.&nbsp; However, JQuery is still very much a programming API.&nbsp; While JQuery may tend to encourage &quot;ceclarative&quot; coding styles, it is not a directive based syntax like AngularJS.&nbsp;
+        </p>
+        <p>
+        The distinction between directive-based configuration and declaritive-based programming is somewhat murky, particularly in common parlance.&nbsp; Declarative programming actually has a formal definition - programming without mutable values.&nbsp; But often in casual conversation the term declarative is used when really the more effective term would be directive - e.g. &quot;Hibernate provides a declarative approach to binding to a database&quot; would be more descriptive if &quot;declarative&quot; is replaced with &quot;directive&quot;.&nbsp; For our purposes, we define directives as syntax containing no (or at least very few) method calls (and it should also satisfy the declarative criteria - no mutable values).&nbsp; So, for example, a JSON object, used to configure a client-side datagrid, would be considered a directive element, as pure JSON does not allow for methods.&nbsp; (Typically, however, the JSON concept is extended to allow for syntax involving method calls -- for example, inside event handlers).&nbsp; The more an 
         api relies on such structures to define behavior (as opposed to programmatic method calls), the more we can call it a directive-based API.</p>
-    <p>
-&nbsp;AngularJS adds custom attributes to DOM elements for its directives.&nbsp; The advantage of this approach is that it is easy to associate the behavior to the element it is getting applied to.&nbsp; The disadvantages of this approach are that 1)&nbsp;&nbsp; these directives will tend to detract from the semantic nature of&nbsp; the html markup and clutter up the page, 2) a large number of directives applied, repetively, to many elements will tend to increase the bandwidth requirements of the page.&nbsp; These are the problems that JQuery solves quite effectively by applying method calls to all elements satisfying the css selector.&nbsp; But the disadvantage of the JQuery approach is it is difficult to find all the behaviors associated with an element, as the code can be scattered about.</p>
-    <p>
-        The DBS provides support for a directive-oriented way of associating behavior with elements without the pitfalls of the AngularJS approach:&nbsp; CSS styles which get compiled, on the server, to JavaScript.&nbsp; For example:</p>
+        <p>
+&nbsp;AngularJS adds custom attributes to DOM elements for its directives.&nbsp; The advantage of this approach is that it is easy to associate the behavior to the element it is getting applied to.&nbsp; The disadvantages of this approach are that 1)&nbsp;&nbsp; these directives will tend to detract from the semantic nature of&nbsp; the html markup and clutter up the page, 2) a large number of directives applied, repetatively, to many elements will tend to increase the bandwidth requirements of the page.&nbsp; These are the problems that JQuery solves quite effectively by applying method calls to all elements satisfying the css selector.&nbsp; But the disadvantage of the JQuery approach is it is difficult to find all the behaviors associated with an element, as the code can be scattered about.</p>
+        <p>
+        The DBS provides support for a directive-oriented way of associating behavior with elements without the pitfalls of the AngularJS approach:&nbsp; CSS styles which get compiled, on the server, to JavaScript.&nbsp; For example:
     <p>
     
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
@@ -575,7 +578,12 @@
 </div>
 </div>
     
-    The <em>data-compiler</em> attribute is another example of an attribute expecting a &quot;server-side method&quot; string.&nbsp; The static method will get access to the DOM element containing the style (actually, the parsed CSS rules), and will generate, typically,&nbsp; JavaScript / JSON based on the contents of the tag.&nbsp; It may generate more than one tag.&nbsp; For example, it may generate one script tag consisting of JavaScript, and another style tag which retains those rules which are actually css rules.&nbsp; The DBS container replaces the original style with these generated tags.</p>
+    The <em>data-compiler</em> attribute is another example of an attribute expecting a &quot;server-side method&quot; string.&nbsp; 
+        The static method will get access to the DOM element containing the style (actually, the parsed CSS rules), 
+        and will generate, typically,&nbsp; JavaScript / JSON based on the contents of the tag.&nbsp; 
+        It may generate more than one tag.&nbsp; For example, it may generate one script tag consisting of JavaScript, 
+        and another style tag which retains those rules which are actually css rules.&nbsp; 
+        Or it might be used to compile some compact CSS format (like LESS) into browser-compatible CSS.&nbsp; The DBS container replaces the original style with these generated tags.</p>
     <p>
         The static method, if written in C#, for example, must have signature:</p>
     <p>
@@ -588,5 +596,105 @@
         <li>Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector.&nbsp; But unlike JQuery, further code resuse can be accomplished by taking advantage of the same CSS cascading and specificity rules applied by browsers when applying styles.</li>
         <li>IDE Support:&nbsp; Some IDE&#39;s (e.g. Microsoft Web Expression, Dreamweaver) provide special support for CSS.&nbsp; For example, if you navigate to a DOM element in the HTML Markup, which references a css class name, it may be possible to select the class, and allow the IDE to jump to the CSS rule for the class (at least if there is only one such class definition).&nbsp; This is not available with JQuery code associated with the class.</li>
     </ul>
+    <p>
+        The disadvantages are:
+        <ul>
+            <li>Functionality specified this way will not work in a simple web server, but will require a DBS engine to 
+                compile the directives on the server.&nbsp; Without such an engine, the directives will be ignored.
+            </li>
+            <lFunctionality specified this way will not work in a simple web server, but will require a DBS engine to 
+                compile the directives on the server.&nbsp; Without such an engine, the directives will be ignored.
+            </li>
+            <li>IDE&#39;s will generally not recognize links to JavaScript functions. So in the example above, <span style="background:#ffffff;color:#0000ff">form1.changeHandler</span> will 
+                not provide any intellisense after typing "form1.", or be able to navigate to the function, or underline in red if the function name has a typo.</li>
+            <li>Even those IDE&#39;s to help maintain the relationship between DOM elements and the classes associated with them, it is less direct then seeing the attributes directly in the element itself.&nbsp; Web browsers&#39; developer tools help visual the relationship even more clearly, but this help may not work with these custom styles [TODO: research].</li>
+        </ul>
+        </p>
+    </div>
+    <div id="pageInheritance">
+        <h3>Page Inheritance</h3>       
+We've seen with server-side iframes how the DBS supports embedding page components from one page into others.  Another for of code reuse is "Page Inheritance," where an 
+        extending page inherits and modifies a base page.  The syntax:<br />
+
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="1" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">html</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">head</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">meta</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">name</span><span style="background:#ffffff;color:#0000ff">=&quot;inherits&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">content</span><span style="background:#ffffff;color:#0000ff">=&quot;form1.tsp.html&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#0000ff">/&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">title</span><span style="background:#ffffff;color:#0000ff">&gt;</span><span style="background:#ffffff;color:#000000">Inherit Test</span><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">title</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">head</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+        <br />
+        will take the contents of the base page, "form1.tsp.html" and merge the contents of the page itself on top of the base page.  
+        The merging will follow rules similar to how <a href="http://msdn.microsoft.com/en-us/library/dd465326(v=vs.110).aspx">Microsoft's XML Transformation</a> works, 
+        and the merging will be done on the server-side (with a notable exception detailed later).  A typical merging node will look as follows:
+<br /><br />
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="8" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">span</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;msg&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-xmatch</span><span style="background:#ffffff;color:#0000ff">=&quot;id&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-xmerge</span><span style="background:#ffffff;color:#0000ff">=&quot;Replace&quot;&gt;</span><span style="background:#ffffff;color:#000000">Here is a new message</span><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">span</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+        <br />
+        Merging will follow these rules:
+
+        <ul>
+            <li>Matching: Nodes in the extending page will be matched with nodes in the base page as follows:
+                
+        
+                <ul>
+                <li>
+                    Matching will start at the root level and get applied recursively.  In the absense of special attributes, matching will be based on the tag name.  
+                        If there is only one tag with the same tag name at one level of the DOM tree, and the base page has the same single tag name at that level, then they match.  So based on these rules,  
+                        &lt;html&gt;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt; will typically easily match between the two documents.
+
+                </li>
+                <li>
+                    Where there is more than one tag with the same tag name at the same level of the DOM tree, in either the base or the extending document, matching will need to be done with the help of a locator attribute.&nbsp; Locator attributes are either <em>data-match</em> or <em>data-xmatch-cssSelect</em></li>
+                <li>
+                    The data-xmatch attribute indicates one or more other attributes (comma delimited) to find an exact match on all the values of the attributes.
+                </li>
+                
+                <li>
+                    A more flexible matching attribute is the xmatch/cssSelect attribute <em>data-xmatch-cssSelect</em>, which searches the base document for a single node matching the CSS selector criteria.
+                </li>
+                <li>
+                    If no match is found, but the <em>data-xmerge </em>attribute requires the existence of a match (see below), an error will be thrown.  
+                </li>
+                </ul>
+            </li>
+            <li>Transforming:  Nothing from the extending document will be added to the output coming from the base document, unless a matching node contains the                  
+                            data-xmerge attribute.  This attribute can have the following values:
+                        
+                    <ul>
+                        <li>Append -- appends to the end of the matching parent node</li>
+                        <li>Insert after -- requires that the previous sibling node in the extending document matches a node in the base document</li>
+                        <li>Insert before -- requires that the following sibling node in the extending document matches a node in the base document</li>
+                        <li>Remove (requires matching node)</li>
+                        <li>RemoveChildren (requires matching node)</li>
+                        <li>Replace (requires matching node)</li>
+                        <li>ReplaceAttributes (requires matching node)</li>
+                    </ul>
+            </li>
+                    
+                
+            
+        </ul>
+        <br /><br />
+        The meta tag 
+        with name &quot;inherits&quot; will normally cause the merging to be done on the server-side.&nbsp; However, there is an important special case where the meta tag will be ignored -- and that is in the case where the page is being requested from a client-side form submission, which will be described below.&nbsp; As we shall see, in this case, the merging will be done on the client-side, following the same rules as above.&nbsp; This will allow for browsers which have JavaScript disabled to gracefully provide similar results, though with performance likely to be degraded.e Forms</h4>
+   </div>
+    
+
+
 </body>
 </html>
