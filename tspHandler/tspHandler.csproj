@@ -71,9 +71,9 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Coneole.cs" />
     <Compile Include="INodeSelector.cs" />
     <Compile Include="tspModelHandler.cs" />
-    <Compile Include="tsp_script\Console.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="HtmlAttributeFacade.cs" />
     <Compile Include="HtmlDocumentFacade.cs" />
