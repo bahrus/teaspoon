@@ -128,6 +128,7 @@
       <SubType>Designer</SubType>
     </Content>
     <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
+    <TypeScriptCompile Include="tsp_script\DBS.ts" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">

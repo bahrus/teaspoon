@@ -19,12 +19,19 @@
                 elem.attachEvent('on' + eventType, handler);
         }
     </script>
+    <style type="text/css" data-compiler="DBS.Attr">
+                 input.myClass {
+                     ng-required@:true;
+                     ng-maxLength@:8;
+                     color:green;
+                 }
+             </style>
 </head>
 <body>
     <script id="someScript">
         var obj = { test: 'iamherre' };
     </script>
-    
+        <input class="myClass" value="sometext" type="text" />
         <div>i am here</div>
    
     <input type="button" onclick="show()" value="show" />
