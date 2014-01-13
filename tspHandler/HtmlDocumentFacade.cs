@@ -12,6 +12,9 @@ namespace tspHandler
 {
     public class HtmlDocumentFacade : INodeSelector
     {
+
+        public ProcessingContext ProcessContext { get; set; }
+
         private HtmlDocument _htmlDoc;
 
         public IDocumentHost Host
@@ -31,6 +34,7 @@ namespace tspHandler
         {
             _htmlDoc = new HtmlDocument();
             _htmlDoc.LoadHtml(Content);
+            this.ProcessContext = new ProcessingContext();
         }
 
         public HtmlDocumentFacade(IDocumentHost host)
@@ -42,6 +46,8 @@ namespace tspHandler
             string content = host.GetContentOfDocument();
             _htmlDoc.LoadHtml(content);
             this.Trace("endCreateHTMLDocument");
+            this.ProcessContext = new ProcessingContext();
+
         }
 
         

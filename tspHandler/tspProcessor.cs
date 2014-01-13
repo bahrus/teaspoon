@@ -6,6 +6,7 @@ using System.Text;
 using Noesis.Javascript;
 using System.Web;
 using System.Collections.Generic;
+using System.Dynamic;
 
 namespace tspHandler
 {
@@ -14,13 +15,17 @@ namespace tspHandler
     {
 
         public const string ModelAttribute = "data-model";
+        public const string CSFilterAttribute = "data-csFilter";
+
         public const string ModeAttribute = "data-mode";
         public const string DesignTypeAttribute = "data-design-type";
+        public const string SSFormatAttribute = "data-model-ssFormat";
 
         public const string modeParameter = "mode";
         public const string ServerSideMode = "server-side-only";
         public const string ClientSideMode = "client-side-only";
         public const string BothMode = "both";
+        public const string DependsMode = "depends";
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
 
         
@@ -30,28 +35,88 @@ namespace tspHandler
             var typeString = StaticMethodString.SubstringBeforeLast(".").SubstringAfter("[").SubstringBeforeLast("]");
             var methodString = StaticMethodString.SubstringAfterLast(".");
             var typ = Type.GetType(typeString, true);
-            var result = typ.GetMethod(methodString).Invoke(null, args);
+            var mthd = typ.GetMethod(methodString);
+            if(mthd == null){
+                throw new NotImplementedException("Method " + methodString + " not found in " + typ.FullName);
+            }
+            var result = mthd.Invoke(null, args);
             return result;
+        }
+
+        private static Modes GetMode(HtmlNodeFacade node)
+        {
+            string mode = node.getAttribute(ModeAttribute);
+            string tagName = node.tagName.ToLower();
+            if (string.IsNullOrEmpty(mode))
+            {
+                switch (tagName)
+                {
+                    case "script":
+                        string type = node.getAttribute("type");
+                        if (type != null && (type.ToLower() == "text/html" || type.ToLower() == "text/emmet"))
+                        {
+                            return Modes.ClientSideOnly;
+                        }
+                        if (string.IsNullOrEmpty(mode))
+                        {
+                            string model = node.getAttribute(ModelAttribute);
+                            return model == null ? Modes.ClientSideOnly : Modes.Both;
+                        }
+                        break;
+                    case "iframe":
+                        return Modes.ClientSideOnly;
+                    case "style":
+                        return Modes.Unspecified;
+                    case "form":
+                        return Modes.ServerSideOnly;
+                }
+            }
+            switch (mode)
+            {
+                case ClientSideMode:
+                    return Modes.ClientSideOnly;
+                case ServerSideMode:
+                    return Modes.ServerSideOnly;
+                case BothMode:
+                    return Modes.Both;
+                case DependsMode:
+                    return Modes.Depends;
+                default:
+                    throw new NotSupportedException("Mode " + mode + " not supported");
+
+            }
+            
         }
 
         private static Func<HtmlNodeFacade, bool> _TestForServerSide =  node =>
         {
-            string type = node.getAttribute("type");
-            if (type != null && (type.ToLower() == "text/html" || type.ToLower() == "text/emmet"))
+            var mode = GetMode(node);
+            switch (mode)
             {
-                return false;
+                case Modes.Both:
+                case Modes.ServerSideOnly:
+                    return true;
+                case Modes.Depends:
+                    throw new NotSupportedException();
+                default:
+                    return false;
             }
-            string mode = node.getAttribute(ModeAttribute);
-            if (string.IsNullOrEmpty(mode)) return false;
-            return (mode == ServerSideMode || mode == BothMode);
 
         };
 
         private static Func<HtmlNodeFacade, bool> _TestForClientSide = node =>
         {
-            string mode = node.getAttribute(ModeAttribute);
-            if (string.IsNullOrEmpty(mode)) return true;
-            return (mode != ServerSideMode);
+            var mode = GetMode(node);
+            switch (mode)
+            {
+                case Modes.Both:
+                case Modes.ClientSideOnly:
+                    return true;
+                case Modes.Depends:
+                    throw new NotSupportedException();
+                default:
+                    return false;
+            }
 
         };
 
@@ -149,6 +214,7 @@ namespace tspHandler
             HttpContext.Current.Response.AddHeader(key, (nd.Ticks / 10000000d).ToString());
         }
 
+
         #region Process Methods
         public static HtmlDocumentFacade Process(this HtmlDocumentFacade doc)
         {
@@ -165,13 +231,21 @@ namespace tspHandler
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
             {
-                ProcessServerSideScripts(doc);
-                DisplayDesignMode(doc);
+                doc
+                    .ProcessModelScriptTags()
+                    .ProcessServerSideScripts()
+                    .DisplayDesignMode()
+                    .PostProcessModel()
+                ;
             }
             else
             {
-                ProcessServerSideIncludes(doc);
-                ProcessServerSideScripts(doc);
+                doc
+                    .ProcessModelScriptTags()
+                    .ProcessServerSideIncludes()
+                    .ProcessServerSideScripts()
+                    .PostProcessModel()
+                ;
             }
             Trace(doc, "EndProcess");
             return doc;
@@ -436,43 +510,165 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
-        public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
-        {
-            //var serverSideScripts = doc.getElementsByTagName("parentScript").Where(node =>
-            //{
-            //    string mode = node.getAttribute(ModeAttribute);
-            //    if (string.IsNullOrEmpty(mode)) return false;
-            //    return (mode == ServerSideMode || mode == BothMode);
+        
 
-            //});
-            var serverSideScripts = doc.getElementsByTagName("script").Where(_TestForServerSide);
-            var models = serverSideScripts
+        public static HtmlDocumentFacade ProcessModelScriptTags(this HtmlDocumentFacade doc)
+        {
+            var models = doc.getElementsByTagName("script")
                 .Where(node => !string.IsNullOrEmpty(node.getAttribute(ModelAttribute)))
                 .ToList();
-            var sb = new StringBuilder();
+            bool addedInitializer = false;
             models.ForEach(model =>
             {
                 var id = model.id;
                 if (string.IsNullOrEmpty(id)) throw new Exception("model script tags must have an id");
+                var postProcessModelInfo = new ModelScriptPostProcessingInfo
+                {
+                    Node = model,
+                    CSFilter = model.getAttribute(CSFilterAttribute),
+                };
+                doc.ProcessContext.ModelScriptPostProcessingInfosNN.Add(postProcessModelInfo);
+                var mode = GetMode(model);
+                #region see if there's a client side representation for model.  
+                switch (mode)
+                {
+                    case Modes.Both:
+                    case Modes.ClientSideOnly:
+                        postProcessModelInfo.NeededForClient = true;
+                        break;
+                }
+                #endregion
                 var staticMethodString = model.getAttribute(ModelAttribute);
-                var hasAsync = model.hasAttribute("async");
-                var server = HttpContext.Current.Server;
+                switch (mode)
+                {
+                    case Modes.Both:
+                    case Modes.ServerSideOnly:
+                        #region model needed for server side processing
+                        string ssFormat = model.getAttribute(SSFormatAttribute);
+                        bool isDumbedDown = false;
+                        if (!string.IsNullOrEmpty(ssFormat))
+                        {
+                            if (ssFormat != "JSON") throw new NotSupportedException(ssFormat + " not supported for attribute " + SSFormatAttribute);
+                            isDumbedDown = true;
+                        }
+                        
+                        var result = InvokeServerSideMethod(staticMethodString, null);
+                        if (isDumbedDown)
+                        {
+                            #region Dumbed Down -- convert server side object to json
+                            string json = JsonConvert.SerializeObject(result);
+                            if (postProcessModelInfo.NeededForClient)
+                            {
+                                postProcessModelInfo.JSONifiedModel = json;
+                                postProcessModelInfo.IsDumbedDown = true;
+                            }
+                            string initializer = addedInitializer ? null : @"
+        if(typeof(model)=='undefined') model = {};";
+                            string modelScript = @"
+        model['" + id + "'] = " + json + @";
+";
+                            model.innerHTML = initializer + modelScript;
+                            addedInitializer = true;
+                            #endregion
+                        }
+                        else
+                        {
+                            if (doc.ProcessContext.Model == null) doc.ProcessContext.Model = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)doc.ProcessContext.Model;
+                            dict[id] = result;
+                            postProcessModelInfo.Model = result;
+                        }
+                        break;
+                        #endregion
+                    case Modes.ClientSideOnly:
+                        postProcessModelInfo.StaticMethodString = staticMethodString;
+                        break;
+                }
+                
+                
+                
+                
+                    #region Serverside Method
+                    
+                    
+                    
+
+                    
+                    
+                    
+                    #endregion
+
+                
+                model.removeAttribute(ModelAttribute);
+                
+            });
+            return doc;
+        }
+
+        public static HtmlDocumentFacade PostProcessModel(this HtmlDocumentFacade doc)
+        {
+            if (doc.ProcessContext.ModelScriptPostProcessingInfos == null) return doc;
+            bool addedInitializer = false;
+            foreach (var modelProcessingInfo in doc.ProcessContext.ModelScriptPostProcessingInfos)
+            {
+                var node = modelProcessingInfo.Node;
+                if (!modelProcessingInfo.NeededForClient)
+                {
+                    node.parentNode.removeChild(node);
+                    continue;
+                }
+                else if (modelProcessingInfo.IsDumbedDown)
+                {
+                    continue;
+                }
+                var hasAsync = node.hasAttribute("async");
+                string id = node.id;
                 if (hasAsync)
                 {
-                    string src = "model.tsp.js?" + tspModelHandler.getMethod + "=" + server.UrlEncode(staticMethodString) + "&" + tspModelHandler.id + "=" + server.UrlEncode(id);
-                    model.innerHTML = string.Empty;
-                    model.setAttribute("src", src);
+                    var server = HttpContext.Current.Server;
+                    if (modelProcessingInfo.Model == null)
+                    {
+                        string src = "model.tsp.js?" + tspModelHandler.getMethod + "=" + server.UrlEncode(modelProcessingInfo.StaticMethodString) + "&" + tspModelHandler.id + "=" + server.UrlEncode(id);
+                        node.innerHTML = string.Empty;
+                        node.setAttribute("src", src);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
                 else
                 {
-                    var result = InvokeServerSideMethod(staticMethodString, null);
-                    string json = JsonConvert.SerializeObject(result);
+                    #region embed JSON data in tag
+                    if(modelProcessingInfo.Model == null){
+                        var result = InvokeServerSideMethod(modelProcessingInfo.StaticMethodString, null);
+                        modelProcessingInfo.Model = result;
+                    }
+                    string json = JsonConvert.SerializeObject(modelProcessingInfo.Model);
+                    string initializer = addedInitializer ? null : @"
+        if(typeof(model)=='undefined') model = {};";
                     string modelScript = @"
-if(typeof(model)=='undefined') model = {};
-model['" + id + "'] = " + json + ";";
-                    model.innerHTML = modelScript;
+        model['" + id + "'] = " + json + @";
+";
+                    node.innerHTML = initializer + modelScript;
+                    addedInitializer = true;
+                    #endregion
                 }
-            });
+            }
+            return doc;
+            //
+            //if (hasAsync)
+            //{
+            
+            //}
+            //return doc;
+        }
+
+        public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
+        {
+            var serverSideScripts = doc.getElementsByTagName("script")
+                .Where(_TestForServerSide);
+            var sb = new StringBuilder();
             //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
             var serverSideScriptsList = serverSideScripts.ToList();
             serverSideScriptsList.ForEach(node =>
@@ -486,8 +682,7 @@ model['" + id + "'] = " + json + ";";
                 {
                     sb.AppendLine(doc.GetHostContent(src));
                 }
-                string mode = node.getAttribute(ModeAttribute);
-                if (mode == ServerSideMode)
+                if(!_TestForClientSide(node))
                 {
                     node.parentNode.removeChild(node);
                 }
@@ -669,6 +864,15 @@ model['" + id + "'] = " + json + ";";
         RemoveChildren,
         Replace,
         ReplaceAttributes,
+    }
+
+    public enum Modes
+    {
+        ClientSideOnly,
+        ServerSideOnly,
+        Both,
+        Depends,
+        Unspecified,
     }
     
 }

@@ -132,7 +132,7 @@
                                         <td>depends</td>
                                         <td>
                                             Custom logic can be used to determine in which tier the code should execute.  
-                                            The custom attribute data-dynamic-mode will call a server side function / method, which will return
+                                            The custom attribute <em>data-dynamic-mode</em> will call a server side function / method, which will return
                                             one of the other three values.
                                         </td>
                                     </tr>
@@ -158,7 +158,7 @@
                     <tr>
                         <td>depends</td>
                         <td>
-                            Custom logic can be used to determine in which tier the code should execute.  
+                            Custom logic can be used to determine in which tier the embedding should occur.  
                             The custom attribute data-dynamic-mode will call a server side function / method, which will return
                             one of the other three values.
                         </td>
@@ -174,7 +174,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td class="modesTD">client-side-only</td>
-						<td>On form submit, form fields are set via AJAX request to server, 
+						<td>On form submit, form fields are sent via AJAX request to server, 
 						without redrawing the page. HTML markup is returned, which is merged into DOM document</td>
 					</tr>
 					<tr>
@@ -191,7 +191,7 @@
 		</table>
 		
 		<p id="modesForStyle"> 
-            In the case of the style attribute, if the custom attribute <em>data-compiler</em> is set, then the style attribute may be compiled into javascript, in which case <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.
+            In the case of the style attribute, if the custom attribute <em>data-compiler</em> is set, then the style attribute may be compiled into JavaScript, in which case <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.
             &nbsp;For example, as discussed in the TSP implementation document:
         </p>
 		
@@ -240,7 +240,7 @@
 	    <h3>Modeling</h3>
 	
 	    <p id="JSONModelObject">
-            The DBS emphasizes solutions which can work in all sorts of devices, including ones which do not support Javascript. Relying too heavily, then, on a client-side data model, which binds to the UI via JavaScript, could detract from that goal. Nevertheless, the specification does facilitate the use of a model on the server-side, and there are many scenarios where a client-side model can <em>enhance</em> the user experience, such as for client-side paging, without rendering the page useless for simpler devices.
+            The DBS emphasizes solutions which can work in all sorts of devices, including ones which do not support JavaScript. Relying too heavily, then, on a client-side data model, which binds to the UI via JavaScript, could detract from that goal. Nevertheless, the specification does facilitate the use of a model on the server-side, and there are many scenarios where a client-side model can <em>enhance</em> the user experience, such as for client-side paging, without rendering the page useless for simpler devices.
             Thus, the DBS does provide a way to embed dynamic objects, as a branch in the global 'model' object, as shown below:
 	    </p> 
 	
@@ -265,7 +265,7 @@
 	
 	    <p id="ModelScriptDummyData">
             We shall refer to script tags with the data-model attribute as &quot;script model&quot; tags. 
-            The JavaScript code inside these script model tags will be discarded on the server side during run time in the context of a functioning DBS container. The dummy data is there for two purposes -- first, it allows prototyping in a simple file server enviornment to provide a rudimentary representation of how it will look with actual data. Secondly, if the developer tests out some JavaScript&nbsp; by directly embedding it in the page, then references to the model will benefit from intellisense, and basic inconsistency checks, at least in sophisticated enough IDE&#39;s.&nbsp; There is a small performance hit from including dummy data inside the script tag - the server will spend slightly more time parsing the HTML file, longer if the dummy data is extraordinarily large.
+            The JavaScript code inside these script model tags will be discarded on the server side during run time in the context of a functioning DBS container. The dummy data is there for two purposes -- first, it allows prototyping in a simple file server environment to provide a rudimentary representation of how it will look with actual data. Secondly, if the developer tests out some JavaScript&nbsp; by directly embedding it in the page, then references to the model will benefit from intellisense, and basic inconsistency checks, at least in sophisticated enough IDE&#39;s.&nbsp; There is a small performance hit from including dummy data inside the script tag - the server will spend slightly more time parsing the HTML file, longer if the dummy data is extraordinarily large.
 	    </p>
 	    <p id="dataModelAttribute">
             The key new attribute here is the <em>data-model</em> attribute.  
@@ -301,7 +301,7 @@
 	</p>
 	<ul id="dataModeldataModeScenarios">
 		<li>
-            If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side javascript tags. 
+            If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side JavaScript tags. 
 		    However, the data will be excluded from the output sent to the client.
 		</li>
 		<li>
@@ -581,9 +581,9 @@
             -- 
             and get almost identical results from the end user point of view.
             Thus the page should, as a matter of best practice, work as a standalone page.  
-            In general, the advantages of using client side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts.
+            In general, the advantages of using client-side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts.
             One disadvantage, though, is iframing (on the client) can impose a heavy toll on browser resources, such as memory, particularly when heavy-duty JavaScript libraries are utilized.
-            Ideally, then, we should be able to pick the optimal tier where to emed, which may depend on the type of device accessing the content, and the nature of the content.  
+            Ideally, then, we should be able to pick the optimal tier where to embed, which may depend on the type of device accessing the content, and the nature of the content.  
             Hence, like the script tag, the value of <em>data-mode</em> can be "depends", and some custom logic can be referenced which makes the decision, tailored to the user and the content.
         </p>
         <p id="iframeHashTag">
@@ -674,8 +674,7 @@
             <ul>
                 <li>Readability:  This ties into a familiar pattern for adding detailed enhancements to elements without cluttering the sematic html.</li>
                 <li>
-                    Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector.
-                    &nbsp;But unlike JQuery, further code reuse can be accomplished by taking advantage of the same CSS cascading and specificity rules applied by browsers when applying styles.
+                    Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector. &nbsp;But unlike JQuery, further code reuse can be accomplished by taking advantage of the same CSS cascading and specificity rules honored by browsers when applying styles.
                 </li>
                 <li>
                     Editor Support:&nbsp; Some HTML editors (e.g. Microsoft Web Expression, Dreamweaver) provide special support for CSS.
@@ -698,7 +697,7 @@
         </p>
         <h4>The DBS Attribute Style Directive</h4>
         <p id="DBSAttrStyleDirectiveIntro">
-            Although the DBS provides an open ended way for DBS implementors and/or application developers to incorporate their own style compilers, the DBS does require that implementations provide one built-in compiler:  The DBS.Attr compiler.
+            Although the DBS provides an open ended way for DBS implementors and/or application developers to incorporate their own style compilers, the DBS does require that implementations provide one built-in compiler:  The DBS.compiler.Attr compiler.
             Sample syntax is shown below:
              
             <!--<style type="text/css" data-compiler="DBS.Attr">
@@ -731,7 +730,7 @@
             The DBS Container will do the following:
             <ul>
                 <li>
-                    Any style custom properties (name value pair) where the property name end withs @ will, on the server, be removed from the style tag before it is sent to the client.  
+                    Any style custom properties (name value pair) where the property name ends withs @ will, on the server, be removed from the style tag before it is sent to the client.  
                     For these properties, any elements in the DOM document matching the CSS selector will get the corresponding attribute value applied to it, corresponding to the "style" property value, where the attribute name is the "style" property name after removing the trailing @.
                 </li>
                 <li>The adding of the attribute element will, by default, be performed on the client side, unless attribute <em>data-mode</em> is set to server-side-only.&nbsp; It is acceptable for the DBS container to require referencing one or more JavaScript libraries in order to support this.&nbsp; If other client-side libraries, such as AngularJS, require these tags, then the developer will need to find a way to ensure that the rules which populate the attributes be performed prior to processing by the library.&nbsp; If this proves problematic for a particular library, the developer can always fall back and rely on data-mode=&#39;server-side-only.&#39;&nbsp; Maintenance of the application would still benefit from the reduction in code clutter, but the download bandwidth would not benefit (nor suffer) from employing server-side attribute setting via css rules.</li>
@@ -792,7 +791,7 @@
 
                         </li>
                         <li>
-                            Where there is more than one tag with the same tag name at the same level of the DOM tree, in either the base or the extending document, matching will need to be done with the help of a locator attribute.&nbsp; Locator attributes are either <em>data-match</em> or <em>data-xmatch-cssSelect</em></li>
+                            Where there is more than one tag with the same tag name at the same level of the DOM tree, in either the base or the extending document, matching will need to be done with the help of a locator attribute.&nbsp; Locator attributes are either <em>data-xmatch</em> or <em>data-xmatch-cssSelect</em></li>
                         <li>
                             The data-xmatch attribute indicates one or more other attributes (comma delimited) to find an exact match on all the values of the attributes.
                         </li>
@@ -806,7 +805,7 @@
                     </ul>
                 </li>
                 <li>Transforming:  Nothing from the extending document will be added to the output coming from the base document, unless a matching node contains the                  
-                            data-xmerge attribute.  This attribute can have the following values:
+                            <em>data-xmerge</em> attribute.  This attribute can have the following values:
                     <ul>
                         <li>Append -- appends to the end of the matching parent node</li>
                         <li>InsertAfter -- requires that the previous sibling node in the extending document matches a node in the base document</li>
@@ -836,9 +835,9 @@
             <h4>Server Side Form Processing</h4>
             <div id="FieldPopulating">
                 <h4>Populating Fields</h4>
-                Often, when a form is submitted to the server, and the page is redrawn, the same page is re-drawn (often with validation errors displayed),
+                Often, when a form is submitted to the server, and the browser screen is redrawn, the same page is re-drawn (often with validation errors displayed),
                  or a new page is loaded which needs to carry over the values into another page.  Further, in the case of a page submitting to the same document for server-side form processing, it is natural for the same input fields in the server-side virtual browser to get populated with the same values on the server as exist on the client.&nbsp; Therefore, by default, the DBS container will, on the server, 
-                set the value of fields with matching names to the value passed in via the GET or POST request.  This will be done in the virtual browser prior to any server-side processing being done on the document via server-side script.
+                set the value of all html input fields with matching names to the value passed in via the GET or POST request.  This will be done in the virtual browser prior to any server-side processing being done on the document via server-side script.
                 <br /><br />
                 This feature can be disabled for the entire page using the meta tag: <br />
                 <!--<meta name="DBS.FormPrepopulate" content="Disable:True" />-->
