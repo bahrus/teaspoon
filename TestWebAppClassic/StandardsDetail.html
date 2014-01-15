@@ -26,8 +26,7 @@
     <div id="nutshell">
         <h3>In a nutshell</h3>
         <p id="recentTrends">
-            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript, such as JQuery based frameworks, or more recently, directive based frameworks such as AngularJS or Knockout. These frameworks have largely shunted the benefits which could derive from synergies with server-side processing. Part of this trend towards pure client-side frameworks may be motivated by a desire to avoid committing to a single server-side platform, such as .net, Python, Java, etc. 
-            Another motivation is it becomes more difficult to maintain if developers need to work with two very different languages, and the question &quot;where is this content coming from?&quot; becomes more difficult.</p>
+            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript, such as JQuery based frameworks, or more recently, directive based frameworks such as AngularJS or Knockout. These frameworks have largely shunted the benefits which could derive from synergies with server-side processing. Part of this trend towards pure client-side frameworks may be motivated by a desire to avoid committing to a single server-side platform, such as .net, Python, Java, etc. Another motivation is it becomes more difficult to maintain if developers need to work with two very different languages, and the question &quot;where is this content coming from?&quot; is hard to answer.</p>
         <p>
             These client-centric frameworks generate the dynamic content (or even <i>all</i> the content) on the client using JavaScript. 
             The role of the server has, in many cases, been reduced to providing dumb static file server capabilities, in conjunction with providing live JSON data feeds and a Restful API for storing changes.  
@@ -95,7 +94,7 @@
 		<h3>Modes</h3>
         <p id="dataModeAttribute">
 		    <a href="#nutshell">As we've seen</a>, a central custom attribute is introduced in DBS:  <em>data-mode</em>, which can be set, for example, to 'server-side-only'.
-		    This attribute is applicable to &lt;script/&gt;, &lt;iframe/&gt;, &lt;form/&gt;, &lt;style/&gt;. 
+		    This attribute is applicable to &lt;script/&gt;, &lt;iframe/&gt;, &lt;form/&gt;, &lt;style/&gt; and &lt;link/&gt;. 
 		    The following table lists all the possible values, the meaning, and the default value if the attribute is not specified:
         </p>
 		<table id="modeAttributeTable" style="width: 100%" border="1">
@@ -109,7 +108,7 @@
 				<td>script</td>
 				<td>
 				
-								<table style="width: 100%">
+								<table style="width: 100%" border="1">
 									<tr>
 										<td class="modesTD"><strong>client-side-only</strong></td>
 										<td>Standard script - only executes within client browser.</td>
@@ -145,7 +144,7 @@
 			<tr>
 				<td>iframe</td>
 				<td>
-				<table style="width: 100%">
+				<table style="width: 100%" border="1">
 					<tr>
 						<td class="modesTD"><strong>client-side-only</strong></td>
 						<td>Standard iframe, embeds content via client browser child window.</td>
@@ -171,7 +170,7 @@
 			<tr>
 				<td>form</td>
 				<td>
-				<table style="width: 100%">
+				<table style="width: 100%" border="1">
 					<tr>
 						<td class="modesTD">client-side-only</td>
 						<td>On form submit, form fields are sent via AJAX request to server, 
@@ -191,7 +190,7 @@
 		</table>
 		
 		<p id="modesForStyle"> 
-            In the case of the style attribute, if the custom attribute <em>data-compiler</em> is set, then the style attribute may be compiled into JavaScript, in which case <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.
+            In the case of the style (or link) attribute, if the custom attribute <em>data-compiler</em> is set, then the style attribute may be compiled into JavaScript, in which case <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.
             &nbsp;For example, as discussed in the TSP implementation document:
         </p>
 		
@@ -412,12 +411,12 @@
             </thead>
             <tr>
                 <td>JavaScript Engine</td>
-                <td class="auto-style4"><a href="http://javascriptdotnet.codeplex.com/">Javascipt .NET</a></td>
+                <td class="auto-style4"><a href="http://clearscript.codeplex.com/">ClearScript</a></td>
                 <td>
                     <ul>
                         <li><a href="https://github.com/Taritsyn/MsieJavaScriptEngine">MsieJavaScriptEngine (Chakra)</a></li>
                         <li><a href="http://v8dotnet.codeplex.com/">V8.NET</a></li>
-                        <li><a href="http://clearscript.codeplex.com/">Clear Script</a></li>            
+                        <li><a href="http://javascriptdotnet.codeplex.com/">Javascipt .NET</a></li>            
 
                     </ul>
 
@@ -467,7 +466,7 @@
         </table>
         <p id=";"></p>      
         <p id="VirtualBrowserLimitations">
-            While this dual browser model can allow for much code reuse between the client and server (or code shifting as the needs warrant), we hasten to caution that there are two significant areas of functionality where maintaining an exact replica between the server-side browser, and the client-side browser, is not easy or natural to achieve:
+            While this dual browser model can allow for much code reuse between the client and server (or code shifting as the needs warrant), we hasten to caution that there are some significant areas of functionality where maintaining an exact replica between the server-side browser, and the client-side browser, is not easy or natural to achieve:
             <ol>
                 <li>
                     Event handling, such as the onmousemove event, makes sense on the client, but supporting such event handling on the server side would be contrived and likely to cause more harm than good in terms of performance.
@@ -555,7 +554,10 @@
 </ol>
 </div>
 </div>
-  
+    <p id="externalReferenceJS">
+        The simple "Hello, world" example above used inline JavaScript to make the example simple, but any JavaScript which references external files will behave the same way.
+        All external scripts will be merged into the DOM before processing the scripts.
+    </p>
     </div>
     <div id="iFrame">
 	<h3>Server side iFrames</h3>
@@ -694,6 +696,8 @@
                     not provide any intellisense after typing "form1.", or be able to navigate to the function, or underline in red if the function name has a typo.</li>
                 <li>Even for those IDE&#39;s which help maintain the relationship between DOM elements and the classes associated with them, it is less direct than seeing the directives directly in the element itself.&nbsp; Web browsers&#39; developer tools help visualize the relationship even more clearly, but this help may not work with these custom styles [TODO: research].</li>
             </ul>
+
+            <h4>External style directives via the link tag [TODO]</h4>
         </p>
         <h4>The DBS Attribute Style Directive</h4>
         <p id="DBSAttrStyleDirectiveIntro">

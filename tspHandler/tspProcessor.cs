@@ -692,22 +692,7 @@ tsp.createInputAutoFillRule(model);
             if (script.Length > 0)
             {
                 // Initialize a context
-                //sb.AppendLine("tsp.applyRules(document);");
                 script = sb.ToString();
-                //using (JavascriptContext context = new JavascriptContext())
-                //{
-
-                //    // Setting external parameters for the context
-                //    context.SetParameter("console", new Console());
-                //    context.SetParameter("document", doc);
-                //    //context.SetParameter("model", model);
-                //    var jqueryFacade = new JQueryFacade(doc);
-                //    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
-                //    context.SetParameter(modeParameter, "server");
-                //    context.SetParameter("model", doc.ProcessContext.Model);
-                //    // Running the parentScript
-                //    context.Run(script);
-                //}
                 using (var engine = new V8ScriptEngine())
                 {
                     var jqueryFacade = new JQueryFacade(doc);
