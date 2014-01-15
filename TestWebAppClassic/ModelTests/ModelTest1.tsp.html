@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Model Test 1</title>
-    <script type="text/javascript" id="ModelTest1a" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel">
+    <script id="ModelTest1a" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel">
         if (typeof (model) == 'undefined') model = {};
         model['ModelTest1a'] = { "StringValue": "Hello, World" };
     </script>
@@ -12,6 +12,15 @@
     </script>
 </head>
 <body>
-
+    <span id="ModelTest1aEl"></span>
+    <script>
+        var modTest1aSpan = document.getElementById('ModelTest1aEl');
+        modTest1aSpan.innerHTML = model.ModelTest1a.StringValue;
+    </script>
+    <span id="ModelTest1bEl"></span>
+    <script data-mode="server-side-only">
+        var modTest1bSpan = document.getElementById('ModelTest1bEl');
+        modTest1bSpan.innerHTML = model.ModelTest1b.StringValue2;
+    </script>
 </body>
 </html>

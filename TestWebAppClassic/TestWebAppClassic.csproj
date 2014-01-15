@@ -31,7 +31,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,6 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="baseTable6x10.html" />
+    <Content Include="ClearScriptV8-32.dll" />
+    <Content Include="ClearScriptV8-32.pdb" />
+    <Content Include="ClearScriptV8-64.dll" />
+    <Content Include="ClearScriptV8-64.pdb" />
     <Content Include="Content\jquery.layout-1.30.79.css" />
     <TypeScriptCompile Include="form1.ts" />
     <TypeScriptCompile Include="datagrid.ts" />
@@ -89,6 +93,10 @@
     <Content Include="tsp.tsp.html" />
     <Content Include="ts\tsp_script\tcp.ts" />
     <Content Include="ts\tsp_script\tsp.css" />
+    <Content Include="v8-ia32.dll" />
+    <Content Include="v8-ia32.pdb" />
+    <Content Include="v8-x64.dll" />
+    <Content Include="v8-x64.pdb" />
     <Content Include="WebForm1.aspx" />
     <TypeScriptCompile Include="file1.ts" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />

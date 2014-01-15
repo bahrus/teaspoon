@@ -3,10 +3,10 @@ using System;
 using System.Linq;
 using ClassGenMacros;
 using System.Text;
-using Noesis.Javascript;
 using System.Web;
 using System.Collections.Generic;
 using System.Dynamic;
+using Microsoft.ClearScript.V8;
 
 namespace tspHandler
 {
@@ -53,14 +53,14 @@ namespace tspHandler
                 {
                     case "script":
                         string type = node.getAttribute("type");
-                        if (type != null && (type.ToLower() == "text/html" || type.ToLower() == "text/emmet"))
+                        if (!string.IsNullOrEmpty(type) && (type.ToLower() == "text/html" || type.ToLower() == "text/emmet"))
                         {
                             return Modes.ClientSideOnly;
                         }
                         if (string.IsNullOrEmpty(mode))
                         {
                             string model = node.getAttribute(ModelAttribute);
-                            return model == null ? Modes.ClientSideOnly : Modes.Both;
+                            return string.IsNullOrEmpty(model) ? Modes.ClientSideOnly : Modes.Both;
                         }
                         break;
                     case "iframe":
@@ -577,6 +577,7 @@ tsp.createInputAutoFillRule(model);
                             var dict = (IDictionary<string, object>)doc.ProcessContext.Model;
                             dict[id] = result;
                             postProcessModelInfo.Model = result;
+                            model.innerHTML = string.Empty;
                         }
                         break;
                         #endregion
@@ -693,18 +694,29 @@ tsp.createInputAutoFillRule(model);
                 // Initialize a context
                 //sb.AppendLine("tsp.applyRules(document);");
                 script = sb.ToString();
-                using (JavascriptContext context = new JavascriptContext())
-                {
+                //using (JavascriptContext context = new JavascriptContext())
+                //{
 
-                    // Setting external parameters for the context
-                    context.SetParameter("console", new Console());
-                    context.SetParameter("document", doc);
-                    //context.SetParameter("model", model);
+                //    // Setting external parameters for the context
+                //    context.SetParameter("console", new Console());
+                //    context.SetParameter("document", doc);
+                //    //context.SetParameter("model", model);
+                //    var jqueryFacade = new JQueryFacade(doc);
+                //    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
+                //    context.SetParameter(modeParameter, "server");
+                //    context.SetParameter("model", doc.ProcessContext.Model);
+                //    // Running the parentScript
+                //    context.Run(script);
+                //}
+                using (var engine = new V8ScriptEngine())
+                {
                     var jqueryFacade = new JQueryFacade(doc);
-                    context.SetParameter("jQueryServerSideFacade", jqueryFacade);
-                    context.SetParameter(modeParameter, "server");
-                    // Running the parentScript
-                    context.Run(script);
+                    engine.AddHostObject("console", new Console());
+                    engine.AddHostObject("document", doc);
+                    engine.AddHostObject("jQueryServerSideFacade", jqueryFacade);
+                    engine.Execute("var " + modeParameter + "='server'");
+                    engine.AddHostObject("model", doc.ProcessContext.Model);
+                    engine.Execute(script);
                 }
             }
 
