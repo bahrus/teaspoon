@@ -277,7 +277,7 @@
             The example above wraps the class identifier in brackets, which signifies to look for a class in a .net assembly (for the .net based implementation of TSP, for example).
             No brackets would indicate to use a JavaScript call, where the JavaScript method is either embedded in the page, or exists in a referenced JS file.
             Even if JavaScript is chosen, it will be invoked on the server side, regardless of the data-mode attribute.
-            The DBS container should provide a means for this static method to have access to a platform specific http context from which it can read any query string parameters, cookies, etc. for that request.
+            The DBS container should provide a means for this static method to have access to a platform specific http context from which it can read any query string parameters, cookies, etc. for that request, as well as the tag from which the call was made (which may contain important data in the attributes).
 	    </p>
         <p id="modelSerialization">
             By default, there will be a significant difference between what the model looks like on the server vs. the client.  
@@ -350,7 +350,7 @@
 	    <h4>Implementation</h4>
 	
 		<p id="VirtualBrowserConcept">
-            Central to DBS is the concept of a &quot;virtual browser&quot; running in the server.
+            Central to the DBS is the concept of a &quot;virtual browser&quot; running in the server.
             This concept is a simple extension of the idea behind node.js and other server-side solutions which provide a wrapper around the Google Chrome V8 engine. 
             But while those solutions can execute JavaScript, they do not emulate other critical aspects of what happens in a browser, starting with a DOM parser which can read a HTML compliant document, and query and manipulate the document using calls such as document.getElementById, or document.querySelectorAll, or node.appendChild.
             The following table provides a &quot;shopping list&quot; of functionality needed to implement a virtual browser with enough features to support the DBS.
@@ -950,8 +950,7 @@
             The process described above will work quite well for relatively small object, invoked against relatively simple methods.  
             But there are many scenarios where much more fine tuning would be required: If the method wants to also return a different object type, for example.
             Or the model may be quite large (for example, it binds to a datagrid), and we only want to send up the "dirty" records".  
-            Scenarios like this call for more find tuning...   
-            For these purposes
+            Scenarios like this call for more find tuning, as described below.   
         </p> 
 
         <p id="MaximalComplexity">

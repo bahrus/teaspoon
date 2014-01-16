@@ -2,25 +2,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Model Test 1</title>
-    <script id="ModelTest1a" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel">
+    <script id="ModelTestWithModeEqualsBoth" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel">
         if (typeof (model) == 'undefined') model = {};
-        model['ModelTest1a'] = { "StringValue": "Hello, World" };
+        model['ModelTestWithModeEqualsBoth'] = { "StringValue": "Dummy String Value 1", "StringValue2" : "Dummy String Value 2"};
     </script>
 
-    <script id="ModelTest1b" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel">
-        model['ModelTest1b'] = { "StringValue": "Hello, World" };
+    <script id="ModelTestWithModeEqualsServerSideOnly" data-model="[TestWebAppClassic.ModelTests.ModelTest1, TestWebAppClassic].GetModel" data-mode="server-side-only">
+        model['ModelTestWithModeEqualsServerSideOnly'] = { "StringValue": "Dummy String Value 1", "StringValue2": "Dummy String Value 2" };
+    </script>
+
+    <script data-mode="both">
+        var isClientMode = (typeof (mode) == 'undefined' || mode !== 'server');
     </script>
 </head>
 <body>
-    <span id="ModelTest1aEl"></span>
-    <script>
-        var modTest1aSpan = document.getElementById('ModelTest1aEl');
-        modTest1aSpan.innerHTML = model.ModelTest1a.StringValue;
+    Dual Mode Model Referenced by Client: <span id="ModelTestWithModeEqualsBothPopulatedOnClientSide"></span>
+    <br />
+    Dual Mode Model Referenced by Server: <span id="ModelTestWithModeEqualsBothPopulatedOnServerSide"></span>
+    <br />
+    <script data-mode="both">
+        if (isClientMode) {
+            var span1 = document.getElementById('ModelTestWithModeEqualsBothPopulatedOnClientSide');
+            span1.innerHTML = model.ModelTestWithModeEqualsBoth.StringValue;
+        } else {
+            var span2 = document.getElementById('ModelTestWithModeEqualsBothPopulatedOnServerSide');
+            span2.innerHTML = model.ModelTestWithModeEqualsBoth.StringValue2;
+        }
     </script>
-    <span id="ModelTest1bEl"></span>
+    Server-Side-Only Mode Model Referenced by Server: <span id="ModelTestWithModeEqualsServerSideOnlyPopulatedOnServerSide"></span>
+    <br />
     <script data-mode="server-side-only">
-        var modTest1bSpan = document.getElementById('ModelTest1bEl');
-        modTest1bSpan.innerHTML = model.ModelTest1b.StringValue2;
+        var span3 = document.getElementById('ModelTestWithModeEqualsServerSideOnlyPopulatedOnServerSide');
+        span3.innerHTML = model.ModelTestWithModeEqualsServerSideOnly.StringValue2
     </script>
 </body>
 </html>

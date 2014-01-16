@@ -613,7 +613,7 @@ tsp.createInputAutoFillRule(model);
             foreach (var modelProcessingInfo in doc.ProcessContext.ModelScriptPostProcessingInfos)
             {
                 var node = modelProcessingInfo.Node;
-                if (!modelProcessingInfo.NeededForClient)
+                if (!modelProcessingInfo.NeededForClient && node.parentNode != null) //may have already been removed from doc in process server side scripts
                 {
                     node.parentNode.removeChild(node);
                     continue;
