@@ -82,6 +82,9 @@
     <Content Include="form1.tsp.html" />
     <Content Include="HelloWorld.tsp.html" />
     <Content Include="Images\HelloWorld.png" />
+    <Content Include="ModelTests\CreateCookieData.aspx" />
+    <Content Include="ModelTests\CreatePostData.html" />
+    <Content Include="ModelTests\HttpContext.tsp.html" />
     <Content Include="ModelTests\ModelTest1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
     <Content Include="Scratch2.html" />
@@ -206,6 +209,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableTestModel.cs" />
+    <Compile Include="ModelTests\CreateCookieData.aspx.cs">
+      <DependentUpon>CreateCookieData.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ModelTests\CreateCookieData.aspx.designer.cs">
+      <DependentUpon>CreateCookieData.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ModelTests\ModelTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetrieveProduct.cs" />

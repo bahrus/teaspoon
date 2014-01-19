@@ -7,6 +7,7 @@ using System.Web;
 using System.Collections.Generic;
 using System.Dynamic;
 using Microsoft.ClearScript.V8;
+using tsp;
 
 namespace tspHandler
 {
@@ -32,6 +33,10 @@ namespace tspHandler
 
         public static object InvokeServerSideMethod(string StaticMethodString, object[] args)
         {
+            if (StaticMethodString == "DBS.Http.GetContext")
+            {
+                return Http.GetContextFacade();
+            }
             var typeString = StaticMethodString.SubstringBeforeLast(".").SubstringAfter("[").SubstringBeforeLast("]");
             var methodString = StaticMethodString.SubstringAfterLast(".");
             var typ = Type.GetType(typeString, true);
@@ -585,20 +590,6 @@ tsp.createInputAutoFillRule(model);
                         postProcessModelInfo.StaticMethodString = staticMethodString;
                         break;
                 }
-                
-                
-                
-                
-                    #region Serverside Method
-                    
-                    
-                    
-
-                    
-                    
-                    
-                    #endregion
-
                 
                 model.removeAttribute(ModelAttribute);
                 
