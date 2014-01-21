@@ -7,7 +7,8 @@ using System.Web;
 using System.Collections.Generic;
 using System.Dynamic;
 using Microsoft.ClearScript.V8;
-using tsp;
+using Newtonsoft.Json.Linq;
+
 
 namespace tspHandler
 {
@@ -636,7 +637,23 @@ tsp.createInputAutoFillRule(model);
                         var result = InvokeServerSideMethod(modelProcessingInfo.StaticMethodString, null);
                         modelProcessingInfo.Model = result;
                     }
-                    string json = JsonConvert.SerializeObject(modelProcessingInfo.Model);
+                    //string 
+                    string json = null;
+                    var jsonObj = JObject.FromObject(modelProcessingInfo.Model);
+                    var csFilter = modelProcessingInfo.CSFilter;
+                    if (!string.IsNullOrEmpty(csFilter))
+                    {
+                        var mc = new ModelContext
+                        {
+                            JSONObject = jsonObj,
+                        };
+                        var newResult = InvokeServerSideMethod(csFilter, new object[] { mc });
+                        json = newResult.ToString();
+                    }
+                    else
+                    {
+                        json = jsonObj.ToString();
+                    }
                     string initializer = addedInitializer ? null : @"
         if(typeof(model)=='undefined') model = {};";
                     string modelScript = @"
@@ -861,6 +878,11 @@ tsp.createInputAutoFillRule(model);
         Both,
         Depends,
         Unspecified,
+    }
+
+    public class ModelContext
+    {
+        public JObject JSONObject { get; set; }
     }
     
 }

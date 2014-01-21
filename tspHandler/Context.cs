@@ -4,8 +4,9 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.SessionState;
 
-namespace tsp
+namespace tspHandler
 {
     public class Http
     {
@@ -32,6 +33,20 @@ namespace tsp
             get
             {
                 return _reqFacade;
+            }
+        }
+
+        public Dictionary<string, object> Session
+        {
+            get
+            {
+                var s = HttpContext.Current.Session;
+                var returnObj = new Dictionary<string, object>();
+                foreach (string k in s.Keys)
+                {
+                    returnObj[k] = s[k];
+                }
+                return returnObj;
             }
         }
         
@@ -81,6 +96,8 @@ namespace tsp
                 return h.AllKeys.ToDictionary(k => k, k => h[k]);
             }
         }
+
+        
     }
 
     public class CookieFacade 

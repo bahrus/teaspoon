@@ -14,6 +14,10 @@ namespace TestWebAppClassic.ModelTests
             var newCookie = new HttpCookie("IAmHere");
             newCookie.Value = "Coming from CreateHttpContextTestData";
             newCookie.Expires = DateTime.Now.AddDays(1);
+            Page.Session.Add("testSession", new ModelTest1
+            {
+                StringValue = "Hello, world",
+            });
             Page.Response.Cookies.Add(newCookie);
             Page.Response.Redirect("HttpContext.tsp.html");
         }

@@ -298,28 +298,31 @@
             2) if so, whether the download should be part of the payload of the original page, or instead should be downloaded separately from the page via a call-back ajax call.
         This is sorted out as follows:
 	</p>
-	<ul id="dataModeldataModeScenarios">
-		<li>
-            If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side JavaScript tags. 
-		    However, the data will be excluded from the output sent to the client.
-		</li>
-		<li>
-            If attribute <em>data-mode</em> is 'both' (the default in this special script tag case), this will do the same as the server-side-only setting mentioned above, but it will transmit the JSON-ified data to the client. If the HTML5 attribute &#39;async&#39; is set for the script tag, however, the data which was retrieved for purposes of server side processing will be briefly cached, and instead of embedding the data in the main page payload, the client will make an AJAX request to retrieve the data and merge it into the global object<em> model </em>(and in supported browsers, the async flag will allow other processing to continue while waiting).
-            This complex sequence of events will be managed by the DBS container.
-            One other attribute comes into play when <em>data-mode</em> is &#39;both&#39;:
-            The <em>data-csFilter</em> attribute.&nbsp; The value of such an attribute is also expected to be in the form of a server-side method string, and applies further filtering of the object derived from the data-model attribute.
-            This allows the server-side processing to have access to a large object containing potentially sensitive information, but to whittle down the object to a subset which is relevant and public enough that it is appropriate to send this subset down to the client.
-		</li>
-		<li>
-            If attribute <em>data-mode</em> is 'client-side-only', the data will still ultimately be retrieved by the server.
-            However, the act of retrieving the data will happen much later, and will not be made until the page is rendered by the client, which will then generate an AJAX request.
-            The AJAX request will go to the server, which will still call the static method specified by the data-model attribute and pass the JSON-serialized data back to the client, which will merge the data into the global <em>model </em>object.
-            Again, this complex sequence will be managed by the DBS container behind the scenes.
-		</li>
-        <li>
-            If attribute <em>data-mode</em> is not specified, it will default to &#39;both&#39; for script model tags.
-        </li>
-	</ul>
+        <ul id="dataModeldataModeScenarios">
+            <li>
+                If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side JavaScript tags.
+                However, the data will be excluded from the output sent to the client.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is 'both' (the default in this special script tag case), this will do the same as the server-side-only setting mentioned above, but it will transmit the JSON-ified data to the client. If the HTML5 attribute &#39;async&#39; is set for the script tag, however, the data which was retrieved for purposes of server side processing will be briefly cached, and instead of embedding the data in the main page payload, the client will make an AJAX request to retrieve the data and merge it into the global object<em> model </em>(and in supported browsers, the async flag will allow other processing to continue while waiting).
+                This complex sequence of events will be managed by the DBS container.
+                One other attribute comes into play when <em>data-mode</em> is &#39;both&#39;:
+                The <em>data-csFilter</em> attribute.
+                The value of such an attribute is also expected to be in the form of a server-side method string, and applies further filtering of the object derived from the data-model attribute.
+                The object the method will filter on will not, however, be the native, because filtering out sections of the native object may not be possible without inadvertently causing harm to the object or requiring objects conform to some design which allows for filtering sections out.
+                Rather, the filter method will be passed a JSON representation of the native object.  If the filter does nothing to the object, then that will be the JSON which is sent to the client.
+                This allows the server-side processing to have access to a large object containing potentially sensitive information, but to whittle down the object to a subset which is relevant and public enough that it is appropriate to send this subset down to the client.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is 'client-side-only', the data will still ultimately be retrieved by the server.
+                However, the act of retrieving the data will happen much later, and will not be made until the page is rendered by the client, which will then generate an AJAX request.
+                The AJAX request will go to the server, which will still call the static method specified by the data-model attribute and pass the JSON-serialized data back to the client, which will merge the data into the global <em>model </em>object.
+                Again, this complex sequence will be managed by the DBS container behind the scenes.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is not specified, it will default to &#39;both&#39; for script model tags.
+            </li>
+        </ul>
 	    <p id="asyncClient">
             When data is retrieved asynchronously on the client, it will be up to the developer to ensure that any elements of the page which depend on this data, should get (re)evaluated following the retrieval of the data.
             &nbsp;Making this easier for the developer is an area specific implementations of the DBS may add value.
