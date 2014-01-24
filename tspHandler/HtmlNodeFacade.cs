@@ -9,6 +9,9 @@ namespace tspHandler
     public class HtmlNodeFacade : INodeSelector
     {
         private HtmlNode _node;
+        private HtmlDocumentFacade _ownerDoc;
+
+        
 
         public string className
         {
@@ -65,6 +68,14 @@ namespace tspHandler
             set { this.setAttribute("name", value); }
         }
 
+        public HtmlDocumentFacade ownerDocument
+        {
+            get
+            {
+                return _ownerDoc;
+            }
+        }
+
         public string value
         {
             get { return this.getAttribute("value"); }
@@ -77,10 +88,11 @@ namespace tspHandler
             set { this.setAttribute("type", value); }
         }
 
-        public HtmlNodeFacade(HtmlNode node)
+        public HtmlNodeFacade(HtmlNode node, HtmlDocumentFacade owner)
         {
             if (node == null) throw new Exception();
             this._node = node;
+            this._ownerDoc = owner;
         }
 
         public void insertAdjacentHTML(string placement, string content){
@@ -109,7 +121,7 @@ namespace tspHandler
             }
             var returnObj = _node
                 .QuerySelectorAll(selectorText)
-                .Select(node => new HtmlNodeFacade(node))
+                .Select(node => new HtmlNodeFacade(node, this._ownerDoc))
                 .ToList();
             return returnObj;
         }
@@ -168,7 +180,7 @@ namespace tspHandler
             get
             {
                 if (this._node.ParentNode == null) return null;
-                return new HtmlNodeFacade(this._node.ParentNode);
+                return new HtmlNodeFacade(this._node.ParentNode, this._ownerDoc);
             }
         }
 
@@ -179,7 +191,7 @@ namespace tspHandler
                 var returnObj = new List<HtmlNodeFacade>();
                 foreach (var child in _node.ChildNodes)
                 {
-                    returnObj.Add(new HtmlNodeFacade(child));
+                    returnObj.Add(new HtmlNodeFacade(child, this._ownerDoc));
                 }
                 return returnObj;
             }
@@ -199,7 +211,7 @@ namespace tspHandler
                 return node.Name == tag;
 
             };
-            HtmlDocumentFacade.searchForNode(test, docNode, list);
+            HtmlDocumentFacade.searchForNode(test, docNode, list, this._ownerDoc);
             return list;
         }
 
@@ -211,17 +223,17 @@ namespace tspHandler
             {
                 parent.removeChild(child);
             }
-            return new HtmlNodeFacade(returnObj);
+            return new HtmlNodeFacade(returnObj, this._ownerDoc);
         }
 
         public HtmlNodeFacade insertBefore(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
         {
-            return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node));
+            return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node), this._ownerDoc);
         }
 
         public HtmlNodeFacade insertAfter(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
         {
-            return new HtmlNodeFacade(this._node.InsertAfter(newChild._node, refChild._node));
+            return new HtmlNodeFacade(this._node.InsertAfter(newChild._node, refChild._node), this._ownerDoc);
         }
 
         public void removeAttribute(string attrName)

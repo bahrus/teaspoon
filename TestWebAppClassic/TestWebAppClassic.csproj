@@ -94,6 +94,7 @@
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
     <Content Include="StandardsDetail.html" />
+    <Content Include="StyleDirectiveTests\CustomCompiler.tsp.html" />
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
@@ -223,6 +224,7 @@
     <Compile Include="ModelTests\TestModelCSFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetrieveProduct.cs" />
+    <Compile Include="StyleDirectiveTests\CustomCompiler.cs" />
     <Compile Include="TestModel1.cs" />
     <Compile Include="TreeGridTestModel.cs" />
     <Compile Include="WebForm1.aspx.cs">

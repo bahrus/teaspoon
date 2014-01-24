@@ -22,6 +22,7 @@ namespace tspHandler
         public const string ModeAttribute = "data-mode";
         public const string DesignTypeAttribute = "data-design-type";
         public const string SSFormatAttribute = "data-model-ssFormat";
+        public const string CompilerAttribute = "data-compiler";
 
         public const string modeParameter = "mode";
         public const string ServerSideMode = "server-side-only";
@@ -228,11 +229,16 @@ namespace tspHandler
             var mergedDoc = ProcessDifferences(doc);
             if (mergedDoc != null) return mergedDoc;
             Trace(doc, "ProcessEmmetSpaces");
-            ProcessEmmetSpaces(doc);
-            Trace(doc, "ProcessTSPStyles");
-            ProcessTSPStyles(doc);
-            Trace(doc, "ProcessTCPStyles");
-            ProcessTCPStyles(doc);
+            //ProcessEmmetSpaces(doc);
+            doc
+                .ProcessEmmetSpaces()
+                .ProcessStyleDirectives()
+                .ProcessServerSideForms()
+            ;
+            //Trace(doc, "ProcessTSPStyles");
+            //ProcessTSPStyles(doc);
+            //Trace(doc, "ProcessTCPStyles");
+            //ProcessTCPStyles(doc);
             Trace(doc, "ProcessServerSideForms");
             ProcessServerSideForms(doc);
             if (doc.Host.IsDesignMode())
@@ -398,6 +404,38 @@ namespace tspHandler
             if (!LHS.StartsWith("(") || !LHS.EndsWith(")")) return expression;
             string RHS = expression.SubstringAfter(Lambda).Trim();
             return "function" + LHS + "{ return " + RHS + ";}";
+        }
+
+        public static HtmlDocumentFacade ProcessStyleDirectives(this HtmlDocumentFacade doc)
+        {
+            var styleDirectiveRules = doc.querySelectorAll("style[" + CompilerAttribute + "]").ToList();
+            styleDirectiveRules.ForEach(node =>
+            {
+                string content = node.innerHTML.Trim();
+                var styleSheet = HtmlDocumentFacade.processCssContent(content);
+                string serversideMethodString = node.getAttribute(CompilerAttribute);
+                var result = InvokeServerSideMethod(serversideMethodString, new object[] { styleSheet, node }) as List<HtmlNodeFacade>;
+                bool containsOriginalNode = false;
+                var parent = node.parentNode;
+                foreach (var newNode in result)
+                {
+                    if (newNode == node)
+                    {
+                        containsOriginalNode = true;
+                        continue;
+                    }
+                    else
+                    {
+                        parent.insertAfter(newNode, node);
+                    }
+
+                }
+                if (!containsOriginalNode)
+                {
+                    parent.removeChild(node);
+                }
+            });
+            return doc;
         }
 
         public static HtmlDocumentFacade ProcessTSPStyles(this HtmlDocumentFacade doc){

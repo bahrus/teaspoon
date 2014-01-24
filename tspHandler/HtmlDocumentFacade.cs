@@ -78,7 +78,7 @@ namespace tspHandler
                 return node.Name == tag;
                 
             };
-            searchForNode(test, docNode, list);
+            searchForNode(test, docNode, list, this);
             return list;
         }
 
@@ -92,7 +92,7 @@ namespace tspHandler
                 string[] classes = classTest.Split(' ');
                 return classes.Contains(className);
             };
-            searchForNode(test, docNode, list);
+            searchForNode(test, docNode, list, this);
             return list;
         }
 
@@ -101,18 +101,18 @@ namespace tspHandler
             if (id == null) return null;
             var node = this._htmlDoc.GetElementbyId(id);
             if (node == null) return null;
-            return new HtmlNodeFacade(node);
+            return new HtmlNodeFacade(node, this);
         }
 
-        public static void searchForNode(Func<HtmlNode, bool> test, HtmlNode node, List<HtmlNodeFacade> nodes)
+        public static void searchForNode(Func<HtmlNode, bool> test, HtmlNode node, List<HtmlNodeFacade> nodes, HtmlDocumentFacade owner)
         {
             if (test(node))
             {
-                nodes.Add( new HtmlNodeFacade(node) );
+                nodes.Add( new HtmlNodeFacade(node, owner) );
             }
             foreach (var child in node.ChildNodes)
             {
-                searchForNode(test, child, nodes);
+                searchForNode(test, child, nodes, owner);
             }
         }
 
@@ -154,18 +154,18 @@ namespace tspHandler
         {
             get
             {
-                return new HtmlNodeFacade( _htmlDoc.DocumentNode);
+                return new HtmlNodeFacade( _htmlDoc.DocumentNode, this);
             }
         }
 
         public HtmlNodeFacade createElement(string tag)
         {
-            return new HtmlNodeFacade( _htmlDoc.CreateElement(tag));
+            return new HtmlNodeFacade( _htmlDoc.CreateElement(tag), this);
         }
 
         public HtmlNodeFacade createTextNode(string text)
         {
-            return new HtmlNodeFacade(_htmlDoc.CreateTextNode(text));
+            return new HtmlNodeFacade(_htmlDoc.CreateTextNode(text), this);
         }
 
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
@@ -176,7 +176,7 @@ namespace tspHandler
             //}
             var returnObj = _htmlDoc.DocumentNode
                 .QuerySelectorAll(selectorText)
-                .Select(node => new HtmlNodeFacade(node))
+                .Select(node => new HtmlNodeFacade(node, this))
                 .ToList();
             return returnObj;
         }
