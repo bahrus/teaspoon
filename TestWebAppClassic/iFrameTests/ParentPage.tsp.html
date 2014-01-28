@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>iFrame Tests</title>
+    <script type="text/javascript" src="../tsp_script/DBS.js"></script>
+    <script type="text/javascript" src="../tsp_script/DBS_cs.js"></script>
+</head>
+<body>
+    <table>
+        <thead>
+        <tr>
+            <th>
+                Client-Side-Only
+            </th>
+            <th>
+                Server-Side-Only
+            </th>
+            <th>
+                Hybrid
+            </th>
+        </tr>
+        </thead>
+        <tr>
+            <td>
+                <iframe src="ChildPage1.tsp.html#div2"></iframe>
+            </td>
+            <td>
+                <iframe src="ChildPage1.tsp.html#div2" data-mode="server-side-only"></iframe>
+            </td>
+            <td>
+                <iframe id="myHybrid" src="ChildPage1.tsp.html#div2" data-mode="hybrid"></iframe>
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>

@@ -120,11 +120,23 @@ namespace tspHandler
         {
             get
             {
-                var sw = new StringWriter();
-                this._htmlDoc.Save(sw);
-                return sw.ToString();
+                
+                if (string.IsNullOrEmpty(this.IDSelector))
+                {
+                    var sw = new StringWriter();
+                    this._htmlDoc.Save(sw);
+                    return sw.ToString();
+                }
+                else
+                {
+                    var el = this._htmlDoc.GetElementbyId(this.IDSelector);
+                    return el.OuterHtml;
+                }
+                
             }
         }
+
+        public string IDSelector { get; set; }
 
         public HtmlNodeFacade body
         {

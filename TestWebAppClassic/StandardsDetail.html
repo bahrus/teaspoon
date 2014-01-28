@@ -155,8 +155,10 @@
 						document.</td>
 					</tr>
                     <tr>
-                        <td>both</td>
-                        <td>Content from referenced page is merged into parent document on client side.</td>
+                        <td>hybrid</td>
+                        <td>
+                            Content from referenced page is merged into parent document on client side.
+                        </td>
                     </tr>
                     <tr>
                         <td>depends</td>
@@ -567,10 +569,11 @@
     </p>
     </div>
     <div id="iFrame">
-	<h3>Server side iFrames</h3>
-    <p>
-        Most server-side template engines, such as PHP or ASP.net webforms, supports some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
-        <p>
+        <div id="serverSideIframes">
+	    <h3>Server side iFrames</h3>
+            <p>
+                Most server-side template engines, such as PHP or ASP.net webforms, supports some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
+            <p>
            
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
@@ -581,38 +584,49 @@
 </div>
 </div>
 
-        <p id="benefitOfServerSideIFrameIDE">
-            One nice benefit of reusing the iframe tag for server-side includes, is that some HTML Editors, such as Adobe's Dreamweaver, or Microsoft's Web Expression, provide excellent support for iframes -- in particular previewing the content, being able to easily navigate to the source page of the iframe to edit it.    
-        </p>
-        <p id="recommendFullyFormedHTML">
-            The page being referenced should consist of a fully-formed html document -- 
-                like the script tag mentioned above, we should be able to switch the attribute between client-side-only (regular iframe) and server-side-only 
-            -- 
-            and get almost identical results from the end user point of view.
-            Thus the page should, as a matter of best practice, work as a standalone page.  
-            In general, the advantages of using client-side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts.
-            One disadvantage, though, is iframing (on the client) can impose a heavy toll on browser resources, such as memory, particularly when heavy-duty JavaScript libraries are utilized.
-            Ideally, then, we should be able to pick the optimal tier where to embed, which may depend on the type of device accessing the content, and the nature of the content.  
-            Hence, like the script tag, the value of <em>data-mode</em> can be "depends", and some custom logic can be referenced which makes the decision, tailored to the user and the content.
-        </p>
-        <p id="iframeHashTag">
-            Notice the hash tag in the src attribute.
-            This is expected to specify a unique id found in the referenced document.
-            The DBS container will, on the server, remove all content outside the tag matching the id (with some important exceptions mentioned below), and will add the document fragment to the containing DOM document.
-        </p>
-        <p id="iframeReferences">
-            In the case of server-side iframes, the DBS document will also merge all script and css references found in the referenced page.
-            It will look for client-side identical refrences to js files or css files, and not duplicate them in the event it finds a matching reference.
-        </p>
-        <p>
-            Prior to embedding the content of the page the iframe tag references, the usual DBS processing will be executed on the referenced page, most notably executing any server-side script or nested server-side iframes.
-        </p>
-        <p>
-            If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be emedded in different locations of the page based on the hash tag identifier.</p>
-        <p>
-            When embedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending any duplicate id&#39;s with the id of the containing iframe tag separated by an underscore.&nbsp; 
-            Styles containing references to these id&#39;s will also be correspondingly namespaced.
-        </p>
+            <p id="benefitOfServerSideIFrameIDE">
+                One nice benefit of reusing the iframe tag for server-side includes, is that some HTML Editors, such as Adobe's Dreamweaver, or Microsoft's Web Expression, provide excellent support for iframes -- in particular previewing the content, being able to easily navigate to the source page of the iframe to edit it.    
+            </p>
+            <p id="recommendFullyFormedHTML">
+                The page being referenced should consist of a fully-formed html document -- 
+                    like the script tag mentioned above, we should be able to switch the attribute between client-side-only (regular iframe) and server-side-only 
+                -- 
+                and get almost identical results from the end user point of view.
+                Thus the page should, as a matter of best practice, work as a standalone page.  
+                In general, the advantages of using client-side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts.
+                One disadvantage, though, is iframing (on the client) can impose a heavy toll on browser resources, such as memory, particularly when heavy-duty JavaScript libraries are utilized.
+                Ideally, then, we should be able to pick the optimal tier where to embed, which may depend on the type of device accessing the content, and the nature of the content.  
+                Hence, like the script tag, the value of <em>data-mode</em> can be "depends", and some custom logic can be referenced which makes the decision, tailored to the user and the content.
+            </p>
+            <p id="iframeHashTag">
+                Notice the hash tag in the src attribute.
+                This is expected to specify a unique id found in the referenced document.
+                The DBS container will, on the server, remove all content outside the tag matching the id (with some important exceptions mentioned below), and will add the document fragment to the containing DOM document.
+            </p>
+            <p id="iframeReferences">
+                In the case of server-side iframes, the DBS document will also merge all script and css references found in the referenced page.
+                It will look for client-side identical refrences to js files or css files, and not duplicate them in the event it finds a matching reference.
+            </p>
+            <p>
+                Prior to embedding the content of the page the iframe tag references, the usual DBS processing will be executed on the referenced page, most notably executing any server-side script or nested server-side iframes.
+            </p>
+            <p>
+                If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be emedded in different locations of the page based on the hash tag identifier.</p>
+            <p>
+                When embedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending any duplicate id&#39;s with the id of the containing iframe tag separated by an underscore.&nbsp; 
+                Styles containing references to these id&#39;s will also be correspondingly namespaced.
+            </p>
+        </div>
+        <div id="hybridIframes">
+            <h3>Hybrid IFrames</h3>
+            <p id="hybridIframeRationale">
+                We've seen with server-side and client-side iframes that each has their own advantages and sdisadvantages.
+                But another mode -- <em>hybrid</em> is supported by the DBS, which can achiece the best of both worlds, in many scenario. 
+                The hybrid mode replaces, on the server, the iframe tag with a script tag.
+                The script will make an AJAX call on the client, which will load the page on the server, where server-side processing will take place.  
+                
+            </p>
+        </div>
     </div>
     <div id="styleDirectives">
         <h3>Style directives</h3>
@@ -674,7 +688,18 @@
             &nbsp;Or it might be used to compile some compact CSS format (like LESS) into browser-compatible CSS.
         </p>
         <p id="styleCompiler_staticMethodSignature">
-            The static method, if written in C#, for example, could have signature: [TODO]</p>
+            The static method, if written in TSP / C#, for example, would have signature in the following form:</p>
+
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="24" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">public</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#0000ff">static</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#2b91af">List</span><span style="background:#ffffff;color:#000000">&lt;</span><span style="background:#ffffff;color:#2b91af">HtmlNodeFacade</span><span style="background:#ffffff;color:#000000">&gt; MyCustomCompiler(</span><span style="background:#ffffff;color:#2b91af">StyleSheet</span><span style="background:#ffffff;color:#000000"> ss, </span><span style="background:#ffffff;color:#2b91af">HtmlNodeFacade</span><span style="background:#ffffff;color:#000000"> node)</span></li>
+</ol>
+</div>
+</div>
+
         <p id="styleCompiler_DBSContainerResponsibility">
             The DBS container replaces the original style DOM element with these generated tags.
         </p>

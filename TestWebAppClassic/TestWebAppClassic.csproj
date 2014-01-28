@@ -84,6 +84,8 @@
     <Content Include="form1.submitA.tsp.html" />
     <Content Include="form1.tsp.html" />
     <Content Include="HelloWorld.tsp.html" />
+    <Content Include="iFrameTests\ChildPage1.tsp.html" />
+    <Content Include="iFrameTests\ParentPage.tsp.html" />
     <Content Include="Images\HelloWorld.png" />
     <Content Include="ModelTests\CreateCookieData.aspx" />
     <Content Include="ModelTests\CreatePostData.html" />

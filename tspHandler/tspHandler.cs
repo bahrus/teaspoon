@@ -44,6 +44,12 @@ namespace tspHandler
         {
             
             var doc = new HtmlDocumentFacade(this);
+            var req = HttpContext.Current.Request;
+            var src = req["DBS.src"];
+            if (src == "hif")
+            {
+                doc.IDSelector = req["DBS.id"];
+            }
             return doc.Process();
             
         }

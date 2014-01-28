@@ -71,7 +71,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Coneole.cs" />
+    <Compile Include="Console.cs" />
     <Compile Include="INodeSelector.cs" />
     <Compile Include="ProcessingContext.cs" />
     <Compile Include="tspModelHandler.cs" />
@@ -130,6 +130,8 @@
     </Content>
     <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
     <TypeScriptCompile Include="tsp_script\DBS.ts" />
+    <TypeScriptCompile Include="tsp_script\DBS_cs.ts" />
+    <Content Include="tsp_script\DBS.js" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">
@@ -181,6 +183,7 @@
     <None Include="Schemas\WebExpress4\HTML\tsp.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="tsp_script\DBS.js.map" />
     <None Include="tsp_script\tcp.js.map" />
     <None Include="tsp_script\tsp.js.map" />
     <None Include="tsp_script\tsp.min.js.map">

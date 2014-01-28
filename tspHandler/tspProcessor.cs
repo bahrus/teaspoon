@@ -28,6 +28,7 @@ namespace tspHandler
         public const string ServerSideMode = "server-side-only";
         public const string ClientSideMode = "client-side-only";
         public const string BothMode = "both";
+        public const string HybridMode = "hybrid";
         public const string DependsMode = "depends";
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
 
@@ -86,6 +87,8 @@ namespace tspHandler
                     return Modes.ServerSideOnly;
                 case BothMode:
                     return Modes.Both;
+                case HybridMode:
+                    return Modes.Hybrid;
                 case DependsMode:
                     return Modes.Depends;
                 default:
@@ -109,6 +112,12 @@ namespace tspHandler
                     return false;
             }
 
+        };
+
+        private static Func<HtmlNodeFacade, bool> _TestForHybridMode = node =>
+        {
+            var mode = GetMode(node);
+            return mode == Modes.Hybrid;
         };
 
         private static Func<HtmlNodeFacade, bool> _TestForClientSide = node =>
@@ -254,7 +263,7 @@ namespace tspHandler
             {
                 doc
                     .ProcessModelScriptTags()
-                    .ProcessServerSideIncludes()
+                    .ProcessIFrames()
                     .ProcessServerSideScripts()
                     .PostProcessModel()
                 ;
@@ -753,10 +762,10 @@ tsp.createInputAutoFillRule(model);
 
             return doc;
         }
-     
-        public static HtmlDocumentFacade ProcessServerSideIncludes(this HtmlDocumentFacade doc)
+
+        private static HtmlDocumentFacade ProcessServerSideIFrames(this HtmlDocumentFacade doc, List<HtmlNodeFacade> iframes)
         {
-            var serversideIframes = doc.getElementsByTagName("iframe")
+            var serversideIframes = iframes
                 .Where(_TestForServerSide).ToList();
             serversideIframes.ForEach(iframe =>
             {
@@ -877,6 +886,49 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
+        private static HtmlDocumentFacade ProcessHybridIFrames(this HtmlDocumentFacade doc, List<HtmlNodeFacade> iframes)
+        {
+            var hybridIframes = iframes
+                .Where(_TestForHybridMode).ToList();
+            hybridIframes.ForEach(iframe =>
+            {
+                #region process iframe
+                var iframeID = iframe.id;
+                if (string.IsNullOrEmpty(iframeID))
+                {
+                    throw new Exception("Hybrid IFrames must have an id");
+                }
+                var divPlaceHolder = doc.createElement("div");
+                divPlaceHolder.id = iframeID;
+                divPlaceHolder.setAttribute("src", iframe.getAttribute("src"));
+                //divPlaceHolder.innerHTML = "tempDivPlaceHolder";
+                var par = iframe.parentNode;
+                par.insertBefore(divPlaceHolder, iframe);
+                
+                var iframeScript = doc.createElement("script");
+                iframeScript.innerHTML = @"
+DBS.cs.mergeHybridIframe({
+    destID : '" + iframeID + @"'
+});
+";
+                par.insertBefore(iframeScript, iframe);
+                par.removeChild(iframe);
+                #endregion
+            });
+            return doc;
+        }
+     
+        public static HtmlDocumentFacade ProcessIFrames(this HtmlDocumentFacade doc)
+        {
+            var iframes = doc.getElementsByTagName("iframe");
+            doc
+                .ProcessServerSideIFrames(iframes)
+                .ProcessHybridIFrames(iframes)
+            ;
+            
+            return doc;
+        }
+
         #endregion
         
 
@@ -914,6 +966,7 @@ tsp.createInputAutoFillRule(model);
         ClientSideOnly,
         ServerSideOnly,
         Both,
+        Hybrid,
         Depends,
         Unspecified,
     }

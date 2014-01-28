@@ -554,8 +554,8 @@
 		<xsd:complexType>
 			<!-- TODO: support xsd:sequence
 			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-				<xsd:element ref="dd" />
-				<xsd:element ref="dt" />
+				<xsd:element ref="dd"/>
+				<xsd:element ref="dt"/>
 			</xsd:sequence>
 				-->
 			<xsd:choice>
@@ -726,10 +726,10 @@
 		<xsd:complexType mixed="true">
 			<!-- TODO: support xsd:sequence
 			<xsd:sequence minOccurs="1" maxOccurs="unbounded">
-					<xsd:group ref="phrasingContent" />
+					<xsd:group ref="phrasingContent"/>
 				<xsd:choice>
-					<xsd:element name="rt" type="rtType" minOccurs="1" maxOccurs="1" />
-					<xsd:element name="rp" type="rpType" minOccurs="1" maxOccurs="1" />
+					<xsd:element name="rt" type="rtType" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="rp" type="rpType" minOccurs="1" maxOccurs="1"/>
 				</xsd:choice>
 			</xsd:sequence>
 				-->
@@ -772,14 +772,14 @@
 			<!-- TODO: support xsd:sequence
 			<xsd:choice minOccurs="1" maxOccurs="1">
 				<xsd:sequence minOccurs="1" maxOccurs="1">
-					<xsd:element ref="legend" />
-					<xsd:group ref="flowContent" />
+					<xsd:element ref="legend"/>
+					<xsd:group ref="flowContent"/>
 				</xsd:sequence>
 				<xsd:sequence minOccurs="1" maxOccurs="1">
-					<xsd:group ref="flowContent" />
-					<xsd:element ref="legend" />
+					<xsd:group ref="flowContent"/>
+					<xsd:element ref="legend"/>
 				</xsd:sequence>
-				<xsd:group ref="flowContent" />
+				<xsd:group ref="flowContent"/>
 			</xsd:choice>
 				-->
 			<xsd:choice>
@@ -873,8 +873,8 @@
 		<xsd:complexType mixed="true">
 			<!-- TODO: support xsd:sequence
 			<xsd:sequence minOccurs="1" maxOccurs="1">
-				<xsd:element ref="legend" />
-				<xsd:group ref="flowContent" />
+				<xsd:element ref="legend"/>
+				<xsd:group ref="flowContent"/>
 			</xsd:sequence>
 			-->
 			<xsd:choice>
