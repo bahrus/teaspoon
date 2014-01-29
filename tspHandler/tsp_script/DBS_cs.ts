@@ -7,6 +7,16 @@ module DBS.cs {
 
     export function mergeHybridIframe(config: ISnippetConfig) {
         var vif = document.getElementById(config.destID); //virtual iframe
+        onPropChange(vif, 'src', (el: HTMLElement) => {
+            //TODO:  check if src really changed
+            loadVirtualIFrame(el, config);
+        });
+        loadVirtualIFrame(vif, config);
+        
+
+    }
+
+    function loadVirtualIFrame(vif: HTMLElement, config: ISnippetConfig) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -27,12 +37,36 @@ module DBS.cs {
         url += ('&DBS.id=' + id);
         xmlhttp.open("GET", url);
         xmlhttp.send();
-
     }
 
-    export function substringAfter(val: string, search: string) {
-        var iS = val.indexOf(search);
-        if (iS == -1) return "";
-        return val.substr(iS);
+    //export function substringAfter(val: string, search: string) {
+    //    var iS = val.indexOf(search);
+    //    if (iS == -1) return "";
+    //    return val.substr(iS);
+    //}
+
+    export function onPropChange(el: HTMLElement, attrName: string, handler: (el: HTMLElement) => any) {
+        if (typeof (MutationObserver) !== 'undefined') {
+            var observer = new MutationObserver((mrs: MutationRecord[]) => {
+                // Handle mutations
+                for (var i = 0, n = mrs.length; i < n; i++) {
+                    var mr = mrs[i];
+                    if (mr.attributeName !== attrName) continue;
+                    handler(<HTMLElement> mr.target);
+                    break;
+                }
+            });
+            observer.observe(el, {
+                attributes: true,
+            });
+        } else if (el['attachEvent']) {
+            //TODO:  deprecate eventually - ie 10 and earlier
+            el.attachEvent('onpropertychange', (ev: Event) => {
+                if (ev['propertyName'] !== attrName) return;
+                handler(<HTMLElement> ev.srcElement);
+            });
+        }
     }
+
+
 }
