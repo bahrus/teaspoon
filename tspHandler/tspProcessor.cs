@@ -31,7 +31,7 @@ namespace tspHandler
         public const string HybridMode = "hybrid";
         public const string DependsMode = "depends";
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
-
+        public const string DBS_Attr = "DBS.Attr";
         
 
         public static object InvokeServerSideMethod(string StaticMethodString, object[] args)
@@ -415,6 +415,18 @@ namespace tspHandler
             return "function" + LHS + "{ return " + RHS + ";}";
         }
 
+        private static List<HtmlNodeFacade> ProcessDBSAttr(StyleSheet sSheet, HtmlNodeFacade node)
+        {
+            foreach (var rule in sSheet.rules)
+            {
+                var els = node.ownerDocument.querySelectorAll(rule.selectorText);
+                foreach (var el in els)
+                {
+
+                }
+            }
+        }
+    
         public static HtmlDocumentFacade ProcessStyleDirectives(this HtmlDocumentFacade doc)
         {
             var styleDirectiveRules = doc.querySelectorAll("style[" + CompilerAttribute + "]").ToList();
@@ -423,25 +435,33 @@ namespace tspHandler
                 string content = node.innerHTML.Trim();
                 var styleSheet = HtmlDocumentFacade.processCssContent(content);
                 string serversideMethodString = node.getAttribute(CompilerAttribute);
-                var result = InvokeServerSideMethod(serversideMethodString, new object[] { styleSheet, node }) as List<HtmlNodeFacade>;
-                bool containsOriginalNode = false;
-                var parent = node.parentNode;
-                foreach (var newNode in result)
+                if (serversideMethodString == DBS_Attr)
                 {
-                    if (newNode == node)
-                    {
-                        containsOriginalNode = true;
-                        continue;
-                    }
-                    else
-                    {
-                        parent.insertAfter(newNode, node);
-                    }
-
+                    ProcessDBSAttr(styleSheet, node);
+                    return;
                 }
-                if (!containsOriginalNode)
+                else
                 {
-                    parent.removeChild(node);
+                    var result = InvokeServerSideMethod(serversideMethodString, new object[] { styleSheet, node }) as List<HtmlNodeFacade>;
+                    bool containsOriginalNode = false;
+                    var parent = node.parentNode;
+                    foreach (var newNode in result)
+                    {
+                        if (newNode == node)
+                        {
+                            containsOriginalNode = true;
+                            continue;
+                        }
+                        else
+                        {
+                            parent.insertAfter(newNode, node);
+                        }
+
+                    }
+                    if (!containsOriginalNode)
+                    {
+                        parent.removeChild(node);
+                    }
                 }
             });
             return doc;
@@ -563,7 +583,25 @@ tsp.createInputAutoFillRule(model);
             return doc;
         }
 
-        
+
+        //public static HtmlDocumentFacade ProcessDBSAttrCompilerTags(this HtmlDocumentFacade doc)
+        //{
+        //    var DBSAttrCompilerTags = doc.getElementsByTagName("style")
+        //        .Where(node =>
+        //        {
+        //            string compiler = node.getAttribute(CompilerAttribute);
+        //            if (string.IsNullOrEmpty(compiler)) return false;
+        //            switch (compiler)
+        //            {
+        //                case DBS_Attr:
+        //                    return true;
+        //                default:
+        //                    return false;
+        //            }
+        //        });
+            
+        //    return doc;
+        //}
 
         public static HtmlDocumentFacade ProcessModelScriptTags(this HtmlDocumentFacade doc)
         {

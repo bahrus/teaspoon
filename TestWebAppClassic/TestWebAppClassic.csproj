@@ -98,6 +98,7 @@
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
     <Content Include="StandardsDetail.html" />
     <Content Include="StyleDirectiveTests\CustomCompiler.tsp.html" />
+    <Content Include="StyleDirectiveTests\DBSAttr.tsp.html" />
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
