@@ -741,38 +741,38 @@
             Although the DBS provides an open ended way for DBS implementors and/or application developers to incorporate their own style compilers, the DBS does require that implementations provide one built-in compiler:  The DBS.compiler.Attr compiler.
             Sample syntax is shown below:
              
-            <!--<style type="text/css" data-compiler="DBS.Attr">
-                 input.myClass {
-                     ng-required@:true;
-                     ng-maxLength@:8;
-                     data-filter@contains:true;
-                     data-filter@matchCase:true;
-                     ng-click@:void;
-                     color:green;
-                 }
-             </style>-->
+<style type="text/css" data-compiler="DBS.Attr">
+    input.myClass {
+        ng-required@:true;
+        ng-max-length@:8;
+        data-filter@contains:true;
+        data-filter@matchCase:true;
+        ng-click@:false;
+        color:green;
+    }
+</style>
 
 
 
         </p>
         
 
+
+
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
 <div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="739" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;DBS.Attr&quot;&gt;</span><ol start="739" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-    <li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#800000">input.myClass</span><span style="background:#ffffff;color:#000000"> {</span></li>
-    </ol>
-    </li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">ng-required</span><span style="background:#ffffff;color:#000000">@:true;</span></li>
-<li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">ng-maxLength</span><span style="background:#ffffff;color:#000000">@:8;</span></li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@contains:true;</span></li>
-<li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@matchCase:true;</span></li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">ng-click</span><span style="background:#ffffff;color:#000000">@:void;</span></li>
-<li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#ff0000">color</span><span style="background:#ffffff;color:#000000">:</span><span style="background:#ffffff;color:#0000ff">green</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#000000">}</span></li>
-<li style="background: #f3f3f3">&nbsp;<span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<ol start="744" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;DBS.Attr&quot;&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">input.myClass</span><span style="background:#ffffff;color:#000000"> {</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-required</span><span style="background:#ffffff;color:#000000">@:true;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-max-length</span><span style="background:#ffffff;color:#000000">@:8;</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@contains:true;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@matchCase:true;</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-click</span><span style="background:#ffffff;color:#000000">@:false;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">color</span><span style="background:#ffffff;color:#000000">:</span><span style="background:#ffffff;color:#0000ff">green</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li>    <span style="background:#ffffff;color:#000000">}</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
 </ol>
 </div>
 </div>
@@ -788,9 +788,9 @@
                     For any properties containig a @, any elements in the DOM document matching the CSS selector will get the corresponding attribute value applied to it, corresponding to the "style" property value, where the attribute name is the "style" property name before the @ symbol.
                 </li>
                 <li>
-                    If the property name has some a @ between two names, then the attribute will name to the left of the @ will set a sub property equal to the value.&nbsp; Think of the style attribute as an example, with multiple sub properties.&nbsp; If the value of the style property is within braces: &quot;{val}&quot; then the attribute of the DOM element will be assumed to be in JSON format.&nbsp; Otherwise, it will be assumed to be in the style format:&nbsp; myAttr=&quot;subProp1:prop1Val;subProp2:&#39;prop2Val&#39;;&quot;</li>
+                    If the property name has some a @ between two names, then the attribute will name to the left of the @ will set a sub property equal to the value.&nbsp; Think of the style attribute as an example, with multiple sub properties.&nbsp; [If the value of the style property is within braces: &quot;{val}&quot; then the attribute of the DOM element will be assumed to be in JSON format.&nbsp; Otherwise, it will be assumed to be in the style format:&nbsp; myAttr=&quot;subProp1:prop1Val;subProp2:&#39;prop2Val&#39;;&quot;]</li>
                 <li>
-                    The reserved word &quot;void&quot; will indicate to remove the attribute or sub property.</li>
+                    If the propery name has no name after the @, then the name of the attribute will be the name before the@, and the value will be the string after the :.&nbsp; In this case, the special value &quot;true&quot; will simply add the attribute, &quot;false&quot;will remove it.</li>
                 <li>The adding of the attribute element will, by default, be performed on the client side, unless attribute <em>data-mode</em> is set to server-side-only.&nbsp; It is acceptable for the DBS container to require referencing one or more JavaScript libraries in order to support this.&nbsp; If other client-side libraries, such as AngularJS, require these tags, then the developer will need to find a way to ensure that the rules which populate the attributes be performed prior to processing by the library.&nbsp; If this proves problematic for a particular library, the developer can always fall back and rely on data-mode=&#39;server-side-only.&#39;&nbsp; Maintenance of the application would still benefit from the reduction in code clutter, but the download bandwidth would not benefit (nor suffer) from employing server-side attribute setting via css rules.</li>
                 <li>
                     The order in which these attributes will be added to the DOM will be in order of <a href="http://coding.smashingmagazine.com/2007/07/27/css-specificity-things-you-should-know/">CSS Specifity</a>. 

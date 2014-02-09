@@ -415,55 +415,115 @@ namespace tspHandler
             return "function" + LHS + "{ return " + RHS + ";}";
         }
 
-        private static List<HtmlNodeFacade> ProcessDBSAttr(StyleSheet sSheet, HtmlNodeFacade node)
+        private static void ProcessDBSAttr(StyleDirective directive, StyleDirectiveContext context)
         {
-            foreach (var rule in sSheet.rules)
+            
+            foreach (var styleProperty in directive.Rule.style)
             {
-                var els = node.ownerDocument.querySelectorAll(rule.selectorText);
-                foreach (var el in els)
+                var key = styleProperty.Key;
+                var val = styleProperty.Value;
+                if (key.Contains("@"))
                 {
-
+                    string attributeName = key.SubstringBefore("@");
+                    string subPropertyName = key.SubstringAfter("@");
+                    var els = directive.Node.ownerDocument.querySelectorAll(directive.Rule.selectorText);
+                    foreach (var el in els)
+                    {
+                        string originalAttribute = el.getAttribute(attributeName);
+                        if (!string.IsNullOrEmpty(originalAttribute))
+                        {
+                            if (!val.EndsWith("!important"))
+                            {
+                                continue;
+                            }
+                        }
+                        if (string.IsNullOrEmpty(subPropertyName))
+                        {
+                            context.ElementActions[el] = (nd => nd.setAttribute(attributeName, val));
+                        }
+                        else
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
                 }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+                
             }
         }
     
         public static HtmlDocumentFacade ProcessStyleDirectives(this HtmlDocumentFacade doc)
         {
-            var styleDirectiveRules = doc.querySelectorAll("style[" + CompilerAttribute + "]").ToList();
-            styleDirectiveRules.ForEach(node =>
+            //var styleDirectiveRules = doc.querySelectorAll("style[" + CompilerAttribute + "]").ToList();
+            //styleDirectiveRules.ForEach(node =>
+            //{
+            //    string content = node.innerHTML.Trim();
+            //    var styleSheet = HtmlDocumentFacade.processCssContent(content);
+
+            //});
+            int docOrder = 0;
+            var styleDirectiveRules = doc
+                .querySelectorAll("style[" + CompilerAttribute + "]")
+                .SelectMany(node =>
+                {
+                    string content = node.innerHTML.Trim();
+                    var styleSheet = HtmlDocumentFacade.processCssContent(content);
+
+                    var directives = styleSheet.rules.Select(rule =>
+                    {
+                        return new StyleDirective
+                        {
+                            Rule = rule,
+                            DocOrder = docOrder++,
+                            Node = node,
+                        };
+                    });
+                    return directives;
+                }).ToList()
+            ;
+            styleDirectiveRules.Sort();
+            var styleDirectiveContext = new StyleDirectiveContext();
+            foreach (var directive in styleDirectiveRules)
             {
-                string content = node.innerHTML.Trim();
-                var styleSheet = HtmlDocumentFacade.processCssContent(content);
-                string serversideMethodString = node.getAttribute(CompilerAttribute);
+                #region Process Directives
+                string serversideMethodString = directive.Compiler;
                 if (serversideMethodString == DBS_Attr)
                 {
-                    ProcessDBSAttr(styleSheet, node);
-                    return;
+                    ProcessDBSAttr(directive, styleDirectiveContext);
+                    
                 }
                 else
                 {
-                    var result = InvokeServerSideMethod(serversideMethodString, new object[] { styleSheet, node }) as List<HtmlNodeFacade>;
-                    bool containsOriginalNode = false;
-                    var parent = node.parentNode;
-                    foreach (var newNode in result)
-                    {
-                        if (newNode == node)
-                        {
-                            containsOriginalNode = true;
-                            continue;
-                        }
-                        else
-                        {
-                            parent.insertAfter(newNode, node);
-                        }
+                    //var result = InvokeServerSideMethod(serversideMethodString, new object[] { , node }) as List<HtmlNodeFacade>;
+                    //bool containsOriginalNode = false;
+                    //var parent = node.parentNode;
+                    //foreach (var newNode in result)
+                    //{
+                    //    if (newNode == node)
+                    //    {
+                    //        containsOriginalNode = true;
+                    //        continue;
+                    //    }
+                    //    else
+                    //    {
+                    //        parent.insertAfter(newNode, node);
+                    //    }
 
-                    }
-                    if (!containsOriginalNode)
-                    {
-                        parent.removeChild(node);
-                    }
+                    //}
+                    //if (!containsOriginalNode)
+                    //{
+                    //    parent.removeChild(node);
+                    //}
                 }
-            });
+                #endregion
+            }
+            foreach (var actionKVP in styleDirectiveContext.ElementActions)
+            {
+                actionKVP.Value(actionKVP.Key);
+            }
             return doc;
         }
 
@@ -1012,6 +1072,18 @@ DBS.cs.mergeHybridIframe({
     public class ModelContext
     {
         public JObject JSONObject { get; set; }
+    }
+
+    public class StyleDirectiveContext
+    {
+        public Dictionary<HtmlNodeFacade, List<HtmlNodeFacade>> OutputNodes{get;set;}
+        public Dictionary<HtmlNodeFacade, Action<HtmlNodeFacade>> ElementActions{get;set;}
+
+        public StyleDirectiveContext()
+        {
+            this.OutputNodes = new Dictionary<HtmlNodeFacade, List<HtmlNodeFacade>>();
+            this.ElementActions = new Dictionary<HtmlNodeFacade, Action<HtmlNodeFacade>>();
+        }
     }
     
 }

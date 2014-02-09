@@ -1,66 +1,50 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<html>
 <head>
     <title></title>
-    <script>
-        function show() {
-            var el = document.getElementById("myDiv");
-            el.style.display = 'block';
-            el.title = 'hello';
-            el.innerHTML = 'you are there';
-            //var scr = document.getElementById('someScript');
-            //scr.text = "obj = { test: 'you are there' };";
-        }
-
-        function addEventHandler(elem, eventType, handler) {
-            if (elem.addEventListener)
-                elem.addEventListener(eventType, handler, false);
-            else if (elem.attachEvent)
-                elem.attachEvent('on' + eventType, handler);
+ 
+    <script type="text/javascript">
+        function input() {//Script to be run when a form changes
+            var textvalue = document.getElementById("t1").value; //storing textbox value in variable
+            document.getElementById("Text1").value = textvalue//displaying value in another textbox where id is Text1
+            debugger;
+            
+            window.event.srcElement.submit();
         }
     </script>
-    <style type="text/css" data-compiler="DBS.Attr">
-                 input.myClass {
-                     ng-required@:true;
-                     ng-maxLength@:8;
-                     color:green;
-                 }
-             </style>
+ 
 </head>
 <body>
-    <script id="someScript">
-        var obj = { test: 'iamherre' };
-    </script>
-        <input class="myClass" value="sometext" type="text" />
-        <div>i am here</div>
-   
-    <input type="button" onclick="show()" value="show" />
-    <script>
-        //var myNode = document.getElementById('myDiv');
-        //    myNode.attachEvent('onpropertychange', function (a, b, c, d) {
-        //    debugger;
-        //});
-            //var myScript = document.getElementById('someScript');
-            //myScript.attachEvent('onpropertychange', function (a, b, c, d) {
-            //    debugger;
-                
-            //});
-        var observer = new MutationObserver(function (mutationRecords) {
-
-            // Handle mutations
-            debugger;
-            alert('iah');
-        });
-        
-        //observer.observe(myNode,
-        // {  // options:
-        //     subtree: false,  // observe the subtree rooted at myNode
-        //     childList: false,  // include information childNode insertion/removals
-        //     attributes: true  // include information about changes to attributes within the subtree
-        // });
-        document.body.attachEvent('onpropertychange', function (a, b, c, d) {
-            debugger;
-        });
-    </script>
+    <form onchange="input()" action="http://www.cnn.com">
+    <h3>Example of onformchange</h3>
+    <table width="300">
+        <tr>
+            <td>
+                Enter Some text:
+            </td>
+            <td>
+                <input type="text" id="t1" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                select:
+            </td>
+            <td>
+                <select>
+                    <option value="optionA">Option A</option>
+                    <option value="optionB">Option B</option>
+                    <option value="optionC">Option C</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                After event occured
+            </td>
+            <td>
+                <input type="text" id="Text1" />
+            </td>
+        </tr>
+    </form>
 </body>
 </html>
