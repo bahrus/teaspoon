@@ -12,3 +12,4 @@ packages/
 /TestWebAppClassic/Web.Release.config
 
 /TestWebAppClassic/tsp_script
+/TestWebAppClassic/.idea

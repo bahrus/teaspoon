@@ -20,6 +20,17 @@ namespace tspHandler
                 return ModelScriptPostProcessingInfos;
             }
         }
+
+        public Dictionary<string, List<HtmlNodeFacade>> IFrameMergingNodes { get; set; }
+
+        public Dictionary<string, List<HtmlNodeFacade>> IFrameMergingNodesNN
+        {
+            get
+            {
+                if (IFrameMergingNodes == null) IFrameMergingNodes = new Dictionary<string, List<HtmlNodeFacade>>();
+                return IFrameMergingNodes;
+            }
+        }
     }
 
     public class ModelScriptPostProcessingInfo{

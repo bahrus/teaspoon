@@ -17,11 +17,12 @@
     <CssSyncVendorValues>True</CssSyncVendorValues>
     <HtmlEnableMustache>true</HtmlEnableMustache>
     <HtmlEnableZenCoding>true</HtmlEnableZenCoding>
-    <JavaScriptAutoCloseBraces>True</JavaScriptAutoCloseBraces>
-    <JavaScriptEnableMinification>True</JavaScriptEnableMinification>
-    <JavascriptEnableRegions>True</JavascriptEnableRegions>
-    <JavaScriptGenerateSourceMaps>True</JavaScriptGenerateSourceMaps>
-    <JavaScriptOutlining>True</JavaScriptOutlining>
+    <JavaScriptAutoCloseBraces>true</JavaScriptAutoCloseBraces>
+    <JavaScriptEnableGzipping>false</JavaScriptEnableGzipping>
+    <JavaScriptEnableMinification>true</JavaScriptEnableMinification>
+    <JavascriptEnableRegions>true</JavascriptEnableRegions>
+    <JavaScriptGenerateSourceMaps>true</JavaScriptGenerateSourceMaps>
+    <JavaScriptOutlining>true</JavaScriptOutlining>
     <JsHint_asi>false</JsHint_asi>
     <JsHint_bitwise>true</JsHint_bitwise>
     <JsHint_boss>false</JsHint_boss>

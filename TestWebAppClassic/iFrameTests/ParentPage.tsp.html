@@ -26,20 +26,35 @@
             <th>
                 Hybrid
             </th>
-        </tr>
+        </tr> 
         </thead>
-        <tr>
+        <!--<tr>
             <td>
-                <iframe src="ChildPage1.tsp.html#div2" id="csIFrame"></iframe>
+                <iframe src="ChildPage1.tsp.html" id="csIFrame" data-selector="#div2"></iframe>
             </td>
             <td>
-                <iframe src="ChildPage1.tsp.html#div2" data-mode="server-side-only"></iframe>
+                <iframe src="ChildPage1.tsp.html" data-mode="server-side-only" data-selector="#div2">
+
+                </iframe>
             </td>
             <td>
                 <iframe id="myHybrid" src="ChildPage1.tsp.html#div2" data-mode="hybrid"></iframe>
             </td>
+        </tr>-->
+        <tr>
+            <td>tbd</td>
+            <td>
+                <script type="text/html" data-transform>
+                    <iframe src="ChildPage3.tsp.html" data-selector="#container" data-mode="server-side-only" id="mergingIFrame"></iframe>
+                        <div>
+                            <select>
+                                <option data-xmatch="value" value="option3" data-xmerge="Replace">Here is a new message</option>
+                            </select>
+                        </div>
+                </script>
+            </td>
         </tr>
     </table>
-    <input type="button" value="Load different page" onclick="loadDifferentSrc()"
+    <input type="button" value="Load different page" onclick="loadDifferentSrc()" />
 </body>
 </html>

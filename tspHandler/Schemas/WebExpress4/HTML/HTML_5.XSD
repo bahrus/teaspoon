@@ -730,8 +730,8 @@
     <xsd:complexType>
       <!-- TODO: support xsd:sequence
             <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:element ref="dd"/>
-                <xsd:element ref="dt"/>
+                <xsd:element ref="dd" />
+                <xsd:element ref="dt" />
             </xsd:sequence>
              -->
       <xsd:choice>
@@ -900,10 +900,10 @@
     <xsd:complexType mixed="true">
       <!-- TODO: support xsd:sequence
             <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-                    <xsd:group ref="phrasingContent"/>
+                    <xsd:group ref="phrasingContent" />
                 <xsd:choice>
-                    <xsd:element ref="rt" minOccurs="1" maxOccurs="1"/>
-                    <xsd:element ref="rp" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element ref="rt" minOccurs="1" maxOccurs="1" />
+                    <xsd:element ref="rp" minOccurs="1" maxOccurs="1" />
                 </xsd:choice>
             </xsd:sequence>
              -->
@@ -946,14 +946,14 @@
       <!-- TODO: support xsd:sequence
             <xsd:choice minOccurs="1" maxOccurs="1">
                 <xsd:sequence minOccurs="1" maxOccurs="1">
-                    <xsd:element ref="figcaption"/>
-                    <xsd:group ref="flowContent"/>
+                    <xsd:element ref="figcaption" />
+                    <xsd:group ref="flowContent" />
                 </xsd:sequence>
                 <xsd:sequence minOccurs="1" maxOccurs="1">
-                    <xsd:group ref="flowContent"/>
-                    <xsd:element ref="figcaption"/>
+                    <xsd:group ref="flowContent" />
+                    <xsd:element ref="figcaption" />
                 </xsd:sequence>
-                <xsd:group ref="flowContent"/>
+                <xsd:group ref="flowContent" />
             </xsd:choice>
              -->
       <xsd:choice>
@@ -1050,8 +1050,8 @@
     <xsd:complexType mixed="true">
       <!-- TODO: support xsd:sequence
             <xsd:sequence minOccurs="1" maxOccurs="1">
-                <xsd:element ref="summary"/>
-                <xsd:group ref="flowContent"/>
+                <xsd:element ref="summary" />
+                <xsd:group ref="flowContent" />
             </xsd:sequence>
              -->
       <xsd:choice>

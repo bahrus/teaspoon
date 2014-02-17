@@ -22,7 +22,11 @@ namespace tspHandler
         public const string ModeAttribute = "data-mode";
         public const string DesignTypeAttribute = "data-design-type";
         public const string SSFormatAttribute = "data-model-ssFormat";
+        public const string SelectorAttribute = "data-selector";
         public const string CompilerAttribute = "data-compiler";
+        public const string TransformAttribute = "data-transform";
+
+        public const string XMatchAttribute = "data-xmatch";
 
         public const string modeParameter = "mode";
         public const string ServerSideMode = "server-side-only";
@@ -263,6 +267,7 @@ namespace tspHandler
             {
                 doc
                     .ProcessModelScriptTags()
+                    .ProcessSpecialTemplates()
                     .ProcessIFrames()
                     .ProcessServerSideScripts()
                     .PostProcessModel()
@@ -297,14 +302,26 @@ namespace tspHandler
             var superHandler = new tspHandler(inheritedContentFilePath);
             HtmlDocumentFacade superDoc = superHandler.ProcessFile();
             
-            //var nodeDiffs = new NodeDifference();
-            var nodeHierarchy = new Stack<HtmlNodeFacade>();
-            nodeHierarchy.Push(diffDoc.html);
+            //var nodeHierarchy = new Stack<HtmlNodeFacade>();
+            //nodeHierarchy.Push(diffDoc.html);
+            //var differenceStack = new Stack<NodeDifference>();
+            //var differences = new List<NodeDifference>();
+            //ProcessNode(nodeHierarchy, differenceStack, differences);
+            //MergeDifferences(superDoc, differences);
+            //return superDoc;
+            ProcessTransform(superDoc.html, superDoc.html);
+            return superDoc;
+        }
+
+        private static HtmlNodeFacade ProcessTransform(HtmlNodeFacade superDocNode, HtmlNodeFacade diffDocNode)
+        {
+            var diffNodeHierarchy = new Stack<HtmlNodeFacade>();
+            diffNodeHierarchy.Push(diffDocNode);
             var differenceStack = new Stack<NodeDifference>();
             var differences = new List<NodeDifference>();
-            ProcessNode(nodeHierarchy, differenceStack, differences);
-            MergeDifferences(superDoc, differences);
-            return superDoc;
+            ProcessNode(diffNodeHierarchy, differenceStack, differences);
+            MergeDifferences(superDocNode, differences);
+            return superDocNode;
         }
 
         private static void ProcessNode(Stack<HtmlNodeFacade> nodeHierarchy, Stack<NodeDifference> differenceStack, List<NodeDifference> result)
@@ -314,8 +331,9 @@ namespace tspHandler
             var merge = currNode.getAttribute("data-xmerge");
             if (string.IsNullOrEmpty(merge))
             {
-                foreach (var child in currNode.ChildNodes)
+                foreach (var child in currNode.childNodes)
                 {
+                    if (child.tagName == "#text") continue;
                     nodeHierarchy.Push(child);
                     ProcessNode(nodeHierarchy, differenceStack, result);
                     nodeHierarchy.Pop();
@@ -343,7 +361,7 @@ namespace tspHandler
                 }
                 ndDiff.MatchSelector = selector;
                 differenceStack.Push(ndDiff);
-                foreach (var child in currNode.ChildNodes)
+                foreach (var child in currNode.childNodes)
                 {
                     nodeHierarchy.Push(child);
                     ProcessNode(nodeHierarchy, differenceStack, result);
@@ -364,7 +382,29 @@ namespace tspHandler
                     {
                         case NodeDiffAction.Append:
                             return diff.MatchSelector.SubstringBeforeLast(">");
-                            break;
+                        case NodeDiffAction.Replace:
+                            string ret = diff.MatchSelector;
+                            if (diff.Node.hasAttribute(XMatchAttribute))
+                            {
+                                string attrib = diff.Node.getAttribute(XMatchAttribute);
+                                string[] attribs = attrib.Split(',');
+                                foreach (string matchingAttrib in attribs)
+                                {
+                                    string matchingAttribTrimmed = matchingAttrib.Trim();
+                                    string val = diff.Node.getAttribute(matchingAttribTrimmed);
+                                    ret += "[" + matchingAttribTrimmed;
+                                    if (string.IsNullOrEmpty(val))
+                                    {
+                                        
+                                    }
+                                    else
+                                    {
+                                        ret += "='" + val + "'";
+                                    }
+                                    ret += "]";
+                                }
+                            }
+                            return ret;
                         default:
                             throw new Exception();
                     }
@@ -379,6 +419,9 @@ namespace tspHandler
                 {
                     case NodeDiffAction.Append:
                         node.parentNode.appendChild(diff.Node);
+                        break;
+                    case NodeDiffAction.Replace:
+                        node.parentNode.replaceChild(diff.Node, node);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -592,6 +635,42 @@ namespace tspHandler
                 node.parentNode.insertBefore(newNode, node);
                 node.parentNode.removeChild(node);
             });
+            return doc;
+        }
+
+        public static HtmlDocumentFacade ProcessSpecialTemplates(this HtmlDocumentFacade doc)
+        {
+            var templates = doc.querySelectorAll("script[type='text/html']");
+            doc
+                .ProcessMergingIFrames(templates)
+            ;
+            return doc;
+        }
+
+        public static HtmlDocumentFacade ProcessMergingIFrames(this HtmlDocumentFacade doc, List<HtmlNodeFacade> templates)
+        {
+            var dataTransformTemplates = templates
+                .Where(node =>
+                {
+                    return node.hasAttribute(TransformAttribute);
+                }).ToList();
+            foreach (var dataTransform in dataTransformTemplates)
+            {
+
+                string innerHTML = dataTransform.innerHTML;
+                string iFrameTag = innerHTML.SubstringBetween("<iframe").Inclusive().And("</iframe>");
+                dataTransform.insertAdjacentHTML("beforebegin", iFrameTag);
+                var iFrameNode = dataTransform.previousSibling;
+                if (string.IsNullOrEmpty(iFrameNode.id))
+                {
+                    throw new Exception("Merging iframe must have an ID");
+                }
+                string rest = innerHTML.Replace(iFrameTag, "").Trim();
+                var div = doc.createElement("div");
+                div.innerHTML = rest;
+                doc.ProcessContext.IFrameMergingNodesNN[iFrameNode.id] = div.childNodes;
+                dataTransform.delete();
+            }
             return doc;
         }
 
@@ -876,7 +955,16 @@ tsp.createInputAutoFillRule(model);
                 }
                 var src = iframe.getAttribute("src");
                 var domID = src.SubstringAfter("#");
-                if (string.IsNullOrEmpty(domID)) throw new Exception("No id found in src url"); //TODO:  give more info
+                string selector = "#" + domID;
+                if (string.IsNullOrEmpty(domID))
+                {
+                    string selectorTest = iframe.getAttribute(SelectorAttribute);
+                    if (string.IsNullOrEmpty(selectorTest))
+                    {
+                        throw new Exception("No selector specified for iframe with id " + iframe.id);
+                    }
+                    selector = selectorTest;
+                }
                 src = src.SubstringBefore('#');
                 string parentId = iframe.id;
                 #region GetDoc
@@ -894,8 +982,24 @@ tsp.createInputAutoFillRule(model);
                     savedDom[src] = subDoc;
                 }
                 #endregion
+                var matches = subDoc.querySelectorAll(selector);
+                if(matches.Count == 0){
+                    throw new Exception("No Element with selector " + selector + " found.");
+                }
+                var el = matches[0];
+                #region see if this needs to be merged
+                var mergeNodes = doc.ProcessContext.IFrameMergingNodes;
+                if (mergeNodes != null && mergeNodes.ContainsKey(iframe.id))
+                {
+                    var transformNodes = mergeNodes[iframe.id];
+                    foreach(var child in transformNodes){
+                        ProcessTransform(el, child);
+                    }
+                }
+                
+                
+                #endregion
                 #region name space all id's
-                var el = subDoc.getElementById(domID);
                 el.DoForThisAndAllAncestors(node =>
                 {
                     string currId = node.id;
@@ -1019,6 +1123,7 @@ DBS.cs.mergeHybridIframe({
         public static HtmlDocumentFacade ProcessIFrames(this HtmlDocumentFacade doc)
         {
             var iframes = doc.getElementsByTagName("iframe");
+            //var iframes = doc.querySelectorAll("iframe");
             doc
                 .ProcessServerSideIFrames(iframes)
                 .ProcessHybridIFrames(iframes)

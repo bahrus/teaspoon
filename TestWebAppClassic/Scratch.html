@@ -4,6 +4,7 @@
  
     <script type="text/javascript">
         function input() {//Script to be run when a form changes
+            alert('in input');
             var textvalue = document.getElementById("t1").value; //storing textbox value in variable
             document.getElementById("Text1").value = textvalue//displaying value in another textbox where id is Text1
             debugger;
@@ -11,11 +12,26 @@
             window.event.srcElement.submit();
         }
     </script>
- 
+    <script src="tsp_script/tcp.js"></script>
+    <script type="text/javascript" src="links.js"></script>
+    <style>
+        input {
+            test:tcp.addRowSelection
+        }
+    </style>
+
+    <script>
+        function myDoSomething() {
+            links.doSomething();
+            
+            
+        }
+    </script>
 </head>
 <body>
-    <form onchange="input()" action="http://www.cnn.com">
-    <h3>Example of onformchange</h3>
+    <input type="text" form="myForm" />
+    <form onreadystatechange="links.doSomething" onloadedmetadata="tcp.handleTextFilterChange" action="http://www.cnn.com" id="myForm">
+    <h3>Exale of onformchange</h3>
     <table width="300">
         <tr>
             <td>

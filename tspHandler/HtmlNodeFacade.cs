@@ -113,12 +113,20 @@ namespace tspHandler
             
         }
 
+        public HtmlNodeFacade previousSibling
+        {
+            get
+            {
+                return new HtmlNodeFacade( _node.PreviousSibling, _ownerDoc);
+            }
+        }
+
         public List<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
-            if (selectorText.Contains(">"))
-            {
-                throw new Exception("querySelectorAll implementation does not currently support the > operator");
-            }
+            //if (selectorText.Contains(">"))
+            //{
+            //    throw new Exception("querySelectorAll implementation does not currently support the > operator");
+            //}
             var returnObj = _node
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node, this._ownerDoc))
@@ -184,7 +192,7 @@ namespace tspHandler
             }
         }
 
-        public List<HtmlNodeFacade> ChildNodes
+        public List<HtmlNodeFacade> childNodes
         {
             get
             {
@@ -226,6 +234,11 @@ namespace tspHandler
             return new HtmlNodeFacade(returnObj, this._ownerDoc);
         }
 
+        public HtmlNodeFacade replaceChild(HtmlNodeFacade newChild, HtmlNodeFacade oldChild)
+        {
+            return new HtmlNodeFacade( this._node.ReplaceChild(newChild._node, oldChild._node), this._ownerDoc);
+        }
+
         public HtmlNodeFacade insertBefore(HtmlNodeFacade newChild, HtmlNodeFacade refChild)
         {
             return new HtmlNodeFacade( this._node.InsertBefore(newChild._node, refChild._node), this._ownerDoc);
@@ -244,7 +257,7 @@ namespace tspHandler
         public void DoForThisAndAllAncestors(Action<HtmlNodeFacade> action)
         {
             action(this);
-            foreach (var child in this.ChildNodes)
+            foreach (var child in this.childNodes)
             {
                 child.DoForThisAndAllAncestors(action);
             }

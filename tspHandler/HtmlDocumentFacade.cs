@@ -42,7 +42,7 @@ namespace tspHandler
             _host = host;
             this.Trace("createHTMLDocument");
             _htmlDoc = new HtmlDocument();
-            
+            HtmlNode.ElementsFlags.Remove("option");
             string content = host.GetContentOfDocument();
             _htmlDoc.LoadHtml(content);
             this.Trace("endCreateHTMLDocument");
