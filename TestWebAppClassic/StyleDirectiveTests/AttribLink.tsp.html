@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>DBS.Attr test</title>
+</head>
+<body>
+    <!--<style type="text/css" data-compiler="DBS.Attr">
+        input.myClass {
+            ng-required@:true;
+            ng-maxLength@:8;
+            data-filter@contains:true;
+            data-filter@matchCase:true;
+            ng-click@:void;
+            color:green;
+        }
+    </style>
+
+    <input class="myClass" type="text" />-->
+
+    <style type="text/css" data-attribute-link="Attributes">
+        input.myClassAttributes {
+        }
+        input.myClass {
+            color:green;
+        }
+        
+            
+        
+    </style>
+
+    <input hidden="hidden" class="myClassAttributes" data-attrib1="test" data-mode="both" />
+
+    <form>
+        <input name="input1" value="Input 1" class="myClass"/>
+    </form>
+
+</body>
+</html>

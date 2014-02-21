@@ -253,7 +253,9 @@ namespace tspHandler
 
         private static Dictionary<string, string> processStyle(List<ILine> Children)
         {
+            if (Children == null) return null;
             var returnObj = new Dictionary<string, string>();
+            
             Children.ForEach(child =>
             {
                 var liveStatement = child as LiveStatement;

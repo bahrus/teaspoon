@@ -13,7 +13,7 @@
         }
     </script>
     <script src="tsp_script/tcp.js"></script>
-    <script type="text/javascript" src="links.js"></script>
+    <script type="text/javascript" src="links.ts"></script>
     <style>
         input {
             test:tcp.addRowSelection
@@ -23,14 +23,14 @@
     <script>
         function myDoSomething() {
             links.doSomething();
-            
-            
+            var x = tcp.addRowSelection;
+
         }
     </script>
 </head>
 <body>
     <input type="text" form="myForm" />
-    <form onreadystatechange="links.doSomething" onloadedmetadata="tcp.handleTextFilterChange" action="http://www.cnn.com" id="myForm">
+    <form onreadystatechange="tcp.addRowSelection" onloadedmetadata="tcp.handleTextFilterChange" action="http://www.cnn.com" id="myForm">
     <h3>Exale of onformchange</h3>
     <table width="300">
         <tr>

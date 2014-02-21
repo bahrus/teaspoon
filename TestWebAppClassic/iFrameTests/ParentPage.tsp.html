@@ -46,11 +46,10 @@
             <td>
                 <script type="text/html" data-transform>
                     <iframe src="ChildPage3.tsp.html" data-selector="#container" data-mode="server-side-only" id="mergingIFrame"></iframe>
-                        <div>
-                            <select>
-                                <option data-xmatch="value" value="option3" data-xmerge="Replace">Here is a new message</option>
-                            </select>
-                        </div>
+                    <select>
+                        <option data-xmatch="value" value="option3" data-xmerge="Replace">Here is a replacing new text option</option>
+                        <option data-xmerge="Append" value="option4">This is an appending option</option>
+                    </select>
                 </script>
             </td>
         </tr>
