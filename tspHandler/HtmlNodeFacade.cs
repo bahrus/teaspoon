@@ -11,7 +11,30 @@ namespace tspHandler
         private HtmlNode _node;
         private HtmlDocumentFacade _ownerDoc;
 
-        
+        public void addClass(string className)
+        {
+            if (string.IsNullOrEmpty(className)) return;
+            string[] classNames = className.Split(' ');
+            string currClassName = this.className;
+            if (string.IsNullOrEmpty(currClassName))
+            {
+                this.className = className;
+            }
+            else
+            {
+                var currClassNames = currClassName.Split(' ').ToList();
+                foreach (string newClassName in classNames)
+                {
+                    if (!currClassNames.Contains(newClassName))
+                    {
+                        currClassNames.Add(newClassName);
+                    }
+                }
+                this.className = string.Join(" ", currClassNames.ToArray());
+            }
+
+ 
+        }
 
         public string className
         {

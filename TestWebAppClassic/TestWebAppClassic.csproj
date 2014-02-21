@@ -113,8 +113,6 @@
     <Content Include="tsp_script\tsp.css" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js" />
-    <Content Include="ts\tsp_script\tcp.ts" />
-    <Content Include="ts\tsp_script\tsp.css" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
@@ -217,7 +215,6 @@
     <Content Include="skin\vline-rtl.gif" />
     <Content Include="skin\vline.gif" />
     <Content Include="VisibilityTests.tsp.html" />
-    <Content Include="ts\tsp_script\tsp.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

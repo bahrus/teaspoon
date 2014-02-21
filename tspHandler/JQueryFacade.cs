@@ -172,31 +172,35 @@ namespace tspHandler
 
         public JQueryFacade addClass(string className)
         {
-            if (string.IsNullOrEmpty(className)) return this;
-            string[] classNames = className.Split(' ');
+            //if (string.IsNullOrEmpty(className)) return this;
+            //string[] classNames = className.Split(' ');
+            //foreach (var nd in _nodes)
+            //{
+            //    string currClassName = nd.className;
+            //    if (string.IsNullOrEmpty(currClassName))
+            //    {
+            //        nd.className = className;
+            //    }
+            //    else
+            //    {
+            //        var currClassNames = currClassName.Split(' ').ToList();
+            //        foreach (string newClassName in classNames)
+            //        {
+            //            if (!currClassNames.Contains(newClassName))
+            //            {
+            //                currClassNames.Add(newClassName);
+            //            }
+            //        }
+            //        nd.className = string.Join(" ", currClassNames.ToArray());
+            //    }
+
+            //}
+            //return this;
             foreach (var nd in _nodes)
             {
-                string currClassName = nd.className;
-                if (string.IsNullOrEmpty(currClassName))
-                {
-                    nd.className = className;
-                }
-                else
-                {
-                    var currClassNames = currClassName.Split(' ').ToList();
-                    foreach (string newClassName in classNames)
-                    {
-                        if (!currClassNames.Contains(newClassName))
-                        {
-                            currClassNames.Add(newClassName);
-                        }
-                    }
-                    nd.className = string.Join(" ", currClassNames.ToArray());
-                }
-
+                nd.className = className;
             }
             return this;
-
         }
 
         public string attr(string name)

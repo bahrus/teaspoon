@@ -68,14 +68,27 @@ namespace tspHandler
                             foreach (var attrib in attribs)
                             {
                                 var nm = attrib.name;
+                                
                                 switch (nm)
                                 {
                                     case "class":
                                     case "hidden":
                                     case "data-mode":
                                         continue;
+                                    case "data-class":
+                                        targetElement.addClass(attrib.value);
+                                        break;
+                                    case "data-hidden":
+                                        targetElement.setAttribute("hidden", attrib.value);
+                                        break;
+                                    case "data-data-mode":
+                                        targetElement.setAttribute("data-mode", attrib.value);
+                                        break;
+                                    default:
+                                        targetElement.setAttribute(nm, attrib.value);
+                                        break;
                                 }
-                                targetElement.setAttribute(attrib.name, attrib.value);
+                                
 
                             }
                         }
