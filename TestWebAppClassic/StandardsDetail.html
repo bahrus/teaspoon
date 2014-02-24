@@ -29,7 +29,7 @@
         <p>
             These client-centric frameworks generate the dynamic content (or even <i>all</i> the content) on the client using JavaScript. 
             The role of the server has, in many cases, been reduced to providing dumb static file server capabilities, in conjunction with providing live JSON data feeds and a Restful API for storing changes.  
-            These frameworks have tended, in many cases, to leave behind the concept of <a href="http://developer.yahoo.com/blogs/ydn/many-users-javascript-disabled-14121.html">progressive enhancement</a> , rendering the page useless in the extreme example of a browser (or search engine) not having JavaScript enabled.&nbsp;  
+            As a result these frameworks have often left behind the concept of <a href="http://developer.yahoo.com/blogs/ydn/many-users-javascript-disabled-14121.html">progressive enhancement</a> , rendering the page useless in the extreme example of a browser (or search engine) not having JavaScript enabled.&nbsp;  
         </p>
         <p id="DBSGoals">
             This white paper addresses these shortcomings, and takes some cues from the HTML5 standards, and from the innovations of solutions like node.js, to provide a strategy to achieve the high performance of a rich, AJAX-based client application, while staying true to the directive-based, W3C compliant approach of html.
@@ -98,7 +98,7 @@
 		<h3>Modes</h3>
         <p id="dataModeAttribute">
 		    <a href="#nutshell">As we've seen</a>, a central custom attribute is introduced in DBS:  <em>data-mode</em>, which can be set, for example, to 'server-side-only'.
-		    This attribute is applicable to &lt;script/&gt;, &lt;iframe/&gt;, &lt;form/&gt;, &lt;style/&gt; and &lt;link/&gt;. 
+		    This attribute is applicable to &lt;script/&gt;, &lt;iframe/&gt;, &lt;form/&gt;. 
 		    The following table lists all the possible values, the meaning, and the default value if the attribute is not specified:
         </p>
 		<table id="modeAttributeTable" style="width: 100%" border="1">
@@ -199,50 +199,7 @@
 			</tr>
 		</table>
 		
-		<p id="modesForStyle"> 
-            In the case of the style (or link) attribute, if the custom attribute <em>data-compiler</em> is set, then the style attribute may be compiled into JavaScript, in which case <em>data-mode</em> attribute then becomes applicable, taking on the same meaning and default as for the script tag.
-            &nbsp;For example, as discussed in the TSP implementation document:
-        </p>
 		
-
-<div id="codeSnippet_styleCompilingEx" style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
-<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
-<div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="32" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;client-side-only&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;[tspHandler.tspProcessor, tspHandler].applyRules&quot;&gt;    </span></li>
-<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">#myTable{</span></li>
-<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">call</span><span style="background:#ffffff;color:#000000">:               </span><span style="background:#ffffff;color:#0000ff">tsp.fillGrid</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">tsp-getDataTable</span><span style="background:#ffffff;color:#000000">:   </span><span style="background:#ffffff;color:#0000ff">()</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#0000ff">=&gt;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#0000ff">model.dataTable</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">tsp-rowSelection</span><span style="background:#ffffff;color:#000000">:   </span><span style="background:#ffffff;color:#0000ff">tsp.SelectionOptions.single</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">tsp-titleFill</span><span style="background:#ffffff;color:#000000">:      </span><span style="background:#ffffff;color:#0000ff">tsp.TitleFillOptions.text</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li>   <span style="background:#ffffff;color:#000000">}</span></li>
-<li style="background: #f3f3f3"><span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
-</ol>
-</div>
-</div>
-
-	
-        <p id="styleCompilingEx">will be compiled on the server side into:</p>
-
-
-<div id="codeSnippet_compiledStyle" style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
-<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
-<div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="41" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;client-side-only&quot;&gt;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000">tsp._if(</span><span style="background:#ffffff;color:#a31515">&#39;#myTable&#39;</span><span style="background:#ffffff;color:#000000">, {</span></li>
-<li>            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#a31515">&#39;call&#39;</span><span style="background:#ffffff;color:#000000">: tsp.fillGrid,</span></li>
-<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#a31515">&#39;tsp-getDataTable&#39;</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">function</span><span style="background:#ffffff;color:#000000"> () { </span><span style="background:#ffffff;color:#0000ff">return</span><span style="background:#ffffff;color:#000000"> model.dataTable; },</span></li>
-<li>            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#a31515">&#39;tsp-rowSelection&#39;</span><span style="background:#ffffff;color:#000000">: tsp.SelectionOptions.single,</span></li>
-<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#a31515">&#39;tsp-titleFill&#39;</span><span style="background:#ffffff;color:#000000">: tsp.TitleFillOptions.text,</span></li>
-<li>        <span style="background:#ffffff;color:#000000">});</span></li>
-<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
-</ol>
-</div>
-</div>
-
-
-
 		 		
 	</div>
 	<div id="modeling">
@@ -578,18 +535,22 @@
             <p>
                 Most server-side template engines, such as PHP or ASP.net webforms, support some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
             <p>
+
+<!--<iframe src="ChildPage1.tsp.html" data-mode="server-side-only" data-selector="#div2"></iframe>-->
            
+
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
 <div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="43" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;server-side-only&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">src</span><span style="background:#ffffff;color:#0000ff">=&quot;toc_TreeView.tsp.html#treeContainer&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;toc&quot;&gt;&lt;/</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<ol start="539" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">src</span><span style="background:#ffffff;color:#0000ff">=&quot;ChildPage1.tsp.html&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;server-side-only&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-selector</span><span style="background:#ffffff;color:#0000ff">=&quot;#div2&quot;&gt;&lt;/</span><span style="background:#ffffff;color:#800000">iframe</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
 </ol>
 </div>
 </div>
 
+
             <p id="benefitOfServerSideIFrameIDE">
-                One nice benefit of reusing the iframe tag for server-side includes, is that some HTML Editors, such as Adobe's Dreamweaver, or Microsoft's Web Expression, provide excellent support for iframes -- in particular previewing the content, being able to easily navigate to the source page of the iframe to edit it.    
+                One nice benefit of reusing the iframe tag for server-side includes, is that some HTML Editors provide excellent support for iframes -- in particular previewing the content, and being able to easily navigate to the source page of the iframe to edit it via a right-click menu option..    
             </p>
             <p id="recommendFullyFormedHTML">
                 The page being referenced should consist of a fully-formed html document -- 
@@ -603,7 +564,7 @@
                 Hence, like the script tag, the value of <em>data-mode</em> can be "depends", and some custom logic can be referenced which makes the decision, tailored to the user and the content.
             </p>
             <p id="iframeHashTag">
-                Notice the hash tag in the src attribute.
+                Notice the hash tag value in the data-selector attribute.
                 This is expected to specify a unique id found in the referenced document.
                 The DBS container will, on the server, remove all content outside the tag matching the id (with some important exceptions mentioned below), and will add the document fragment to the containing DOM document.
             </p>
@@ -615,7 +576,7 @@
                 Prior to embedding the content of the page the iframe tag references, the usual DBS processing will be executed on the referenced page, most notably executing any server-side script or nested server-side iframes.
             </p>
             <p>
-                If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be emedded in different locations of the page based on the hash tag identifier.</p>
+                If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be embedded in different locations of the page based on the hash tag identifier.</p>
             <p>
                 When embedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending any duplicate id&#39;s with the id of the containing iframe tag separated by an underscore.&nbsp; 
                 Styles containing references to these id&#39;s will also be correspondingly namespaced.
@@ -625,15 +586,13 @@
             <h3>Hybrid IFrames</h3>
             <p id="hybridIframeRationale">
                 We've seen with server-side and client-side iframes that each has their own advantages and sdisadvantages.
-                But another mode -- <em>hybrid</em> is supported by the DBS, which can achiece the best of both worlds, in many scenario. 
+                But another mode -- <em>hybrid</em> is supported by the DBS, which can achiece the best of both worlds, in many scenarios. 
                 The hybrid mode replaces, on the server, the iframe tag with a script tag.
-                The script will make an AJAX call on the client, which will load the page on the server, where server-side processing will take place.  
-                
-            </p>
+                The script will make an AJAX call on the client, which will load the page on the server, where server-side processing will take place. The page will be serialized to html, and the portion matching the selector attribute will be embedded in the calling page.</p>
         </div>
     </div>
     <div id="styleDirectives">
-        <h3>Style directives</h3>
+        <h3>CSS attributes</h3>
         <p id="JQuery">
             JQuery has proven to be a very popular library.
             Some of this popularity is due to succesfully building on the power of css selectors.
@@ -648,12 +607,11 @@
             So, for example, a JSON object, used to configure a client-side datagrid, would be considered declarative syntax, as pure JSON does not allow for methods.
             Each data element in the declarative syntax can be considered a directive.
         </p>
-        <p id="NeedForStyleDirectives">
-            AngularJS, and other similar libraries, looks for custom attributes within DOM elements (or classes or inside text nodes) for its directives, as does the DBS.
+        <p id="NeedForStyleAttributes">
+            The DBS, and other popular libraries, looks for custom attributes within DOM elements to define behavior..
             The advantage of this approach is that it is easy to associate the behavior to the element it is getting applied to.
-            In the case of AngularJS, this makes sense when binding individual elements to specific places in a data model.
-            But these directives are often extended to be used for many other aspects, aspects which may tend to be more repetitive in nature, and often we will see groups of attributes whose values will tend to go together according to certain patterns. 
-            It is for this reason that css selectors and style sheets were created, where multiple rules could be associated with a css selector, which would get applied to multiple elements.
+            But these custom attributes may tend to be more repetitive in nature, sometimes quite long and detailed, and often we will see groups of attributes whose values will tend to go together according to certain patterns. 
+            It is for this same reason that css selectors and style sheets were created, where multiple rules could be associated with a css selector, which would get applied to multiple elements.
             Failure to take advantage of this feature for css styles can result in markup where
             <ul>
                 <li>these style directives will tend to clutter the page, and to detract from the semantic nature of the html markup.</li>
@@ -666,24 +624,78 @@
         </p>
         <p id="StyleDirectives">
             The DBS provides support for a much more consise way of associating behavior with elements while still adhering to a declarative approach:
-            CSS style directives which get compiled, on the server, to JavaScript, which can then manipulate the other DOM elements.
-            For example:
+            "CSS attributes"  which associates the attributes of a template element, with all the elements matching a css rule.
+            Consider the following example:
         </p>
+
+<!--<style type="text/css" data-attribute-link="Attributes">
+    input.myClassAttributes {
+    }
+
+    input.myClass {
+        color:green;
+    }
+        
+</style>
+
+<input hidden="hidden" class="myClassAttributes" data-attrib1="test" data-mode="both" onclick="alert('iah');" />
+
+<form>
+    <input name="input1" value="Input 1" class="myClass"/>
+</form>-->
     
-<div id="styleDirectiveExample" style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
 <div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="9" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;[tspHandler.tspProcessor, tspHandler].attachEvents&quot;&gt;</span></li>
-<li style="background: #f3f3f3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:#ffffff;color:#800000">input{</span></li>
-<li>            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">event</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">change</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">handler</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">form1.changeHandler</span><span style="background:#ffffff;color:#000000">;        </span></li>
-<li>        <span style="background:#ffffff;color:#000000">}</span></li>
+<ol start="630" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li>&nbsp;</li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-attribute-link</span><span style="background:#ffffff;color:#0000ff">=&quot;Attributes&quot;&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">input.myClassAttributes</span><span style="background:#ffffff;color:#000000"> {</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000">}</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">input.myClass</span><span style="background:#ffffff;color:#000000"> {</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">color</span><span style="background:#ffffff;color:#000000">:</span><span style="background:#ffffff;color:#0000ff">green</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000">}</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span></li>
 <li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">input</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">hidden</span><span style="background:#ffffff;color:#0000ff">=&quot;hidden&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">class</span><span style="background:#ffffff;color:#0000ff">=&quot;myClassAttributes&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-attrib1</span><span style="background:#ffffff;color:#0000ff">=&quot;test&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;both&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">onclick</span><span style="background:#ffffff;color:#0000ff">=&quot;</span><span style="background:#ffffff;color:#000000">alert(</span><span style="background:#ffffff;color:#a31515">&#39;iah&#39;</span><span style="background:#ffffff;color:#000000">);</span><span style="background:#ffffff;color:#0000ff">&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#0000ff">/&gt;</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">form</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">input</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">name</span><span style="background:#ffffff;color:#0000ff">=&quot;input1&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">value</span><span style="background:#ffffff;color:#0000ff">=&quot;Input 1&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">class</span><span style="background:#ffffff;color:#0000ff">=&quot;myClass&quot;/&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">form</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
 </ol>
 </div>
 </div>
-        <p id="styleCompiler">
+
+        <p id="classAttributeExplanation">
+            To explain what the markup above means, let's start with the input element inside the form.  It has a class myClass defined for it.
+            In the style tag we see a css rule associated with this element.  
+            But above that CSS Rule are a number of rules containing the string "Attributes."  
+            "Attributes" matches the value specified by the data-attribute-link attribute for the style.  
+            Any style tag containing the data-attribute-link will look for any styles containing the value of the attribute ("Attributes" if not specified).
+            It will pick out all the DOM elements matching the css selector for these special attribute rules.
+            It will copy the attributes from those DOM elements to all the elements matching the target style, the first rule in the list not containing the special keyword ("Attributes").
+            So in the example above, the rule with selector input.myClassAttributes, has the key word "Attributes" specified by the data-attribute-link.  
+            It searches the document for all elements matching the selector and finds the hidden input field.
+            Call those elements the source elements.
+            It then looks for the first css rule whose selector does <em>not</em> contain the key word.  
+            In this case, it's the next rule, with selector input.myClass.
+            The process then finds all the elements matching that selector.  
+            Call those elements the destination elements.
+            The process then copies all the attribute values (other than "class", "data-mode" and "hidden") from the source elements to the destination elements.
+
+        </p>
+
+        <p>
+            The priority of the rules follow the standard CSS Specificity -- higher specificity will trump lower specificity.
+            Also, if there is a need to apply the special attributes "class", "data-mode" or "hidden", this can be done by prepending the name of the attribute with the "data" prefix.
+            If the source element specifies a data-mode value, the attributes will only be copied to the destination elements in that mode.
+
+        </p>
+
+        <p id="styleCompiler" hidden="hidden" style="display:none">
             The <em>data-compiler</em> attribute is another example of an attribute expecting a &quot;server-side method&quot; string. 
             &nbsp;The static method will get access to the parsed CSS rules contained in the style tag, and will generate, typically,&nbsp; JavaScript / JSON based on the contents of the tag. 
             &nbsp;As mentioned earlier, the generated JavaScript may execute on the server, or on the client, depending on the <em>data-mode</em> attribute of the original style element.
@@ -691,11 +703,13 @@
             &nbsp;For example, it may generate one script tag consisting of JavaScript, and another style tag which retains those rules which are actually css rules. 
             &nbsp;Or it might be used to compile some compact CSS format (like LESS) into browser-compatible CSS.
         </p>
-        <p id="styleCompiler_staticMethodSignature">
-            The static method, if written in TSP / C#, for example, would have signature in the following form:</p>
+        <p id="styleCompiler_staticMethodSignature" style="display:none;">
+            The static method, if written in TSP / C#, for example, would have signature in the following form:
+
+        </p>
 
         
-<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="display:none;border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
 <div style="background: #fff; max-height: 300px; overflow: auto">
 <ol start="24" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
@@ -704,20 +718,21 @@
 </div>
 </div>
 
-        <p id="styleCompiler_DBSContainerResponsibility">
-            The DBS container replaces the original style DOM element with these generated tags.
-        </p>
-        <p id="advantagesOfStyleDirectives">
+        
+        <p id="advantagesOfCssAttributes">
             The advantages of extending the css style system to declare behavior directives like this are:
             <ul>
                 <li>Readability:  This ties into a familiar pattern for adding detailed enhancements to elements without cluttering the sematic html.</li>
                 <li>
-                    Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector. &nbsp;But unlike JQuery, further code reuse can be accomplished by taking advantage of the same CSS cascading and specificity rules honored by browsers when applying styles.
+                    Succinctness:&nbsp; Like JQuery, a single rule can apply to all elements matching the CSS Selector.
+                    But unlike JQuery, further code reuse can be accomplished by taking advantage of the same CSS cascading and specificity rules honored by browsers when applying styles.
                 </li>
                 <li>
-                    Editor Support:&nbsp; Some HTML editors (e.g. Microsoft Web Expression, Dreamweaver) provide special support for CSS.
-                    &nbsp; For example, if you navigate to a DOM element in the HTML Markup, which references a css class name, it may be possible to select the class, and allow the IDE to jump to the CSS rule for the class (at least if there is only one such class definition).
-                    &nbsp; This is not available with JQuery code associated with the class.
+                    Editor Support:&nbsp; Some HTML editors provide special support for CSS.
+                    For example, if you navigate to a DOM element in the HTML Markup, which references a css class name, it may be possible to select the class, and allow the IDE to jump to the CSS rule for the class (at least if there is only one such class definition).
+                    Likewise, some editors allow you to select a css rule, and list all elements which it applies to.
+                    Thus
+                    This is not available with JQuery code associated with the class.
                 </li>
             </ul>
        </p>

@@ -121,6 +121,34 @@ namespace tspHandler
 
         };
 
+        private static Func<HtmlNodeFacade, bool> _TestForServerSideOnly = node =>
+        {
+            var mode = GetMode(node);
+            switch (mode)
+            {
+                case Modes.ServerSideOnly:
+                    return true;
+                case Modes.Depends:
+                    throw new NotImplementedException();
+                default:
+                    return false;
+            }
+        };
+
+        private static Func<HtmlNodeFacade, bool> _TestForClientSideOnly = node =>
+        {
+            var mode = GetMode(node);
+            switch (mode)
+            {
+                case Modes.ClientSideOnly:
+                    return true;
+                case Modes.Depends:
+                    throw new NotImplementedException();
+                default:
+                    return false;
+            }
+        };
+
         private static Func<HtmlNodeFacade, bool> _TestForHybridMode = node =>
         {
             var mode = GetMode(node);
@@ -274,6 +302,7 @@ namespace tspHandler
                     .ProcessIFrames()
                     .ProcessServerSideScripts()
                     .PostProcessModel()
+                    .RemoveServerSideOnlyCSSAttributes()
                 ;
             }
             Trace(doc, "EndProcess");
@@ -549,6 +578,8 @@ tsp.createInputAutoFillRule(model);
             });
             return doc;
         }
+
+        
 
         public static HtmlDocumentFacade PostProcessModel(this HtmlDocumentFacade doc)
         {

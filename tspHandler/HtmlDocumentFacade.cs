@@ -26,6 +26,15 @@ namespace tspHandler
         }
         private IDocumentHost _host;
 
+        public Dictionary<string, HtmlNodeFacade> DynamicallyChangedIDLookup { get; set; }
+        public Dictionary<string, HtmlNodeFacade> DynamicallyChangedIDLookupNN
+        {
+            get{
+                if (DynamicallyChangedIDLookup == null) DynamicallyChangedIDLookup = new Dictionary<string, HtmlNodeFacade>();
+                return DynamicallyChangedIDLookup;
+            }
+        }
+
         /// <summary>
         /// Deprecate
         /// </summary>
@@ -99,6 +108,10 @@ namespace tspHandler
         public HtmlNodeFacade getElementById(string id)
         {
             if (id == null) return null;
+            if (this.DynamicallyChangedIDLookup != null && this.DynamicallyChangedIDLookup.ContainsKey(id))
+            {
+                return this.DynamicallyChangedIDLookup[id];
+            }
             var node = this._htmlDoc.GetElementbyId(id);
             if (node == null) return null;
             return new HtmlNodeFacade(node, this);

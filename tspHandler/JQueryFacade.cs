@@ -184,11 +184,11 @@ namespace tspHandler
             //    else
             //    {
             //        var currClassNames = currClassName.Split(' ').ToList();
-            //        foreach (string newClassName in classNames)
+            //        foreach (string defunctClassName in classNames)
             //        {
-            //            if (!currClassNames.Contains(newClassName))
+            //            if (!currClassNames.Contains(defunctClassName))
             //            {
-            //                currClassNames.Add(newClassName);
+            //                currClassNames.Add(defunctClassName);
             //            }
             //        }
             //        nd.className = string.Join(" ", currClassNames.ToArray());

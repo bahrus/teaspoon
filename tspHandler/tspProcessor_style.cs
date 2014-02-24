@@ -50,21 +50,67 @@ namespace tspHandler
                 #endregion
             });
             directives.Sort();
+            Action<AttributeChanges, HtmlNodeFacade, string> saveOld = (attributeChanges, targetElement, attribName) =>
+            {
+                if (attributeChanges != null && !attributeChanges.ContainsKey(attribName))
+                {
+                    string oldValue = targetElement.getAttribute(attribName);
+                    attributeChanges[attribName] = new AttributeChange
+                    {
+                        OriginalValue = string.IsNullOrEmpty(oldValue) ? null : oldValue,
+                    };
+
+                }
+            };
+            Action<AttributeChanges, HtmlNodeFacade, string> saveOldClass = (attributeChanges, targetElement, className) =>
+            {
+                if (!targetElement.hasClass(className))
+                {
+                    if (!attributeChanges.ClassesToRemoveNN.Contains(className))
+                    {
+                        attributeChanges.ClassesToRemove.Add(className);
+                    }
+                }
+            };
+            //var clientSideChanges = new Dictionary<string, Dictionary<string, string>>(); //id => attribute name => value
+            //Action<HtmlNodeFacade, string, string> setClientSideAttribValue = (el, attribName, newValue) =>
+            //{
+            //    if (!clientSideChanges.ContainsKey(el.id)) clientSideChanges[el.id] = new Dictionary<string, string>();
+            //    var attribChanges = clientSideChanges[el.id];
+            //    attribChanges[attribName] = newValue;
+            //};
             foreach (var cssRule in directives)
             {
                 if(cssRule.AttributeDirectives == null) continue;
                 cssRule.AttributeDirectives.Sort();
                 var targetElements = doc.querySelectorAll(cssRule.Rule.selectorText);
-
+                var pc = doc.ProcessContext;
                 foreach (var attributeDir in cssRule.AttributeDirectives)
                 {
                     var srcElements = doc.querySelectorAll(attributeDir.Rule.selectorText);
                     foreach (var srcElement in srcElements)
                     {
-                        if (!_TestForServerSide(srcElement)) continue;
+                        bool serversideOnly = (_TestForServerSideOnly(srcElement));
+                        //bool clientsideOnly = (_TestForClientSideOnly(srcElement));
                         var attribs = srcElement.attributes;
                         foreach (var targetElement in targetElements)
                         {
+                            AttributeChanges attributeChanges = null;
+                            string elId = pc.GetOrCreateID(targetElement); //need elements to have id for client side linkage among other things
+                            if (serversideOnly)
+                            {
+
+                                
+                                if (!pc.AttributeChangesNN.ContainsKey(elId))
+                                {
+                                    attributeChanges = new AttributeChanges();
+                                    pc.AttributeChanges[elId] = attributeChanges;
+                                }
+                                else
+                                {
+                                    attributeChanges = pc.AttributeChanges[elId];
+                                }
+                            }
                             foreach (var attrib in attribs)
                             {
                                 var nm = attrib.name;
@@ -76,15 +122,19 @@ namespace tspHandler
                                     case "data-mode":
                                         continue;
                                     case "data-class":
+                                        saveOldClass(attributeChanges, targetElement, attrib.value);
                                         targetElement.addClass(attrib.value);
                                         break;
                                     case "data-hidden":
+                                        saveOld(attributeChanges, targetElement, "hidden");
                                         targetElement.setAttribute("hidden", attrib.value);
                                         break;
                                     case "data-data-mode":
+                                        saveOld(attributeChanges, targetElement, "data-mode");
                                         targetElement.setAttribute("data-mode", attrib.value);
                                         break;
                                     default:
+                                        saveOld(attributeChanges, targetElement, nm);
                                         targetElement.setAttribute(nm, attrib.value);
                                         break;
                                 }
@@ -122,45 +172,39 @@ namespace tspHandler
             //return doc;
         }
 
-        //private static void ProcessDBSAttr(StyleDirective directive, StyleDirectiveContext context)
-        //{
-
-        //    foreach (var styleProperty in directive.Rule.style)
-        //    {
-        //        var key = styleProperty.Key;
-        //        var val = styleProperty.Value;
-        //        if (key.Contains("@"))
-        //        {
-        //            string attributeName = key.SubstringBefore("@");
-        //            string subPropertyName = key.SubstringAfter("@");
-        //            var els = directive.Node.ownerDocument.querySelectorAll(directive.Rule.selectorText);
-        //            foreach (var el in els)
-        //            {
-        //                string originalAttribute = el.getAttribute(attributeName);
-        //                if (!string.IsNullOrEmpty(originalAttribute))
-        //                {
-        //                    if (!val.EndsWith("!important"))
-        //                    {
-        //                        continue;
-        //                    }
-        //                }
-        //                if (string.IsNullOrEmpty(subPropertyName))
-        //                {
-        //                    context.ElementActions[el] = (nd => nd.setAttribute(attributeName, val));
-        //                }
-        //                else
-        //                {
-        //                    throw new NotImplementedException();
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            throw new NotImplementedException();
-        //        }
-
-        //    }
-        //}
+        public static HtmlDocumentFacade RemoveServerSideOnlyCSSAttributes(this HtmlDocumentFacade doc)
+        {
+            if (doc.ProcessContext.AttributeChanges != null)
+            {
+                foreach (var kvp in doc.ProcessContext.AttributeChanges)
+                {
+                    string elID = kvp.Key;
+                    var targetEl = doc.getElementById(elID);
+                    var attribChanges = kvp.Value;
+                    foreach (var attribChangeKVP in attribChanges)
+                    {
+                        string attribName = attribChangeKVP.Key;
+                        var attribChange = attribChangeKVP.Value;
+                        if (attribChange.OriginalValue == null)
+                        {
+                            targetEl.removeAttribute(attribName);
+                        }
+                        else
+                        {
+                            targetEl.setAttribute(attribName, attribChange.OriginalValue);
+                        }
+                    }
+                    if (attribChanges.ClassesToRemove != null)
+                    {
+                        foreach (var classToRemove in attribChanges.ClassesToRemove)
+                        {
+                            targetEl.removeClass(classToRemove);
+                        }
+                    }
+                }
+            }
+            return doc;
+        }
     
         
     }

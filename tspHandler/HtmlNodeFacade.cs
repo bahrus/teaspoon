@@ -36,6 +36,24 @@ namespace tspHandler
  
         }
 
+        public void removeClass(string className)
+        {
+            if (string.IsNullOrEmpty(className)) return;
+            string[] classNames = className.Split(' ');
+            string currClassName = this.className;
+            
+            var currClassNames = currClassName.Split(' ').ToList();
+            foreach (string defunctClassName in classNames)
+            {
+                if (!currClassNames.Contains(defunctClassName))
+                {
+                    currClassNames.Remove(defunctClassName);
+                }
+            }
+            this.className = string.Join(" ", currClassNames.ToArray());
+
+        }
+
         public string className
         {
             get
@@ -78,10 +96,13 @@ namespace tspHandler
             get
             {
                 return _node.GetAttributeValue("id", string.Empty);
+                //return _node.Id;
             }
             set
             {
                 _node.SetAttributeValue("id", value);
+                this.ownerDocument.DynamicallyChangedIDLookupNN[value] = this;
+                //_node.Id = value;
             }
         }
 
@@ -166,6 +187,13 @@ namespace tspHandler
         {
             return _node.Attributes.Contains(key);
             //return !string.IsNullOrEmpty(_node.GetAttributeValue(key, ""));
+        }
+
+        public bool hasClass(string className)
+        {
+            if (string.IsNullOrEmpty(className)) return false;
+            var classNames = className.Split(' ').ToList();
+            return classNames.Contains(className);
         }
 
         public void setAttribute(string key, string val)

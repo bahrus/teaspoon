@@ -39,11 +39,6 @@ module DBS.cs {
         xmlhttp.send();
     }
 
-    //export function substringAfter(val: string, search: string) {
-    //    var iS = val.indexOf(search);
-    //    if (iS == -1) return "";
-    //    return val.substr(iS);
-    //}
 
     export function onPropChange(el: HTMLElement, attrName: string, handler: (el: HTMLElement) => any) {
         if (typeof (MutationObserver) !== 'undefined') {

@@ -31,6 +31,29 @@ namespace tspHandler
                 return IFrameMergingNodes;
             }
         }
+
+        public Dictionary<string, AttributeChanges> AttributeChanges { get; set; }
+
+        public Dictionary<string, AttributeChanges> AttributeChangesNN{
+
+            get
+            {
+                if (AttributeChanges == null) AttributeChanges = new Dictionary<string, AttributeChanges>();
+                return AttributeChanges;
+            }
+    
+        }
+
+        private int uniqueCount = 0;
+
+        public string GetOrCreateID(HtmlNodeFacade node)
+        {
+            if (string.IsNullOrEmpty(node.id))
+            {
+                node.id = "DBS_" + uniqueCount++;
+            }
+            return node.id;
+        }
     }
 
     public class ModelScriptPostProcessingInfo{
@@ -41,5 +64,24 @@ namespace tspHandler
         public bool NeededForClient { get; set; }
         public bool IsDumbedDown { get; set; }
         public string StaticMethodString { get; set; }
+    }
+
+    public class AttributeChange
+    {
+        public string OriginalValue { get; set; }
+    }
+
+    public class AttributeChanges : Dictionary<string, AttributeChange>
+    {
+        public List<string> ClassesToRemove { get; set; }
+
+        public List<string> ClassesToRemoveNN
+        {
+            get
+            {
+                if (ClassesToRemove == null) ClassesToRemove = new List<string>();
+                return ClassesToRemove;
+            }
+        }
     }
 }
