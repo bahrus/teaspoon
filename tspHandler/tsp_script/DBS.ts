@@ -48,4 +48,10 @@ module DBS {
         Append,
         Ignore,
     }
+
+    export interface IStyleDirective {
+        CSSRule: CSSRule;
+        DocOrder: number;
+        AttributeDirectives?: IStyleDirective[];
+    }
 } 

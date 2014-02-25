@@ -99,8 +99,6 @@ namespace tspHandler
                             string elId = pc.GetOrCreateID(targetElement); //need elements to have id for client side linkage among other things
                             if (serversideOnly)
                             {
-
-                                
                                 if (!pc.AttributeChangesNN.ContainsKey(elId))
                                 {
                                     attributeChanges = new AttributeChanges();
