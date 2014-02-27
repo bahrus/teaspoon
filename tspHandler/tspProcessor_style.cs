@@ -91,7 +91,8 @@ namespace tspHandler
                     foreach (var srcElement in srcElements)
                     {
                         bool serversideOnly = (_TestForServerSideOnly(srcElement));
-                        //bool clientsideOnly = (_TestForClientSideOnly(srcElement));
+                        bool clientsideOnly = (_TestForClientSideOnly(srcElement));
+                        if (clientsideOnly) continue;
                         var attribs = srcElement.attributes;
                         foreach (var targetElement in targetElements)
                         {

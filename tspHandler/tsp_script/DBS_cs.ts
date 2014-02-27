@@ -99,6 +99,7 @@ module DBS.cs {
     }
 
     export function ready() {
+        debugger;
         window.removeEventListener('load', ready);
         var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
         var docOrder = 0;
@@ -138,15 +139,15 @@ module DBS.cs {
         for (var i = 0, n = sortedDirectives.length; i < n; i++) {
             var cssRule = sortedDirectives[i];
             var sortedAttributeChanges = cssRule.AttributeDirectives.sort(sortFn);
-            var targetElements = document.querySelectorAll(cssRule.CSSRule.cssText);
+            var targetElements = document.querySelectorAll(cssRule.CSSRule['selectorText']);
             for (var j = 0, m = targetElements.length; j < m; j++) {
                 for (var k = 0, l = sortedAttributeChanges.length; k < l; k++) {
                     var attributeDir = sortedAttributeChanges[k];
-                    var srcElements = document.querySelectorAll(attributeDir.CSSRule.cssText);
+                    var srcElements = document.querySelectorAll(attributeDir.CSSRule['selectorText']);
                     for (var i1 = 0, n1 = srcElements.length; i1 < n1; i1++) {
                         var srcElement = <HTMLElement> srcElements[i1];
                         var elMode = srcElement.getAttribute('data-mode');
-                        if (elMode.length > 0 && elMode != 'client-side-only') continue;
+                        if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) continue;
                         var attribs = srcElement.attributes;
                         for (var j1 = 0, m1 = targetElements.length; j1 < m1; j1++) {
                             var targetElement = <HTMLElement> targetElements[j1];
