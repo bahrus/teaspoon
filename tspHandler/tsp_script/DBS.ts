@@ -54,4 +54,9 @@ module DBS {
         DocOrder: number;
         AttributeDirectives?: IStyleDirective[];
     }
+
+    export interface IScriptDirective {
+        scriptTag: HTMLScriptElement;
+        targetElements: NodeList;
+    }
 } 

@@ -95,15 +95,17 @@ module DBS.cs {
         //| RegexOptions.IgnorePatternWhitespace;
         //return Regex.Matches(input, pattern, options).Count;
         var regExp = new RegExp(pattern, 'i');
+        var tst = regExp.exec(input);
+        if (!tst) return 0;
         return regExp.exec(input).length;
     }
 
     export function ready() {
-        debugger;
         window.removeEventListener('load', ready);
         var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
         var docOrder = 0;
-        var directives : IStyleDirective[] = [];
+        var directives: IStyleDirective[] = [];
+        var scriptDirectives: IScriptDirective[] = [];
         for (var i = 0, n = attributeLinkStyles.length; i < n; i++){
             //#region analyze style tag
             var attribeLinkStyleNode = <HTMLStyleElement> attributeLinkStyles[i];
@@ -146,6 +148,14 @@ module DBS.cs {
                     var srcElements = document.querySelectorAll(attributeDir.CSSRule['selectorText']);
                     for (var i1 = 0, n1 = srcElements.length; i1 < n1; i1++) {
                         var srcElement = <HTMLElement> srcElements[i1];
+                        if (srcElement.tagName == 'SCRIPT') {
+                            var sd: IScriptDirective = {
+                                scriptTag: <HTMLScriptElement> srcElement,
+                                targetElements: targetElements,
+                            };
+                            scriptDirectives.push(sd);
+                        }
+                        
                         var elMode = srcElement.getAttribute('data-mode');
                         if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) continue;
                         var attribs = srcElement.attributes;
@@ -179,6 +189,15 @@ module DBS.cs {
                         }
                     }
                 }
+            }
+        }
+        for (var i = 0, n = scriptDirectives.length; i < n; i++) {
+            var sd = scriptDirectives[i];
+            var sc = sd.scriptTag.innerHTML.replace(';', '');
+            var fn = eval(sc);
+            for (var j = 0, m = sd.targetElements.length; j < m; j++) {
+                var te = targetElements[j];
+                fn(te);
             }
         }
     }

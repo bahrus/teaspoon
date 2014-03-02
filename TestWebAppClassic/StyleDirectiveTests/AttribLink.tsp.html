@@ -11,6 +11,8 @@
         input.myClassAttributes {
         }
 
+        script.myClassAttributes { 
+        }
 
         input.myClass {
             color:green;
@@ -21,14 +23,20 @@
     <input hidden="hidden" class="myClassAttributes" data-attrib1="test" data-mode="both" onclick="alert('iah');" />
 
     <input hidden="hidden" class="myClassAttributes" data-attrib2="test2" />
-
+    
+    <script>
+        function test() {
+            var spTest = document.getElementById('output');
+            spTest.innerHTML = "I am here";
+        }
+    </script>
     <script class="myClassAttributes">
-        
+        test;
     </script>
 
     <form>
-        <input name="input1" value="Input 1" class="myClass" onclick="DBS.cs.mergeHybridIframe;DBS.cs.onPropChange"/>
+        <input name="input1" value="Input 1" class="myClass"/>
     </form>
-
+    <span id="output"></span>
 </body>
 </html>

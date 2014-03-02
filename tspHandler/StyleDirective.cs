@@ -30,7 +30,7 @@ namespace tspHandler
                 if (_specifity == null)
                 {
                     _specifity = CssSelectorHelper.CalculateSpecificity(Rule.selectorText);
-                    throw new NotImplementedException();
+                    //throw new NotImplementedException();
                 }
                 return (int) _specifity;
             }

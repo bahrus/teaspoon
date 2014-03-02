@@ -80,6 +80,7 @@
     <Content Include="Emmet\emmet.js" />
     <Content Include="Emmet\emmet.min.js" />
     <Content Include="Emmet\index.html" />
+    <Content Include="FormsTests\ClientSideWithAction.html" />
     <Content Include="FormsTests\ServersideForm.tsp.html" />
     <Content Include="HelloWorld.tsp.html" />
     <Content Include="iFrameTests\ChildPage1.tsp.html" />
@@ -110,7 +111,9 @@
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.css" />
     <Content Include="tsp_script\tsp.js" />
-    <Content Include="tsp_script\tsp.min.js" />
+    <Content Include="tsp_script\tsp.min.js">
+      <DependentUpon>tsp.js</DependentUpon>
+    </Content>
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
@@ -260,7 +263,9 @@
     <Content Include="tsp_script\DBS_cs.js.map" />
     <Content Include="tsp_script\tcp.js.map" />
     <Content Include="tsp_script\tsp.js.map" />
-    <Content Include="tsp_script\tsp.min.js.map" />
+    <Content Include="tsp_script\tsp.min.js.map">
+      <DependentUpon>tsp.min.js</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
