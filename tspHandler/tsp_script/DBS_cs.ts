@@ -148,6 +148,8 @@ module DBS.cs {
                     var srcElements = document.querySelectorAll(attributeDir.CSSRule['selectorText']);
                     for (var i1 = 0, n1 = srcElements.length; i1 < n1; i1++) {
                         var srcElement = <HTMLElement> srcElements[i1];
+                        var elMode = srcElement.getAttribute('data-mode');
+                        if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) continue;
                         if (srcElement.tagName == 'SCRIPT') {
                             var sd: IScriptDirective = {
                                 scriptTag: <HTMLScriptElement> srcElement,
@@ -156,8 +158,7 @@ module DBS.cs {
                             scriptDirectives.push(sd);
                         }
                         
-                        var elMode = srcElement.getAttribute('data-mode');
-                        if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) continue;
+                        
                         var attribs = srcElement.attributes;
                         for (var j1 = 0, m1 = targetElements.length; j1 < m1; j1++) {
                             var targetElement = <HTMLElement> targetElements[j1];
