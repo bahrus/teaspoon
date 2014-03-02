@@ -72,7 +72,6 @@
     <Content Include="ClearScriptV8-64.dll" />
     <Content Include="ClearScriptV8-64.pdb" />
     <Content Include="Content\jquery.layout-1.30.79.css" />
-    <TypeScriptCompile Include="form1.ts" />
     <TypeScriptCompile Include="datagrid.ts" />
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.query1.tsp.html" />
@@ -81,8 +80,7 @@
     <Content Include="Emmet\emmet.js" />
     <Content Include="Emmet\emmet.min.js" />
     <Content Include="Emmet\index.html" />
-    <Content Include="form1.submitA.tsp.html" />
-    <Content Include="form1.tsp.html" />
+    <Content Include="FormsTests\ServersideForm.tsp.html" />
     <Content Include="HelloWorld.tsp.html" />
     <Content Include="iFrameTests\ChildPage1.tsp.html" />
     <Content Include="iFrameTests\ChildPage2.tsp.html" />
@@ -101,7 +99,7 @@
     <Content Include="Scratch4.html" />
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
-    <Content Include="StandardsDetail.html" />
+    <Content Include="DBS_Specs.html" />
     <Content Include="StyleDirectiveTests\CustomCompiler.tsp.html" />
     <Content Include="StyleDirectiveTests\AttribLink.tsp.html" />
     <Content Include="TabsTest.tsp.html" />

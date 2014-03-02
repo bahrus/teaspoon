@@ -11,6 +11,7 @@
         input.myClassAttributes {
         }
 
+
         input.myClass {
             color:green;
         }
@@ -21,8 +22,12 @@
 
     <input hidden="hidden" class="myClassAttributes" data-attrib2="test2" />
 
+    <script class="myClassAttributes">
+        
+    </script>
+
     <form>
-        <input name="input1" value="Input 1" class="myClass"/>
+        <input name="input1" value="Input 1" class="myClass" onclick="DBS.cs.mergeHybridIframe;DBS.cs.onPropChange"/>
     </form>
 
 </body>

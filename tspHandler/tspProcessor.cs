@@ -279,12 +279,7 @@ namespace tspHandler
                 .ProcessStyleDirectives()
                 .ProcessServerSideForms()
             ;
-            //Trace(doc, "ProcessTSPStyles");
-            //ProcessTSPStyles(doc);
-            //Trace(doc, "ProcessTCPStyles");
-            //ProcessTCPStyles(doc);
-            Trace(doc, "ProcessServerSideForms");
-            ProcessServerSideForms(doc);
+            
             if (doc.Host.IsDesignMode())
             {
                 doc
@@ -442,43 +437,7 @@ namespace tspHandler
             return doc;
         }
 
-        public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)
-        {
-            return doc;
-            var serversideForms = doc.getElementsByTagName("form")
-                .Where(_TestForServerSide).ToList();
-            if (serversideForms.Count == 0) return doc;
-            var context = doc.createElement("script");
-            //<script data-model= data-mode="both" id="context"></script>
-            //TODO:  don't hard code this
-            context.setAttribute("data-model", "[tsp.Http].GetContext");
-            context.setAttribute(ModeAttribute, BothMode);
-            context.id = "httpContext";
-            var head = doc.head;
-            head.appendChild(context);
-            var autoFill = doc.createElement("script");
-            autoFill.setAttribute(ModeAttribute, ServerSideMode);
-            autoFill.innerHTML = @"
-tsp.createInputAutoFillRule(model);
-";
-            head.appendChild(autoFill);
-            var inputs = doc.querySelectorAll("input[type='submit']");
-            var reqParams = HttpContext.Current.Request.QueryString;
-            inputs.ToList().ForEach(input =>
-            {
-                var name = input.name;
-                var reqVal = reqParams[name];
-                if (reqVal != null)
-                {
-                    if (reqVal == input.value)
-                    {
-                        input.setAttribute("data-eventName", "clicked");
-                    }
-                }
-            });
-            return doc;
-        }
-
+        
 
         //public static HtmlDocumentFacade ProcessDBSAttrCompilerTags(this HtmlDocumentFacade doc)
         //{
