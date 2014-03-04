@@ -1,0 +1,52 @@
+﻿{ 
+  "fathers" : [ 
+    { 
+      "id" : 0,
+      "married" : false,
+      "name" : "Eric Wilson",
+      "sons" : null,
+      "daughters" : [
+        ]
+      },
+    { 
+      "id" : 1,
+      "married" : true,
+      "name" : "Steven Williams",
+      "sons" : null,
+      "daughters" : [
+        ]
+      },
+    { 
+      "id" : 2,
+      "married" : false,
+      "name" : "Edward Young",
+      "sons" : null,
+      "daughters" : [
+        ]
+      },
+    { 
+      "id" : 3,
+      "married" : false,
+      "name" : "Michael White",
+      "sons" : null,
+      "daughters" : [ 
+        { 
+          "age" : 23,
+          "name" : "Melissa"
+          }
+        ]
+      },
+    { 
+      "id" : 4,
+      "married" : false,
+      "name" : "Joseph Gonzalez",
+      "sons" : null,
+      "daughters" : [ 
+        { 
+          "age" : 31,
+          "name" : "Carol"
+          }
+        ]
+      }
+    ]
+  }

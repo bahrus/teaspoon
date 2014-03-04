@@ -59,4 +59,8 @@ module DBS {
         scriptTag: HTMLScriptElement;
         targetElements: NodeList;
     }
+
+    export interface IRender extends HTMLElement {
+        render: (target: HTMLElement, data: any) => HTMLElement;
+    }
 } 

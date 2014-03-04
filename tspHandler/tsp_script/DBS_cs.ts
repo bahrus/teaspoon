@@ -1,4 +1,5 @@
 ///<reference path='DBS.ts'/>
+///<reference path='../Scripts/typings/jquery/jquery.d.ts'/>
 
 module DBS.cs {
     export interface ISnippetConfig {
@@ -201,6 +202,7 @@ module DBS.cs {
                 fn(te);
             }
         }
+        configureCSForms();
     }
 
     function sortFn(a: IStyleDirective, b: IStyleDirective): number {
@@ -210,5 +212,41 @@ module DBS.cs {
         if (as < bs) return 0;
         return -1;
     }
+
+    function configureCSForms() {
+        var frms = document.querySelectorAll('form[data-mode="client-side-only"]');
+        for (var i = 0, n = frms.length; i < n; i++) {
+            var $frm = $(frms[i]);
+
+            $frm.submit(function(event) {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: $(this).serialize() + '&tsp-src=ajaxForm',
+                    dataType: $(this).attr('data-type') ? $(this).attr('data-type') : 'html',
+                    beforeSend: function(settings: JQueryAjaxSettings) {
+                        settings['$frm'] = $frm;
+                    },
+                    success: (data: any) => {
+                        if (typeof (data) == 'object') {
+                            $frm.children()
+                                //.filter((el: HTMLElement)=> el['render'])
+                                .each((it: number, el: HTMLElement) => {
+                                if (el['render']) {
+                                    var ren = <IRender> el;
+                                    ren.render(el, data);
+                                }
+                            });
+                        }
+                    }
+                });
+                event.preventDefault();
+            });
+            if ($frm.attr('data-submit-on') === 'load') {
+                $frm.submit();
+            }
+        }
+    }
+
 }
 window.addEventListener("load", DBS.cs.ready, false);

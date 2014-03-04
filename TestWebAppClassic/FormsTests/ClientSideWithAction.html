@@ -1,12 +1,29 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>ClientSide with Action</title>
+    <link rel="stylesheet" href="../Content/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" href="../skin/slick.grid.css"/>
+    <script src="../Scripts/jquery-2.0.3.js"></script>
+    <script src="../Scripts/jquery.event.drag.js"></script>
     <script src="../tsp_script/DBS_cs.js"></script>
+    <script src="../Scripts/slickGrid/slick.core.js"></script>
+    <script src="../Scripts/slickGrid/slick.grid.js"></script>
+    <script src="ClientSideWithAction.js"></script>
+    <style data-attribute-link>
+        script.slickGridAttributes{}   
+        .slickGrid {
+            height: 400px;
+            width: 600px;      
+        }
+    </style>
+    <script class="slickGridAttributes">
+        FormsTests.ClientSideWithAction.attachRenderer;
+    </script>
 </head>
 <body>
-    <form data-mode="client-side-only" ondata-submit="DBS.cs.">
-        
+    <form data-mode="client-side-only" data-type="json" data-submit-on="load"  action="../MockData/Fathers.JSON.txt">
+        <div class="slickGrid"></div>
     </form>
 </body>
 </html>
