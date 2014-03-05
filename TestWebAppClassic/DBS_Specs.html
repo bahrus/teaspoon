@@ -54,7 +54,7 @@
             The TypeScript/JavaScript libraries which come with TSP can also be leveraged in other, alternative DBS implementations, built leveraging the Java, Python, or node.JS platforms, for example.
 		</p>
 		<p id="IslandsOfNonJavaScript">
-            While JavaScript becomes a primary vehicle for delivering content both on the client and on the server in a DBS-based application, there are a few islands of functionality where an arguably more mature / robust language (from a server point of view) can be used - for example, in generating the data model, and in providing support for some tag transformation logic. 
+            While JavaScript becomes a primary vehicle for delivering content both on the client and on the server in a DBS-based application, there are a few islands of functionality where an arguably more mature / robust language (from a server point of view) can be used - for example, in generating the data model. 
 		</p>   
         <p id="ScriptExample">
             Standard JavaScript tags (&lt;script&gt;...&lt;/script&gt;) will by default continue to execute on the DOM in the client browser.
@@ -623,7 +623,7 @@
             And with JQuery it may be difficult to find all the behaviors associated with an element, as the code can be scattered about.
         </p>
         <p id="StyleDirectives">
-            The DBS provides support for a much more consise way of associating behavior with elements while still adhering to a declarative approach:
+            The DBS provides support for a much more concise way of associating behavior with elements while still adhering to a declarative approach:
             "CSS attributes"  which associates the attributes of a template element, with all the elements matching a css rule.
             Consider the following example:
         </p>
@@ -735,86 +735,142 @@
                     This is not available with JQuery code associated with the class.
                 </li>
             </ul>
-       </p>
-        <p id="disadvantagesOfStyleDirectives">
-            The disadvantages are:
-            <ul>
-                <li>Functionality specified this way will not work in a simple web server, but will require a DBS engine to 
-                    compile the directives on the server.&nbsp; Without such an engine, the directives will be ignored.
-                </li>
-                
-                <li>IDE&#39;s will generally not recognize links to JavaScript functions. So in the example above, <span style="background:#ffffff;color:#0000ff">form1.changeHandler</span> will 
-                    not provide any intellisense after typing "form1.", or be able to navigate to the function, or underline in red if the function name has a typo.</li>
-                <li>Even for those IDE&#39;s which help maintain the relationship between DOM elements and the classes associated with them, it is less direct than seeing the directives directly in the element itself.&nbsp; Web browsers&#39; developer tools help visualize the relationship even more clearly, but this help may not work with these custom styles [TODO: research].</li>
-            </ul>
-
-            <h4>External style directives via the link tag [TODO]</h4>
-        </p>
-        <h4>The DBS Attribute Style Directive</h4>
-        <p id="DBSAttrStyleDirectiveIntro">
-            Although the DBS provides an open ended way for DBS implementors and/or application developers to incorporate their own style compilers, the DBS does require that implementations provide one built-in compiler:  The DBS.compiler.Attr compiler.
-            Sample syntax is shown below:
-             
-<!--<style type="text/css" data-compiler="DBS.Attr">
-    input.myClass {
-        ng-required@:true;
-        ng-max-length@:8;
-        data-filter@contains:true;
-        data-filter@matchCase:true;
-        ng-click@:false;
-        color:green;
-    }
-</style>-->
-
-
-
         </p>
         
+        <h4>Attaching JavaScript Behavior</h4>
+        <p>
+            It is quite common, especially for light-weight JQuery enhanced pages, for a page to have a piece of JavaScript code which runs after the DOM has been processed, which will attach behavior to lists of html elements based on css selectors.
+            A typical example can be found <a href="https://jqueryui.com/sortable/#portlets">here</a>, whose source has code like this:
+         
+        </p>
+        
+<!--<script>
+        $(function () {
+            $(".column").sortable({
+                connectWith: ".column",
+                handle: ".portlet-header",
+                cancel: ".portlet-toggle",
+                placeholder: "portlet-placeholder ui-corner-all"
+            });
 
+            $(".portlet")
+                .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+                .find(".portlet-header")
+                .addClass("ui-widget-header ui-corner-all")
+                .prepend("<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
 
+            $(".portlet-toggle").click(function () {
+                var icon = $(this);
+                icon.toggleClass("ui-icon-minusthick ui-icon-plusthick");
+                icon.closest(".portlet").find(".portlet-content").toggle();
+            });
+        });
+</script>-->
 
+        
 <div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
 <div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
 <div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="744" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">type</span><span style="background:#ffffff;color:#0000ff">=&quot;text/css&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-compiler</span><span style="background:#ffffff;color:#0000ff">=&quot;DBS.Attr&quot;&gt;</span></li>
-<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">input.myClass</span><span style="background:#ffffff;color:#000000"> {</span></li>
-<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-required</span><span style="background:#ffffff;color:#000000">@:true;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-max-length</span><span style="background:#ffffff;color:#000000">@:8;</span></li>
-<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@contains:true;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">data-filter</span><span style="background:#ffffff;color:#000000">@matchCase:true;</span></li>
-<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">ng-click</span><span style="background:#ffffff;color:#000000">@:false;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">color</span><span style="background:#ffffff;color:#000000">:</span><span style="background:#ffffff;color:#0000ff">green</span><span style="background:#ffffff;color:#000000">;</span></li>
-<li>    <span style="background:#ffffff;color:#000000">}</span></li>
-<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<ol start="747" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000">$(</span><span style="background:#ffffff;color:#0000ff">function</span><span style="background:#ffffff;color:#000000"> () {</span></li>
+<li>            <span style="background:#ffffff;color:#000000">$(</span><span style="background:#ffffff;color:#a31515">&quot;.column&quot;</span><span style="background:#ffffff;color:#000000">).sortable({</span></li>
+<li style="background: #f3f3f3">                <span style="background:#ffffff;color:#000000">connectWith: </span><span style="background:#ffffff;color:#a31515">&quot;.column&quot;</span><span style="background:#ffffff;color:#000000">,</span></li>
+<li>                <span style="background:#ffffff;color:#000000">handle: </span><span style="background:#ffffff;color:#a31515">&quot;.portlet-header&quot;</span><span style="background:#ffffff;color:#000000">,</span></li>
+<li style="background: #f3f3f3">                <span style="background:#ffffff;color:#000000">cancel: </span><span style="background:#ffffff;color:#a31515">&quot;.portlet-toggle&quot;</span><span style="background:#ffffff;color:#000000">,</span></li>
+<li>                <span style="background:#ffffff;color:#000000">placeholder: </span><span style="background:#ffffff;color:#a31515">&quot;portlet-placeholder ui-corner-all&quot;</span></li>
+<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000">});</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000">$(</span><span style="background:#ffffff;color:#a31515">&quot;.portlet&quot;</span><span style="background:#ffffff;color:#000000">)</span></li>
+<li>                <span style="background:#ffffff;color:#000000">.addClass(</span><span style="background:#ffffff;color:#a31515">&quot;ui-widget ui-widget-content ui-helper-clearfix ui-corner-all&quot;</span><span style="background:#ffffff;color:#000000">)</span></li>
+<li style="background: #f3f3f3">                <span style="background:#ffffff;color:#000000">.find(</span><span style="background:#ffffff;color:#a31515">&quot;.portlet-header&quot;</span><span style="background:#ffffff;color:#000000">)</span></li>
+<li>                <span style="background:#ffffff;color:#000000">.addClass(</span><span style="background:#ffffff;color:#a31515">&quot;ui-widget-header ui-corner-all&quot;</span><span style="background:#ffffff;color:#000000">)</span></li>
+<li style="background: #f3f3f3">                <span style="background:#ffffff;color:#000000">.prepend(</span><span style="background:#ffffff;color:#a31515">&quot;&lt;span class=&#39;ui-icon ui-icon-minusthick portlet-toggle&#39;&gt;&lt;/span&gt;&quot;</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000">$(</span><span style="background:#ffffff;color:#a31515">&quot;.portlet-toggle&quot;</span><span style="background:#ffffff;color:#000000">).click(</span><span style="background:#ffffff;color:#0000ff">function</span><span style="background:#ffffff;color:#000000"> () {</span></li>
+<li>                <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> icon = $(</span><span style="background:#ffffff;color:#0000ff">this</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li style="background: #f3f3f3">                <span style="background:#ffffff;color:#000000">icon.toggleClass(</span><span style="background:#ffffff;color:#a31515">&quot;ui-icon-minusthick ui-icon-plusthick&quot;</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li>                <span style="background:#ffffff;color:#000000">icon.closest(</span><span style="background:#ffffff;color:#a31515">&quot;.portlet&quot;</span><span style="background:#ffffff;color:#000000">).find(</span><span style="background:#ffffff;color:#a31515">&quot;.portlet-content&quot;</span><span style="background:#ffffff;color:#000000">).toggle();</span></li>
+<li style="background: #f3f3f3">            <span style="background:#ffffff;color:#000000">});</span></li>
+<li>        <span style="background:#ffffff;color:#000000">});</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
 </ol>
 </div>
 </div>
+        <p>
+        The DBS supports doing something similar, but in a way that integrates tightly with the declarative linkages established by HTML/CSS.
+        Consider the following markup:
+        </p>
+<!--<style data-attribute-link>
+    script.slickGridAttributes{}   
+    .slickGrid {
+        height: 400px;
+        width: 600px;      
+    }
+</style>
+<script class="slickGridAttributes">
+    FormsTests.ClientSideWithAction.attachRenderer;
+</script>
+
+<form data-mode="client-side-only" data-type="json" data-submit-on="load"  action="../MockData/Fathers.JSON.txt">
+    <div class="slickGrid"></div>
+</form>-->
+
         
-        <p id="DBSAttrRules" aria-autocomplete="both">
-            &nbsp;<p>
-            The DBS Container will do the following:
-            <ul>
-                <li>
-                    Any style custom properties (name value pair) where the property name contains a @ will, on the server, be removed from the style tag before it is sent to the client.  
-                    </li>
-                <li>
-                    For any properties containig a @, any elements in the DOM document matching the CSS selector will get the corresponding attribute value applied to it, corresponding to the "style" property value, where the attribute name is the "style" property name before the @ symbol.
-                </li>
-                <li>
-                    If the property name has some a @ between two names, then the attribute will name to the left of the @ will set a sub property equal to the value.&nbsp; Think of the style attribute as an example, with multiple sub properties.&nbsp; [If the value of the style property is within braces: &quot;{val}&quot; then the attribute of the DOM element will be assumed to be in JSON format.&nbsp; Otherwise, it will be assumed to be in the style format:&nbsp; myAttr=&quot;subProp1:prop1Val;subProp2:&#39;prop2Val&#39;;&quot;]</li>
-                <li>
-                    If the propery name has no name after the @, then the name of the attribute will be the name before the@, and the value will be the string after the :.&nbsp; In this case, the special value &quot;true&quot; will simply add the attribute, &quot;false&quot;will remove it.</li>
-                <li>The adding of the attribute element will, by default, be performed on the client side, unless attribute <em>data-mode</em> is set to server-side-only.&nbsp; It is acceptable for the DBS container to require referencing one or more JavaScript libraries in order to support this.&nbsp; If other client-side libraries, such as AngularJS, require these tags, then the developer will need to find a way to ensure that the rules which populate the attributes be performed prior to processing by the library.&nbsp; If this proves problematic for a particular library, the developer can always fall back and rely on data-mode=&#39;server-side-only.&#39;&nbsp; Maintenance of the application would still benefit from the reduction in code clutter, but the download bandwidth would not benefit (nor suffer) from employing server-side attribute setting via css rules.</li>
-                <li>
-                    The order in which these attributes will be added to the DOM will be in order of <a href="http://coding.smashingmagazine.com/2007/07/27/css-specificity-things-you-should-know/">CSS Specifity</a>. 
-                    So attribute values associated with high CSS specificity rules will trump those with lower specificity.
-                </li>
-            </ul>
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="804" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-attribute-link</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3">   <span style="background:#ffffff;color:#000000">  </span><span style="background:#ffffff;color:#800000">script.slickGridAttributes{}</span><span style="background:#ffffff;color:#000000"></span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#800000">.slickGrid</span><span style="background:#ffffff;color:#000000"> {</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">height</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">400px</span><span style="background:#ffffff;color:#000000">;</span></li>
+<li>        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">width</span><span style="background:#ffffff;color:#000000">: </span><span style="background:#ffffff;color:#0000ff">600px</span><span style="background:#ffffff;color:#000000">;      </span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000">}</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">style</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">class</span><span style="background:#ffffff;color:#0000ff">=&quot;slickGridAttributes&quot;&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000">FormsTests.ClientSideWithAction.attachRenderer;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li>&nbsp;</li>
+<li style="background: #f3f3f3">  <span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">form</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;client-side-only&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-type</span><span style="background:#ffffff;color:#0000ff">=&quot;json&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-submit-on</span><span style="background:#ffffff;color:#0000ff">=&quot;load&quot;</span><span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#ff0000">action</span><span style="background:#ffffff;color:#0000ff">=&quot;../MockData/Fathers.JSON.txt&quot;&gt;</span></li>
+<li>    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">div</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">class</span><span style="background:#ffffff;color:#0000ff">=&quot;slickGrid&quot;&gt;&lt;/</span><span style="background:#ffffff;color:#800000">div</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">form</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+        <p>
+            The rules for class attributes described early apply here as well, with one key difference:  In this case the source element evaluates a script tag.  
+            In this special case, the DBS expects a list of function references, separated by semicolons and/or line breaks.  
+            The (list of) function(s) will then be applied to all the target elements in a loop.&nbsp; Thus the signature of the function should look as follows in this example:
+
         </p>
-        <p id="applyingAttr">
-            The specific implementation of the DBS may require the addition of a script call required by the application logic, in order for the specified vales to take effect.
+<!--<script>
+    function attachRenderer(targetElement) {
+        ...
+    }
+</script>-->    
+        
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="848" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">function</span><span style="background:#ffffff;color:#000000"> attachRenderer(targetElement) {</span></li>
+<li>        <span style="background:#ffffff;color:#000000">...</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000">}</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+        <p>
+        It is no accident that by following this syntax, one can, in a sufficiently powerful html editor, start with the div target element, go to the definition of its class, immediately see the associated class attribute, from there find the dom elements associated with that class, and jump to the JavaScript which attaches behavior to the original div target element, all via point and click (or other simple keystrokes).
+        No more tedius project searches for keywords which may often provide false positives!
         </p>
+   
+        <h4>External style directives via the link tag [TODO]</h4>
+        
     </div>
     <div id="pageInheritance">
         <h3>Page Inheritance</h3>       
@@ -835,6 +891,8 @@
 </ol>
 </div>
 </div>
+
+
 
         <p id="pageInheritanceIntrolCont">
             will take the contents of the base page, "form1.tsp.html" and merge the contents of the page itself on top of the base page.  

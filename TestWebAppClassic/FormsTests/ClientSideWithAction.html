@@ -10,6 +10,9 @@
     <script src="../Scripts/slickGrid/slick.core.js"></script>
     <script src="../Scripts/slickGrid/slick.grid.js"></script>
     <script src="ClientSideWithAction.js"></script>
+
+</head>
+<body>
     <style data-attribute-link>
         script.slickGridAttributes{}   
         .slickGrid {
@@ -20,10 +23,11 @@
     <script class="slickGridAttributes">
         FormsTests.ClientSideWithAction.attachRenderer;
     </script>
-</head>
-<body>
+
     <form data-mode="client-side-only" data-type="json" data-submit-on="load"  action="../MockData/Fathers.JSON.txt">
         <div class="slickGrid"></div>
     </form>
+
+    
 </body>
 </html>
