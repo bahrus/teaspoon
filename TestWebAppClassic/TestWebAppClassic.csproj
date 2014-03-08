@@ -90,6 +90,7 @@
     <Content Include="iFrameTests\ParentPage.tsp.html" />
     <Content Include="Images\HelloWorld.png" />
     <None Include="linksCopy.ss" />
+    <Content Include="LazyLoadTests\LazyLoadTest1.tsp.html" />
     <Content Include="links.js" />
     <Content Include="MockData\Fathers.JSON.txt" />
     <Content Include="ModelTests\CreateCookieData.aspx" />
@@ -122,12 +123,14 @@
     <Content Include="tsp.tsp.html" />
     <Content Include="tsp_script\DBS.js" />
     <Content Include="tsp_script\DBS_cs.js" />
+    <TypeScriptCompile Include="tsp_script\DBS_ns.ts" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.css" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">
       <DependentUpon>tsp.js</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tsp_script\tsp_ss.ts" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />

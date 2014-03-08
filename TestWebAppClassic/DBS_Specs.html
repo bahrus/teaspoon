@@ -25,7 +25,10 @@
     <div id="nutshell">
         <h3>In a nutshell</h3>
         <p id="recentTrends">
-            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript, such as JQuery based frameworks, or more recently, directive based frameworks such as AngularJS or Knockout. These frameworks have largely shunted the benefits which could derive from synergies with server-side processing. Part of this trend towards pure client-side frameworks may be motivated by a desire to avoid committing to a single server-side platform, such as .net, Python, Java, etc. Another motivation is it becomes more difficult to maintain if developers need to work with two very different languages, and the question &quot;where is this content coming from?&quot; is hard to answer.</p>
+            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript, such as JQuery based frameworks, or more recently, directive based frameworks such as AngularJS or Knockout. 
+            These frameworks have largely shunted the benefits which could derive from synergies with server-side processing. 
+            Part of this trend towards pure client-side frameworks may be motivated by a desire to avoid committing to a single server-side platform, such as .net, Python, Java, etc. 
+            Another motivation is it becomes more difficult to maintain if developers need to work with two very different languages, and the question &quot;where is this content coming from?&quot; is hard to answer.</p>
         <p>
             These client-centric frameworks generate the dynamic content (or even <i>all</i> the content) on the client using JavaScript. 
             The role of the server has, in many cases, been reduced to providing dumb static file server capabilities, in conjunction with providing live JSON data feeds and a Restful API for storing changes.  
@@ -139,6 +142,15 @@
                                             one of the other three values.
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            none
+                                        </td>
+                                        <td>
+                                            DBS container will remove such tags.  It will not execute either on the server or the client.  
+                                            The purpose of such script is to provide a back-fill way of achieving similar results when no DBS container is not present.
+                                        </td>
+                                    </tr>
 				</table>
 								</td>
 				<td>client-side-only (except in case of Model script tags)</td>
@@ -202,119 +214,7 @@
 		
 		 		
 	</div>
-	<div id="modeling">
-	    <h3>Modeling</h3>
 	
-	    <p id="JSONModelObject">
-            The DBS emphasizes solutions which can work in all sorts of devices, including ones which do not support JavaScript. Relying too heavily, then, on a client-side data model, which binds to the UI via JavaScript, could detract from that goal. Nevertheless, the specification does facilitate the use of a model on the server-side, and there are many scenarios where a client-side model can <em>enhance</em> the user experience, such as for client-side paging, without rendering the page useless for simpler devices.
-            Thus, the DBS does provide a way to embed dynamic objects, as a branch in the global 'model' object, as shown below:
-	    </p> 
-	
-	
-
-<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
-<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
-<div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="8" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-model</span><span style="background:#ffffff;color:#0000ff">=&quot;[TestWebAppClassic.ProductManager, TestWebAppClassic].RetrieveProduct&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;both&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;product&quot;
-<span style="background:#ffffff;color:#ff0000">async</span>&gt;</span></li>
-<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> model = {};</span></li>
-<li>        <span style="background:#ffffff;color:#000000">model.product = { Name: </span><span style="background:#ffffff;color:#a31515">
-"Ipsum Lorem"</span><span style="background:#ffffff;color:#000000"> };</span></li>
-<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
-</ol>
-</div>
-</div>
-	
-	
-	
-	
-	    <p id="ModelScriptDummyData">
-            We shall refer to script tags with the data-model attribute as &quot;script model&quot; tags. 
-            The JavaScript code inside these script model tags will be discarded on the server side during run time in the context of a functioning DBS container. The dummy data is there for two purposes -- first, it allows prototyping in a simple file server environment to provide a rudimentary representation of how it will look with actual data. Secondly, if the developer tests out some JavaScript&nbsp; by directly embedding it in the page, then references to the model will benefit from intellisense, and basic inconsistency checks, at least in sophisticated enough IDE&#39;s.&nbsp; There is a small performance hit from including dummy data inside the script tag - the server will spend slightly more time parsing the HTML file, longer if the dummy data is extraordinarily large.
-	    </p>
-	    <p id="dataModelAttribute">
-            The key new attribute here is the <em>data-model</em> attribute.  
-            The <em>id</em> attribute is also required, because this will determine the branch name of the global model object to attach the results to. 
-            Constructing the model (or &quot;view model&quot;) data structure is one place in the application logic where we can utlize platforms other than a JavaScript runtime, if we wish.
-            The <em>data-model</em> attribute specifies a static method in a static class, with no parameters. This method may be developed in one of two language runtimes:
-                i) JavaScript, or 
-                ii) in whatever specific platform the implementation of the DBS framework is running.
-            This string identifier for a server-side method will be referred to, throughout this document, as the &quot;server-side method string&quot;.
-            The example above wraps the class identifier in brackets, which signifies to look for a class in a .net assembly (for the .net based implementation of TSP, for example).
-            No brackets would indicate to use a JavaScript call, where the JavaScript method is either embedded in the page, or exists in a referenced JS file.
-            Even if JavaScript is chosen, it will be invoked on the server side, regardless of the data-mode attribute.
-            The DBS container should provide a means for this static method to have access to a platform specific http context from which it can read any query string parameters, cookies, etc. for that request, as well as the tag from which the call was made (which may contain important data in the attributes).
-	    </p>
-        <p id="modelSerialization">
-            By default, there will be a significant difference between what the model looks like on the server vs. the client.  
-            On the server side, it will be a "live" native object, complete with method calls which may access system resources or make database connections to sensitive systems.
-            The server-side JavaScript  will be able to script against this object, as long as the object methods have simple enough parameter signatures.
-            Before the object gets to the client (if <em>data-mode</em> requires it to), it is serialized to JSON, leaving behind no methods for the client to interact with. Thus it would be quite easy to write code which works when executing on the server-side, but fails on the client-side, and vice versa. This is a significant issue, but it is pragmatic to live with this compared with at least one alternative -- 
-                &quot;dumbing down&quot; the server object, forcing the object to serialize to JSON and stripping all methods right away, even on the server, would tie the hands of the developer, and impose a significant performance penalty, all to fanatically adhere to perfect symmetry between the client and the server.
-            Nevertheless, for some application types, or data elements, it may be quite beneficial to support customizations to this default behavior, and achieve more consistency between the client and server. DBS implementors may optionally provide some experimental attributes to achieve this consistency.  
-            These options are <a href="#advancedModelFineTuning"> discussed later</a>.  
-            
-            
-        </p>
-	<p id="dataModeldataMode">
-        Like other script tags, the ones which contain the <em>data-model </em>attribute also support the <em>data-mode</em> attribute, but its meaning is a bit different here.
-        Regardless of the value of <em>data-mode</em>, the data model will be generated by the server, and will wipe away the content inside the script tag.
-        The only questions are whether 
-            1) the JSON-serialized data model needs to be downloaded to the client and 
-            2) if so, whether the download should be part of the payload of the original page, or instead should be downloaded separately from the page via a call-back ajax call.
-        This is sorted out as follows:
-	</p>
-        <ul id="dataModeldataModeScenarios">
-            <li>
-                If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side JavaScript tags.
-                However, the data will be excluded from the output sent to the client.
-            </li>
-            <li>
-                If attribute <em>data-mode</em> is 'both' (the default in this special script tag case), this will do the same as the server-side-only setting mentioned above, but it will transmit the JSON-ified data to the client. If the HTML5 attribute &#39;async&#39; is set for the script tag, however, the data which was retrieved for purposes of server side processing will be briefly cached, and instead of embedding the data in the main page payload, the client will make an AJAX request to retrieve the data and merge it into the global object<em> model </em>(and in supported browsers, the async flag will allow other processing to continue while waiting).
-                This complex sequence of events will be managed by the DBS container.
-                One other attribute comes into play when <em>data-mode</em> is &#39;both&#39;:
-                The <em>data-csFilter</em> attribute.
-                The value of such an attribute is also expected to be in the form of a server-side method string, and applies further filtering of the object derived from the data-model attribute.
-                The object the method will filter on will not, however, be the native, because filtering out sections of the native object may not be possible without inadvertently causing harm to the object or requiring objects conform to some design which allows for filtering sections out.
-                Rather, the filter method will be passed a JSON representation of the native object.  If the filter does nothing to the object, then that will be the JSON which is sent to the client.
-                This allows the server-side processing to have access to a large object containing potentially sensitive information, but to whittle down the object to a subset which is relevant and public enough that it is appropriate to send this subset down to the client.
-            </li>
-            <li>
-                If attribute <em>data-mode</em> is 'client-side-only', the data will still ultimately be retrieved by the server.
-                However, the act of retrieving the data will happen much later, and will not be made until the page is rendered by the client, which will then generate an AJAX request.
-                The AJAX request will go to the server, which will still call the static method specified by the data-model attribute and pass the JSON-serialized data back to the client, which will merge the data into the global <em>model </em>object.
-                Again, this complex sequence will be managed by the DBS container behind the scenes.
-            </li>
-            <li>
-                If attribute <em>data-mode</em> is not specified, it will default to &#39;both&#39; for script model tags.
-            </li>
-        </ul>
-	    <p id="asyncClient">
-            When data is retrieved asynchronously on the client, it will be up to the developer to ensure that any elements of the page which depend on this data, should get (re)evaluated following the retrieval of the data.
-            &nbsp;Making this easier for the developer is an area specific implementations of the DBS may add value.
-            &nbsp;The TSP framework implementation provides support for some such scenarios.
-	    </p>
-	    <p id="httpContextModel">
-            A special, reserved model can be added to the page, as follows:
-	    </p>   
-
-<div id="codeSnippet_httpContextModel" style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
-<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
-<div style="background: #fff; max-height: 300px; overflow: auto">
-<ol start="18" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
-<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-model</span><span style="background:#ffffff;color:#0000ff">=&quot;DBS.Http.GetContext&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;myContext&quot;&gt;</span></li>
-<li style="background: #f3f3f3">&nbsp;<span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
-</ol>
-</div>
-</div>
-
-        <p id="httpContextModelCont"> 
-            This special model will be provided by the DBS container, and it will generate a JSON representation of the basic request object (query string parameters, cookies, etc) in the following form:[TODO]
-            Just as with standard model script tags, this special http context model can contain sample mockup inside the script for intellisense / prototyping purposes, and additionally&nbsp; the <em>data-mode </em> attribute will follow the same standard rules for script model tags, and the <em>data-csFilter</em> will also be honored as before.
-            Other objects often associated with a web session, such as session objects or application cache, need to be exposed to the browser via custom model tags.
-        </p>
-	</div>
 	<div id="server-side-script">
 	    <h3>Server side script tags</h3>
 	    <h4>Implementation</h4>
@@ -443,10 +343,7 @@
                     &nbsp;Instead, the DBS will provide for lighter-weight, more basic approaches for coordinating events between the client and server.
                 </li>
                 <li>
-                    The DOM Tree sits in memory in the client browser for the duration of having the page loaded.
-                    &nbsp;It is tempting to consider maintaining a shadow copy of the DOM Tree in memory on the server for each user / loaded page as well, and having some process in place to keep them in sync.
-                    &nbsp;But that is not the approach recommended by the DBS.
-                    &nbsp;While specific implementations of the DBS may take advantage of caching on the server, which may resemble such a solution to a certain degree, the assumption of the DBS is that the server will utilize mostly stateless approaches as a base, and DBS will specify approaches which will work well with this approach.
+                    The DOM Tree sits in memory in the client browser for the duration of having the page loaded. &nbsp;It is tempting to consider maintaining a shadow copy of the DOM Tree in memory on the server for each user / loaded page as well, and having some process in place to keep them in sync. &nbsp;But that is not the approach recommended by the DBS. &nbsp;While specific implementations of the DBS may take advantage of caching on the server, which may resemble such a solution to a certain degree, the assumption of the DBS is that the server will utilize mostly stateless approaches as a base, and DBS will provide functionality which will work well with this approach.
                 </li>
             </ol>
         </p>      
@@ -507,6 +404,11 @@
             This same page, if served by a host which does not understand the DBS markup, would render the same exact display in the browser, but now the markup sent to the client would be identical between the client-side and server-side tags.&nbsp; It is an important design-goal for DBS that, as much as possible, the user not see a difference whether the same script is executed on the server vs. the client.&nbsp; But the observant reader may have spotted that in fact this example would actually fail the test -- in standard browers, the markup as specified would fail, because the script tag in the head is searching for a DOM element that does not yet exist.&nbsp; The virtual browser implemented by TSP does not have this limitation.&nbsp; In this case the entire DOM is first first loaded prior to the execution of the JavaScript.&nbsp; It is debatable whether this difference in behavior should be tolerated.&nbsp; At any rate, the safe thing to do is to place the JavaScript in a location so it will work im all environments. 
             (TODO:&nbsp; JQuery&#39;s ready function)
         </p>
+
+        <p id="externalReferenceJS">
+        The simple &quot;Hello, world&quot; example above used inline JavaScript to make the example simple, but any JavaScript which references external files will behave the same way. All external scripts will be loaded into memory on the server side before getting executed against the server-side DOM.
+        </p>
+
         <p id="HelloWorldDiscussion">
             In many cases we will want to expose common functions both to the server as well as the client.
             For example, we may have a function that populates a grid, and we may choose to populate the first page on the server side, but populate subsequent pages on the client side based on a cached data model.
@@ -524,16 +426,155 @@
 </ol>
 </div>
 </div>
-    <p id="externalReferenceJS">
-        The simple "Hello, world" example above used inline JavaScript to make the example simple, but any JavaScript which references external files will behave the same way.
-        All external scripts will be merged into the DOM before processing the scripts.
+
+    <p id="nonDBSContainer">
+        It is a goal of the DBS that pages rendered in a browser with JavaScript disabled should produce similar results as if they do.
+        Conversely, it is also a goal that the same page should produce similar results if JavaScript is enabled in the browser, but no DBS container is present on the server-side.
+        (If JavaScript is disabled on the browser, <em>and</em> no DBS server is there to process the JavaScript on the server, then the page will likely be dysfunctional if it depends on any JavaScript logic.)
     </p>
+    <p>    
+        In order to maintain this symmetry as much as possible, sometimes it is necessary to provide client side logic that can perform functionality which normally is best left up to the server-side DBS container. For this purpose, one can apply attribute data-mode=&#39;none&#39; to a script tag. The DBS container will simply remove all such tags during runtime, and of course if there is no DBS runtime, then the script code will execute. Removing the tags will thus mean that providing the support for non DBS containers will incur little overhead in terms of download size in a production setting.
+    </p>
+    <p>
+        If, however, some special&nbsp; client-side code needed to support non DBS containers needs to <em>intermingle</em> with&nbsp; code which needs to execute even when there is a DBS container, then that can be done via the check:
+    </p>
+
+<!--<script>
+    var hasDBSContainer = (typeof (mode) !== 'undefined');
+</script>-->
+        
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="542" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+<li style="background: #f3f3f3">    <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> hasDBSContainer = (</span><span style="background:#ffffff;color:#0000ff">typeof</span><span style="background:#ffffff;color:#000000"> (mode) !== </span><span style="background:#ffffff;color:#a31515">&#39;undefined&#39;</span><span style="background:#ffffff;color:#000000">);</span></li>
+<li><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+
+    
     </div>
+    <div id="modeling">
+	    <h3>Modeling</h3>
+	
+	    <p id="JSONModelObject">
+            The DBS emphasizes solutions which can work in all sorts of devices, including ones which do not support JavaScript. Relying too heavily, then, on a client-side data model, which binds to the UI via JavaScript, could detract from that goal. Nevertheless, the specification does facilitate the use of a model on the server-side, and there are many scenarios where a client-side model can <em>enhance</em> the user experience, such as for client-side paging, without rendering the page useless for simpler devices.
+            Thus, the DBS does provide a way to embed dynamic objects, as a branch in the global 'model' object, as shown below:
+	    </p> 
+	
+	
+
+<div style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="8" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-model</span><span style="background:#ffffff;color:#0000ff">=&quot;[TestWebAppClassic.ProductManager, TestWebAppClassic].RetrieveProduct&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-mode</span><span style="background:#ffffff;color:#0000ff">=&quot;both&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;product&quot;
+<span style="background:#ffffff;color:#ff0000">async</span>&gt;</span></li>
+<li style="background: #f3f3f3">        <span style="background:#ffffff;color:#000000"></span><span style="background:#ffffff;color:#0000ff">var</span><span style="background:#ffffff;color:#000000"> model = {};</span></li>
+<li>        <span style="background:#ffffff;color:#000000">model.product = { Name: </span><span style="background:#ffffff;color:#a31515">
+"Ipsum Lorem"</span><span style="background:#ffffff;color:#000000"> };</span></li>
+<li style="background: #f3f3f3"><span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+	
+	
+	
+	
+	    <p id="ModelScriptDummyData">
+            We shall refer to script tags with the data-model attribute as &quot;script model&quot; tags. 
+            The JavaScript code inside these script model tags will be discarded on the server side during run time in the context of a functioning DBS container. The dummy data is there for two purposes -- first, it allows prototyping in a simple file server environment to provide a rudimentary representation of how it will look with actual data. Secondly, if the developer tests out some JavaScript&nbsp; by directly embedding it in the page, then references to the model will benefit from intellisense, and basic inconsistency checks, at least in sophisticated enough IDE&#39;s.&nbsp; There is a small performance hit from including dummy data inside the script tag - the server will spend slightly more time parsing the HTML file, longer if the dummy data is extraordinarily large.
+	    </p>
+	    <p id="dataModelAttribute">
+            The key new attribute here is the <em>data-model</em> attribute.  
+            The <em>id</em> attribute is also required, because this will determine the branch name of the global model object to attach the results to. 
+            Constructing the model (or &quot;view model&quot;) data structure is one place in the application logic where we can utlize platforms other than a JavaScript runtime, if we wish.
+            The <em>data-model</em> attribute specifies a static method in a static class, with no parameters. This method may be developed in one of two language runtimes:
+                i) JavaScript, or 
+                ii) in whatever specific platform the implementation of the DBS framework is running.
+            This string identifier for a server-side method will be referred to, throughout this document, as the &quot;server-side method string&quot;.
+            The example above wraps the class identifier in brackets, which signifies to look for a class in a .net assembly (for the .net based implementation of TSP, for example).
+            No brackets would indicate to use a JavaScript call, where the JavaScript method is either embedded in the page, or exists in a referenced JS file.
+            Even if JavaScript is chosen, it will be invoked on the server side, regardless of the data-mode attribute.
+            The DBS container should provide a means for this static method to have access to a platform specific http context from which it can read any query string parameters, cookies, etc. for that request, as well as the tag from which the call was made (which may contain important data in the attributes).
+	    </p>
+        <p id="modelSerialization">
+            By default, there will be a significant difference between what the model looks like on the server vs. the client.  
+            On the server side, it will be a "live" native object, complete with method calls which may access system resources or make database connections to sensitive systems.
+            The server-side JavaScript  will be able to script against this object, as long as the object methods have simple enough parameter signatures.
+            Before the object gets to the client (if <em>data-mode</em> requires it to), it is serialized to JSON, leaving behind no methods for the client to interact with. Thus it would be quite easy to write code which works when executing on the server-side, but fails on the client-side, and vice versa. This is a significant issue, but it is pragmatic to live with this compared with at least one alternative -- 
+                &quot;dumbing down&quot; the server object, forcing the object to serialize to JSON and stripping all methods right away, even on the server, would tie the hands of the developer, and impose a significant performance penalty, all to fanatically adhere to perfect symmetry between the client and the server.
+            Nevertheless, for some application types, or data elements, it may be quite beneficial to support customizations to this default behavior, and achieve more consistency between the client and server. DBS implementors may optionally provide some experimental attributes to achieve this consistency.  
+            These options are <a href="#advancedModelFineTuning"> discussed later</a>.  
+            
+            
+        </p>
+	<p id="dataModeldataMode">
+        Like other script tags, the ones which contain the <em>data-model </em>attribute also support the <em>data-mode</em> attribute, but its meaning is a bit different here.
+        Regardless of the value of <em>data-mode</em>, the data model will be generated by the server, and will wipe away the content inside the script tag.
+        The only questions are whether 
+            1) the JSON-serialized data model needs to be downloaded to the client and 
+            2) if so, whether the download should be part of the payload of the original page, or instead should be downloaded separately from the page via a call-back ajax call.
+        This is sorted out as follows:
+	</p>
+        <ul id="dataModeldataModeScenarios">
+            <li>
+                If attribute <em>data-mode</em> is &#39;server-side-only&#39;, then the data model will be retrieved, and the data will be added to the global model object, <em>prior</em> to the processing of the other server-side JavaScript tags.
+                However, the data will be excluded from the output sent to the client.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is 'both' (the default in this special script tag case), this will do the same as the server-side-only setting mentioned above, but it will transmit the JSON-ified data to the client. If the HTML5 attribute &#39;async&#39; is set for the script tag, however, the data which was retrieved for purposes of server side processing will be briefly cached, and instead of embedding the data in the main page payload, the client will make an AJAX request to retrieve the data and merge it into the global object<em> model </em>(and in supported browsers, the async flag will allow other processing to continue while waiting).
+                This complex sequence of events will be managed by the DBS container.
+                One other attribute comes into play when <em>data-mode</em> is &#39;both&#39;:
+                The <em>data-csFilter</em> attribute.
+                The value of such an attribute is also expected to be in the form of a server-side method string, and applies further filtering of the object derived from the data-model attribute.
+                The object the method will filter on will not, however, be the native, because filtering out sections of the native object may not be possible without inadvertently causing harm to the object or requiring objects conform to some design which allows for filtering sections out.
+                Rather, the filter method will be passed a JSON representation of the native object.  If the filter does nothing to the object, then that will be the JSON which is sent to the client.
+                This allows the server-side processing to have access to a large object containing potentially sensitive information, but to whittle down the object to a subset which is relevant and public enough that it is appropriate to send this subset down to the client.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is 'client-side-only', the data will still ultimately be retrieved by the server.
+                However, the act of retrieving the data will happen much later, and will not be made until the page is rendered by the client, which will then generate an AJAX request.
+                The AJAX request will go to the server, which will still call the static method specified by the data-model attribute and pass the JSON-serialized data back to the client, which will merge the data into the global <em>model </em>object.
+                Again, this complex sequence will be managed by the DBS container behind the scenes.
+            </li>
+            <li>
+                If attribute <em>data-mode</em> is not specified, it will default to &#39;both&#39; for script model tags.
+            </li>
+        </ul>
+	    <p id="asyncClient">
+            When data is retrieved asynchronously on the client, it will be up to the developer to ensure that any elements of the page which depend on this data, should get (re)evaluated following the retrieval of the data.
+            &nbsp;Making this easier for the developer is an area specific implementations of the DBS may add value.
+            &nbsp;The TSP framework implementation provides support for some such scenarios.
+	    </p>
+	    <p id="httpContextModel">
+            A special, reserved model can be added to the page, as follows:
+	    </p>   
+
+<div id="codeSnippet_httpContextModel" style="border: #000080 1px solid; color: #000; font-family: 'Courier New', Courier, Monospace; font-size: 10pt">
+<div style="background: #000080; color: #fff; font-family: Verdana, Tahoma, Arial, sans-serif; font-weight: bold; padding: 2px 5px">Code Snippet</div>
+<div style="background: #fff; max-height: 300px; overflow: auto">
+<ol start="18" style="background: #ffffff; margin: 0; padding: 0 0 0 5px;">
+<li><span style="background:#ffffff;color:#0000ff">&lt;</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">data-model</span><span style="background:#ffffff;color:#0000ff">=&quot;DBS.Http.GetContext&quot;</span><span style="background:#ffffff;color:#000000"> </span><span style="background:#ffffff;color:#ff0000">id</span><span style="background:#ffffff;color:#0000ff">=&quot;myContext&quot;&gt;</span></li>
+<li style="background: #f3f3f3">&nbsp;<span style="background:#ffffff;color:#0000ff">&lt;/</span><span style="background:#ffffff;color:#800000">script</span><span style="background:#ffffff;color:#0000ff">&gt;</span></li>
+</ol>
+</div>
+</div>
+
+        <p id="httpContextModelCont"> 
+            This special model will be provided by the DBS container, and it will generate a JSON representation of the basic request object (query string parameters, cookies, etc) in the following form:[TODO]
+            Just as with standard model script tags, this special http context model can contain sample mockup inside the script for intellisense / prototyping purposes, and additionally&nbsp; the <em>data-mode </em> attribute will follow the same standard rules for script model tags, and the <em>data-csFilter</em> will also be honored as before.
+            Other objects often associated with a web session, such as session objects or application cache, need to be exposed to the browser via custom model tags.
+        </p>
+	</div>
     <div id="iFrame">
         <div id="serverSideIframes">
 	    <h3>Server side iFrames</h3>
             <p>
-                Most server-side template engines, such as PHP or ASP.net webforms, support some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; This is certainly the case with the DBS, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
+                Most server-side template engines, such as PHP or ASP.net webforms, support some notion of server-side includes, where content from one file can be shared or embedded inside multiple other pages.&nbsp; The DBS supports this as well, but one could argue the solution, consistent with the server-side script tag, is more elegant.&nbsp; Since on the client-side, the tag most often used to embed content from one page into another is the iframe tag, it is natural to extend the same tag to the server side:</p>
             <p>
 
 <!--<iframe src="ChildPage1.tsp.html" data-mode="server-side-only" data-selector="#div2"></iframe>-->
@@ -553,14 +594,8 @@
                 One nice benefit of reusing the iframe tag for server-side includes, is that some HTML Editors provide excellent support for iframes -- in particular previewing the content, and being able to easily navigate to the source page of the iframe to edit it via a right-click menu option..    
             </p>
             <p id="recommendFullyFormedHTML">
-                The page being referenced should consist of a fully-formed html document -- 
-                    like the script tag mentioned above, we should be able to switch the attribute between client-side-only (regular iframe) and server-side-only 
-                -- 
-                and get almost identical results from the end user point of view.
-                Thus the page should, as a matter of best practice, work as a standalone page.  
-                In general, the advantages of using client-side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts.
-                One disadvantage, though, is iframing (on the client) can impose a heavy toll on browser resources, such as memory, particularly when heavy-duty JavaScript libraries are utilized.
-                Ideally, then, we should be able to pick the optimal tier where to embed, which may depend on the type of device accessing the content, and the nature of the content.  
+                The page being referenced should consist of a fully-formed html document -- like the script tag mentioned above, we should be able to switch the attribute between client-side-only (regular iframe) and server-side-only -- and get almost identical results from the end user point of view. Thus the page should, as a matter of best practice, work as a standalone page. In general, the advantages of using client-side iframes is that it provides a simple way to allow portions of the page to process and load in parallel with other parts. Another advantage is it can allow the use of different versions of the same library, or use libraries that might conflict with those used by the parent page.&nbsp; The main disadvantages, though, are performance related - iframing (on the client) can impose a heavy toll on browser resources, such as memory, particularly when heavy-duty JavaScript libraries are utilized.
+                In addition, it adds to the number of http requests.&nbsp; Finally, it imposes a rectangular barior outside of which it is difficult to render popups without complex coordination with the parent container.&nbsp; Ideally, then, we should be able to pick the optimal tier where to embed, which may depend on the type of device accessing the content, and the nature of the content.  
                 Hence, like the script tag, the value of <em>data-mode</em> can be "depends", and some custom logic can be referenced which makes the decision, tailored to the user and the content.
             </p>
             <p id="iframeHashTag">
@@ -576,7 +611,7 @@
                 Prior to embedding the content of the page the iframe tag references, the usual DBS processing will be executed on the referenced page, most notably executing any server-side script or nested server-side iframes.
             </p>
             <p>
-                If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be embedded in different locations of the page based on the hash tag identifier.</p>
+                If a DBS document contains multiple server-side iframes linking to the same document, the container will only perform server-side processing once for the duration of the request for this document, and allow different parts of the DOM to be embedded in different locations of the page based on the data-selector attribute.</p>
             <p>
                 When embedding the content of a server-side iframe, the DBS container will ensure the uniqueness of the DOM id&#39;s by prepending any duplicate id&#39;s with the id of the containing iframe tag separated by an underscore.&nbsp; 
                 Styles containing references to these id&#39;s will also be correspondingly namespaced.
@@ -608,7 +643,7 @@
             Each data element in the declarative syntax can be considered a directive.
         </p>
         <p id="NeedForStyleAttributes">
-            The DBS, and other popular libraries, looks for custom attributes within DOM elements to define behavior..
+            Like other libraries, the DBS looks for custom attributes within DOM elements to define behavior..
             The advantage of this approach is that it is easy to associate the behavior to the element it is getting applied to.
             But these custom attributes may tend to be more repetitive in nature, sometimes quite long and detailed, and often we will see groups of attributes whose values will tend to go together according to certain patterns. 
             It is for this same reason that css selectors and style sheets were created, where multiple rules could be associated with a css selector, which would get applied to multiple elements.
@@ -840,9 +875,10 @@
 </div>
 
         <p>
-            The rules for class attributes described early apply here as well, with one key difference:  In this case the source element evaluates a script tag.  
+            The rules for class attributes described earlier apply here as well, with one key difference:  In this case the source element evaluates to a script tag.  
             In this special case, the DBS expects a list of function references, separated by semicolons and/or line breaks.  
-            The (list of) function(s) will then be applied to all the target elements in a loop.&nbsp; Thus the signature of the function should look as follows in this example:
+            The (list of) function(s) will then be applied to all the target elements in a loop.&nbsp; 
+            Thus the signature of the function should look as follows in this example:
 
         </p>
 <!--<script>

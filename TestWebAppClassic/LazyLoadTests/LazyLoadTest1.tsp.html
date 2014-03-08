@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="../Scripts/jquery-2.0.3.js"></script>
+    <script src="../tsp_script/DBS_cs.js"></script>
+    <script src="../tsp_script/DBS_ns.js" data-mode="none"></script>
+
+    <style data-attribute-link>
+        #activateAttributes {}
+        #activate {
+        }
+        
+    </style>
+    <script id="activateAttributes">
+        activate;
+    </script>
+    <script>
+
+        function activate(el) {
+            var $el = $(el);
+            $el.click(function (ev) {
+                $('#LazyLoadSection').css('display', 'block');
+            });
+            
+        }
+    </script>
+</head>
+<body>
+    <script class="activateAttributes">
+
+    </script>
+    <div id="activate">click here</div>
+
+    <div id="LazyLoadSection" data-display="lazy">I am here</div>
+</body>
+</html>

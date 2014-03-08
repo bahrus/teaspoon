@@ -203,6 +203,7 @@ module DBS.cs {
             }
         }
         configureCSForms();
+        watchForLazyLoadElements();
     }
 
     function sortFn(a: IStyleDirective, b: IStyleDirective): number {
@@ -248,5 +249,35 @@ module DBS.cs {
         }
     }
 
+    //#region LazyLoad
+    function watchForLazyLoadElements() {
+        var nds = document.querySelectorAll('.reserved_lazyLoad');
+        for (var j = 0, n = nds.length; j < n; j++) {
+            var nd = <HTMLElement> nds[j];
+            onPropChange(nd, 'style', handleStyleDisplayChangeEventForLazyLoadedElement);
+        }
+    }
+
+    export function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
+        var $el = $(el);
+        //var sNewValue = el.style.display;
+        var sNewValue = $el.css('display');
+        var sOldValue = $.data(el).dbs_display;
+        if (!sOldValue) sOldValue = 'none';
+        if (sNewValue == sOldValue) return;
+        //if (el.detachEvent) {
+        //    el.detachEvent('onpropertychange', handleOnPropertyChange);
+        //}
+        $.data(el).tsp_display = sNewValue;
+        if (!$.data(el).dbs_lazyloaded && (sNewValue !== 'none')) {
+            var content = $.trim($el.html());
+            el.insertAdjacentHTML('beforebegin', content);
+        }
+        var newElement = (<HTMLElement> el.previousSibling);
+        newElement.style.display = sNewValue;
+        newElement.id = newElement.getAttribute('data-originalID');
+        el.parentNode.removeChild(el);
+    }
+    //#endregion
 }
 window.addEventListener("load", DBS.cs.ready, false);

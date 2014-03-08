@@ -89,7 +89,9 @@
     <Compile Include="tspHandler.cs" />
     <Compile Include="tspProcessor.cs" />
     <Compile Include="tspProcessor_Form.cs" />
+    <Compile Include="tspProcessor_Lazy.cs" />
     <Compile Include="tspProcessor_Merge.cs" />
+    <Compile Include="tspProcessor_Script.cs" />
     <Compile Include="tspProcessor_style.cs" />
   </ItemGroup>
   <ItemGroup>

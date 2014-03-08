@@ -32,9 +32,12 @@ namespace tspHandler
         public const string modeParameter = "mode";
         public const string ServerSideMode = "server-side-only";
         public const string ClientSideMode = "client-side-only";
+
         public const string BothMode = "both";
         public const string HybridMode = "hybrid";
         public const string DependsMode = "depends";
+        public const string NoneMode = "none";
+
         public const string SavedIFrameDomsKey = "SavedIFrameDomsKey";
         public const string DBS_Attr = "DBS.Attr";
         
@@ -70,7 +73,7 @@ namespace tspHandler
                         {
                             return Modes.ClientSideOnly;
                         }
-                        if (string.IsNullOrEmpty(mode))
+                        //if (string.IsNullOrEmpty(mode)) redundant
                         {
                             string model = node.getAttribute(ModelAttribute);
                             return string.IsNullOrEmpty(model) ? Modes.ClientSideOnly : Modes.Both;
@@ -98,6 +101,8 @@ namespace tspHandler
                     return Modes.Hybrid;
                 case DependsMode:
                     return Modes.Depends;
+                case NoneMode:
+                    return Modes.None;
                 default:
                     throw new NotSupportedException("Mode " + mode + " not supported");
 
@@ -119,6 +124,12 @@ namespace tspHandler
                     return false;
             }
 
+        };
+
+        private static Func<HtmlNodeFacade, bool> _TestForNoSide = node =>
+        {
+            var mode = GetMode(node);
+            return mode == Modes.None;
         };
 
         private static Func<HtmlNodeFacade, bool> _TestForServerSideOnly = node =>
@@ -293,6 +304,7 @@ namespace tspHandler
             {
                 doc
                     .ProcessModelScriptTags()
+                    .ProcessLazyElements()
                     .ProcessSpecialTemplates()
                     .ProcessIFrames()
                     .ProcessServerSideScripts()
@@ -615,48 +627,7 @@ namespace tspHandler
             //return doc;
         }
 
-        public static HtmlDocumentFacade ProcessServerSideScripts(this HtmlDocumentFacade doc)
-        {
-            var serverSideScripts = doc.getElementsByTagName("script")
-                .Where(_TestForServerSide);
-            var sb = new StringBuilder();
-            //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
-            var serverSideScriptsList = serverSideScripts.ToList();
-            serverSideScriptsList.ForEach(node =>
-            {
-                string src = node.getAttribute("src");
-                if (string.IsNullOrEmpty(src))
-                {
-                    sb.AppendLine(node.innerHTML);
-                }
-                else
-                {
-                    sb.AppendLine(doc.GetHostContent(src));
-                }
-                if(!_TestForClientSide(node))
-                {
-                    node.parentNode.removeChild(node);
-                }
-            });
-            string script = sb.ToString();
-            if (script.Length > 0)
-            {
-                // Initialize a context
-                script = sb.ToString();
-                using (var engine = new V8ScriptEngine())
-                {
-                    var jqueryFacade = new JQueryFacade(doc);
-                    engine.AddHostObject("console", new Console());
-                    engine.AddHostObject("document", doc);
-                    engine.AddHostObject("jQueryServerSideFacade", jqueryFacade);
-                    engine.Execute("var " + modeParameter + "='server'");
-                    engine.AddHostObject("model", doc.ProcessContext.Model);
-                    engine.Execute(script);
-                }
-            }
-
-            return doc;
-        }
+        
 
         private static HtmlDocumentFacade ProcessServerSideIFrames(this HtmlDocumentFacade doc, List<HtmlNodeFacade> iframes)
         {
@@ -890,6 +861,7 @@ DBS.cs.mergeHybridIframe({
         Hybrid,
         Depends,
         Unspecified,
+        None,
     }
 
     public class ModelContext
