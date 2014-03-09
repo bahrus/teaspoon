@@ -51,7 +51,10 @@ namespace tspHandler
                     engine.AddHostObject("document", doc);
                     engine.AddHostObject("jQueryServerSideFacade", jqueryFacade);
                     engine.Execute("var " + modeParameter + "='server'");
-                    engine.AddHostObject("model", doc.ProcessContext.Model);
+                    if (doc.ProcessContext.Model != null)
+                    {
+                        engine.AddHostObject("model", doc.ProcessContext.Model);
+                    }
                     engine.Execute(script);
                 }
             }

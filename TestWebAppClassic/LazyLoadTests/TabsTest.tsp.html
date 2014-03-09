@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Demonstration of Lazy Loading Tabs</title>
+    <script src="../Scripts/jquery-2.0.3.js"></script>
+    <script src="../Scripts/jquery-ui-1.10.3.js"></script>
+    <script src="../tsp_script/DBS_cs.js"></script>
+    <link rel="stylesheet" type="text/css" href="../Content/themes/base/jquery-ui.css">
+    <!--<script data-mode="server-side-only">
+        var model = {};
+        model.tabsVisibility = {
+            'tab1': false,
+            'tab2': true,
+            'tab3': true,
+            isFirst: function (s) {
+                for (var i = 0; i < 3; i++) {
+                    var ithTab = 'tab' + i;
+                    if (this[ithTab]) {
+                        return s === ithTab;
+                    }
+                }
+            }
+        };
+        function enableLazyLoad(tabID) {
+            return model.tabsVisibility[tabID] && !model.tabsVisibility.isFirst(tabID);
+        }
+    </script>-->
+    
+    <style type="text/css" data-attribute-link>
+        .content {
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tabsAttributes{}
+        .tabs{}
+    </style>
+    <script>
+        function addTabsBehavior(el)
+        {
+            $(el).tabs();
+        }
+    </script>
+</head>
+    <body>
+        <script class="tabsAttributes">
+            addTabsBehavior;
+        </script>
+        <div class="tabs" style="width:100%; height:100%">
+            <ul>
+                <li class="conditional tab1"><a href="#tabs-1">Simple</a></li>
+                <li class="conditional tab2"><a href="#tabs-2">More Complex</a></li>
+                <li class="conditional tab3"><a href="#tabs-3">Most Complex</a></li>
+            </ul>
+            <div class="conditional tab1 content" id="tabs-1">
+                <iframe src="../toc.html"></iframe>
+            </div>
+            <div class="conditional tab2 content" id="tabs-2">
+                <iframe src="../toc.html"></iframe>
+            </div>
+            <div class="conditional tab3 content" id="tabs-3">
+                <iframe src="../toc.html"></iframe>
+            </div>
+        </div>
+    </body>
+</html>

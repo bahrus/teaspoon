@@ -91,6 +91,7 @@
     <Content Include="Images\HelloWorld.png" />
     <None Include="linksCopy.ss" />
     <Content Include="LazyLoadTests\LazyLoadTest1.tsp.html" />
+    <Content Include="LazyLoadTests\TabsTest.tsp.html" />
     <Content Include="links.js" />
     <Content Include="MockData\Fathers.JSON.txt" />
     <Content Include="ModelTests\CreateCookieData.aspx" />
@@ -218,7 +219,6 @@
       <DependentUpon>emmet.js</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="LazyLoadTest1.tsp.html" />
     <Content Include="Scratch.html" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
