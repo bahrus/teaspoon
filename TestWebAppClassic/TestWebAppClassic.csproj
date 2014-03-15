@@ -125,12 +125,14 @@
     <Content Include="tsp_script\DBS.js" />
     <Content Include="tsp_script\DBS_cs.js" />
     <TypeScriptCompile Include="tsp_script\DBS_ns.ts" />
+    <Content Include="tsp_script\DBS_ss.js" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.css" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">
       <DependentUpon>tsp.js</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tsp_script\DBS_ss.ts" />
     <TypeScriptCompile Include="tsp_script\tsp_ss.ts" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
@@ -261,6 +263,7 @@
       <DependentUpon>CreateCookieData.aspx</DependentUpon>
     </Compile>
     <Compile Include="ModelTests\ModelTest1.cs" />
+    <Compile Include="ModelTests\TabsVisibility.cs" />
     <Compile Include="ModelTests\TestModelCSFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetrieveProduct.cs" />
@@ -286,6 +289,7 @@
     <Content Include="tsp_script\tsp.min.js.map">
       <DependentUpon>tsp.min.js</DependentUpon>
     </Content>
+    <Content Include="tsp_script\DBS_ss.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

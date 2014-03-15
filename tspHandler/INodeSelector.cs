@@ -7,6 +7,6 @@ namespace tspHandler
 {
     public interface INodeSelector
     {
-        List<HtmlNodeFacade> querySelectorAll(string selectorText);
+        JSArrayFacade<HtmlNodeFacade> querySelectorAll(string selectorText);
     }
 }

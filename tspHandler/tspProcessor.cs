@@ -6,7 +6,6 @@ using System.Text;
 using System.Web;
 using System.Collections.Generic;
 using System.Dynamic;
-using Microsoft.ClearScript.V8;
 using Newtonsoft.Json.Linq;
 
 
@@ -78,7 +77,6 @@ namespace tspHandler
                             string model = node.getAttribute(ModelAttribute);
                             return string.IsNullOrEmpty(model) ? Modes.ClientSideOnly : Modes.Both;
                         }
-                        break;
                     case "iframe":
                         return Modes.ClientSideOnly;
                     case "style":
@@ -223,7 +221,7 @@ namespace tspHandler
         {
             #region get all form elements and display them only
             doc.body.DoForThisAndAllAncestors(nd =>{
-                switch (nd.tagName)
+                switch (nd.tagName.ToLower())
                 {
                     case "body":
                     case "form":
@@ -699,7 +697,7 @@ namespace tspHandler
                 });
                 #endregion
                 #region insert content
-                var div = doc.createElement(el.tagName);
+                var div = doc.createElement(el.tagName.ToLower());
                 foreach (var attrib in el.attributes)
                 {
                     div.setAttribute(attrib.name, attrib.value);

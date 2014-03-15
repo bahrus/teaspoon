@@ -197,8 +197,9 @@ module DBS.cs {
             var sd = scriptDirectives[i];
             var sc = sd.scriptTag.innerHTML.replace(';', '');
             var fn = eval(sc);
-            for (var j = 0, m = sd.targetElements.length; j < m; j++) {
-                var te = targetElements[j];
+            var tes = sd.targetElements;
+            for (var j = 0, m = tes.length; j < m; j++) {
+                var te = tes[j];
                 fn(te);
             }
         }

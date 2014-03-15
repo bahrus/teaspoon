@@ -66,6 +66,18 @@ namespace tspHandler
             }
         }
 
+        public JSArrayFacade<string> classList
+        {
+            get
+            {
+                string cn = this.className;
+                string[] classes = cn.Split(' ');
+                return JSArrayFacade<string>.FromArray(classes);
+            }
+        }
+    
+        
+
         public string this[string index]
         {
             get
@@ -86,9 +98,9 @@ namespace tspHandler
         public string tagName
         {
             get { 
-                return _node.Name; 
+                return _node.Name.ToUpper(); 
             }
-            set { _node.Name = value; }
+            set { _node.Name = value.ToUpper(); }
         }
 
         public string id
@@ -165,16 +177,18 @@ namespace tspHandler
             }
         }
 
-        public List<HtmlNodeFacade> querySelectorAll(string selectorText)
+        public JSArrayFacade<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
             //if (selectorText.Contains(">"))
             //{
             //    throw new Exception("querySelectorAll implementation does not currently support the > operator");
             //}
-            var returnObj = _node
+            var returnObj = new JSArrayFacade<HtmlNodeFacade>();
+            _node
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node, this._ownerDoc))
-                .ToList();
+                .ToList()
+                .ForEach(node => returnObj.Add(node));
             return returnObj;
         }
 

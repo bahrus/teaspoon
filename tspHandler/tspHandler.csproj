@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Console.cs" />
     <Compile Include="CssSelectorHelper.cs" />
+    <Compile Include="HtmlNodeListFacade.cs" />
     <Compile Include="INodeSelector.cs" />
     <Compile Include="ProcessingContext.cs" />
     <Compile Include="StyleDirective.cs" />
@@ -139,6 +140,7 @@
     <TypeScriptCompile Include="tsp_script\DBS.ts" />
     <TypeScriptCompile Include="tsp_script\DBS_cs.ts" />
     <Content Include="tsp_script\DBS.js" />
+    <Content Include="tsp_script\DBS_ss.ts" />
     <Content Include="tsp_script\tcp.js" />
     <Content Include="tsp_script\tsp.js" />
     <Content Include="tsp_script\tsp.min.js">

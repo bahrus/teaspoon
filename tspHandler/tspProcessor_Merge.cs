@@ -175,7 +175,7 @@ namespace tspHandler
             var lst = nodeHierarchy.ToList()
                 .Select(nd =>
                 {
-                    string tagSelector = nd.tagName + nd.getAttribute("xmatch");
+                    string tagSelector = nd.tagName.ToLower() + nd.getAttribute("xmatch");
                     return tagSelector;
                 });
               return string.Join(">", lst.Reverse().ToArray());

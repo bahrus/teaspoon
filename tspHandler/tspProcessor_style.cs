@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClassGenMacros;
+using HtmlAgilityPack;
 
 namespace tspHandler
 {
@@ -93,9 +94,15 @@ namespace tspHandler
                         bool serversideOnly = (_TestForServerSideOnly(srcElement));
                         bool clientsideOnly = (_TestForClientSideOnly(srcElement));
                         if (clientsideOnly) continue;
+                        string scriptToExecute = null;
+                        if (srcElement.tagName == "SCRIPT")
+                        {
+                            scriptToExecute = srcElement.innerHTML.RemoveWhitespace().Trim(';');
+                        }
                         var attribs = srcElement.attributes;
                         foreach (var targetElement in targetElements)
                         {
+                            if(scriptToExecute!=null ) targetElement.setAttribute("data-dbs-onload", scriptToExecute);
                             AttributeChanges attributeChanges = null;
                             string elId = pc.GetOrCreateID(targetElement); //need elements to have id for client side linkage among other things
                             if (serversideOnly)
@@ -145,6 +152,8 @@ namespace tspHandler
                     }
                 }
             }
+
+
             return doc;
             
             //styleDirectiveRules.Sort();
@@ -204,7 +213,17 @@ namespace tspHandler
             }
             return doc;
         }
-    
+
+        //public class ScriptDirective
+        //{
+        //    public HtmlNodeFacade scriptTag { get; set; }
+        //    public List<HtmlNodeFacade> targetElements { get; set; }
+
+        //    public ScriptDirective()
+        //    {
+        //        this.targetElements = new List<HtmlNodeFacade>();
+        //    }
         
+        //}
     }
 }
