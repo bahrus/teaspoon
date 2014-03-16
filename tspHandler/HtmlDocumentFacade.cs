@@ -195,20 +195,11 @@ namespace tspHandler
 
         public JSArrayFacade<HtmlNodeFacade> querySelectorAll(string selectorText)
         {
-            //if (selectorText.Contains(">"))
-            //{
-            //    throw new Exception("querySelectorAll implementation does not currently support the > operator");
-            //}
-            
-            var returnObj = new JSArrayFacade<HtmlNodeFacade>();
-            _htmlDoc.DocumentNode
+            var nodes =  _htmlDoc.DocumentNode
                 .QuerySelectorAll(selectorText)
                 .Select(node => new HtmlNodeFacade(node, this))
-                .ToList()
-                .ForEach(node => returnObj.Add(node))
             ;
-            
-            return returnObj;
+            return JSArrayFacade<HtmlNodeFacade>.FromArray(nodes.ToArray());
         }
 
         private StyleSheet[] _styleSheets;
@@ -249,23 +240,44 @@ namespace tspHandler
         {
             var lines = CurlyBraceParser.Parser.Parse(cssContent);
             var list = new List<CssRule>();
-            var rules = lines.Where(line =>
+            var openBraceRules = lines.Where(line =>
             {
                 var openStatement = line as OpenBraceStatement;
-                return openStatement != null;
+                if(openStatement != null) return true;
+                var liveStatement = line as LiveStatement;
+                if (liveStatement == null) return false;
+                string frontTrimmed = liveStatement.FrontTrimmedLiveStatement.TrimEnd();
+                return frontTrimmed.Contains("{") && frontTrimmed.EndsWith("}");
             })
-            .Select(line => line as OpenBraceStatement)
-            .Select(obs => {
-                string selectorText =  obs.FrontTrimmedLiveStatement.SubstringBeforeLast("{").Trim();
-                return new CssRule
+            .Select(line => {
+                var obs = line as OpenBraceStatement;
+                if(obs !=null){
+                    string selectorText =  obs.FrontTrimmedLiveStatement.SubstringBeforeLast("{").Trim();
+                    return new CssRule
+                    {
+                        selectorText = selectorText,
+                        style = processStyle(obs.Children),
+                    };
+                }
+                else
                 {
-                    selectorText = selectorText,
-                    style = processStyle(obs.Children),
-                };
+                    var liveStatement = line as LiveStatement;
+                    string frontTrimmed = liveStatement.FrontTrimmedLiveStatement.TrimEnd();
+                    string selectorText = frontTrimmed.SubstringBefore("{").Trim();
+                    string rulesText = frontTrimmed.SubstringAfter("{").SubstringBeforeLast("}");
+                    var ruleTokens = new Dictionary<string, string>();
+                    processLine(rulesText, ruleTokens);
+                    return new CssRule
+                    {
+                        selectorText = selectorText,
+                        style = ruleTokens,
+                    };
+                }
             });
+            
             return new StyleSheet
             {
-                rules = rules.ToArray(),
+                rules = openBraceRules.ToArray(),
             };
         }
 
@@ -279,13 +291,18 @@ namespace tspHandler
                 var liveStatement = child as LiveStatement;
                 if (liveStatement == null) return;
                 string str = liveStatement.FrontTrimmedLiveStatement;
-                if (!str.Contains(":")) return;
-                var keyValue = str.SplitFirst(":");
-                string key = keyValue[0].Trim();
-                string val = keyValue[1].SubstringBeforeLast(";").Trim();
-                returnObj[key] = val;
+                processLine(str, returnObj);
             });
             return returnObj;
+        }
+
+        private static void processLine(string str, Dictionary<string, string> returnObj)
+        {
+            if (!str.Contains(":")) return;
+            var keyValue = str.SplitFirst(":");
+            string key = keyValue[0].Trim();
+            string val = keyValue[1].SubstringBeforeLast(";").Trim();
+            returnObj[key] = val;
         }
     }
 

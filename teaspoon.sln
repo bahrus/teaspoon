@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurlyBraceParser", "CurlyBraceParser\CurlyBraceParser.csproj", "{04CF9C5C-172C-4A5A-8629-627F703F8D5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenMacros", "ClassGenMacros\ClassGenMacros.csproj", "{ACADE0C9-F545-4648-8359-506F3D5FA416}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICurlyBraceParser", "ICurlyBraceParser\ICurlyBraceParser.csproj", "{B65498D1-DDBF-49BC-99CF-FB807D18C186}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F8598F7-6691-4A8E-86E9-93E2115C0A14}"
@@ -28,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5F8598
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITestWebAppClassic", "ITestWebAppClassic\ITestWebAppClassic.csproj", "{BAAE5E90-332C-41E8-A21A-E9A25682C396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenMacros", "ClassGenMacros\ClassGenMacros.csproj", "{ACADE0C9-F545-4648-8359-506F3D5FA416}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04CF9C5C-172C-4A5A-8629-627F703F8D5E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B65498D1-DDBF-49BC-99CF-FB807D18C186}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,11 +55,12 @@ Global
 		{BAAE5E90-332C-41E8-A21A-E9A25682C396}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAAE5E90-332C-41E8-A21A-E9A25682C396}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAAE5E90-332C-41E8-A21A-E9A25682C396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACADE0C9-F545-4648-8359-506F3D5FA416}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{ACADE0C9-F545-4648-8359-506F3D5FA416} = {D812289F-30FB-4F43-93DC-952F4E54E77E}
 	EndGlobalSection
 EndGlobal

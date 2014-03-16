@@ -10,29 +10,15 @@
     <script data-mode="both" data-model="[TestWebAppClassic.ModelTests.TabsVisibility, TestWebAppClassic].GetTabsVisibility" id="tabsVisibility">
         var model = {};
         model.tabsVisibility = {
-            'tab1': false,
-            'tab2': true,
-            'tab3': true,
-            isFirst: function (s) {
-                for (var i = 0; i < 3; i++) {
-                    var ithTab = 'tab' + i;
-                    if (this[ithTab]) {
-                        return s === ithTab;
-                    }
-                }
-            },
-            checkRemove: function (s) { }
+            checkRemove: function (s) {
+                return false;
+            }
         };
-        //function enableLazyLoad(tabID) {
-        //    return model.tabsVisibility[tabID] && !model.tabsVisibility.isFirst(tabID);
-        //}
-
     </script>
 
     
     <script data-mode="server-side-only">
         function checkVis(el) {
-            console.log('i am here');
             var cns = el.classList;
             for (var i = 0, n = cns.length; i < n; i++) {
                 var cn = cns[i];
@@ -61,11 +47,8 @@
         .tabsAttributes{}
         .tabs{}
 
-        .conditionalAttributes {
-        }
-
-        .conditional {
-        }
+        .conditionalAttributes {}
+        .conditional {}
 
         
     </style>
@@ -91,7 +74,7 @@
                 <li class="conditional tab2"><a href="#tabs-2">Slick Grid</a></li>
                 <li class="conditional tab3"><a href="#tabs-3">IFrameTest</a></li>
             </ul>
-            <div class="conditional tab1 content" id="tabs-1">
+            <div class="conditional tab1 content" id="tabs-1" >
                 <!--<iframe src="../toc.html"></iframe>-->
             </div>
             <div class="conditional tab2 content" id="tabs-2">

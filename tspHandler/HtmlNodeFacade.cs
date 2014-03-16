@@ -183,13 +183,10 @@ namespace tspHandler
             //{
             //    throw new Exception("querySelectorAll implementation does not currently support the > operator");
             //}
-            var returnObj = new JSArrayFacade<HtmlNodeFacade>();
-            _node
+            var nodes = _node
                 .QuerySelectorAll(selectorText)
-                .Select(node => new HtmlNodeFacade(node, this._ownerDoc))
-                .ToList()
-                .ForEach(node => returnObj.Add(node));
-            return returnObj;
+                .Select(node => new HtmlNodeFacade(node, this._ownerDoc));
+            return JSArrayFacade<HtmlNodeFacade>.FromArray(nodes.ToArray());
         }
 
         public string getAttribute(string key)
