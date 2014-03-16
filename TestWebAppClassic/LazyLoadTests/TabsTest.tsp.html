@@ -41,22 +41,21 @@
 
         
     </style>
-    <script>
-        function addTabsBehavior(el)
-        {
-            $(el).tabs();
-        }
-    </script>
+    
     
     
 </head>
     <body>
-        <script class="tabsAttributes">
+        <!--<script class="tabsAttributes">
             addTabsBehavior;
-        </script>
-        <!--<script class="conditionalAttributes" data-mode="server-side-only">
-            checkVis;
         </script>-->
+
+        <script class="tabsAttributes">
+            function addTabsBehavior(el) {
+                $(el).tabs();
+            }
+        </script>
+        
         <script data-mode="server-side-only" class="conditionalAttributes">
             function checkVis(el) {
                 var cns = el.classList;

@@ -193,10 +193,20 @@ module DBS.cs {
                 }
             }
         }
+        var fn;
         for (var i = 0, n = scriptDirectives.length; i < n; i++) {
             var sd = scriptDirectives[i];
-            var sc = sd.scriptTag.innerHTML.replace(';', '');
-            var fn = eval(sc);
+            var ih = sd.scriptTag.innerHTML;
+            var search = 'function ';
+            var iPosOfFun = ih.indexOf(search);
+            if (iPosOfFun > -1) {
+                var iPosOfParen = ih.indexOf('(');
+                var sc = ih.substring(iPosOfFun + search.length, iPosOfParen);
+                fn = eval(sc);
+            } else {
+                var sc = sd.scriptTag.innerHTML.replace(';', '');
+                fn = eval(sc);
+            }
             var tes = sd.targetElements;
             for (var j = 0, m = tes.length; j < m; j++) {
                 var te = tes[j];
