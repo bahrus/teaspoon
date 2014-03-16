@@ -281,6 +281,34 @@ namespace tspHandler
             };
         }
 
+        public static ScriptTag processJSTag(string content)
+        {
+            var lines = CurlyBraceParser.Parser.Parse(content);
+            var openBraceFns = lines.Where(line =>
+            {
+                var openStatement = line as OpenBraceStatement;
+                return openStatement != null && openStatement.FrontTrimmedLiveStatement.StartsWith("function ");
+            })
+            .Select(line =>
+            {
+                var openStatement = line as OpenBraceStatement;
+                string functionSignature = openStatement.FrontTrimmedLiveStatement.SubstringBefore("{").Trim().SubstringAfter("function ");
+                string functionName = functionSignature.SubstringBefore("(").Trim();
+                string parameterNames = functionSignature.SubstringBetween("(").And(")");
+                string[] paramNamesArr = parameterNames.RemoveWhitespace().Split(',');
+                return new JSFunction
+                {
+                    Name = functionName,
+                    Params = paramNamesArr,
+                };
+            })
+            ;
+            return new ScriptTag
+            {
+                Functions = openBraceFns.ToArray(),
+            };
+        }
+
         private static Dictionary<string, string> processStyle(List<ILine> Children)
         {
             if (Children == null) return null;

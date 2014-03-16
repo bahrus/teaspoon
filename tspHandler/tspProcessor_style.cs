@@ -97,7 +97,21 @@ namespace tspHandler
                         string scriptToExecute = null;
                         if (srcElement.tagName == "SCRIPT")
                         {
-                            scriptToExecute = srcElement.innerHTML.RemoveWhitespace().Trim(';');
+                            string innerHTML = srcElement.innerHTML.Trim();
+                            if (innerHTML.Contains("function "))
+                            {
+                                var scriptTag = HtmlDocumentFacade.processJSTag(innerHTML);
+                                var fns = scriptTag.Functions
+                                    .Where(fn => fn.Params.Length == 1)
+                                    .Select(fn => fn.Name)
+                                ;
+                                scriptToExecute = string.Join(";", fns.ToArray());
+                            }
+                            else
+                            {
+                                scriptToExecute = innerHTML.RemoveWhitespace().Trim(';');
+                            }
+                            
                         }
                         var attribs = srcElement.attributes;
                         foreach (var targetElement in targetElements)
@@ -179,6 +193,8 @@ namespace tspHandler
             //}
             //return doc;
         }
+
+        
 
         public static HtmlDocumentFacade RemoveServerSideOnlyCSSAttributes(this HtmlDocumentFacade doc)
         {

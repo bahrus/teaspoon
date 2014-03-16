@@ -76,6 +76,7 @@
     <Compile Include="JSArrayFacade.cs" />
     <Compile Include="INodeSelector.cs" />
     <Compile Include="ProcessingContext.cs" />
+    <Compile Include="ScriptTag.cs" />
     <Compile Include="StyleDirective.cs" />
     <Compile Include="tspModelHandler.cs" />
     <Compile Include="Context.cs" />
