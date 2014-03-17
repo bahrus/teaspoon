@@ -46,9 +46,7 @@
     
 </head>
     <body>
-        <!--<script class="tabsAttributes">
-            addTabsBehavior;
-        </script>-->
+        
 
         <script class="tabsAttributes">
             function addTabsBehavior(el) {
@@ -57,13 +55,27 @@
         </script>
         
         <script data-mode="server-side-only" class="conditionalAttributes">
+            var bpassedFirst = false;
+
             function checkVis(el) {
                 var cns = el.classList;
+                var bRemoved = false;
                 for (var i = 0, n = cns.length; i < n; i++) {
                     var cn = cns[i];
                     if (model.tabsVisibility.checkRemove(cn)) {
                         el.parentNode.removeChild(el);
+                        bRemoved = true;
                         break;
+                    
+                    }
+                }
+                if (!bRemoved) {
+                    if (el.tagName == 'DIV') {
+                        if (bpassedFirst) {
+                            el.setAttribute('data-display', 'lazy');
+                        } else {
+                            bpassedFirst = true;
+                        }
                     }
                 }
             }
@@ -74,14 +86,14 @@
                 <li class="conditional tab2"><a href="#tabs-2">Slick Grid</a></li>
                 <li class="conditional tab3"><a href="#tabs-3">IFrameTest</a></li>
             </ul>
-            <div class="conditional tab1 content" id="tabs-1" >
-                <!--<iframe src="../toc.html"></iframe>-->
+            <div class="conditional tab1 content" id="tabs-1">
+                <iframe src="../toc.html"></iframe>
             </div>
             <div class="conditional tab2 content" id="tabs-2">
-                <!--<iframe src="../FormsTests/ClientSideWithAction.html"></iframe>-->
+                <iframe src="../FormsTests/ClientSideWithAction.html"></iframe>
             </div>
             <div class="conditional tab3 content" id="tabs-3">
-                <!--<iframe src="../iFrameTests/ParentPage.tsp.html"></iframe>-->
+                <iframe src="../iFrameTests/ParentPage.tsp.html"></iframe>
             </div>
         </div>
         

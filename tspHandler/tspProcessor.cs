@@ -302,10 +302,10 @@ namespace tspHandler
             {
                 doc
                     .ProcessModelScriptTags()
-                    .ProcessLazyElements()
                     .ProcessSpecialTemplates()
                     .ProcessIFrames()
                     .ProcessServerSideScripts()
+                    .ProcessLazyElements()
                     .PostProcessModel()
                     .RemoveServerSideOnlyCSSAttributes()
                 ;
