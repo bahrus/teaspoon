@@ -235,38 +235,53 @@ module DBS.cs {
         return -1;
     }
 
-    function configureCSForms(selectableNode: NodeSelector) {
-        var frms = selectableNode.querySelectorAll('form[data-mode="client-side-only"]');
-        for (var i = 0, n = frms.length; i < n; i++) {
-            var $frm = $(frms[i]);
+    function configureCSForm(frm: HTMLFormElement) {
+        var $frm = $(frm);
 
-            $frm.submit(function(event) {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: $(this).serialize() + '&tsp-src=ajaxForm',
-                    dataType: $(this).attr('data-type') ? $(this).attr('data-type') : 'html',
-                    beforeSend: function(settings: JQueryAjaxSettings) {
-                        settings['$frm'] = $frm;
-                    },
-                    success: (data: any) => {
-                        if (typeof (data) == 'object') {
-                            $frm.children()
-                                //.filter((el: HTMLElement)=> el['render'])
-                                .each((it: number, el: HTMLElement) => {
+        $frm.submit(function (event) {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize() + '&tsp-src=ajaxForm',
+                dataType: $(this).attr('data-type') ? $(this).attr('data-type') : 'html',
+                beforeSend: function (settings: JQueryAjaxSettings) {
+                    settings['$frm'] = $frm;
+                },
+                success: (data: any) => {
+                    if (typeof (data) == 'object') {
+                        $frm.children()
+                        //.filter((el: HTMLElement)=> el['render'])
+                            .each((it: number, el: HTMLElement) => {
                                 if (el['render']) {
                                     var ren = <IRender> el;
                                     ren.render(el, data);
                                 }
                             });
-                        }
                     }
-                });
-                event.preventDefault();
+                }
             });
-            if ($frm.attr('data-submit-on') === 'load') {
-                $frm.submit();
-            }
+            event.preventDefault();
+        });
+        if ($frm.attr('data-submit-on') === 'load') {
+            $frm.submit();
+        }
+
+    }
+
+    function configureCSForms(selectableNode: NodeSelector) {
+        var frms: NodeList;
+        if (selectableNode['tagName'] == 'FORM') {
+            var frm2 = <HTMLFormElement> selectableNode;
+            if (frm2.getAttribute('data-mode') == 'client-side-only') {
+                configureCSForm(frm2);
+
+            } 
+            return;
+        } else {
+            frms = selectableNode.querySelectorAll('form[data-mode="client-side-only"]');
+        }
+        for (var i = 0, n = frms.length; i < n; i++) {
+            configureCSForm(<HTMLFormElement> frms[i]);
         }
     }
 
@@ -280,7 +295,6 @@ module DBS.cs {
     }
 
     export function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
-        debugger;
         var $el = $(el);
         //var sNewValue = el.style.display;
         var sNewValue = $el.css('display');
