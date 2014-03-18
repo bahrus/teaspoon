@@ -90,6 +90,7 @@
     <Content Include="iFrameTests\ParentPage.tsp.html" />
     <Content Include="Images\HelloWorld.png" />
     <None Include="linksCopy.ss" />
+    <Content Include="LazyLoadTests\FormsTest.tsp.html" />
     <Content Include="LazyLoadTests\LazyLoadTest1.tsp.html" />
     <Content Include="LazyLoadTests\TabsTest.tsp.html" />
     <Content Include="links.js" />
@@ -139,7 +140,6 @@
     <Content Include="v8-x64.dll" />
     <Content Include="v8-x64.pdb" />
     <Content Include="WebForm1.aspx" />
-    <TypeScriptCompile Include="file1.ts" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -211,9 +211,6 @@
     <Content Include="dynatree\jquery.js" />
     <Content Include="dynatree\jquery.min.js" />
     <Content Include="dynatree\README.txt" />
-    <Content Include="file1.min.js">
-      <DependentUpon>file1.ts</DependentUpon>
-    </Content>
     <Content Include="toc.html" />
     <Content Include="Emmet\.DS_Store" />
     <Content Include="Emmet\README.md" />

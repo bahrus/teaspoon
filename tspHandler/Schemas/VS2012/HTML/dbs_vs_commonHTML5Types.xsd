@@ -20,6 +20,7 @@
     <xsd:attribute name="data-xmerge-InsertAfter" xdt:Transform="Insert"/>
     <xsd:attribute name="data-xmerge-InsertBefore" xdt:Transform="Insert"/>
     <xsd:attribute name="data-xmatch" xdt:Transform="Insert"/>
+    <xsd:attribute name="data-display" type="displayModes" xdt:Transform="Insert"/>
   </xsd:attributeGroup>
 
   <xsd:simpleType name="metaNameType" xdt:Locator="Match(name)">
@@ -31,4 +32,11 @@
       </xsd:simpleType>
     </xsd:union>
   </xsd:simpleType>
+
+  <xsd:simpleType name="displayModes" xdt:Transform="Insert">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="lazy" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  
 </xsd:schema>

@@ -178,6 +178,7 @@
 		<xsd:attribute name="data-xmerge-InsertAfter"/>
 		<xsd:attribute name="data-xmerge-InsertBefore"/>
 		<xsd:attribute name="data-xmatch"/>
+		<xsd:attribute name="data-display" type="displayModes"/>
 	</xsd:attributeGroup>
 
 	<xsd:attributeGroup name="microdataAttributeGroup">
@@ -911,6 +912,11 @@
 				<xsd:restriction base="xsd:string" />
 			</xsd:simpleType>
 		</xsd:union>
+	</xsd:simpleType>
+	<xsd:simpleType name="displayModes">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="lazy"/>
+		</xsd:restriction>
 	</xsd:simpleType>
 
 </xsd:schema>

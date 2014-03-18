@@ -21,11 +21,14 @@
   <xsd:element name="form" vs:disallowedancestor="form"  xdt:Locator="Match(name)">
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+      <xsd:attribute name="data-type" type="dataTypes" xdt:Transform="Insert"/>
+      <xsd:attribute name="data-submit-on" type="submitOn" xdt:Transform="Insert"/>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="iframe" vs:disallowedancestor="button" xdt:Locator="Match(name)">
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
+      <xsd:attribute name="data-model" type="xsd:string" xdt:Transform="Insert"/>
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="input" vs:disallowedancestor="button" xdt:Locator="Match(name)">
@@ -43,27 +46,13 @@
   <xsd:element name="script" xdt:Locator="Match(name)">
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
-      <xsd:attribute name="data-js-compiler" vs:readonly="true" xdt:Transform="Insert">
-        <xsd:simpleType>
-          <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="tsp.script-rules"/>
-            <xsd:enumeration value="tsp.event-handlers"/>
-          </xsd:restriction>
-        </xsd:simpleType>
-      </xsd:attribute>
+   
     </xsd:complexType>
   </xsd:element>
   <xsd:element name="style" xdt:Locator="Match(name)">
     <xsd:complexType mixed="true">
       <xsd:attribute name="data-mode" vs:readonly="true" type="modes" xdt:Transform="Insert"/>
-      <xsd:attribute name="data-js-compiler" vs:readonly="true" xdt:Transform="Insert">
-        <xsd:simpleType>
-          <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="tsp.script-rules"/>
-            <xsd:enumeration value="tsp.event-handlers"/>
-          </xsd:restriction>
-        </xsd:simpleType>
-      </xsd:attribute>
+      <xsd:attribute name="data-attribute-link" type="xsd:string" xdt:Transform="Insert"/>
     </xsd:complexType>
   </xsd:element>
   <xsd:simpleType name="modes" xdt:Transform="Insert">
@@ -72,6 +61,21 @@
       <xsd:enumeration value="client-side-only" />
       <xsd:enumeration value="both" />
       <xsd:enumeration value="design-time-only"/>
+      <xsd:enumeration value="none"/>
+      <xsd:enumeration value="hybrid"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="dataTypes" xdt:Transform="Insert">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="json"/>
+      <xsd:enumeration value="html"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="submitOn" xdt:Transform="Insert">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="load"/>
+      <xsd:enumeration value="change"/>
+      <xsd:enumeration value="load|change"/>
     </xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>

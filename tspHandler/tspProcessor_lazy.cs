@@ -22,7 +22,8 @@ namespace tspHandler
                 ndHidden.setAttribute("type", "text/html");
                 ndHidden.addClass(reserved_lazyLoad);
                 var inserted = el.parentNode.insertBefore(ndHidden, el);
-                inserted.appendChild(el);
+                inserted.innerHTML = el.outerHTML;
+                el.delete();
             });
             return doc;
         }

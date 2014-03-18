@@ -431,14 +431,7 @@
 			<xsd:attribute name="media" type="mediaType" default="screen" />
 			<xsd:attribute name="scoped" vs:standalone="true" />
 			<xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
-			<xsd:attribute name="data-js-compiler" vs:readonly="true">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="tsp.script-rules"/>
-						<xsd:enumeration value="tsp.event-handlers"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:attribute>
+			<xsd:attribute name="data-attribute-link" type="xsd:string"/>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -453,14 +446,6 @@
 			<xsd:attribute name="defer" vs:standalone="true" />
 			<xsd:attribute name="async" vs:standalone="true" />
 			<xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
-			<xsd:attribute name="data-js-compiler" vs:readonly="true">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="tsp.script-rules"/>
-						<xsd:enumeration value="tsp.event-handlers"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -811,6 +796,7 @@
 			<xsd:attribute name="width" type="xsd:nonNegativeInteger" />
 			<xsd:attribute name="height" type="xsd:nonNegativeInteger" />
 			<xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
+			<xsd:attribute name="data-model" type="xsd:string"/>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -993,6 +979,8 @@
 			<xsd:attribute name="novalidate" type="formNovalidateType" vs:standalone="true" />
 			<xsd:attribute name="target" type="browsingContext" />
 			<xsd:attribute name="data-mode" vs:readonly="true" type="modes"/>
+			<xsd:attribute name="data-type" type="dataTypes"/>
+			<xsd:attribute name="data-submit-on" type="submitOn"/>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -1353,6 +1341,21 @@
 			<xsd:enumeration value="client-side-only"/>
 			<xsd:enumeration value="both"/>
 			<xsd:enumeration value="design-time-only"/>
+			<xsd:enumeration value="none"/>
+			<xsd:enumeration value="hybrid"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dataTypes">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="json"/>
+			<xsd:enumeration value="html"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="submitOn">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="load"/>
+			<xsd:enumeration value="change"/>
+			<xsd:enumeration value="load|change"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 

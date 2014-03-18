@@ -52,6 +52,7 @@ namespace tspHandler
             this.Trace("createHTMLDocument");
             _htmlDoc = new HtmlDocument();
             HtmlNode.ElementsFlags.Remove("option");
+            HtmlNode.ElementsFlags.Remove("form");
             string content = host.GetContentOfDocument();
             _htmlDoc.LoadHtml(content);
             this.Trace("endCreateHTMLDocument");

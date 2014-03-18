@@ -101,13 +101,12 @@ module DBS.cs {
         return regExp.exec(input).length;
     }
 
-    export function ready() {
-        window.removeEventListener('load', ready);
+    function applyDirectives(selectableNode: NodeSelector) {
         var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
         var docOrder = 0;
         var directives: IStyleDirective[] = [];
         var scriptDirectives: IScriptDirective[] = [];
-        for (var i = 0, n = attributeLinkStyles.length; i < n; i++){
+        for (var i = 0, n = attributeLinkStyles.length; i < n; i++) {
             //#region analyze style tag
             var attribeLinkStyleNode = <HTMLStyleElement> attributeLinkStyles[i];
             var attributeLink = attribeLinkStyleNode.getAttribute('data-attribute-link');
@@ -118,7 +117,7 @@ module DBS.cs {
             for (var j = 0, m = styleSheet.length; j < m; j++) {
                 //#region analyze style
                 var rule = <CSSRule> styleSheet[j];
-                var styleDirective : IStyleDirective = {
+                var styleDirective: IStyleDirective = {
                     CSSRule: rule,
                     DocOrder: docOrder++,
                     //Node = attribeLinkStyleNode,
@@ -127,7 +126,7 @@ module DBS.cs {
                     attributeClasses.push(styleDirective);
                 }
                 else {
-                    
+
                     if (attributeClasses.length > 0) {
                         directives.push(styleDirective);
                         styleDirective.AttributeDirectives = attributeClasses;
@@ -142,7 +141,7 @@ module DBS.cs {
         for (var i = 0, n = sortedDirectives.length; i < n; i++) {
             var cssRule = sortedDirectives[i];
             var sortedAttributeChanges = cssRule.AttributeDirectives.sort(sortFn);
-            var targetElements = document.querySelectorAll(cssRule.CSSRule['selectorText']);
+            var targetElements = selectableNode.querySelectorAll(cssRule.CSSRule['selectorText']);
             for (var j = 0, m = targetElements.length; j < m; j++) {
                 for (var k = 0, l = sortedAttributeChanges.length; k < l; k++) {
                     var attributeDir = sortedAttributeChanges[k];
@@ -158,8 +157,8 @@ module DBS.cs {
                             };
                             scriptDirectives.push(sd);
                         }
-                        
-                        
+
+
                         var attribs = srcElement.attributes;
                         for (var j1 = 0, m1 = targetElements.length; j1 < m1; j1++) {
                             var targetElement = <HTMLElement> targetElements[j1];
@@ -185,7 +184,7 @@ module DBS.cs {
                                     default:
                                         targetElement.setAttribute(nm, attrib.value);
                                         break;
- 
+
                                 }
                             }
                         }
@@ -213,8 +212,19 @@ module DBS.cs {
                 fn(te);
             }
         }
-        configureCSForms();
-        watchForLazyLoadElements();
+
+    }
+
+    export function ready() {
+        window.removeEventListener('load', ready);
+        applyDBS(document);
+        
+    }
+
+    function applyDBS(selectableNode: NodeSelector) {
+        applyDirectives(selectableNode);
+        configureCSForms(selectableNode);
+        watchForLazyLoadElements(selectableNode);
     }
 
     function sortFn(a: IStyleDirective, b: IStyleDirective): number {
@@ -225,8 +235,8 @@ module DBS.cs {
         return -1;
     }
 
-    function configureCSForms() {
-        var frms = document.querySelectorAll('form[data-mode="client-side-only"]');
+    function configureCSForms(selectableNode: NodeSelector) {
+        var frms = selectableNode.querySelectorAll('form[data-mode="client-side-only"]');
         for (var i = 0, n = frms.length; i < n; i++) {
             var $frm = $(frms[i]);
 
@@ -261,8 +271,8 @@ module DBS.cs {
     }
 
     //#region LazyLoad
-    function watchForLazyLoadElements() {
-        var nds = document.querySelectorAll('.reserved_lazyLoad');
+    function watchForLazyLoadElements(selectableNode: NodeSelector) {
+        var nds = selectableNode.querySelectorAll('.reserved_lazyLoad');
         for (var j = 0, n = nds.length; j < n; j++) {
             var nd = <HTMLElement> nds[j];
             onPropChange(nd, 'style', handleStyleDisplayChangeEventForLazyLoadedElement);
@@ -270,6 +280,7 @@ module DBS.cs {
     }
 
     export function handleStyleDisplayChangeEventForLazyLoadedElement(el: HTMLElement) {
+        debugger;
         var $el = $(el);
         //var sNewValue = el.style.display;
         var sNewValue = $el.css('display');
@@ -287,6 +298,7 @@ module DBS.cs {
         var newElement = (<HTMLElement> el.previousSibling);
         newElement.style.display = sNewValue;
         newElement.id = newElement.getAttribute('data-originalID');
+        applyDBS(newElement);
         el.parentNode.removeChild(el);
     }
     //#endregion

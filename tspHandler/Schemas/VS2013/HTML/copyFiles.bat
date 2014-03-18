@@ -1,0 +1,2 @@
+copy commonHTML5Types.xsd "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\schemas\html\commonHTML5Types.xsd"
+copy HTML_5.xsd "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\schemas\html\HTML_5.xsd"
