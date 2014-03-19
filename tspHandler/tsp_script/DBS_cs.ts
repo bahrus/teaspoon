@@ -1,4 +1,5 @@
 ///<reference path='DBS.ts'/>
+///<reference path='DBS_b.ts'/>
 ///<reference path='../Scripts/typings/jquery/jquery.d.ts'/>
 
 module DBS.cs {
@@ -222,6 +223,7 @@ module DBS.cs {
     }
 
     function applyDBS(selectableNode: NodeSelector) {
+        DBS.b.applyEmmet(selectableNode);
         applyDirectives(selectableNode);
         configureCSForms(selectableNode);
         watchForLazyLoadElements(selectableNode);

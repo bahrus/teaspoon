@@ -1,3 +1,5 @@
+///<reference path='DBS_b.ts'/>
+
 module DBS.ss {
 
     export function ready() {
@@ -15,6 +17,7 @@ module DBS.ss {
                 fn(dbsOnloadEl);
             }
         }
+        DBS.b.applyEmmet(document);
     }
 
 }

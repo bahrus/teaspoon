@@ -19,7 +19,9 @@ namespace tspHandler
                 node.parentNode.removeChild(node);
             });
             var serverSideScripts = scripts
-                .Where(_TestForServerSide);
+                .Where(_TestForServerSide)
+                .Where(_TestForRealScript)
+            ;
             var sb = new StringBuilder();
             //serverSideScripts = serverSideScripts.Where(node => string.IsNullOrEmpty(node.getAttribute(ModelAttribute)));
             var serverSideScriptsList = serverSideScripts.ToList();

@@ -76,10 +76,9 @@
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.query1.tsp.html" />
     <Content Include="datagrid.tsp.html" />
-    <Content Include="Emmet.tsp.html" />
-    <Content Include="Emmet\emmet.js" />
-    <Content Include="Emmet\emmet.min.js" />
-    <Content Include="Emmet\index.html" />
+    <Content Include="Emmet\Emmet.tsp.html" />
+    <Content Include="Scripts\emmet.js" />
+    <Content Include="Scripts\emmet.min.js" />
     <Content Include="FormsTests\ClientSideWithAction.html" />
     <Content Include="FormsTests\ClientSideWithAction.js" />
     <Content Include="FormsTests\ServersideForm.tsp.html" />
@@ -212,9 +211,7 @@
     <Content Include="dynatree\jquery.min.js" />
     <Content Include="dynatree\README.txt" />
     <Content Include="toc.html" />
-    <Content Include="Emmet\.DS_Store" />
-    <Content Include="Emmet\README.md" />
-    <Content Include="Emmet\emmet.min.js.map">
+    <Content Include="Scripts\emmet.min.js.map">
       <DependentUpon>emmet.js</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />

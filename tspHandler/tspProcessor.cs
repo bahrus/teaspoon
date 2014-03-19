@@ -124,6 +124,22 @@ namespace tspHandler
 
         };
 
+        private static Func<HtmlNodeFacade, bool> _TestForRealScript = node =>
+        {
+            var typ = node.getAttribute("type");
+            if(string.IsNullOrEmpty(typ)) return true;
+            typ = typ.ToLower();
+            switch(typ){
+                case "text/javascript":
+                case "text/ecmascript":
+                case "application/ecmascript":
+                case "application/javascript":
+                    return true;
+                default:
+                    return false;
+            }
+        };
+
         private static Func<HtmlNodeFacade, bool> _TestForNoSide = node =>
         {
             var mode = GetMode(node);
@@ -435,17 +451,7 @@ namespace tspHandler
             return doc;
         }
 
-        public static HtmlDocumentFacade ProcessEmmetSpaces(this HtmlDocumentFacade doc)
-        {
-            var emmetTagsWithSpaces = doc.querySelectorAll("script[type='text/emmet']").ToList();
-            emmetTagsWithSpaces.ForEach(node =>
-            {
-                string content = node.innerHTML.Trim();
-                content = content.RemoveWhiteSpaceOutsideGroupings(new char[] { '{' }, new char[] { '}' });
-                node.innerHTML = content;
-            });
-            return doc;
-        }
+        
 
         
 

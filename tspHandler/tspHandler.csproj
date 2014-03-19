@@ -90,11 +90,12 @@
     <Compile Include="StyleSheet.cs" />
     <Compile Include="tspHandler.cs" />
     <Compile Include="tspProcessor.cs" />
-    <Compile Include="tspProcessor_Form.cs" />
-    <Compile Include="tspProcessor_Lazy.cs" />
-    <Compile Include="tspProcessor_Merge.cs" />
-    <Compile Include="tspProcessor_Script.cs" />
-    <Compile Include="tspProcessor_style.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Emmet.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Form.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Lazy.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Merge.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Script.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_style.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Usage.html" />
@@ -116,6 +117,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="tsp_script\DBS_b.ts" />
     <TypeScriptCompile Include="tsp_script\tcp.ts" />
     <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
     <Content Include="Schemas\VS2012\CSS\css-main.xml" />
