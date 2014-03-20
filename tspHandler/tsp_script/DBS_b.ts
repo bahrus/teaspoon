@@ -26,4 +26,20 @@ module DBS.b{
 
         }
     }
+
+     
+
+    export function MakeRCsUnique(el: HTMLElement) {
+        var rcELS = el.querySelectorAll('*[data-rc]');
+        var row = 0;
+        for (var i = 0, n = rcELS.length; i < n; i++) {
+            var rcEL = <HTMLElement> rcELS[i];
+            var rc = rcEL.getAttribute('data-rc');
+            if (rc == 'r,1') {
+                row++;
+            }
+            rc = rc.replace('r,', row + ',');
+            rcEL.setAttribute('data-rc', rc);
+        }
+    }
 } 

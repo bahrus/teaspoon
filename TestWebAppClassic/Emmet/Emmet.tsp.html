@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title></title>
     <script src="../Scripts/jquery-2.0.3.js"></script>
@@ -8,11 +8,17 @@
     <script src="../tsp_script/DBS_b.js" data-mode="both"></script>
     <script src="../tsp_script/DBS_cs.js"></script>
     <script src="../tsp_script/DBS_ss.js" data-mode="server-side-only"></script>
-
+    <style data-attribute-link="Attributes">
+        .RCAttributes {}
+        .RC {}
+    </style>
 </head>
 <body>
-    <script type="text/emmet" data-mode="server-side-only">
-        table>(
+    <script class="RCAttributes">
+        DBS.b.MakeRCsUnique;
+    </script>
+    <script type="text/emmet" data-mode="client-side-only">
+        table.RC>(
             (thead>tr>td*3)
           + (tbody>
                 (tr>
