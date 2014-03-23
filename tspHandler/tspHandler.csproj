@@ -94,6 +94,7 @@
     <Compile Include="tspProcessor_partials\tspProcessor_Form.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Lazy.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Merge.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Resource.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Script.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_style.cs" />
   </ItemGroup>

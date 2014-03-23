@@ -72,10 +72,10 @@
     <Content Include="ClearScriptV8-64.dll" />
     <Content Include="ClearScriptV8-64.pdb" />
     <Content Include="Content\jquery.layout-1.30.79.css" />
-    <TypeScriptCompile Include="datagrid.ts" />
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.query1.tsp.html" />
     <Content Include="datagrid.tsp.html" />
+    <Content Include="Depends.html" />
     <Content Include="Emmet\Emmet.tsp.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
@@ -122,18 +122,6 @@
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
-    <Content Include="tsp_script\DBS.js" />
-    <Content Include="tsp_script\DBS_cs.js" />
-    <TypeScriptCompile Include="tsp_script\DBS_ns.ts" />
-    <Content Include="tsp_script\DBS_ss.js" />
-    <Content Include="tsp_script\tcp.js" />
-    <Content Include="tsp_script\tsp.css" />
-    <Content Include="tsp_script\tsp.js" />
-    <Content Include="tsp_script\tsp.min.js">
-      <DependentUpon>tsp.js</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="tsp_script\DBS_ss.ts" />
-    <TypeScriptCompile Include="tsp_script\tsp_ss.ts" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
@@ -233,19 +221,12 @@
       <SubType>Designer</SubType>
     </Content>
     <TypeScriptCompile Include="FormsTests\ClientSideWithAction.ts" />
-    <TypeScriptCompile Include="links.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.dynatree\jquery.dynatree.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\slick.headerbuttons.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\SlickGrid.d.ts" />
-    <TypeScriptCompile Include="tsp_script\DBS.ts" />
-    <TypeScriptCompile Include="tsp_script\DBS_cs.ts" />
-    <TypeScriptCompile Include="tsp_script\emmet.d.ts" />
-    <TypeScriptCompile Include="tsp_script\jQueryFacade.d.ts" />
-    <TypeScriptCompile Include="tsp_script\tcp.ts" />
-    <TypeScriptCompile Include="tsp_script\tsp.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableTestModel.cs" />
@@ -276,14 +257,6 @@
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="skin\Thumbs.db" />
-    <Content Include="tsp_script\DBS.js.map" />
-    <Content Include="tsp_script\DBS_cs.js.map" />
-    <Content Include="tsp_script\tcp.js.map" />
-    <Content Include="tsp_script\tsp.js.map" />
-    <Content Include="tsp_script\tsp.min.js.map">
-      <DependentUpon>tsp.min.js</DependentUpon>
-    </Content>
-    <Content Include="tsp_script\DBS_ss.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,4 +1,4 @@
-///<reference path="../tsp_script/DBS.ts"/>
+///<reference path="../../tspHandler/tsp_script/DBS.ts"/>
 ///<reference path="../Scripts/typings/slickgrid/SlickGrid.d.ts"/>
 
 module FormsTests.ClientSideWithAction {

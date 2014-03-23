@@ -300,6 +300,7 @@ namespace tspHandler
             Trace(doc, "ProcessEmmetSpaces");
             //ProcessEmmetSpaces(doc);
             doc
+                .ProcessResourceDependencies()
                 .ProcessEmmetSpaces()
                 .ProcessStyleDirectives()
                 .ProcessServerSideForms()
