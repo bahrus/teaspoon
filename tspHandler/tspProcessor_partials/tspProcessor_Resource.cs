@@ -66,12 +66,27 @@ namespace tspHandler
                 var alreadyAdded = new Dictionary<string, bool>();
                 var fileList = new List<TypescriptFile>();
                 foreach(var tsFile in typeScriptFiles){
-                    ProcessTypeScriptFile(level, fileList, tsFile);
+                    ProcessTypeScriptFile(alreadyAdded, fileList, tsFile);
                 }
                 fileList.Sort();
+                var rdID = rd.id;
+                var previousScriptTags = doc.head.querySelectorAll("script[data-genID='" + rdID + "']");
+                foreach (var previousScriptTag in previousScriptTags)
+                {
+                    previousScriptTag.delete();
+                }
+                foreach (var tsFile in fileList)
+                {
+                    var sc = doc.createElement("script");
+                    var src = doc.GetHostRelativePath(tsFile.DocumentFilePath);
+                    sc.setAttribute("src", src);
+                    sc.setAttribute("data-genID", rdID);
+                    doc.head.appendChild(sc);
+                }
                 #endregion
 
                 rd.delete();
+                var newHtml = doc.html;
             });
             return doc;
         }
@@ -88,7 +103,7 @@ namespace tspHandler
                 {
                     ProcessTypeScriptFile(alreadyAdded, fileList, dep);
                 }
-                file.Dependencies = null;
+                //file.Dependencies = null;
             }
         
         }

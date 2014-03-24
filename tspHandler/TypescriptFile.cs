@@ -56,23 +56,24 @@ namespace tspHandler
         {
             get
             {
-                if (_level != null) return _level;
+                if (_level != null) return (int) _level;
                 if (this.Dependencies == null)
                 {
                     _level = 0;
-                    return _level;
+                    return (int) _level;
                 }
                 _level = this.Dependencies.Count + this.Dependencies.Sum(tsf => tsf.Level);
-                return _level;
+                return (int) _level;
             }
         }
 
 
         public int CompareTo(TypescriptFile other)
         {
-            var lhs = this.Dependencies == null ? 0 : this.Dependencies.Count;
-            var rhs = other.Dependencies == null ? 0 : other.Dependencies.Count;
-            return lhs.CompareTo(rhs);
+            //var lhs = this.Dependencies == null ? 0 : this.Dependencies.Count;
+            //var rhs = other.Dependencies == null ? 0 : other.Dependencies.Count;
+            //return lhs.CompareTo(rhs);
+            return this.Level.CompareTo(other.Level);
         }
     }
 }
