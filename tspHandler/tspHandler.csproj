@@ -97,6 +97,7 @@
     <Compile Include="tspProcessor_partials\tspProcessor_Resource.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Script.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_style.cs" />
+    <Compile Include="TypescriptFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Usage.html" />

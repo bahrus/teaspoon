@@ -19,38 +19,78 @@ namespace tspHandler
             {
                 var relPath = rd.getAttribute("src");
                 string content = doc.GetHostContent(relPath);
+                
                 var depDoc = new HtmlDocumentFacade(content);
+                var depDocFilePath = doc.GetHostContentFilePath(relPath);
                 var header = depDoc.head;
                 #region find type def mappings
-                //var sr = new StringReader(header);
-                //while (sr.Peek() != -1)
-                //{
-                //    var line = sr.ReadLine();
-                //    if (line.Contains(MappingSeparator))
-                //    {
-                //        var lhs = line.SubstringBefore(MappingSeparator).Trim();
-                //    }
-                //}
+                
                 var children = header.childNodes;
-                HtmlNodeFacade prevChild = null;
                 Dictionary<string, string> typeDefsToImplementationMappings = new Dictionary<string, string>();
-                bool inMiddleOfScriptMapping = false;
-                foreach(var child in children){
-                    if (inMiddleOfScriptMapping)
+                Dictionary<string, bool> typescriptRefs = new Dictionary<string, bool>();
+                int childrenLen = children.Count;
+                for (var i = 0; i < childrenLen; i++)
+                {
+                    #region read script tag
+                    var child = children[i];
+                    if (child.tagName == "SCRIPT")
                     {
-                        var lhsSrc = prevChild.getAttribute("src");
-                        var rhsSrc = child.getAttribute("src");
-                        typeDefsToImplementationMappings[lhsSrc] = rhsSrc;
+                        if (
+                            (i + 2 < childrenLen)
+                            && children[i + 1].tagName == "#text"
+                            && children[i + 1].innerHTML == "="
+                            && children[i + 2].tagName == "SCRIPT"
+                        )
+                        {
+                            var lhsSrc = child.getAttribute("src");
+                            var rhsSrc = children[i + 2].getAttribute("src");
+                            typeDefsToImplementationMappings[lhsSrc] = rhsSrc;
+                        }
+                        else
+                        {
+                            string src = child.getAttribute("src");
+                            if (src.EndsWith(".ts"))
+                            {
+                                typescriptRefs[src] = true;
+                            }
+                        }
                     }
-                    if(child.tagName == "#text" && child.innerHTML=="=" && prevChild != null && prevChild.tagName=="SCRIPT"){
-                        inMiddleOfScriptMapping = true;
-                        continue;
-                    }
-                    prevChild = child;
+                    #endregion
                 }
+                var typeScriptFiles = typescriptRefs.Select(typescriptRef =>
+                {
+                    var src = typescriptRef.Key;
+                    var srcFilePath = depDocFilePath.NavigateTo(src);
+                    return new TypescriptFile(srcFilePath);
+                }).ToList();
+                var alreadyAdded = new Dictionary<string, bool>();
+                var fileList = new List<TypescriptFile>();
+                foreach(var tsFile in typeScriptFiles){
+                    ProcessTypeScriptFile(level, fileList, tsFile);
+                }
+                fileList.Sort();
                 #endregion
+
+                rd.delete();
             });
             return doc;
+        }
+
+        private static void ProcessTypeScriptFile(Dictionary<string, bool> alreadyAdded, List<TypescriptFile> fileList, TypescriptFile file){
+            if (!alreadyAdded.ContainsKey(file.DocumentFilePath))
+            {
+                fileList.Add(file);
+                alreadyAdded[file.DocumentFilePath] = true;
+            }
+            if (file.Dependencies != null)
+            {
+                foreach (var dep in file.Dependencies)
+                {
+                    ProcessTypeScriptFile(alreadyAdded, fileList, dep);
+                }
+                file.Dependencies = null;
+            }
+        
         }
     }
 }

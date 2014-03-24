@@ -92,7 +92,6 @@
     <Content Include="LazyLoadTests\FormsTest.tsp.html" />
     <Content Include="LazyLoadTests\LazyLoadTest1.tsp.html" />
     <Content Include="LazyLoadTests\TabsTest.tsp.html" />
-    <Content Include="links.js" />
     <Content Include="MockData\Fathers.JSON.txt" />
     <Content Include="ModelTests\CreateCookieData.aspx" />
     <Content Include="ModelTests\CreatePostData.html" />

@@ -97,7 +97,8 @@ namespace tspHandler
 
         public string tagName
         {
-            get { 
+            get {
+                if (_node.Name.StartsWith("#")) return _node.Name;
                 return _node.Name.ToUpper(); 
             }
             set { _node.Name = value.ToUpper(); }

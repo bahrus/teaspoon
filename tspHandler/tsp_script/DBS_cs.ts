@@ -44,18 +44,19 @@ module DBS.cs {
 
     export function onPropChange(el: HTMLElement, attrName: string, handler: (el: HTMLElement) => any) {
         if (typeof (MutationObserver) !== 'undefined') {
-            var observer = new MutationObserver((mrs: MutationRecord[]) => {
-                // Handle mutations
-                for (var i = 0, n = mrs.length; i < n; i++) {
-                    var mr = mrs[i];
-                    if (mr.attributeName !== attrName) continue;
-                    handler(<HTMLElement> mr.target);
-                    break;
-                }
-            });
-            observer.observe(el, {
-                attributes: true,
-            });
+            //var observer = new MutationObserver((mrs: MutationRecord[]) => {
+            //    // Handle mutations
+            //    for (var i = 0, n = mrs.length; i < n; i++) {
+            //        var mr = mrs[i];
+            //        if (mr.attributeName !== attrName) continue;
+            //        handler(<HTMLElement> mr.target);
+            //        break;
+            //    }
+            //});
+            //observer.observe(el, {
+            //    attributes: true,
+            //});
+            alert('need typescript fix');
         } else if (el['attachEvent']) {
             //TODO:  deprecate eventually - ie 10 and earlier
             el.attachEvent('onpropertychange', (ev: Event) => {
