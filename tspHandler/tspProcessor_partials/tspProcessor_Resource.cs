@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ClassGenMacros;
+using System.Web;
 
 namespace tspHandler
 {
@@ -15,6 +16,7 @@ namespace tspHandler
         public static HtmlDocumentFacade ProcessResourceDependencies(this HtmlDocumentFacade doc)
         {
             var resourceDependencies = doc.querySelectorAll("iframe[data-resource]").ToList();
+            var isLocal = HttpContext.Current.Request.IsLocal;
             resourceDependencies.ForEach(rd =>
             {
                 var relPath = rd.getAttribute("src");
@@ -22,6 +24,13 @@ namespace tspHandler
                 
                 var depDoc = new HtmlDocumentFacade(content);
                 var depDocFilePath = doc.GetHostContentFilePath(relPath);
+                DateTime latestTimeStamp = new DateTime(0);
+                if(isLocal){
+                    var fi = new FileInfo(depDocFilePath);
+                    if(fi.LastWriteTime > latestTimeStamp){
+                        latestTimeStamp = fi.LastWriteTime;
+                    }
+                }
                 var header = depDoc.head;
                 #region find type def mappings
                 
@@ -43,8 +52,10 @@ namespace tspHandler
                         )
                         {
                             var lhsSrc = child.getAttribute("src");
+                            var lhsAbs = depDocFilePath.NavigateTo(lhsSrc);
                             var rhsSrc = children[i + 2].getAttribute("src");
-                            typeDefsToImplementationMappings[lhsSrc] = rhsSrc;
+                            var rhsAbs = depDocFilePath.NavigateTo(rhsSrc);
+                            typeDefsToImplementationMappings[lhsAbs] = rhsAbs;
                         }
                         else
                         {
@@ -78,7 +89,22 @@ namespace tspHandler
                 foreach (var tsFile in fileList)
                 {
                     var sc = doc.createElement("script");
-                    var src = doc.GetHostRelativePath(tsFile.DocumentFilePath);
+                    string tsFileAbsPath = tsFile.DocumentFilePath;
+                    if (typeDefsToImplementationMappings.ContainsKey(tsFileAbsPath))
+                    {
+                        tsFileAbsPath = typeDefsToImplementationMappings[tsFileAbsPath];
+                    }
+                    if(isLocal){
+                        var fi = new FileInfo(tsFileAbsPath);
+                        if(fi.LastWriteTime > latestTimeStamp){
+                            latestTimeStamp = fi.LastWriteTime;
+                        }
+                    }
+                    var src = doc.GetHostRelativePath(tsFileAbsPath);
+                    if (src.EndsWith(".ts"))
+                    {
+                        src = src.ReplaceLast(".ts").With( ".js");
+                    }
                     sc.setAttribute("src", src);
                     sc.setAttribute("data-genID", rdID);
                     doc.head.appendChild(sc);
@@ -87,6 +113,16 @@ namespace tspHandler
 
                 rd.delete();
                 var newHtml = doc.html;
+                if (isLocal)
+                {
+                    string destFilePath = doc.Host.GetDocumentFilePath().ReplaceLast(".tsp").With(".d.tsp");
+                    var destFI = new FileInfo(destFilePath);
+                    if (destFI.LastWriteTime < latestTimeStamp)
+                    {
+                        File.WriteAllText(destFilePath, newHtml.outerHTML);
+                    }
+                }
+                
             });
             return doc;
         }

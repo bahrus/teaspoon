@@ -76,6 +76,7 @@
     <Content Include="datagrid.query1.tsp.html" />
     <Content Include="datagrid.tsp.html" />
     <Content Include="Depends.html" />
+    <Content Include="Emmet\Emmet.d.tsp.html" />
     <Content Include="Emmet\Emmet.tsp.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />

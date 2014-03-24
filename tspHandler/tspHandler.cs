@@ -73,6 +73,12 @@ namespace tspHandler
         {
             return this._documentFilePath.ReadFile();
         }
+
+
+        public string GetDocumentFilePath()
+        {
+            return _documentFilePath;
+        }
     }
 
     public interface IDocumentHost
@@ -88,5 +94,7 @@ namespace tspHandler
         bool IsDesignMode();
 
         bool IsTraceMode();
+
+        string GetDocumentFilePath();
     }
 }

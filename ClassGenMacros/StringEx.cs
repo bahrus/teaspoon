@@ -15,6 +15,17 @@ namespace ClassGenMacros
             return File.ReadAllText(FilePath);
         }
 
+        public static ReplaceString ReplaceLast(this string value, string oldString)
+        {
+            var rs = new ReplaceString
+            {
+                Last = true,
+                StringToSearch = value,
+                SearchString = oldString,
+            };
+            return rs;
+        }
+
         public static string[] SplitFirst(this string value, string separator)
         {
             if (value == null) return null;
