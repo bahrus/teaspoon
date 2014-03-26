@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ClientSide with Action</title>
+    <link rel="stylesheet" href="../Content/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="../skin/slick.grid.css">
+    <!--<script src="../Scripts/jquery-2.0.3.js"></script>-->
+    <script src="../Scripts/jquery.event.drag.js"></script>
+    <!--<script src="../tsp_script/DBS_cs.js"></script>-->
+    <script src="../Scripts/slickGrid/slick.core.js"></script>
+    <script src="../Scripts/slickGrid/slick.grid.js"></script>
+    <script src="ClientSideWithAction.js"></script>
+
+<script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script></head>
+<body>
+    
+    <style data-attribute-link="">
+        script.slickGridAttributes{}   
+        .slickGrid {
+            height: 400px;
+            width: 600px;      
+        }
+    </style>
+    <script class="slickGridAttributes">
+        FormsTests.ClientSideWithAction.attachRenderer;
+    </script>
+
+    <form data-mode="client-side-only" data-type="json" data-submit-on="load" action="../MockData/Fathers.JSON.txt">
+        <div class="slickGrid"></div>
+    </form>
+
+    
+</body>
+</html>

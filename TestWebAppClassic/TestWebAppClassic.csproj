@@ -75,12 +75,13 @@
     <Content Include="Content\themes\smoothness\jquery-ui.css" />
     <Content Include="datagrid.query1.tsp.html" />
     <Content Include="datagrid.tsp.html" />
-    <Content Include="Depends.html" />
+    <Content Include="Emmet\EmmetScriptRefs.html" />
     <Content Include="Emmet\Emmet.d.tsp.html" />
     <Content Include="Emmet\Emmet.tsp.html" />
+    <Content Include="FormsTests\CSWithActionResources.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
-    <Content Include="FormsTests\ClientSideWithAction.html" />
+    <Content Include="FormsTests\ClientSideWithAction.tsp.html" />
     <Content Include="FormsTests\ClientSideWithAction.js" />
     <Content Include="FormsTests\ServersideForm.tsp.html" />
     <Content Include="HelloWorld.tsp.html" />
@@ -109,6 +110,7 @@
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
     <Content Include="DBS_Specs.html" />
+    <Content Include="Scripts\Mappings.html" />
     <Content Include="Scripts\slickGrid\slick.core.js" />
     <Content Include="Scripts\slickGrid\slick.dataview.js" />
     <Content Include="Scripts\slickGrid\slick.editors.js" />
@@ -122,6 +124,7 @@
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
+    <Content Include="tsp_script\DBS_b.js" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
@@ -301,7 +304,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51157</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51891/</IISUrl>
+          <IISUrl>http://localhost:51157/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

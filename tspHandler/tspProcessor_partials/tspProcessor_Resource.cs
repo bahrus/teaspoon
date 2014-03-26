@@ -13,13 +13,45 @@ namespace tspHandler
 
         public const string MappingSeparator = "<-->";
 
+        
+
+        private static Dictionary<string, List<string>> ProcessTypeScriptMappingFile(this HtmlDocumentFacade DepDoc, string DepDocFilePath)
+        {
+            var header = DepDoc.head;
+            var links = header.querySelectorAll("link[rel='jsMappings']").ToList();
+            var returnObj = new Dictionary<string, List<string>>();
+            foreach (var link in links)
+            {
+                var href = link.getAttribute("href");
+                var linkFilePath = DepDocFilePath.NavigateTo(href);
+                var sr = new StreamReader(linkFilePath);
+                while(sr.Peek() != -1)
+                {
+                    var lineOfText = sr.ReadLine().Trim();
+                    if (!lineOfText.StartsWith("<script")) continue;
+                    var LHS = lineOfText.SubstringBefore("></script>=<script ");
+                    LHS = LHS.SubstringAfter("=").Trim('"', '\'');
+                    var typeDefFilePath = linkFilePath.NavigateTo(LHS);
+                    var RHS = lineOfText.SubstringAfter("></script>=<script src=");
+                    RHS = RHS.Replace("></script>", string.Empty).Replace("<script src=\"", string.Empty).Trim('"', '\'');
+                    var implPaths = RHS.Split('+').Select(s => linkFilePath.NavigateTo(s)).ToList();
+                    
+                    returnObj[typeDefFilePath] = implPaths;
+                    //LHS = LHS.SubstringAfter("<script src=\"");
+                }
+                sr.Close();
+            }
+            return returnObj;
+
+        }
+
         public static HtmlDocumentFacade ProcessResourceDependencies(this HtmlDocumentFacade doc)
         {
-            var resourceDependencies = doc.querySelectorAll("iframe[data-resource]").ToList();
+            var resourceDependencies = doc.head.querySelectorAll("link[rel='jsInclude']").ToList();
             var isLocal = HttpContext.Current.Request.IsLocal;
             resourceDependencies.ForEach(rd =>
             {
-                var relPath = rd.getAttribute("src");
+                var relPath = rd.getAttribute("href");
                 string content = doc.GetHostContent(relPath);
                 
                 var depDoc = new HtmlDocumentFacade(content);
@@ -30,44 +62,61 @@ namespace tspHandler
                     if(fi.LastWriteTime > latestTimeStamp){
                         latestTimeStamp = fi.LastWriteTime;
                     }
+                    var fi2 = new FileInfo(doc.Host.GetDocumentFilePath());
+                    if (fi2.LastWriteTime > latestTimeStamp)
+                    {
+                        latestTimeStamp = fi2.LastWriteTime;
+                    }
                 }
                 var header = depDoc.head;
                 #region find type def mappings
                 
-                var children = header.childNodes;
-                Dictionary<string, string> typeDefsToImplementationMappings = new Dictionary<string, string>();
+                //var children = header.childNodes;
+                //Dictionary<string, string> typeDefsToImplementationMappings = new Dictionary<string, string>();
+                var typeDefsToImplementationMappings = depDoc.ProcessTypeScriptMappingFile(depDocFilePath);
                 Dictionary<string, bool> typescriptRefs = new Dictionary<string, bool>();
-                int childrenLen = children.Count;
-                for (var i = 0; i < childrenLen; i++)
+                var scripts = header
+                    .querySelectorAll("script")
+                    .ToList();
+                scripts.ForEach(s =>
                 {
-                    #region read script tag
-                    var child = children[i];
-                    if (child.tagName == "SCRIPT")
+                    var src = s.getAttribute("src");
+                    if (src.ToLower().EndsWith(".ts"))
                     {
-                        if (
-                            (i + 2 < childrenLen)
-                            && children[i + 1].tagName == "#text"
-                            && children[i + 1].innerHTML == "="
-                            && children[i + 2].tagName == "SCRIPT"
-                        )
-                        {
-                            var lhsSrc = child.getAttribute("src");
-                            var lhsAbs = depDocFilePath.NavigateTo(lhsSrc);
-                            var rhsSrc = children[i + 2].getAttribute("src");
-                            var rhsAbs = depDocFilePath.NavigateTo(rhsSrc);
-                            typeDefsToImplementationMappings[lhsAbs] = rhsAbs;
-                        }
-                        else
-                        {
-                            string src = child.getAttribute("src");
-                            if (src.EndsWith(".ts"))
-                            {
-                                typescriptRefs[src] = true;
-                            }
-                        }
+                        typescriptRefs[src] = true;
                     }
-                    #endregion
-                }
+                });
+                //int childrenLen = children.Count;
+                //for (var i = 0; i < childrenLen; i++)
+                //{
+                //    #region read script tag
+                //    var child = children[i];
+                //    if (child.tagName == "SCRIPT")
+                //    {
+                //        if (
+                //            (i + 2 < childrenLen)
+                //            && children[i + 1].tagName == "#text"
+                //            && children[i + 1].innerHTML == "="
+                //            && children[i + 2].tagName == "SCRIPT"
+                //        )
+                //        {
+                //            var lhsSrc = child.getAttribute("src");
+                //            var lhsAbs = depDocFilePath.NavigateTo(lhsSrc);
+                //            var rhsSrc = children[i + 2].getAttribute("src");
+                //            var rhsAbs = depDocFilePath.NavigateTo(rhsSrc);
+                //            typeDefsToImplementationMappings[lhsAbs] = rhsAbs;
+                //        }
+                //        else
+                //        {
+                //            string src = child.getAttribute("src");
+                //            if (src.EndsWith(".ts"))
+                //            {
+                //                typescriptRefs[src] = true;
+                //            }
+                //        }
+                //    }
+                //    #endregion
+                //}
                 var typeScriptFiles = typescriptRefs.Select(typescriptRef =>
                 {
                     var src = typescriptRef.Key;
@@ -88,26 +137,34 @@ namespace tspHandler
                 }
                 foreach (var tsFile in fileList)
                 {
-                    var sc = doc.createElement("script");
-                    string tsFileAbsPath = tsFile.DocumentFilePath;
-                    if (typeDefsToImplementationMappings.ContainsKey(tsFileAbsPath))
+                    
+                    var tsFileAbsPaths = new List<string>{
+                        tsFile.DocumentFilePath,
+                    };
+                    if (typeDefsToImplementationMappings.ContainsKey(tsFileAbsPaths[0]))
                     {
-                        tsFileAbsPath = typeDefsToImplementationMappings[tsFileAbsPath];
+                        tsFileAbsPaths = typeDefsToImplementationMappings[tsFileAbsPaths[0]];
                     }
-                    if(isLocal){
-                        var fi = new FileInfo(tsFileAbsPath);
-                        if(fi.LastWriteTime > latestTimeStamp){
-                            latestTimeStamp = fi.LastWriteTime;
+                    foreach (var tsFileAbsPath in tsFileAbsPaths)
+                    {
+                        var sc = doc.createElement("script");
+                        if (isLocal)
+                        {
+                            var fi = new FileInfo(tsFileAbsPath);
+                            if (fi.LastWriteTime > latestTimeStamp)
+                            {
+                                latestTimeStamp = fi.LastWriteTime;
+                            }
                         }
+                        var src = doc.GetHostRelativePath(tsFileAbsPath);
+                        if (src.EndsWith(".ts"))
+                        {
+                            src = src.ReplaceLast(".ts").With(".js");
+                        }
+                        sc.setAttribute("src", src);
+                        sc.setAttribute("data-genID", rdID);
+                        doc.head.appendChild(sc);
                     }
-                    var src = doc.GetHostRelativePath(tsFileAbsPath);
-                    if (src.EndsWith(".ts"))
-                    {
-                        src = src.ReplaceLast(".ts").With( ".js");
-                    }
-                    sc.setAttribute("src", src);
-                    sc.setAttribute("data-genID", rdID);
-                    doc.head.appendChild(sc);
                 }
                 #endregion
 

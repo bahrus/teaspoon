@@ -240,7 +240,7 @@ module DBS.cs {
 
     function configureCSForm(frm: HTMLFormElement) {
         var $frm = $(frm);
-
+        debugger;
         $frm.submit(function (event) {
             $.ajax({
                 url: $(this).attr('action'),
