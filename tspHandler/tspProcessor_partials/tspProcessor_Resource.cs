@@ -33,7 +33,7 @@ namespace tspHandler
                     LHS = LHS.SubstringAfter("=").Trim('"', '\'');
                     var typeDefFilePath = linkFilePath.NavigateTo(LHS);
                     var RHS = lineOfText.SubstringAfter("></script>=<script src=");
-                    RHS = RHS.Replace("></script>", string.Empty).Replace("<script src=\"", string.Empty).Trim('"', '\'');
+                    RHS = RHS.Replace("\"></script>", string.Empty).Replace("<script src=\"", string.Empty).Trim('"', '\'');
                     var implPaths = RHS.Split('+').Select(s => linkFilePath.NavigateTo(s)).ToList();
                     
                     returnObj[typeDefFilePath] = implPaths;
@@ -71,8 +71,6 @@ namespace tspHandler
                 var header = depDoc.head;
                 #region find type def mappings
                 
-                //var children = header.childNodes;
-                //Dictionary<string, string> typeDefsToImplementationMappings = new Dictionary<string, string>();
                 var typeDefsToImplementationMappings = depDoc.ProcessTypeScriptMappingFile(depDocFilePath);
                 Dictionary<string, bool> typescriptRefs = new Dictionary<string, bool>();
                 var scripts = header
@@ -86,37 +84,6 @@ namespace tspHandler
                         typescriptRefs[src] = true;
                     }
                 });
-                //int childrenLen = children.Count;
-                //for (var i = 0; i < childrenLen; i++)
-                //{
-                //    #region read script tag
-                //    var child = children[i];
-                //    if (child.tagName == "SCRIPT")
-                //    {
-                //        if (
-                //            (i + 2 < childrenLen)
-                //            && children[i + 1].tagName == "#text"
-                //            && children[i + 1].innerHTML == "="
-                //            && children[i + 2].tagName == "SCRIPT"
-                //        )
-                //        {
-                //            var lhsSrc = child.getAttribute("src");
-                //            var lhsAbs = depDocFilePath.NavigateTo(lhsSrc);
-                //            var rhsSrc = children[i + 2].getAttribute("src");
-                //            var rhsAbs = depDocFilePath.NavigateTo(rhsSrc);
-                //            typeDefsToImplementationMappings[lhsAbs] = rhsAbs;
-                //        }
-                //        else
-                //        {
-                //            string src = child.getAttribute("src");
-                //            if (src.EndsWith(".ts"))
-                //            {
-                //                typescriptRefs[src] = true;
-                //            }
-                //        }
-                //    }
-                //    #endregion
-                //}
                 var typeScriptFiles = typescriptRefs.Select(typescriptRef =>
                 {
                     var src = typescriptRef.Key;
@@ -196,7 +163,6 @@ namespace tspHandler
                 {
                     ProcessTypeScriptFile(alreadyAdded, fileList, dep);
                 }
-                //file.Dependencies = null;
             }
         
         }

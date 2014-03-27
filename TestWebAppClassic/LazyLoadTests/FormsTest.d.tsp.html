@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="../Content/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="../skin/slick.grid.css">
+    
+    <!--<script src="../Scripts/jquery-2.0.3.js"></script>
+    <script src="../Scripts/jquery.event.drag.js"></script>
+    <script src="../tsp_script/DBS_cs.js"></script>
+    <script src="../Scripts/slickGrid/slick.core.js"></script>
+    <script src="../Scripts/slickGrid/slick.grid.js"></script>-->
+    
+    <script>
+        function showForm() {
+            $('#myForm').css('display', 'block');
+        }
+    </script>
+<script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../Scripts/jquery.event.drag.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.core.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.dataView.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.editors.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.formatters.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.groupitemmetadataprovider.js" data-genid="lib"></script><script src="../Scripts/slickGrid/slick.grid.js" data-genid="lib"></script><script src="../Scripts/jquery.event.drag.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../FormsTests/ClientSideWithAction.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script></head>
+<body>
+    <style data-attribute-link="">
+        script.slickGridAttributes{}   
+        .slickGrid {
+            height: 400px;
+            width: 600px;      
+        }
+    </style>
+    <script class="slickGridAttributes">
+        FormsTests.ClientSideWithAction.attachRenderer;
+    </script>
+
+    <form id="myForm" data-mode="client-side-only" data-type="json" data-submit-on="load" data-display="lazy" action="../MockData/Fathers.JSON.txt">
+        <div class="slickGrid"></div>
+    </form>
+
+    <input type="button" onclick="showForm()" value="Show form">
+</body>
+</html>

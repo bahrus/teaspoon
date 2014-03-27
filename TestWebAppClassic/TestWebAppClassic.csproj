@@ -78,7 +78,7 @@
     <Content Include="Emmet\EmmetScriptRefs.html" />
     <Content Include="Emmet\Emmet.d.tsp.html" />
     <Content Include="Emmet\Emmet.tsp.html" />
-    <Content Include="FormsTests\CSWithActionResources.html" />
+    <Content Include="FormsTests\ClientSideWithActionRefs.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
     <Content Include="FormsTests\ClientSideWithAction.tsp.html" />
