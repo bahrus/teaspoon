@@ -7,11 +7,11 @@ using ClassGenMacros;
 
 namespace tspHandler
 {
-    public class TypescriptFile : IComparable<TypescriptFile>
+    public class ScriptFile : IComparable<ScriptFile>
     {
         public string DocumentFilePath { get; set; }
 
-        public TypescriptFile(string documentFilePath)
+        public ScriptFile(string documentFilePath)
         {
             //TODO:  Prevent circular references
             this.DocumentFilePath = documentFilePath;
@@ -30,18 +30,18 @@ namespace tspHandler
                 string beforeclosedBracket = afterPathEquals.SubstringBefore("/>");
                 string path = beforeclosedBracket.Trim().Trim('\'').Trim('\"');
                 string newPath = documentFilePath.NavigateTo(path);
-                var tfChild = new TypescriptFile(newPath);
+                var tfChild = new ScriptFile(newPath);
                 this.DependenciesNN.Add(tfChild);
             }
         }
 
-        public List<TypescriptFile> Dependencies { get; set; }
+        public List<ScriptFile> Dependencies { get; set; }
 
-        public List<TypescriptFile> DependenciesNN
+        public List<ScriptFile> DependenciesNN
         {
             get
             {
-                if (Dependencies == null) Dependencies = new List<TypescriptFile>();
+                if (Dependencies == null) Dependencies = new List<ScriptFile>();
                 return Dependencies;
             }
         }
@@ -68,7 +68,7 @@ namespace tspHandler
         }
 
 
-        public int CompareTo(TypescriptFile other)
+        public int CompareTo(ScriptFile other)
         {
             //var lhs = this.Dependencies == null ? 0 : this.Dependencies.Count;
             //var rhs = other.Dependencies == null ? 0 : other.Dependencies.Count;

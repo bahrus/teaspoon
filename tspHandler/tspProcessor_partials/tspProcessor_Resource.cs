@@ -74,8 +74,7 @@ namespace tspHandler
                 #region find type def mappings
                 
                 var typeDefsToImplementationMappings = depDoc.ProcessTypeScriptMappingFile(depDocFilePath);
-                var typescriptRefs = new Dictionary<string, bool>();
-                //var jsRefs = new Dictionary<string, bool>();
+                var scriptRefs = new Dictionary<string, bool>();
                 var scripts = header
                     .querySelectorAll("script")
                     .ToList();
@@ -83,25 +82,18 @@ namespace tspHandler
                 {
                     var src = s.getAttribute("src");
                     var srcLC = src.ToLower();
-                    //if (srcLC.EndsWith(".ts"))
-                    {
-                        typescriptRefs[src] = true;
-                    }
-                    //else if (srcLC.EndsWith(".js"))
-                    //{
-                    //    jsRefs[src] = true;
-                    //}
+                    scriptRefs[src] = true;
                 });
-                var typeScriptFiles = typescriptRefs.Select(typescriptRef =>
+                var scriptFiles = scriptRefs.Select(typescriptRef =>
                 {
                     var src = typescriptRef.Key;
                     var srcFilePath = depDocFilePath.NavigateTo(src);
-                    return new TypescriptFile(srcFilePath);
+                    return new ScriptFile(srcFilePath);
                 }).ToList();
                 var alreadyAdded = new Dictionary<string, bool>();
-                var fileList = new List<TypescriptFile>();
-                foreach(var tsFile in typeScriptFiles){
-                    ProcessTypeScriptFile(alreadyAdded, fileList, tsFile);
+                var fileList = new List<ScriptFile>();
+                foreach(var tsFile in scriptFiles){
+                    checkScriptFileForDependencies(alreadyAdded, fileList, tsFile);
                 }
                 fileList.Sort();
                 var rdID = rd.id;
@@ -110,17 +102,17 @@ namespace tspHandler
                 {
                     previousScriptTag.delete();
                 }
-                foreach (var tsFile in fileList)
+                foreach (var scriptFile in fileList)
                 {
                     
-                    var tsFileAbsPaths = new List<string>{
-                        tsFile.DocumentFilePath,
+                    var scriptFileAbsPaths = new List<string>{
+                        scriptFile.DocumentFilePath,
                     };
-                    if (typeDefsToImplementationMappings.ContainsKey(tsFileAbsPaths[0]))
+                    if (typeDefsToImplementationMappings.ContainsKey(scriptFileAbsPaths[0]))
                     {
-                        tsFileAbsPaths = typeDefsToImplementationMappings[tsFileAbsPaths[0]];
+                        scriptFileAbsPaths = typeDefsToImplementationMappings[scriptFileAbsPaths[0]];
                     }
-                    foreach (var tsFileAbsPath in tsFileAbsPaths)
+                    foreach (var tsFileAbsPath in scriptFileAbsPaths)
                     {
                         var sc = doc.createElement("script");
                         if (isLocal)
@@ -163,7 +155,7 @@ namespace tspHandler
             return doc;
         }
 
-        private static void ProcessTypeScriptFile(Dictionary<string, bool> alreadyAdded, List<TypescriptFile> fileList, TypescriptFile file){
+        private static void checkScriptFileForDependencies(Dictionary<string, bool> alreadyAdded, List<ScriptFile> fileList, ScriptFile file){
             if (!alreadyAdded.ContainsKey(file.DocumentFilePath))
             {
                 fileList.Add(file);
@@ -173,7 +165,7 @@ namespace tspHandler
             {
                 foreach (var dep in file.Dependencies)
                 {
-                    ProcessTypeScriptFile(alreadyAdded, fileList, dep);
+                    checkScriptFileForDependencies(alreadyAdded, fileList, dep);
                 }
             }
         
