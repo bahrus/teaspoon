@@ -1,8 +1,13 @@
 ///<reference path='emmet.d.ts'/>
 declare var mode: string;
 module DBS.b{
+
+    export function isCSMode() : boolean {
+        return (typeof (mode) == 'undefined' || mode !== 'server');
+    }
+
     export function applyEmmet(selectedNode: NodeSelector) {
-        var cs = (typeof (mode) == 'undefined' || mode !== 'server');
+        var cs = isCSMode();
         var emmetSelector = 'script[type="text/emmet"][data-mode="';
         if (cs) {
             emmetSelector += 'client-side-only';

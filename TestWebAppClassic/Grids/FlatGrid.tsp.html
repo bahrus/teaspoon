@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>Flat Grid Test</title>
+    <style data-attribute-link="Attributes">
+        .RCAttributes {}
+        .RC {}
+    </style>
+    <link href="FlatGridRefs.html" rel="jsInclude" id="lib">
+    <script data-genid="lib" src="../tsp_script/DBS_b.js"></script>
+    <script data-genid="lib" src="../tsp_script/tsp_b.js"></script>
+</head>
+<body>
+<script data-mode="both" data-model="[TestWebAppClassic.DataTableTestModel, TestWebAppClassic].GetTbl" id="dataTable"></script>
+
+<script class="RCAttributes">
+    DBS.b.MakeRCsUnique;
+</script>
+<script class="RCAttributes">
+    function populateGrid(el){
+        var populateRule = {
+            getDataTable: function() {
+                return model.dataTable;
+            }
+        };
+        tsp.b.refreshTemplateWithRectCoords(el, null, populateRule)
+    }
+</script>
+<script type="text/emmet" data-mode="client-side-only">
+        table.RC>(
+            (thead>tr>td*3)
+          + (tbody>
+                (tr>
+                    (td[data-rc=r,$]*3)
+                )*6
+            )
+        )
+    </script>
+</body>
+</html>

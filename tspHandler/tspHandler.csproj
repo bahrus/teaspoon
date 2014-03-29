@@ -152,6 +152,7 @@
       <DependentUpon>tsp.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="tsp_script\tsp.ts" />
+    <TypeScriptCompile Include="tsp_script\tsp_b.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
