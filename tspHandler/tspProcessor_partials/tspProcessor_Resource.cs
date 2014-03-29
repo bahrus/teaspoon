@@ -45,6 +45,7 @@ namespace tspHandler
 
         }
 
+
         public static HtmlDocumentFacade ProcessResourceDependencies(this HtmlDocumentFacade doc)
         {
             var resourceDependencies = doc.head.querySelectorAll("link[rel='jsInclude']").ToList();
@@ -52,6 +53,7 @@ namespace tspHandler
             resourceDependencies.ForEach(rd =>
             {
                 var relPath = rd.getAttribute("href");
+                string mode = rd.getAttribute("data-mode");
                 string content = doc.GetHostContent(relPath);
                 
                 var depDoc = new HtmlDocumentFacade(content);
@@ -72,17 +74,23 @@ namespace tspHandler
                 #region find type def mappings
                 
                 var typeDefsToImplementationMappings = depDoc.ProcessTypeScriptMappingFile(depDocFilePath);
-                Dictionary<string, bool> typescriptRefs = new Dictionary<string, bool>();
+                var typescriptRefs = new Dictionary<string, bool>();
+                //var jsRefs = new Dictionary<string, bool>();
                 var scripts = header
                     .querySelectorAll("script")
                     .ToList();
                 scripts.ForEach(s =>
                 {
                     var src = s.getAttribute("src");
-                    if (src.ToLower().EndsWith(".ts"))
+                    var srcLC = src.ToLower();
+                    //if (srcLC.EndsWith(".ts"))
                     {
                         typescriptRefs[src] = true;
                     }
+                    //else if (srcLC.EndsWith(".js"))
+                    //{
+                    //    jsRefs[src] = true;
+                    //}
                 });
                 var typeScriptFiles = typescriptRefs.Select(typescriptRef =>
                 {
@@ -129,6 +137,10 @@ namespace tspHandler
                             src = src.ReplaceLast(".ts").With(".js");
                         }
                         sc.setAttribute("src", src);
+                        if (!string.IsNullOrEmpty(mode))
+                        {
+                            sc.setAttribute("data-mode", mode);
+                        }
                         sc.setAttribute("data-genID", rdID);
                         doc.head.appendChild(sc);
                     }
