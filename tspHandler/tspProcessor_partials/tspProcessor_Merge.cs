@@ -18,7 +18,7 @@ namespace tspHandler
             }
             HtmlDocumentFacade diffDoc = doc;
             doc.Trace("begindocInherits");
-            var docInherits = doc.querySelectorAll("html>head>meta[name='inherits']");
+            var docInherits = doc.querySelectorAll("html>head>link[name='inherits']");
             doc.Trace("enddocInherits");
             if (docInherits.Count == 0) return null;
             if (docInherits.Count > 1)

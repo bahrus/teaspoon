@@ -18,7 +18,7 @@ namespace tspHandler
         private static Dictionary<string, List<string>> ProcessTypeScriptMappingFile(this HtmlDocumentFacade DepDoc, string DepDocFilePath)
         {
             var header = DepDoc.head;
-            var links = header.querySelectorAll("link[rel='jsMappings']").ToList();
+            var links = header.querySelectorAll("link[rel='import']").ToList();
             var returnObj = new Dictionary<string, List<string>>();
             foreach (var link in links)
             {
@@ -48,7 +48,7 @@ namespace tspHandler
 
         public static HtmlDocumentFacade ProcessResourceDependencies(this HtmlDocumentFacade doc)
         {
-            var resourceDependencies = doc.head.querySelectorAll("link[rel='jsInclude']").ToList();
+            var resourceDependencies = doc.head.querySelectorAll("link[rel='import']").ToList();
             var isLocal = HttpContext.Current.Request.IsLocal;
             resourceDependencies.ForEach(rd =>
             {
@@ -57,6 +57,8 @@ namespace tspHandler
                 string content = doc.GetHostContent(relPath);
                 
                 var depDoc = new HtmlDocumentFacade(content);
+                var metaProcessor = depDoc.head.querySelectorAll("meta[name='importProcessor'][content='DBS.mergeScript']");
+                if (metaProcessor.Count == 0) return;
                 var depDocFilePath = doc.GetHostContentFilePath(relPath);
                 DateTime latestTimeStamp = new DateTime(0);
                 if(isLocal){

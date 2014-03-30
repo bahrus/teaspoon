@@ -1,62 +1,62 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-    <script type="text/javascript" src="Scripts/jquery-2.0.3.js"></script>
-    <script src="tsp_script/tsp.js" data-mode="both"></script>
-    <script src="tsp_script/tcp.js"></script>
-    <script src="form1.js"></script>
-    <style type="text/css" data-js-compiler="[tspHandler.tspProcessor].processEvents">
-   		input{
+	<title></title>
+	<script type="text/javascript" src="Scripts/jquery-2.0.3.js"></script>
+	<script src="tsp_script/tsp.js" data-mode="both"></script>
+	<script src="tsp_script/tcp.js"></script>
+	<script src="form1.js"></script>
+	<style type="text/css" data-js-compiler="[tspHandler.tspProcessor].processEvents">
+		input{
 			event: change;
 			handler: form1.changeHandler;        
 		}
-    </style>
-    <script data-mode="both">
-        tsp.applyRules();
-    </script>
-    <script data-model="[Http].GetContext" id="myContext">
-    </script>
+	</style>
+	<script data-mode="both">
+		tsp.applyRules();
+	</script>
+	<script data-model="[Http].GetContext" id="myContext">
+	</script>
 </head>
 <body>
-    <form action="form1.submitA.tsp.html" data-mode="client-side-only" >
-        <input type="submit" value="Test Submit A" />
-    </form>
-    <form name="myForm" data-mode="both" id="myForm">
-        
-        <span id="msg"></span>
-        <input type="hidden" name="myHiddenField" data-design-type="datalist" list="browsers" >
+	<form action="form1.submitA.tsp.html" data-mode="client-side-only" >
+		<input type="submit" value="Test Submit A" />
+	</form>
+	<form name="myForm" data-mode="both" id="myForm">
 		
-        <datalist id="browsers" data-mode="design-time-only">
-            <option value="Internet Explorer">
-            <option value="Firefox">
-            <option value="Chrome">
-            <option value="Opera">
-            <option value="Safari">
-        </datalist>
+		<span id="msg"></span>
+		<input type="hidden" name="myHiddenField" data-design-type="datalist" list="browsers" >
+		
+		<datalist id="browsers" data-mode="design-time-only">
+			<option value="Internet Explorer">
+			<option value="Firefox">
+			<option value="Chrome">
+			<option value="Opera">
+			<option value="Safari">
+		</datalist>
 
-        <input type="submit" value="button1" name="submits" >
-        <input type="submit" value="button2" id="button2" name="submits" >
-        <input type="submit" value="button3" name="submits2" >
-        <input type="submit" value="button4" name="submits2">
+		<input type="submit" value="button1" name="submits" >
+		<input type="submit" value="button2" id="button2" name="submits" >
+		<input type="submit" value="button3" name="submits2" >
+		<input type="submit" value="button4" name="submits2">
 
-        
-    </form>
-    <input type="text" name="myTextBox" id="myTextBox" form="myForm">
-    <form name="tcp_urlBuilder_form">
-        <textarea id="tcp_urlBuilder"></textarea>
-    </form>
-    <script data-mode="server-side-only">
-        var $ = tsp.$;
-        
-        var btn2 = $('#button2[data-eventName="clicked"]')[0];
-        if (btn2) {
-            $('#msg').html($('#myTextBox').val());
-        }
-        var s = "12345   ";
-        $('#msg').html($.trim(s));
-    </script>
-    
+		
+	</form>
+	<input type="text" name="myTextBox" id="myTextBox" form="myForm">
+	<form name="tcp_urlBuilder_form">
+		<textarea id="tcp_urlBuilder"></textarea>
+	</form>
+	<script data-mode="server-side-only">
+		var $ = tsp.$;
+		
+		var btn2 = $('#button2[data-eventName="clicked"]')[0];
+		if (btn2) {
+			$('#msg').html($('#myTextBox').val());
+		}
+		var s = "12345   ";
+		$('#msg').html($.trim(s));
+	</script>
+	
 </body>
-    
+	
 </html>
