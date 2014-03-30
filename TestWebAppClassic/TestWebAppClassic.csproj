@@ -80,6 +80,7 @@
     <Content Include="Emmet\Emmet.tsp.html" />
     <Content Include="FormsTests\ClientSideWithActionRefs.html" />
     <Content Include="FormsTests\form1.tsp.html" />
+    <Content Include="FormsTests\InheritanceTest.tsp.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
     <Content Include="FormsTests\ClientSideWithAction.tsp.html" />

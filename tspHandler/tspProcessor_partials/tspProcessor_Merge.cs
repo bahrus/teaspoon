@@ -18,7 +18,7 @@ namespace tspHandler
             }
             HtmlDocumentFacade diffDoc = doc;
             doc.Trace("begindocInherits");
-            var docInherits = doc.querySelectorAll("html>head>link[name='inherits']");
+            var docInherits = doc.querySelectorAll("html>head>link[rel='export']");
             doc.Trace("enddocInherits");
             if (docInherits.Count == 0) return null;
             if (docInherits.Count > 1)
@@ -26,7 +26,7 @@ namespace tspHandler
                 throw new ArgumentException("Cannot inherit from more than one page");
             }
             var metaEl = docInherits[0];
-            var baseDocRelativeURL = metaEl.getAttribute("content");
+            var baseDocRelativeURL = metaEl.getAttribute("href");
             if (string.IsNullOrEmpty(baseDocRelativeURL)) throw new ArgumentException("No Content Attribute found");
             var inheritedContentFilePath = doc.GetHostContentFilePath(baseDocRelativeURL);
             var superHandler = new tspHandler(inheritedContentFilePath);
@@ -39,7 +39,7 @@ namespace tspHandler
             //ProcessNode(nodeHierarchy, differenceStack, differences);
             //MergeDifferences(superDoc, differences);
             //return superDoc;
-            ProcessTransform(superDoc.html, superDoc.html);
+            ProcessTransform(superDoc.html, doc.html);
             return superDoc;
         }
 
@@ -116,7 +116,7 @@ namespace tspHandler
                     switch (diff.Action)
                     {
                         case NodeDiffAction.Append:
-                            return diff.MatchSelector.SubstringBeforeLast(">");
+                            return diff.MatchSelector.SubstringBeforeLast(">").SubstringAfter("html>");
                         case NodeDiffAction.Replace:
                             string ret = diff.MatchSelector;
                             if (diff.Node.hasAttribute(XMatchAttribute))
