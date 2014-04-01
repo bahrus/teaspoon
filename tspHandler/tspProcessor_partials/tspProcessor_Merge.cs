@@ -116,7 +116,8 @@ namespace tspHandler
                     switch (diff.Action)
                     {
                         case NodeDiffAction.Append:
-                            return diff.MatchSelector.SubstringBeforeLast(">").SubstringAfter("html>");
+                            var returnS = diff.MatchSelector.SubstringBeforeLast(">").SubstringAfterIfExists("html>");
+                            return returnS;
                         case NodeDiffAction.Replace:
                             string ret = diff.MatchSelector;
                             if (diff.Node.hasAttribute(XMatchAttribute))

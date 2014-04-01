@@ -42,6 +42,14 @@ namespace ClassGenMacros
             return value.Substring(posOfSearch + search.Length);
         }
 
+        public static string SubstringAfterIfExists(this string value, string search)
+        {
+            if (value == null) return null;
+            int posOfSearch = value.IndexOf(search);
+            if (posOfSearch == -1) return value;
+            return value.Substring(posOfSearch + search.Length);
+        }
+
         public static string SubstringAfterLast(this string value, string search)
         {
             if (value == null) return null;
