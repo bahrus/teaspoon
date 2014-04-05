@@ -136,7 +136,8 @@ namespace tspHandler
                             sc.setAttribute("data-mode", mode);
                         }
                         sc.setAttribute("data-genID", rdID);
-                        doc.head.appendChild(sc);
+                        //doc.head.appendChild(sc);
+                        doc.head.insertBefore(sc, rd);
                     }
                 }
                 #endregion

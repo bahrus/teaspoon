@@ -81,6 +81,9 @@
     <Content Include="FormsTests\ClientSideWithActionRefs.html" />
     <Content Include="FormsTests\form1.tsp.html" />
     <Content Include="FormsTests\InheritanceTest.tsp.html" />
+    <Content Include="Grids\FlatGrid.d.tsp.html" />
+    <Content Include="Grids\FlatGrid.tsp.html" />
+    <Content Include="Grids\FlatGridRefs.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
     <Content Include="FormsTests\ClientSideWithAction.tsp.html" />
@@ -120,13 +123,14 @@
     <Content Include="Scripts\slickGrid\slick.grid.js" />
     <Content Include="Scripts\slickGrid\slick.groupitemmetadataprovider.js" />
     <Content Include="Scripts\slickGrid\slick.remotemodel.js" />
+    <Content Include="ScrollTests\ScrollTest1.tsp.html" />
+    <Content Include="ScrollTests\ScrollTest1Refs.html" />
     <Content Include="skin\slick.grid.css" />
     <Content Include="StyleDirectiveTests\CustomCompiler.tsp.html" />
     <Content Include="StyleDirectiveTests\AttribLink.tsp.html" />
     <Content Include="TabsTest.tsp.html" />
     <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
-    <Content Include="tsp_script\DBS_b.js" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
@@ -232,6 +236,7 @@
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\slick.headerbuttons.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\SlickGrid.d.ts" />
+    <TypeScriptCompile Include="ScrollTests\ScrollTest1.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableTestModel.cs" />
@@ -281,6 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Inheritance\" />
+    <Folder Include="tsp_script\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

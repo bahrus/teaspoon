@@ -6,6 +6,31 @@ module DBS.b{
         return (typeof (mode) == 'undefined' || mode !== 'server');
     }
 
+    //export function isClientSideMode() {
+    //    return typeof (mode) == 'undefined' || mode !== 'server'
+    //}
+
+    export var dataExpando = isCSMode() ? 'data-cs-cache' : 'data-ss-cache';
+    var cache = [{}];
+    export function data(elem: HTMLElement): any {
+        var $el = $(elem);
+        var cacheIndex = elem.getAttribute(dataExpando), nextCacheIndex = cache.length;
+        //var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
+        var nCacheIndex: number;
+        if (!cacheIndex) {
+            $el.attr(dataExpando, nextCacheIndex.toString());
+            //elem.setAttribute(expando, nextCacheIndex.toString());
+            cache[nextCacheIndex] = {};
+            nCacheIndex = nextCacheIndex;
+        } else {
+            nCacheIndex = parseInt(cacheIndex);
+
+        }
+        if (!cache[nCacheIndex]) cache[nextCacheIndex] = {};
+        return cache[nCacheIndex];
+    }
+
+
     export function applyEmmet(selectedNode: NodeSelector) {
         var cs = isCSMode();
         var emmetSelector = 'script[type="text/emmet"][data-mode="';
@@ -46,5 +71,21 @@ module DBS.b{
             rc = rc.replace('r,', row + ',');
             rcEL.setAttribute('data-rc', rc);
         }
+    }
+
+    export function extractDirective<T>(el: HTMLElement, prop: string): any {
+        //var $el = $(el);
+        var d = <T> DBS.b.data(el)[prop];
+        if (d) return d;
+        var attName = 'data-' + toSnakeCase(prop);
+        var da = el.getAttribute(attName);
+        if (da) {
+            return eval('(' + da + ')');
+        }
+    }
+
+    var lcUpRegExp = /([a-z])([A-Z])/g;
+    export function toSnakeCase(s: string) {
+        return s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 } 

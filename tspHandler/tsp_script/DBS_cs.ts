@@ -114,6 +114,8 @@ module DBS.cs {
         return regExp.exec(input).length;
     }
 
+    
+
     function applyDirectives(selectableNode: NodeSelector) {
         var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
         var docOrder = 0;
@@ -205,28 +207,58 @@ module DBS.cs {
                 }
             }
         }
-        var fn;
         for (var i = 0, n = scriptDirectives.length; i < n; i++) {
+            var fn = null;
+            var varNameD = null;
+            var varName = null;
+            var exprVal = null;
             var sd = scriptDirectives[i];
-            var ih = sd.scriptTag.innerHTML;
-            var search = 'function ';
-            var iPosOfFun = ih.indexOf(search);
+            var bStringify = sd.scriptTag.hasAttribute('data-stringify');
+            var ih = sd.scriptTag.innerHTML.trim();
+            var fnSearch = 'function ';
+            var iPosOfFun = ih.indexOf(fnSearch);
             if (iPosOfFun > -1) {
                 var iPosOfParen = ih.indexOf('(');
-                var sc = ih.substring(iPosOfFun + search.length, iPosOfParen);
+                var sc = ih.substring(iPosOfFun + fnSearch.length, iPosOfParen);
                 fn = eval(sc);
             } else {
-                var sc = sd.scriptTag.innerHTML.replace(';', '');
-                fn = eval(sc);
+                var varSearch = 'var ';
+                var iPosOfVar = ih.indexOf(varSearch);
+                if (iPosOfVar > -1) {
+                    var iPosOfEquals = ih.indexOf('=');
+                    varName = ih.substring(iPosOfVar + varSearch.length, iPosOfEquals).trim();
+                    if (bStringify) {
+                        varNameD = 'data-' + DBS.b.toSnakeCase(varName);
+                    }
+                    var expr = ih.substring(iPosOfEquals + 1).trim().replace(';', '');
+                    if (bStringify) {
+                        exprVal = expr;
+                    } else {
+                        exprVal = eval('(' +  expr + ')');
+                    }
+                } else {
+                    var sc = sd.scriptTag.innerHTML.replace(';', '');
+                    fn = eval(sc);
+                }
             }
             var tes = sd.targetElements;
             for (var j = 0, m = tes.length; j < m; j++) {
-                var te = tes[j];
-                fn(te);
+                var te = <HTMLElement> tes[j];
+                if (fn) {
+                    fn(te);
+                } else {
+                    if (bStringify) {
+                        te.setAttribute(varNameD, exprVal);
+                    } else {
+                        DBS.b.data(te)[varName] = exprVal;
+                    }
+                }
             }
         }
 
     }
+
+    
 
     export function ready() {
         window.removeEventListener('load', ready);

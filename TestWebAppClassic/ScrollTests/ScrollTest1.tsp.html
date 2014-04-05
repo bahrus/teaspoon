@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="import" href="ScrollTest1Refs.html" id="lib" />
+    <script src="../tsp_script/tsp_b.js"></script>
+    <script src="../tsp_script/tsp_cs.js"></script>
+    <style data-attribute-link="Attributes">
+        script.VScrollBarAttributes {
+        }
+        .VScrollBar {
+        }
+        script.HScrollBarAttributes {
+        }
+        .HScrollBar {
+        }
+    </style>
+    <script class="VScrollBarAttributes">
+        var scrollOptions = {
+            direction: tsp.b.DirectionOptions.Vertical,
+            maxValue: 1000,
+            maxElementSize: 20,
+            formTargets: $('#scrollValues'),
+        };
+    </script>
+
+    <script class="HScrollBarAttributes">
+        var scrollOptions = {
+            direction: tsp.b.DirectionOptions.Horizontal,
+            maxValue: 1000,
+            maxElementSize: 20,
+        }
+    </script>
+
+    <script class="VScrollBarAttributes HScrollBarAttributes">
+        tsp.cs.addScroll;
+    </script>
+
+    
+</head>
+<body>
+
+    <form id="scrollValues">
+        <input type="hidden" name="vs">
+    </form>
+    
+    Vertical
+    <div class="VScrollBar" style="height:200px" id="vs" form="scrollValues"></div>
+    Horizontal
+    <div class="HScrollBar" style="width:200px"></div>
+
+
+</body>
+</html>
