@@ -230,14 +230,20 @@ module DBS.cs {
                     if (bStringify) {
                         varNameD = 'data-' + DBS.b.toSnakeCase(varName);
                     }
-                    var expr = ih.substring(iPosOfEquals + 1).trim().replace(';', '');
+                    var expr = ih.substring(iPosOfEquals + 1).trim();
+                    var len = expr.length;
+                    if (len > 1) {
+                        if (expr.lastIndexOf(';') == len - 1) {
+                            expr = expr.substr(0, len - 1);
+                        }
+                    }
                     if (bStringify) {
                         exprVal = expr;
                     } else {
                         exprVal = eval('(' +  expr + ')');
                     }
                 } else {
-                    var sc = sd.scriptTag.innerHTML.replace(';', '');
+                    var sc = sd.scriptTag.innerHTML.replace(';', '').trim();
                     fn = eval(sc);
                 }
             }

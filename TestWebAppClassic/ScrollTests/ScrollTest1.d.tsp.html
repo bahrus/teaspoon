@@ -1,9 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
+    <script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script>
     
-    <script src="../tsp_script/tsp_b.js"></script>
-    <script src="../tsp_script/tsp_cs.js"></script>
+    
     <style data-attribute-link="Attributes">
         script.VScrollBarAttributes {
         }
@@ -28,6 +28,7 @@
             direction: tsp.b.DirectionOptions.Horizontal,
             maxValue: 1000,
             maxElementSize: 20,
+            formTargets: $('#scrollValues'),
         }
     </script>
 
@@ -35,19 +36,27 @@
         tsp.cs.addScroll;
     </script>
 
+    <script>
+        function onFormChange() {
+            alert('iah');
+        }
+    </script>
     
-<script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script></head>
+</head>
 <body>
 
     <form id="scrollValues">
-        <input type="hidden" name="vs">
     </form>
     
     Vertical
-    <div class="VScrollBar" style="height:200px" id="vs" form="scrollValues"></div>
+    <div class="VScrollBar" style="height:200px" id="vs"></div>
     Horizontal
-    <div class="HScrollBar" style="width:200px"></div>
+    <div class="HScrollBar" style="width:200px" id="hs"></div>
 
+<script>
+    var t = document.getElementById('scrollValues');
+    t.addEventListener('change', onFormChange);
+</script>
 
 </body>
 </html>

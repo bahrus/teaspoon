@@ -60,8 +60,16 @@ module tsp.cs {
         //console.log(evt);
         var src = <HTMLDivElement> evt.srcElement;
         var scrollOptions = <tsp.b.IScrollOptions> DBS.b.data(src)['scrollOptions'];
+        var newVal;
+        switch (scrollOptions.direction) {
+            case tsp.b.DirectionOptions.Horizontal:
+                newVal = Math.floor(src.scrollLeft / scrollOptions.maxElementSize);
+                break;
+            case tsp.b.DirectionOptions.Vertical:
+                newVal = Math.floor(src.scrollTop / scrollOptions.maxElementSize);
+                break;
+        }
         
-        var newVal = Math.floor(src.scrollTop / scrollOptions.maxElementSize);
         if (newVal !== scrollOptions.currentValue) {
             console.log(newVal);
             scrollOptions.currentValue = newVal;

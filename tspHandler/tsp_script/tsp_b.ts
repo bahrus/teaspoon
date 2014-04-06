@@ -2,6 +2,8 @@
 
 module tsp.b {
 
+    var db = DBS.b;
+
     export interface IDataTable {
         data?: any[][];
         fields?: IDataField[];
@@ -29,9 +31,10 @@ module tsp.b {
         text,
     }
 
-    export interface IPopulateRectCoordinates {
+    export interface IFillGridOptions {
         //templateSelector: string;
         //verticalOffsetCtlSelector?: 
+        verticalOffsetFld?: HTMLInputElement;
         getDataTable?: (el: HTMLElement) => IDataTable;
         suppressVerticalVirtualization?: boolean;
         //supportRowSelection?: boolean;
@@ -107,7 +110,7 @@ module tsp.b {
 
 
 
-    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IPopulateRectCoordinates) {
+    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IFillGridOptions) {
         var rowOffsetFld2;
         if (rowOffsetFld) {
             rowOffsetFld2 = rowOffsetFld;
@@ -117,14 +120,14 @@ module tsp.b {
         //var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
         var rowOffset = (rowOffsetFld2 && rowOffsetFld2.value.length > 0) ? parseInt(rowOffsetFld2.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
-        var rule = populateRule ? populateRule : <IPopulateRectCoordinates> DBS.b.data(el).populateRule;
+        var rule = populateRule ? populateRule : <IFillGridOptions> db.data(el).populateRule;
         var dataTable = rule.getDataTable(el);
         var dt = dataTable.data;
         var view = dataTable.rowView;
         var tnIdx = -1;
         switch (rule.treeColumn) {
             case TreeType.simple:
-                tnIdx = <number> DBS.b.data(el).treeNodeIndex;
+                tnIdx = <number> db.data(el).treeNodeIndex;
                 break;
         }
         for (var i = 0, n = rcs.length; i < n; i++) {
@@ -171,47 +174,33 @@ module tsp.b {
         return sp + sR + node[nodeIdxes.text];
     }
 
-//    export function fillGrid(el: HTMLElement, populateRule: IPopulateRectCoordinates) {
-//        getOrCreateHiddenInput(el, el.id + '_rowOffset', hiddenFld => {
-//            tsp.data(el).populateRule = populateRule;
-//            if (!el.getAttribute('data-populated')) {
-//                switch (populateRule.treeColumn) {
-//                    case TreeType.simple:
-//                        applyTreeView(el, populateRule);
-//                        break;
-//                }
-//                refreshTemplateWithRectCoords(el, hiddenFld, populateRule);
-//                el.setAttribute('data-populated', 'yes');
-//            }
-//            if (isClientSideMode()) {
-//                switch (populateRule.rowSelection) {
-//                    case SelectionOptions.single:
-//                        tcp.addRowSelection(el);
-//                        break;
-//                }
-//                switch (populateRule.treeColumn) {
-//                    case TreeType.simple:
-//                        applyTreeView(el, populateRule);
-//                        tcp.addTreeNodeToggle(el);
-//                }
-//                if (!populateRule.suppressVerticalVirtualization) {
-//                    tcp.addVScroller(el, populateRule.getDataTable(el), hiddenFld);
-//                }
-//                switch (populateRule.titleFill) {
-//                    case TitleFillOptions.text:
-//                        tcp._when('mousemove', {
-//                            selectorNodeTest: 'td',
-//                            handler: function (evt) {
-//                                var el = <HTMLElement> evt.srcElement;
-//                                el.title = el.innerText;
-//                            }
-//                        });
-//                        break;
-//                }
-//            }
-//        });
-//        tsp.data(el).initialized = true;
+    export function fillGrid(el: HTMLElement) {
+        var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+        if (fgo.verticalOffsetFld) {
+            if (db.isCSMode()) {
+                var vof = fgo.verticalOffsetFld;
+                var vofd = db.data(vof);
+                if (!vofd.dependantGrids) {
+                    vofd.dependantGrids = [];
+                }
+                vofd.dependantGrids.push(el);
+                DBS.cs.onPropChange(fgo.verticalOffsetFld, 'value', verticalOffsetChangeHandler);
+            }
+            refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        }
+    }
+
+    
+
+    function verticalOffsetChangeHandler(verticalOffsetFld: HTMLElement) {
+        var dgs = <HTMLElement[]> db.data(verticalOffsetFld).dependantGrids;
+        for (var i = 0, n = dgs.length; i < n; i++) {
+            var el = dgs[i];
+            var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+            refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        }
+    }
 
 
-//    }
+
 } 
