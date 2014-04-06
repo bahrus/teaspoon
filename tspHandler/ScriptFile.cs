@@ -33,6 +33,7 @@ namespace tspHandler
                 var tfChild = new ScriptFile(newPath);
                 this.DependenciesNN.Add(tfChild);
             }
+            sr.Close();
         }
 
         public List<ScriptFile> Dependencies { get; set; }

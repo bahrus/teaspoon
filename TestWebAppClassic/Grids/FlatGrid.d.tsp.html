@@ -12,7 +12,7 @@
         .VScrollBar {
         }
     </style>
-    <script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script>
+    <script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script>
     
     
 
@@ -149,25 +149,27 @@
     };
 </script>
 <script class="RCAttributes">
-    tsp.b.fillGrid;
+    tsp.cs.fillGrid;
 </script>
 <script type="text/emmet" data-mode="client-side-only">
-        table.RC>(
-            (thead>tr>td*3)
-          + (tbody>
-                (tr>
-                    (td[data-rc=r,$]*3)
-                )*6
+        (table>tr>
+            (td>
+                table.RC>(
+                    (thead>tr>th[data-hc=1,$]*3)
+                  + (tbody>
+                        (tr>
+                            (td[data-rc=r,$]*3)
+                        )*6
+                    )
+                )
+            )
+            + (td>
+              div#vs.VScrollBar[style=height:200px]
             )
         )
-    </script>
+        + form#scrollValues>input#vs_ScrollVal[name=vs_ScrollVal][type='hidden']
+</script>
 
 
-<form id="scrollValues">
-    <input type='hidden' name='vs_ScrollVal' id='vs_ScrollVal'>
-</form>
-
-
-<div class="VScrollBar" style="height:200px" id="vs"></div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿///<reference path='DBS_b.ts'/>
 
+
 module tsp.b {
 
     var db = DBS.b;
@@ -174,32 +175,24 @@ module tsp.b {
         return sp + sR + node[nodeIdxes.text];
     }
 
-    export function fillGrid(el: HTMLElement) {
+    export function fillGrid(el: HTMLElement) : IFillGridOptions {
         var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-        if (fgo.verticalOffsetFld) {
-            if (db.isCSMode()) {
-                var vof = fgo.verticalOffsetFld;
-                var vofd = db.data(vof);
-                if (!vofd.dependantGrids) {
-                    vofd.dependantGrids = [];
-                }
-                vofd.dependantGrids.push(el);
-                DBS.cs.onPropChange(fgo.verticalOffsetFld, 'value', verticalOffsetChangeHandler);
-            }
-            refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        var hcs = el.querySelectorAll('th[data-hc]');
+        var dataTable = fgo.getDataTable(el);
+        var fields = dataTable.fields;
+        for (var i = 0, n = hcs.length; i < n; i++) {
+            var field = fields[i];
+            var hc = <HTMLTableCellElement> hcs[i];
+            hc.innerHTML = field.header ? field.header : field.name;
         }
+        refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        return fgo;
+        
     }
 
     
 
-    function verticalOffsetChangeHandler(verticalOffsetFld: HTMLElement) {
-        var dgs = <HTMLElement[]> db.data(verticalOffsetFld).dependantGrids;
-        for (var i = 0, n = dgs.length; i < n; i++) {
-            var el = dgs[i];
-            var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
-        }
-    }
+    
 
 
 
