@@ -110,10 +110,28 @@ module tsp.b {
         }
     }
 
+    export function refreshHeaderTemplateWithRectCoords(el: HTMLElement, fillGridOptions?: IFillGridOptions) {
+        var fgo = fillGridOptions;
+        var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
+        var hcs = el.querySelectorAll('th[data-hc]');
+        var dataTable = fgo.getDataTable(el);
+        var fields = dataTable.fields;
+        for (var i = 0, n = hcs.length; i < n; i++) {
+            var fldIdx = Math.min(fields.length - 1, i + colOffset);
+            var field = fields[fldIdx];
+            if (field.renderer) {
+                if (typeof (field.renderer) == 'string') {
+                    field.renderer = eval(field.renderer);
+                }
+            }
+            var hc = <HTMLTableCellElement> hcs[i];
+            hc.innerHTML = field.header ? field.header : field.name;
+        }
+    }
 
 
-
-    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, fillGridOptions?: IFillGridOptions) {
+    export function refreshBodyTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, fillGridOptions?: IFillGridOptions) {
+        var fgo = fillGridOptions;
         var rowOffsetFld2;
         if (rowOffsetFld) {
             rowOffsetFld2 = rowOffsetFld;
@@ -122,9 +140,9 @@ module tsp.b {
         }
         //var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
         var rowOffset = (rowOffsetFld2 && rowOffsetFld2.value.length > 0) ? parseInt(rowOffsetFld2.value) : 0;
-        var colOffset = (fillGridOptions && fillGridOptions.horizontalOffsetFld && fillGridOptions.horizontalOffsetFld.value.length > 0) ? parseInt(fillGridOptions.horizontalOffsetFld.value) : 0;
+        var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
-        var rule = fillGridOptions ? fillGridOptions : <IFillGridOptions> db.data(el).populateRule;
+        var rule = fgo ? fgo : <IFillGridOptions> db.data(el).populateRule;
         var dataTable = rule.getDataTable(el);
         var dt = dataTable.data;
         var f = dataTable.fields;
@@ -183,20 +201,8 @@ module tsp.b {
 
     export function fillGrid(el: HTMLElement) : IFillGridOptions {
         var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-        var hcs = el.querySelectorAll('th[data-hc]');
-        var dataTable = fgo.getDataTable(el);
-        var fields = dataTable.fields;
-        for (var i = 0, n = hcs.length; i < n; i++) {
-            var field = fields[i];
-            if (field.renderer) {
-                if (typeof (field.renderer) == 'string') {
-                    field.renderer = eval(field.renderer);
-                }
-            }
-            var hc = <HTMLTableCellElement> hcs[i];
-            hc.innerHTML = field.header ? field.header : field.name;
-        }
-        refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        refreshHeaderTemplateWithRectCoords(el, fgo);
+        refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         return fgo;
         
     }

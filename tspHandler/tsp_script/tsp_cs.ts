@@ -119,7 +119,7 @@ module tsp.cs {
         for (var i = 0, n = dgs.length; i < n; i++) {
             var el = dgs[i];
             var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            tsp.b.refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+            tsp.b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         }
     }
 
@@ -128,7 +128,8 @@ module tsp.cs {
         for (var i = 0, n = dgs.length; i < n; i++) {
             var el = dgs[i];
             var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            tsp.b.refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+            tsp.b.refreshHeaderTemplateWithRectCoords(el, fgo);
+            tsp.b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         }
     }
 }
