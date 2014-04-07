@@ -19,6 +19,7 @@ module tsp.b {
         isTreeNodeInfo?: boolean;
         header?: string;
         footer?: string;
+        renderer?: any;
     }
 
     export enum SelectionOptions {
@@ -35,6 +36,7 @@ module tsp.b {
     export interface IFillGridOptions {
         //templateSelector: string;
         //verticalOffsetCtlSelector?: 
+        horizontalOffsetFld?: HTMLInputElement;
         verticalOffsetFld?: HTMLInputElement;
         getDataTable?: (el: HTMLElement) => IDataTable;
         suppressVerticalVirtualization?: boolean;
@@ -111,7 +113,7 @@ module tsp.b {
 
 
 
-    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, populateRule?: IFillGridOptions) {
+    export function refreshTemplateWithRectCoords(el: HTMLElement, rowOffsetFld?: HTMLInputElement, fillGridOptions?: IFillGridOptions) {
         var rowOffsetFld2;
         if (rowOffsetFld) {
             rowOffsetFld2 = rowOffsetFld;
@@ -120,10 +122,12 @@ module tsp.b {
         }
         //var rowOffsetFld2 = rowOffsetFld ? rowOffsetFld : <HTMLInputElement> document.getElementById(el.id + '_rowOffset');
         var rowOffset = (rowOffsetFld2 && rowOffsetFld2.value.length > 0) ? parseInt(rowOffsetFld2.value) : 0;
+        var colOffset = (fillGridOptions && fillGridOptions.horizontalOffsetFld && fillGridOptions.horizontalOffsetFld.value.length > 0) ? parseInt(fillGridOptions.horizontalOffsetFld.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
-        var rule = populateRule ? populateRule : <IFillGridOptions> db.data(el).populateRule;
+        var rule = fillGridOptions ? fillGridOptions : <IFillGridOptions> db.data(el).populateRule;
         var dataTable = rule.getDataTable(el);
         var dt = dataTable.data;
+        var f = dataTable.fields;
         var view = dataTable.rowView;
         var tnIdx = -1;
         switch (rule.treeColumn) {
@@ -135,7 +139,7 @@ module tsp.b {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
             var row = parseInt(coord[0]) - 1 + rowOffset;
-            var col = parseInt(coord[1]) - 1;
+            var col = Math.min( parseInt(coord[1]) - 1 + colOffset, f.length - 1);
             var dRow;
             if (view) {
                 row = (row < view.length) ? view[row] : -1
@@ -155,6 +159,8 @@ module tsp.b {
             } else {
                 var val = dRow[col];
             }
+            var fc  = f[col];
+            if (fc.renderer) val = fc.renderer(val, rc, dRow);
             rc.innerHTML = val;
         }
     }
@@ -182,6 +188,11 @@ module tsp.b {
         var fields = dataTable.fields;
         for (var i = 0, n = hcs.length; i < n; i++) {
             var field = fields[i];
+            if (field.renderer) {
+                if (typeof (field.renderer) == 'string') {
+                    field.renderer = eval(field.renderer);
+                }
+            }
             var hc = <HTMLTableCellElement> hcs[i];
             hc.innerHTML = field.header ? field.header : field.name;
         }

@@ -101,10 +101,30 @@ module tsp.cs {
             }
 
         }
+        if (fgo.horizontalOffsetFld) {
+            if (db.isCSMode()) {
+                var hof = fgo.horizontalOffsetFld;
+                var hofd = db.data(hof);
+                if (!hofd.dependantGrids) {
+                    hofd.dependantGrids = [];
+                }
+                hofd.dependantGrids.push(el);
+                DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
+            }
+        }
     }
 
     function verticalOffsetChangeHandler(verticalOffsetFld: HTMLElement) {
         var dgs = <HTMLElement[]> db.data(verticalOffsetFld).dependantGrids;
+        for (var i = 0, n = dgs.length; i < n; i++) {
+            var el = dgs[i];
+            var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+            tsp.b.refreshTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        }
+    }
+
+    function horizontalOffsetChangeHandler(horizontalOffsetFld: HTMLInputElement) {
+        var dgs = <HTMLElement[]> db.data(horizontalOffsetFld).dependantGrids;
         for (var i = 0, n = dgs.length; i < n; i++) {
             var el = dgs[i];
             var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');

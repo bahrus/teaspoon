@@ -24,22 +24,24 @@ namespace tspHandler
             {
                 var href = link.getAttribute("href");
                 var linkFilePath = DepDocFilePath.NavigateTo(href);
-                var sr = new StreamReader(linkFilePath);
-                while(sr.Peek() != -1)
+                using (var sr = new StreamReader(linkFilePath))
                 {
-                    var lineOfText = sr.ReadLine().Trim();
-                    if (!lineOfText.StartsWith("<script")) continue;
-                    var LHS = lineOfText.SubstringBefore("></script>=<script ");
-                    LHS = LHS.SubstringAfter("=").Trim('"', '\'');
-                    var typeDefFilePath = linkFilePath.NavigateTo(LHS);
-                    var RHS = lineOfText.SubstringAfter("></script>=<script src=");
-                    RHS = RHS.Replace("\"></script>", string.Empty).Replace("<script src=\"", string.Empty).Trim('"', '\'');
-                    var implPaths = RHS.Split('+').Select(s => linkFilePath.NavigateTo(s)).ToList();
-                    
-                    returnObj[typeDefFilePath] = implPaths;
-                    //LHS = LHS.SubstringAfter("<script src=\"");
+                    while (sr.Peek() != -1)
+                    {
+                        var lineOfText = sr.ReadLine().Trim();
+                        if (!lineOfText.StartsWith("<script")) continue;
+                        var LHS = lineOfText.SubstringBefore("></script>=<script ");
+                        LHS = LHS.SubstringAfter("=").Trim('"', '\'');
+                        var typeDefFilePath = linkFilePath.NavigateTo(LHS);
+                        var RHS = lineOfText.SubstringAfter("></script>=<script src=");
+                        RHS = RHS.Replace("\"></script>", string.Empty).Replace("<script src=\"", string.Empty).Trim('"', '\'');
+                        var implPaths = RHS.Split('+').Select(s => linkFilePath.NavigateTo(s)).ToList();
+
+                        returnObj[typeDefFilePath] = implPaths;
+                        //LHS = LHS.SubstringAfter("<script src=\"");
+                    }
+                    sr.Close();
                 }
-                sr.Close();
             }
             return returnObj;
 

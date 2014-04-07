@@ -11,6 +11,10 @@
         }
         .VScrollBar {
         }
+        script.HScrollBarAttributes {
+        }
+        .HScrollBar {
+        }
     </style>
     <link href="FlatGridRefs.html" rel="import" id="lib">
     <script data-genid="lib" src="../tsp_script/DBS_b.js"></script>
@@ -135,7 +139,16 @@
     };
 </script>
 
-<script class="VScrollBarAttributes">
+<script class="HScrollBarAttributes">
+    var scrollOptions = {
+        direction: tsp.b.DirectionOptions.Horizontal,
+        maxValue: model.dataTable.fields.length,
+        maxElementSize: 100,
+        formTargets: $('#scrollValues')
+    };
+</script>
+
+<script class="VScrollBarAttributes HScrollBarAttributes">
     tsp.cs.addScroll;
 </script>
 
@@ -145,29 +158,35 @@
 <script class="RCAttributes">
     var fillGridOptions = {
         getDataTable: function(){return model.dataTable;},
-        verticalOffsetFld: document.getElementById('vs_ScrollVal')
+        verticalOffsetFld: document.getElementById('vs_ScrollVal'),
+        horizontalOffsetFld: document.getElementById('hs_ScrollVal')
     };
 </script>
 <script class="RCAttributes">
     tsp.cs.fillGrid;
 </script>
 <script type="text/emmet" data-mode="client-side-only">
-        (table>tr>
-            (td>
-                table.RC>(
-                    (thead>tr>th[data-hc=1,$]*3)
-                  + (tbody>
-                        (tr>
-                            (td[data-rc=r,$]*3)
-                        )*6
+        (table>
+            (tr>
+                (td>
+                    table.RC>(
+                        (thead>tr>th[data-hc=1,$]*3)
+                      + (tbody>
+                            (tr>
+                                (td[data-rc=r,$]*3)
+                            )*6
+                        )
                     )
                 )
+                + (td>
+                  div#vs.VScrollBar[style=height:200px]
+                )
             )
-            + (td>
-              div#vs.VScrollBar[style=height:200px]
-            )
+            + tr>td>div#hs.HScrollBar[style=width:200px]
         )
-        + form#scrollValues>input#vs_ScrollVal[name=vs_ScrollVal][type='hidden']
+        + form#scrollValues>
+            (input#vs_ScrollVal[name=vs_ScrollVal][type='hidden'])
+            + (input#hs_ScrollVal[name=hs_ScrollVal][type='hidden'])
 </script>
 
 

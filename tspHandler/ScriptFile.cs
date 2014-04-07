@@ -17,23 +17,25 @@ namespace tspHandler
             this.DocumentFilePath = documentFilePath;
             var fi = new FileInfo(documentFilePath);
             if(!fi.Exists) return;
-            var sr = new StreamReader(documentFilePath);
-            while (sr.Peek() != -1)
+            using (var sr = new StreamReader(documentFilePath))
             {
-                string line = sr.ReadLine().Trim();
-                if (line.Length == 0) continue;
-                if (!line.StartsWith("///<reference"))
+                while (sr.Peek() != -1)
                 {
-                    break;
+                    string line = sr.ReadLine().Trim();
+                    if (line.Length == 0) continue;
+                    if (!line.StartsWith("///<reference"))
+                    {
+                        break;
+                    }
+                    string afterPathEquals = line.SubstringAfter("=");
+                    string beforeclosedBracket = afterPathEquals.SubstringBefore("/>");
+                    string path = beforeclosedBracket.Trim().Trim('\'').Trim('\"');
+                    string newPath = documentFilePath.NavigateTo(path);
+                    var tfChild = new ScriptFile(newPath);
+                    this.DependenciesNN.Add(tfChild);
                 }
-                string afterPathEquals = line.SubstringAfter("=");
-                string beforeclosedBracket = afterPathEquals.SubstringBefore("/>");
-                string path = beforeclosedBracket.Trim().Trim('\'').Trim('\"');
-                string newPath = documentFilePath.NavigateTo(path);
-                var tfChild = new ScriptFile(newPath);
-                this.DependenciesNN.Add(tfChild);
+                sr.Close();
             }
-            sr.Close();
         }
 
         public List<ScriptFile> Dependencies { get; set; }
