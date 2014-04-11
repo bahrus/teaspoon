@@ -31,9 +31,10 @@ namespace TestWebAppClassic
                 dt.fields.Add(dc);
             }
             var totalColumns = dt.fields.Count;
-            int iLevel1Rows = 10;
-            int iLevel2Rows = 5;
-            int iLevel3Rows = 5;
+            int iLevel1Rows = 3;// 10;
+            int iLevel2Rows = 2; // 5;
+            int iLevel3Rows = 2;// 5;
+
             for (int i = 0; i < iLevel1Rows; i++)
             {
                 var dataRow = new object[totalColumns];

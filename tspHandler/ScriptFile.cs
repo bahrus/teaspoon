@@ -17,7 +17,8 @@ namespace tspHandler
             this.DocumentFilePath = documentFilePath;
             var fi = new FileInfo(documentFilePath);
             if(!fi.Exists) return;
-            using (var sr = new StreamReader(documentFilePath))
+            var fs = new FileStream(documentFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using (var sr = new StreamReader(fs))
             {
                 while (sr.Peek() != -1)
                 {

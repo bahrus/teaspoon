@@ -59,6 +59,14 @@ module tsp.cs {
         }
     }
 
+    export function addTreeNodeToggle(el: HTMLElement) {
+        _when('click', {
+            containerID: db.getOrCreateID(el),
+            handler: handleTreeNodeToggle,
+            selectorNodeTest: 'span.treeNodeToggler',
+        });
+    }
+
     function scrollListener(evt: Event) {
 
         //console.log(evt);
@@ -89,6 +97,10 @@ module tsp.cs {
 
     export function fillGrid(el: HTMLElement) {
         var fgo = tsp.b.fillGrid(el);
+        switch (fgo.treeColumn) {
+            case tsp.b.TreeType.simple:
+                addTreeNodeToggle(el);   
+        }
         if (fgo.verticalOffsetFld) {
             if (db.isCSMode()) {
                 var vof = fgo.verticalOffsetFld;
@@ -98,6 +110,7 @@ module tsp.cs {
                 }
                 vofd.dependantGrids.push(el);
                 DBS.cs.onPropChange(fgo.verticalOffsetFld, 'value', verticalOffsetChangeHandler);
+                
             }
 
         }
@@ -131,6 +144,124 @@ module tsp.cs {
             tsp.b.refreshHeaderTemplateWithRectCoords(el, fgo);
             tsp.b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         }
+    }
+
+    export interface ICascadingHandler {
+        selectorNodeTest?: string;
+        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
+        //test?: (el: HTMLElement) => boolean;
+        containerID?: string;
+        container?: HTMLElement;
+        data?: any;
+    }
+
+    var matchesSelector = function (node, selector) {
+        var nodeList = node.parentNode.querySelectorAll(selector),
+            length = nodeList.length,
+            i = 0;
+        while (i < length) {
+            if (nodeList[i] == node) return true;
+            ++i;
+        }
+        return false;
+    };
+
+    function handleCascadingEvent(evt: Event) {
+        var el = <HTMLElement> evt.srcElement;
+        var evtEl = el;
+        while (el) {
+            var bCheckedBody = (el.tagName == 'BODY');
+            var test = el.getAttribute(db.dataExpando);
+            if (test) {
+                var evtHandlers = db.data(el).handlers;
+                if (evtHandlers) {
+                    var evtHandler = evtHandlers[evt.type];
+                    if (evtHandler) {
+                        for (var i = 0, n = evtHandler.length; i < n; i++) {
+                            var cascadeHandler = evtHandler[i];
+                            var doesMatch = false;
+                            if (cascadeHandler.selectorNodeTest) {
+                                //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
+                                if (evtEl.msMatchesSelector) {
+                                    doesMatch = evtEl.msMatchesSelector(cascadeHandler.selectorNodeTest);
+                                } else {//need to test other browsers with native support
+                                    doesMatch = matchesSelector(evtEl, cascadeHandler.selectorNodeTest);
+                                }
+                            }
+                            if (doesMatch) {
+                                cascadeHandler.handler(evt, cascadeHandler);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            el = <HTMLElement> el.parentNode;
+            if (bCheckedBody) return;
+        }
+
+
+    } 
+
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
+        var evtEl = evt.srcElement;
+        var $evtEl = $(evtEl);
+        $evtEl.toggleClass('plus').toggleClass('minus');
+        var dataCell = evtEl;
+
+        var rc = dataCell.getAttribute('data-rc');
+        while (dataCell && !rc) {
+            dataCell = <Element> dataCell.parentNode;
+            rc = dataCell.getAttribute('data-rc');
+        }
+        if (!dataCell) return;
+        var rowNo = parseInt(rc.split(',')[0]) - 1;
+        var templEl = document.getElementById(cascadeInfo.containerID);
+        var rule = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
+        //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
+        var dt = rule.getDataTable(templEl);
+        var dtRow = dt.data[rowNo];
+        var ndFldIdx = tsp.b.getNodeFldIdx(dt);
+        var nd = dtRow[ndFldIdx];
+        var numChildren = nd[tsp.b.nodeIdxes.numChildren];
+        nd[tsp.b.nodeIdxes.numChildren] = -1 * numChildren;
+        tsp.b.applyTreeView(templEl, rule);
+        tsp.b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
+    }
+
+    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
+        //if (!pageisloaded) {
+        //    window.addEventListener('load', function () {
+        //        pageisloaded = 1;
+        //        _when(eventName, cascadingHandler);
+        //    });
+        //    return;
+        //}
+        var el: HTMLElement;
+        if (cascadingHandler.containerID) {
+            el = document.getElementById(cascadingHandler.containerID);
+        } else if (cascadingHandler.container) {
+            el = cascadingHandler.container;
+        } else {
+            el = document.body;
+        }
+        //var eventHandlers = handlers[eventName];
+        var eventHandlers: { [key: string]: ICascadingHandler[]; } = db.data(el).handlers;
+        if (!eventHandlers) {
+            eventHandlers = {};
+            db.data(el).handlers = eventHandlers;
+        }
+        var eventHandler = eventHandlers[eventName];
+        if (!eventHandler) {
+            eventHandler = [];
+            eventHandlers[eventName] = eventHandler;
+            if (el.attachEvent) {
+                el.attachEvent('on' + eventName, handleCascadingEvent);
+            } else {
+                el.addEventListener(eventName, handleCascadingEvent);
+            }
+        }
+        eventHandler[eventHandler.length] = cascadingHandler;
     }
 }
  

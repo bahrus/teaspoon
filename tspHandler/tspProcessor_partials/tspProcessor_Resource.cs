@@ -24,7 +24,8 @@ namespace tspHandler
             {
                 var href = link.getAttribute("href");
                 var linkFilePath = DepDocFilePath.NavigateTo(href);
-                using (var sr = new StreamReader(linkFilePath))
+                var fs = new FileStream(linkFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using (var sr = new StreamReader(fs))
                 {
                     while (sr.Peek() != -1)
                     {

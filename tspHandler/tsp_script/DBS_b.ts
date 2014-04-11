@@ -10,6 +10,15 @@ module DBS.b{
     //    return typeof (mode) == 'undefined' || mode !== 'server'
     //}
 
+    var uidCounter = 0;
+
+    export function getOrCreateID(el: HTMLElement) {
+        if (!el.id) {
+            el.id = 'DBS_' + uidCounter++;
+        }
+        return el.id;
+    }
+
     export var dataExpando = isCSMode() ? 'data-cs-cache' : 'data-ss-cache';
     var cache = [{}];
     export function data(elem: HTMLElement): any {

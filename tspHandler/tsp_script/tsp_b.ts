@@ -4,6 +4,7 @@
 module tsp.b {
 
     var db = DBS.b;
+    //var tsp_cs = eval('tsp.cs');
 
     export interface IDataTable {
         data?: any[][];
@@ -72,6 +73,52 @@ module tsp.b {
         level = 3,
         numChildren = 4,
     }
+
+    export function getNodeFldIdx(dt: IDataTable): number {
+        var treeFldIdx = -1;
+        var flds = dt.fields;
+        for (var i = 0, n = flds.length; i < n; i++) {
+            var fld = flds[i];
+            if (fld.isTreeNodeInfo) {
+                treeFldIdx = i;
+                break;
+            }
+        }
+        return treeFldIdx;
+    }
+
+    export function applyTreeView(templEl: HTMLElement, populateRule: IFillGridOptions) {
+        var dt = populateRule.getDataTable(templEl);
+        var expanded = {};
+        var treeFldIdx = getNodeFldIdx(dt);
+        if (treeFldIdx == -1) {
+            populateRule.treeColumn = TreeType.none;
+            return;
+        }
+        db.data(templEl).treeNodeIndex = treeFldIdx;
+        var d = dt.data;
+        var view = [];
+        var dontView = [];
+        for (var i = 0, n = d.length; i < n; i++) {
+            var r = d[i];
+            var tn = r[treeFldIdx];
+
+            if (tn[nodeIdxes.numChildren] < 0) {
+                expanded[tn[nodeIdxes.id]] = true;
+            }
+            var parentID = tn[nodeIdxes.parentId];
+            if (!parentID || expanded[parentID]) {
+                view.push(i);
+            } else {
+                dontView.push(i);
+            }
+        }
+        dt.rowView = view;
+        dt.rowDontView = dontView;
+        var vSlider = db.data(templEl).slider;
+        if (vSlider) vSlider.slider('option', 'max', view.length);
+    }
+
 
     
     export function getOrCreateHiddenInput(el: HTMLElement, inputName: string, callBack: (hiddenFld: HTMLInputElement) => void) {
@@ -201,6 +248,10 @@ module tsp.b {
 
     export function fillGrid(el: HTMLElement) : IFillGridOptions {
         var fgo = <IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+        if (fgo.treeColumn) {
+            applyTreeView(el, fgo);
+            //if (tsp_cs) tsp_cs.addTreeNodeToggle(el);
+        }
         refreshHeaderTemplateWithRectCoords(el, fgo);
         refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         return fgo;
