@@ -9,75 +9,57 @@ module tsp.cs {
     var db = DBS.b;
     var b = tsp.b;
 
-    function getOrCreateFormElements$(targetForms$: JQuery, fldName: string): HTMLInputElement[] {
-        var returnObj: HTMLInputElement[] = [];
-        targetForms$.each((idx, frm) => {
-            var inpFlds = frm.querySelectorAll('input[name="' + fldName + '"]');
-            var inpFld: HTMLInputElement;
-            if (inpFlds.length == 0) {
-                inpFld = <HTMLInputElement> document.createElement('input');
-                inpFld.type = 'hidden';
-                inpFld.name = fldName;
-                frm.appendChild(inpFld);
-                returnObj.push(inpFld);
-            } else {
-                for (var i = 0, n = inpFlds.length; i < n; i++) {
-                    returnObj.push(<HTMLInputElement> inpFlds[i]);
+
+    //#region Interfaces
+    export interface ICascadingHandler {
+        selectorNodeTest?: string;
+        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
+        //test?: (el: HTMLElement) => boolean;
+        containerID?: string;
+        container?: HTMLElement;
+        data?: any;
+    }
+    //#endregion
+
+    //#region Event Handlers
+    function handleCascadingEvent(evt: Event) {
+        var el = <HTMLElement> evt.srcElement;
+        var evtEl = el;
+        while (el) {
+            var bCheckedBody = (el.tagName == 'BODY');
+            var test = el.getAttribute(db.dataExpando);
+            if (test) {
+                var evtHandlers = db.data(el).handlers;
+                if (evtHandlers) {
+                    var evtHandler = evtHandlers[evt.type];
+                    if (evtHandler) {
+                        for (var i = 0, n = evtHandler.length; i < n; i++) {
+                            var cascadeHandler = evtHandler[i];
+                            var doesMatch = false;
+                            if (cascadeHandler.selectorNodeTest) {
+                                //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
+                                if (evtEl.msMatchesSelector) {
+                                    doesMatch = evtEl.msMatchesSelector(cascadeHandler.selectorNodeTest);
+                                } else {//need to test other browsers with native support
+                                    doesMatch = matchesSelector(evtEl, cascadeHandler.selectorNodeTest);
+                                }
+                            }
+                            if (doesMatch) {
+                                cascadeHandler.handler(evt, cascadeHandler);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
-        });
-        return returnObj;
-    }
-
-    export function sizeScroll(el: HTMLElement, scrollOptions?: tsp.b.IScrollOptions, innerDiv?: HTMLDivElement) {
-        console.log('tsp.cs.sizeScroll');
-        if (!scrollOptions) scrollOptions = <tsp.b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
-        if (!innerDiv) innerDiv = <HTMLDivElement> el.firstChild;
-        var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
-        console.log('maxValue = ' + maxValue);
-        var innerDim = scrollOptions.maxElementSize * maxValue;
-        console.log('innerDim = ' + innerDim);
-        var styleDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'height' : 'width');
-        innerDiv.style[styleDim] = innerDim + 'px';
-    }
-
-    export function addScroll(el: HTMLElement) {
-        var scrollOptions = <b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
-        scrollOptions.elementID = db.getOrCreateID(el);
-        //el.style.height = ['height'] + 'px';
-        var innerDiv = <HTMLDivElement> document.createElement('div');
-        innerDiv.innerHTML = '&nbsp';
-        var overFl = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'Y' : 'X');
-        el.style['overflow' + overFl] = 'auto';
-        sizeScroll(el, scrollOptions, innerDiv);
-        el.appendChild(innerDiv);
-        var ft = scrollOptions.formTargets;
-        if (ft) {
-            el.addEventListener('scroll', scrollListener, false);
+            el = <HTMLElement> el.parentNode;
+            if (bCheckedBody) return;
         }
-        subscribeToScrollDimensionChange(scrollOptions);
+
+
     }
 
-    function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
-        var nl = scrollOptions.maxValueChangeNotifier;
-        console.log('tsp.cs.subscribeToScrollDimensionChange:  nl = ' + nl);
-        if (nl) {
-            nl.addChangeListener(function (d: b.IDataTable) {
-
-                sizeScroll(document.getElementById(scrollOptions.elementID));
-            });
-        }
-    }
-
-    export function addTreeNodeToggle(el: HTMLElement) {
-        _when('click', {
-            containerID: db.getOrCreateID(el),
-            handler: handleTreeNodeToggle,
-            selectorNodeTest: 'span.treeNodeToggler',
-        });
-    }
-
-    function scrollListener(evt: Event) {
+    function handleScroll(evt: Event) {
 
         //console.log(evt);
         var src = <HTMLDivElement> evt.srcElement;
@@ -104,12 +86,115 @@ module tsp.cs {
         }
     }
 
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
+        var evtEl = evt.srcElement;
+        var $evtEl = $(evtEl);
+        $evtEl.toggleClass('plus').toggleClass('minus');
+        var dataCell = evtEl;
+
+        var rc = dataCell.getAttribute('data-rc');
+        while (dataCell && !rc) {
+            dataCell = <Element> dataCell.parentNode;
+            rc = dataCell.getAttribute('data-rc');
+        }
+        if (!dataCell) return;
+        var rowNo = parseInt(rc.split(',')[0]) - 1;
+        var templEl = document.getElementById(cascadeInfo.containerID);
+        var rule = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
+        //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
+        var dt = rule.getDataTable(templEl);
+        //var dtRow = dt.data[rowNo];
+        var dtRow = dt.data[dt.rowView[rowNo]];
+        var ndFldIdx = b.getNodeFldIdx(dt);
+        var nd = dtRow[ndFldIdx];
+        var numChildren = nd[b.nodeIdxes.numChildren];
+        nd[b.nodeIdxes.numChildren] = -1 * numChildren;
+        b.applyTreeView(templEl, rule);
+        b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
+        db.notifyListeners(dt);
+    }
+    //#endregion
+
+    function getOrCreateFormElements$(targetForms$: JQuery, fldName: string): HTMLInputElement[] {
+        var returnObj: HTMLInputElement[] = [];
+        targetForms$.each((idx, frm) => {
+            var inpFlds = frm.querySelectorAll('input[name="' + fldName + '"]');
+            var inpFld: HTMLInputElement;
+            if (inpFlds.length == 0) {
+                inpFld = <HTMLInputElement> document.createElement('input');
+                inpFld.type = 'hidden';
+                inpFld.name = fldName;
+                frm.appendChild(inpFld);
+                returnObj.push(inpFld);
+            } else {
+                for (var i = 0, n = inpFlds.length; i < n; i++) {
+                    returnObj.push(<HTMLInputElement> inpFlds[i]);
+                }
+            }
+        });
+        return returnObj;
+    }
+
+    //#region Scroll Support
+    export function sizeScroll(el: HTMLElement, scrollOptions?: tsp.b.IScrollOptions, innerDiv?: HTMLDivElement) {
+        console.log('tsp.cs.sizeScroll');
+        if (!scrollOptions) scrollOptions = <tsp.b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
+        if (!innerDiv) innerDiv = <HTMLDivElement> el.firstChild;
+        var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
+        console.log('maxValue = ' + maxValue);
+        var innerDim = scrollOptions.maxElementSize * maxValue;
+        console.log('innerDim = ' + innerDim);
+        var styleDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'height' : 'width');
+        innerDiv.style[styleDim] = innerDim + 'px';
+    }
+
+    export function addScroll(el: HTMLElement) {
+        var scrollOptions = <b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
+        scrollOptions.elementID = db.getOrCreateID(el);
+        //el.style.height = ['height'] + 'px';
+        var innerDiv = <HTMLDivElement> document.createElement('div');
+        innerDiv.innerHTML = '&nbsp';
+        var overFl = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'Y' : 'X');
+        el.style['overflow' + overFl] = 'auto';
+        sizeScroll(el, scrollOptions, innerDiv);
+        el.appendChild(innerDiv);
+        var ft = scrollOptions.formTargets;
+        if (ft) {
+            el.addEventListener('scroll', handleScroll, false);
+        }
+        subscribeToScrollDimensionChange(scrollOptions);
+    }
+
+    function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
+        var nl = scrollOptions.maxValueChangeNotifier;
+        console.log('tsp.cs.subscribeToScrollDimensionChange:  nl = ' + nl);
+        if (nl) {
+            nl.addChangeListener(function (d: b.IDataTable) {
+
+                sizeScroll(document.getElementById(scrollOptions.elementID));
+            });
+        }
+    }
+    //#endregion
+
+    //#region Tree Grid Support
+
+    export function addTreeGridNodeToggle(el: HTMLElement) {
+        _when('click', {
+            containerID: db.getOrCreateID(el),
+            handler: handleTreeNodeToggle,
+            selectorNodeTest: 'span.treeNodeToggler',
+        });
+    }
+
+    //#endregion
+
 
     export function fillGrid(el: HTMLElement) {
         var fgo = b.fillGrid(el);
         switch (fgo.treeColumn) {
             case b.TreeType.simple:
-                addTreeNodeToggle(el);   
+                addTreeGridNodeToggle(el);   
         }
         if (fgo.verticalOffsetFld) {
             if (db.isCSMode()) {
@@ -156,14 +241,7 @@ module tsp.cs {
         }
     }
 
-    export interface ICascadingHandler {
-        selectorNodeTest?: string;
-        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
-        //test?: (el: HTMLElement) => boolean;
-        containerID?: string;
-        container?: HTMLElement;
-        data?: any;
-    }
+    
 
     var matchesSelector = function (node, selector) {
         var nodeList = node.parentNode.querySelectorAll(selector),
@@ -176,69 +254,7 @@ module tsp.cs {
         return false;
     };
 
-    function handleCascadingEvent(evt: Event) {
-        var el = <HTMLElement> evt.srcElement;
-        var evtEl = el;
-        while (el) {
-            var bCheckedBody = (el.tagName == 'BODY');
-            var test = el.getAttribute(db.dataExpando);
-            if (test) {
-                var evtHandlers = db.data(el).handlers;
-                if (evtHandlers) {
-                    var evtHandler = evtHandlers[evt.type];
-                    if (evtHandler) {
-                        for (var i = 0, n = evtHandler.length; i < n; i++) {
-                            var cascadeHandler = evtHandler[i];
-                            var doesMatch = false;
-                            if (cascadeHandler.selectorNodeTest) {
-                                //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
-                                if (evtEl.msMatchesSelector) {
-                                    doesMatch = evtEl.msMatchesSelector(cascadeHandler.selectorNodeTest);
-                                } else {//need to test other browsers with native support
-                                    doesMatch = matchesSelector(evtEl, cascadeHandler.selectorNodeTest);
-                                }
-                            }
-                            if (doesMatch) {
-                                cascadeHandler.handler(evt, cascadeHandler);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            el = <HTMLElement> el.parentNode;
-            if (bCheckedBody) return;
-        }
-
-
-    } 
-
-    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
-        var evtEl = evt.srcElement;
-        var $evtEl = $(evtEl);
-        $evtEl.toggleClass('plus').toggleClass('minus');
-        var dataCell = evtEl;
-
-        var rc = dataCell.getAttribute('data-rc');
-        while (dataCell && !rc) {
-            dataCell = <Element> dataCell.parentNode;
-            rc = dataCell.getAttribute('data-rc');
-        }
-        if (!dataCell) return;
-        var rowNo = parseInt(rc.split(',')[0]) - 1;
-        var templEl = document.getElementById(cascadeInfo.containerID);
-        var rule = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
-        //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
-        var dt = rule.getDataTable(templEl);
-        var dtRow = dt.data[rowNo];
-        var ndFldIdx = b.getNodeFldIdx(dt);
-        var nd = dtRow[ndFldIdx];
-        var numChildren = nd[b.nodeIdxes.numChildren];
-        nd[b.nodeIdxes.numChildren] = -1 * numChildren;
-        b.applyTreeView(templEl, rule);
-        b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
-        db.notifyListeners(dt);
-    }
+    
 
     export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
         //if (!pageisloaded) {
