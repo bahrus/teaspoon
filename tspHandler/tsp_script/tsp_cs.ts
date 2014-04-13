@@ -7,6 +7,7 @@
 module tsp.cs {
 
     var db = DBS.b;
+    var b = tsp.b;
 
     function getOrCreateFormElements$(targetForms$: JQuery, fldName: string): HTMLInputElement[] {
         var returnObj: HTMLInputElement[] = [];
@@ -28,34 +29,43 @@ module tsp.cs {
         return returnObj;
     }
 
+    export function sizeScroll(el: HTMLElement, scrollOptions?: tsp.b.IScrollOptions, innerDiv?: HTMLDivElement) {
+        console.log('tsp.cs.sizeScroll');
+        if (!scrollOptions) scrollOptions = <tsp.b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
+        if (!innerDiv) innerDiv = <HTMLDivElement> el.firstChild;
+        var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
+        console.log('maxValue = ' + maxValue);
+        var innerDim = scrollOptions.maxElementSize * maxValue;
+        console.log('innerDim = ' + innerDim);
+        var styleDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'height' : 'width');
+        innerDiv.style[styleDim] = innerDim + 'px';
+    }
+
     export function addScroll(el: HTMLElement) {
-        var scrollOptions = <tsp.b.IScrollOptions> DBS.b.extractDirective(el, 'scrollOptions');
+        var scrollOptions = <b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
+        scrollOptions.elementID = db.getOrCreateID(el);
         //el.style.height = ['height'] + 'px';
-        var innerDiv = document.createElement('div');
+        var innerDiv = <HTMLDivElement> document.createElement('div');
         innerDiv.innerHTML = '&nbsp';
-        switch (scrollOptions.direction) {
-            case tsp.b.DirectionOptions.Vertical:
-                el.style.overflowY = 'auto';
-                var outerHeight = el.clientHeight;
-                var innerHeight = scrollOptions.maxElementSize * scrollOptions.maxValue;
-                innerDiv.style.height = innerHeight + 'px';
-                break;
-            case tsp.b.DirectionOptions.Horizontal:
-                el.style.overflowX = 'auto';
-                var outerWidth = el.clientWidth;
-                var innerWidth = scrollOptions.maxElementSize * scrollOptions.maxValue;
-
-                innerDiv.style.width = innerWidth + 'px';
-                break;
-        }
-
+        var overFl = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'Y' : 'X');
+        el.style['overflow' + overFl] = 'auto';
+        sizeScroll(el, scrollOptions, innerDiv);
         el.appendChild(innerDiv);
         var ft = scrollOptions.formTargets;
         if (ft) {
-
             el.addEventListener('scroll', scrollListener, false);
+        }
+        subscribeToScrollDimensionChange(scrollOptions);
+    }
 
-            //el.attachEvent('scroll', scrollListener);
+    function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
+        var nl = scrollOptions.maxValueChangeNotifier;
+        console.log('tsp.cs.subscribeToScrollDimensionChange:  nl = ' + nl);
+        if (nl) {
+            nl.addChangeListener(function (d: b.IDataTable) {
+
+                sizeScroll(document.getElementById(scrollOptions.elementID));
+            });
         }
     }
 
@@ -74,10 +84,10 @@ module tsp.cs {
         var scrollOptions = <tsp.b.IScrollOptions> DBS.b.data(src)['scrollOptions'];
         var newVal;
         switch (scrollOptions.direction) {
-            case tsp.b.DirectionOptions.Horizontal:
+            case b.DirectionOptions.Horizontal:
                 newVal = Math.floor(src.scrollLeft / scrollOptions.maxElementSize);
                 break;
-            case tsp.b.DirectionOptions.Vertical:
+            case b.DirectionOptions.Vertical:
                 newVal = Math.floor(src.scrollTop / scrollOptions.maxElementSize);
                 break;
         }
@@ -96,9 +106,9 @@ module tsp.cs {
 
 
     export function fillGrid(el: HTMLElement) {
-        var fgo = tsp.b.fillGrid(el);
+        var fgo = b.fillGrid(el);
         switch (fgo.treeColumn) {
-            case tsp.b.TreeType.simple:
+            case b.TreeType.simple:
                 addTreeNodeToggle(el);   
         }
         if (fgo.verticalOffsetFld) {
@@ -132,7 +142,7 @@ module tsp.cs {
         for (var i = 0, n = dgs.length; i < n; i++) {
             var el = dgs[i];
             var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            tsp.b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         }
     }
 
@@ -141,8 +151,8 @@ module tsp.cs {
         for (var i = 0, n = dgs.length; i < n; i++) {
             var el = dgs[i];
             var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            tsp.b.refreshHeaderTemplateWithRectCoords(el, fgo);
-            tsp.b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+            b.refreshHeaderTemplateWithRectCoords(el, fgo);
+            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
         }
     }
 
@@ -221,12 +231,13 @@ module tsp.cs {
         //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
         var dt = rule.getDataTable(templEl);
         var dtRow = dt.data[rowNo];
-        var ndFldIdx = tsp.b.getNodeFldIdx(dt);
+        var ndFldIdx = b.getNodeFldIdx(dt);
         var nd = dtRow[ndFldIdx];
-        var numChildren = nd[tsp.b.nodeIdxes.numChildren];
-        nd[tsp.b.nodeIdxes.numChildren] = -1 * numChildren;
-        tsp.b.applyTreeView(templEl, rule);
-        tsp.b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
+        var numChildren = nd[b.nodeIdxes.numChildren];
+        nd[b.nodeIdxes.numChildren] = -1 * numChildren;
+        b.applyTreeView(templEl, rule);
+        b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
+        db.notifyListeners(dt);
     }
 
     export function _when(eventName: string, cascadingHandler: ICascadingHandler) {

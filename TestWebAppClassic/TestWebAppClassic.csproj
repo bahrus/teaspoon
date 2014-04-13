@@ -105,9 +105,6 @@
     <Content Include="ModelTests\HttpContext.tsp.html" />
     <Content Include="ModelTests\ModelTest1.tsp.html" />
     <Content Include="PerformanceTest.tsp.html" />
-    <Content Include="Scratch2.html" />
-    <Content Include="Scratch3.tsp.html" />
-    <Content Include="Scratch4.html" />
     <Content Include="Scripts\jquery.event.drag.js" />
     <Content Include="Scripts\jquery.event.drag.live.js" />
     <Content Include="Scripts\jquery.event.drag.live.min.js" />
@@ -129,13 +126,11 @@
     <Content Include="StyleDirectiveTests\CustomCompiler.tsp.html" />
     <Content Include="StyleDirectiveTests\AttribLink.tsp.html" />
     <Content Include="TabsTest.tsp.html" />
-    <Content Include="treeGrid.tsp.html" />
     <Content Include="tsp.tsp.html" />
     <Content Include="v8-ia32.dll" />
     <Content Include="v8-ia32.pdb" />
     <Content Include="v8-x64.dll" />
     <Content Include="v8-x64.pdb" />
-    <Content Include="WebForm1.aspx" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -212,7 +207,6 @@
       <DependentUpon>emmet.js</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="Scratch.html" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
@@ -255,13 +249,6 @@
     <Compile Include="StyleDirectiveTests\CustomCompiler.cs" />
     <Compile Include="TestModel1.cs" />
     <Compile Include="TreeGridTestModel.cs" />
-    <Compile Include="WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

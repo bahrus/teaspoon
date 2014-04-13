@@ -97,4 +97,38 @@ module DBS.b{
     export function toSnakeCase(s: string) {
         return s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
+
+    export interface INotifyListeners{
+        addChangeListener<T>(callBack: (T) => void);
+        changeListeners?: { (t: any): void }[];
+    }
+
+    export function attachNotifyListeners<T extends INotifyListeners>(t: T) {
+        console.log('DBS.b.attachNotifyListeners');
+        t.addChangeListener = partial(addChangeListener, t);
+    }
+
+    function addChangeListener<T extends INotifyListeners>(t: T, callBack: (T) => void) {
+        if (!t.changeListeners) t.changeListeners = [];
+        console.log('DBS.b.addChangeListener');
+        t.changeListeners.push(callBack);
+    }
+
+    export function notifyListeners(listenerContainer: INotifyListeners) {
+        console.log('DBS.b.notifyListeners');
+        var cls = listenerContainer.changeListeners;
+        if (!cls) return;
+        for (var i = 0, n = cls.length; i < n; i++) {
+            var cl = cls[i];
+            cl(listenerContainer);
+        }
+    }
+
+    function partial(func, arg1?, arg2?, arg3?, arg4?, arg5?, arg6?, arg7?) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return function () {
+            var allArguments = args.concat(Array.prototype.slice.call(arguments));
+            return func.apply(this, allArguments);
+        };
+    }
 } 

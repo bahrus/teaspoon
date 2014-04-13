@@ -10,7 +10,10 @@
 
     <style data-attribute-link="Attributes">
         .RCAttributes {}
-        .RC {}
+        .RC {
+            width:600px;
+            overflow-x:hidden;
+        }
     </style>
 
     <style data-attribute-link="Attributes">
@@ -504,12 +507,22 @@
 
     </script>
 
+    <script>
+        DBS.b.attachNotifyListeners(model.treeTable)
+
+    </script>
+
     <script class="VScrollBarAttributes">
         var scrollOptions = {
             direction: tsp.b.DirectionOptions.Vertical,
-            maxValue: model.treeTable.data.length,
-            maxElementSize: 20,
-            formTargets: $('#scrollValues')
+            //maxValue: model.treeTable.data.length,
+            maxValueFn: function(){
+                var v = model.treeTable.rowView;
+                return v ? v.length : 0;
+            },
+            maxElementSize: 24,
+            formTargets: $('#scrollValues'),
+            maxValueChangeNotifier: model.treeTable
         };
     </script>
 
@@ -557,7 +570,7 @@
                   div#vs.VScrollBar[style=height:200px]
                 )
             )
-            + tr>td>div#hs.HScrollBar[style=width:200px]
+            + tr>td>div#hs.HScrollBar[style=width:600px]
         )
         + form#scrollValues>
             (input#vs_ScrollVal[name=vs_ScrollVal][type='hidden'])

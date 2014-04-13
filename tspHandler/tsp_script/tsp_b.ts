@@ -6,12 +6,13 @@ module tsp.b {
     var db = DBS.b;
     //var tsp_cs = eval('tsp.cs');
 
-    export interface IDataTable {
+    export interface IDataTable extends DBS.b.INotifyListeners {
         data?: any[][];
         fields?: IDataField[];
 
         rowView?: number[];
         rowDontView?: number[];
+    
     }
 
     export interface IDataField {
@@ -51,9 +52,12 @@ module tsp.b {
     export interface IScrollOptions {
         direction: DirectionOptions;
         maxValue: number;
-        maxElementSize: number;
+        maxElementSize?: number;
+        maxValueFn?: () => number;
         formTargets: any;
         currentValue?: number;
+        maxValueChangeNotifier?: DBS.b.INotifyListeners;
+        elementID?: string;
     }
 
     export enum TreeType {
@@ -117,6 +121,8 @@ module tsp.b {
         dt.rowDontView = dontView;
         var vSlider = db.data(templEl).slider;
         if (vSlider) vSlider.slider('option', 'max', view.length);
+        console.log('tsp.n.applyTreeView.notifyListeners');
+        db.notifyListeners(dt);
     }
 
 
@@ -237,11 +243,11 @@ module tsp.b {
         var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
         if (nd4 > 0) {
             //sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
-            sR = '<span class="ui-state-default ui-icon plus treeNodeToggler">&nbsp;</span>';
+            sR = '<span class="ui-icon plus treeNodeToggler">&nbsp;</span>';
         } else if (nd4 == 0) {
             sR = '';
         } else {
-            sR = '<span class="ui-state-default ui-icon minus treeNodeToggler">&nbsp;</span>';
+            sR = '<span class="ui-icon minus treeNodeToggler">&nbsp;</span>';
         }
         return sp + sR + node[nodeIdxes.text];
     }
