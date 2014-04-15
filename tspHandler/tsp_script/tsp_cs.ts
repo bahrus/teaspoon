@@ -89,7 +89,7 @@ module tsp.cs {
     function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
         var evtEl = evt.srcElement;
         var $evtEl = $(evtEl);
-        $evtEl.toggleClass('plus').toggleClass('minus');
+        $evtEl.toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
         var dataCell = evtEl;
 
         var rc = dataCell.getAttribute('data-rc');
@@ -113,6 +113,35 @@ module tsp.cs {
         b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
         db.notifyListeners(dt);
     }
+
+    function handleHideColumn(evt: Event, cascadeInfo: ICascadingHandler) {
+        var evtEl = evt.srcElement;
+        var templEl = document.getElementById(cascadeInfo.containerID);
+        var fgo = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
+        var actionCell = evtEl;
+        var ac = actionCell.getAttribute('data-ac');
+        while (actionCell && !ac) {
+            actionCell = <Element> actionCell.parentNode;
+            ac = actionCell.getAttribute('data-ac');
+        }
+        var colNo = parseInt(ac.split(',')[1]) - 1;
+        var dt = fgo.getDataTable(templEl);
+        if (!dt.colView) {
+            var colView: number[] = [];
+            for (var i = 0, n = dt.fields.length; i < n; i++) {
+                if (i != colNo) colView.push(i);
+            }
+            dt.colView = colView;
+        } else {
+            //var idx = dt.colView.indexOf(colNo);
+            //if (idx > -1) {
+            //dt.colView.splice(idx, 1);
+            //}
+            dt.colView.splice(colNo, 1);
+        }
+        b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
+        b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
+    }
     //#endregion
 
     function getOrCreateFormElements$(targetForms$: JQuery, fldName: string): HTMLInputElement[] {
@@ -134,6 +163,8 @@ module tsp.cs {
         });
         return returnObj;
     }
+
+    //#region Grid Support
 
     //#region Scroll Support
     export function sizeScroll(el: HTMLElement, scrollOptions?: tsp.b.IScrollOptions, innerDiv?: HTMLDivElement) {
@@ -175,6 +206,27 @@ module tsp.cs {
             });
         }
     }
+
+    function verticalOffsetChangeHandler(verticalOffsetFld: HTMLElement) {
+        var dgs = <HTMLElement[]> db.data(verticalOffsetFld).dependantGrids;
+        for (var i = 0, n = dgs.length; i < n; i++) {
+            var el = dgs[i];
+            var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        }
+    }
+
+    function horizontalOffsetChangeHandler(horizontalOffsetFld: HTMLInputElement) {
+        var dgs = <HTMLElement[]> db.data(horizontalOffsetFld).dependantGrids;
+        for (var i = 0, n = dgs.length; i < n; i++) {
+            var el = dgs[i];
+            var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
+            b.refreshHeaderTemplateWithRectCoords(el, fgo);
+            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
+        }
+    }
+
+
     //#endregion
 
     //#region Tree Grid Support
@@ -189,6 +241,7 @@ module tsp.cs {
 
     //#endregion
 
+    
 
     export function fillGrid(el: HTMLElement) {
         var fgo = b.fillGrid(el);
@@ -220,29 +273,17 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
+        _when('click', {
+            selectorNodeTest: '.fa-minus-square-o',
+            containerID: db.getOrCreateID(el),
+            handler: handleHideColumn,
+        });
     }
 
-    function verticalOffsetChangeHandler(verticalOffsetFld: HTMLElement) {
-        var dgs = <HTMLElement[]> db.data(verticalOffsetFld).dependantGrids;
-        for (var i = 0, n = dgs.length; i < n; i++) {
-            var el = dgs[i];
-            var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
-        }
-    }
 
-    function horizontalOffsetChangeHandler(horizontalOffsetFld: HTMLInputElement) {
-        var dgs = <HTMLElement[]> db.data(horizontalOffsetFld).dependantGrids;
-        for (var i = 0, n = dgs.length; i < n; i++) {
-            var el = dgs[i];
-            var fgo = <tsp.b.IFillGridOptions> db.extractDirective(el, 'fillGridOptions');
-            b.refreshHeaderTemplateWithRectCoords(el, fgo);
-            b.refreshBodyTemplateWithRectCoords(el, fgo.verticalOffsetFld, fgo);
-        }
-    }
-
-    
-
+    //#endregion
+ 
+       //#region css selector-based event handling
     var matchesSelector = function (node, selector) {
         var nodeList = node.parentNode.querySelectorAll(selector),
             length = nodeList.length,
@@ -254,16 +295,7 @@ module tsp.cs {
         return false;
     };
 
-    
-
     export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
-        //if (!pageisloaded) {
-        //    window.addEventListener('load', function () {
-        //        pageisloaded = 1;
-        //        _when(eventName, cascadingHandler);
-        //    });
-        //    return;
-        //}
         var el: HTMLElement;
         if (cascadingHandler.containerID) {
             el = document.getElementById(cascadingHandler.containerID);
@@ -290,5 +322,7 @@ module tsp.cs {
         }
         eventHandler[eventHandler.length] = cascadingHandler;
     }
+
+    //#endregion
 }
  

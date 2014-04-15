@@ -4,14 +4,15 @@
 module tsp.b {
 
     var db = DBS.b;
-    //var tsp_cs = eval('tsp.cs');
 
     export interface IDataTable extends DBS.b.INotifyListeners {
         data?: any[][];
         fields?: IDataField[];
 
         rowView?: number[];
-        rowDontView?: number[];
+        //rowDontView?: number[];
+
+        colView?: number[];
     
     }
 
@@ -118,7 +119,7 @@ module tsp.b {
             }
         }
         dt.rowView = view;
-        dt.rowDontView = dontView;
+        //dt.rowDontView = dontView;
         var vSlider = db.data(templEl).slider;
         if (vSlider) vSlider.slider('option', 'max', view.length);
         console.log('tsp.n.applyTreeView.notifyListeners');
@@ -171,12 +172,24 @@ module tsp.b {
         var fields = dataTable.fields;
         for (var i = 0, n = hcs.length; i < n; i++) {
             var fldIdx = Math.min(fields.length - 1, i + colOffset);
-            var field = fields[fldIdx];
+            var field;
+            if (dataTable.colView) {
+                field = fields[dataTable.colView[fldIdx]];
+            } else {
+                field = fields[fldIdx];
+            }
             if (field.renderer) {
                 if (typeof (field.renderer) == 'string') {
                     field.renderer = eval(field.renderer);
                 }
             }
+            //var hc;
+            //if (dataTable.colView) {
+            //    hc = <HTMLTableCellElement> hcs[dataTable.colView[i]];
+            //} else {
+            //    hc = <HTMLTableCellElement> hcs[i];
+            //}
+            //if(hc) 
             var hc = <HTMLTableCellElement> hcs[i];
             hc.innerHTML = field.header ? field.header : field.name;
         }
@@ -243,11 +256,11 @@ module tsp.b {
         var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
         if (nd4 > 0) {
             //sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
-            sR = '<span class="ui-icon plus treeNodeToggler">&nbsp;</span>';
+            sR = '<span class="treeNodeToggler fa fa-plus-square-o">&nbsp;</span>';
         } else if (nd4 == 0) {
             sR = '';
         } else {
-            sR = '<span class="ui-icon minus treeNodeToggler">&nbsp;</span>';
+            sR = '<span class="treeNodeToggler fa fa-minus-square-o">&nbsp;</span>';
         }
         return sp + sR + node[nodeIdxes.text];
     }
