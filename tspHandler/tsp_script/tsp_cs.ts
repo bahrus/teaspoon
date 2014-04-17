@@ -141,6 +141,8 @@ module tsp.cs {
         }
         b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
         b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
+        //debugger;
+        db.notifyListeners(dt);
     }
     //#endregion
 
@@ -198,10 +200,8 @@ module tsp.cs {
 
     function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
         var nl = scrollOptions.maxValueChangeNotifier;
-        console.log('tsp.cs.subscribeToScrollDimensionChange:  nl = ' + nl);
         if (nl) {
             nl.addChangeListener(function (d: b.IDataTable) {
-
                 sizeScroll(document.getElementById(scrollOptions.elementID));
             });
         }
@@ -273,11 +273,14 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
-        _when('click', {
-            selectorNodeTest: '.fa-minus-square-o',
-            containerID: db.getOrCreateID(el),
-            handler: handleHideColumn,
-        });
+        var test = el.querySelectorAll('.fa-minus-square-o');
+        if (test.length > 0) {
+            _when('click', {
+                selectorNodeTest: '.fa-minus-square-o',
+                containerID: db.getOrCreateID(el),
+                handler: handleHideColumn,
+            });
+        }
     }
 
 

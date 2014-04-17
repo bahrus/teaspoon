@@ -132,6 +132,10 @@
     };
 </script>
 
+<script>
+    DBS.b.attachNotifyListeners(model.dataTable);
+</script>
+
 <script class="VScrollBarAttributes">
     var scrollOptions = {
         direction: tsp.b.DirectionOptions.Vertical,
@@ -144,9 +148,14 @@
 <script class="HScrollBarAttributes">
     var scrollOptions = {
         direction: tsp.b.DirectionOptions.Horizontal,
-        maxValue: model.dataTable.fields.length,
+        //maxValue: model.dataTable.fields.length,
+        maxValueFn: function(){
+            //debugger;
+            return model.dataTable.colView ? model.dataTable.colView.length : model.dataTable.fields.length;
+        },
         maxElementSize: 100,
-        formTargets: $('#scrollValues')
+        formTargets: $('#scrollValues'),
+        maxValueChangeNotifier: model.dataTable
     };
 </script>
 
