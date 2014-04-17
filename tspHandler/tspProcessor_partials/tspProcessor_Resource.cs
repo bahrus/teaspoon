@@ -60,7 +60,7 @@ namespace tspHandler
                 string content = doc.GetHostContent(relPath);
                 
                 var depDoc = new HtmlDocumentFacade(content);
-                var metaProcessor = depDoc.head.querySelectorAll("meta[name='importProcessor'][content='DBS.mergeScript']");
+                var metaProcessor = depDoc.head.querySelectorAll("meta[name='importProcessor'][content='DBS.mergeAssets']");
                 if (metaProcessor.Count == 0) return;
                 var depDocFilePath = doc.GetHostContentFilePath(relPath);
                 DateTime latestTimeStamp = new DateTime(0);
