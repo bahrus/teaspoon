@@ -4,3 +4,6 @@
     cursor:pointer;
 }
 
+th[data-ac]>span.fa{
+    cursor:hand;
+}

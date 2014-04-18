@@ -79,6 +79,7 @@ namespace tspHandler
                 #region find type def mappings
                 
                 var typeDefsToImplementationMappings = depDoc.ProcessTypeScriptMappingFile(depDocFilePath);
+                #region process scripts
                 var scriptRefs = new Dictionary<string, bool>();
                 var scripts = header
                     .querySelectorAll("script")
@@ -103,13 +104,10 @@ namespace tspHandler
                 fileList.Sort();
                 var rdID = rd.id;
                 var previousScriptTags = doc.head.querySelectorAll("script[data-genID='" + rdID + "']");
-                foreach (var previousScriptTag in previousScriptTags)
-                {
-                    previousScriptTag.delete();
-                }
+                previousScriptTags.ForEach(pst => pst.delete());
                 foreach (var scriptFile in fileList)
                 {
-                    
+                    #region map script files
                     var scriptFileAbsPaths = new List<string>{
                         scriptFile.DocumentFilePath,
                     };
@@ -119,7 +117,7 @@ namespace tspHandler
                     }
                     foreach (var tsFileAbsPath in scriptFileAbsPaths)
                     {
-                        var sc = doc.createElement("script");
+                        var scriptImport = doc.createElement("script");
                         if (isLocal)
                         {
                             var fi = new FileInfo(tsFileAbsPath);
@@ -133,18 +131,43 @@ namespace tspHandler
                         {
                             src = src.ReplaceLast(".ts").With(".js");
                         }
-                        sc.setAttribute("src", src);
+                        scriptImport.setAttribute("src", src);
                         if (!string.IsNullOrEmpty(mode))
                         {
-                            sc.setAttribute("data-mode", mode);
+                            scriptImport.setAttribute("data-mode", mode);
                         }
-                        sc.setAttribute("data-genID", rdID);
+                        scriptImport.setAttribute("data-genID", rdID);
                         //doc.head.appendChild(sc);
-                        doc.head.insertBefore(sc, rd);
+                        doc.head.insertBefore(scriptImport, rd);
                     }
+                    #endregion
                 }
                 #endregion
-
+                #endregion
+                #region process css
+                var links = header
+                    .querySelectorAll("link[rel='stylesheet']")
+                    .Select(l =>
+                    {
+                        var href = l.getAttribute("href");
+                        var hrefFilePath = depDocFilePath.NavigateTo(href);
+                        return hrefFilePath;
+                    })
+                    .ToList();
+                var previousLinkTags = doc.head.querySelectorAll("link[data-genID='" + rdID + "']");
+                previousLinkTags.ForEach(plt => plt.delete());
+                links.ForEach(linkAbsPath =>
+                {
+                    var linkImport = doc.createElement("link");
+                    var fi = new FileInfo(linkAbsPath);
+                    if (fi.LastWriteTime > latestTimeStamp) latestTimeStamp = fi.LastWriteTime;
+                    var href = doc.GetHostRelativePath(linkAbsPath);
+                    linkImport.setAttribute("href", href);
+                    linkImport.setAttribute("data-genID", rdID);
+                    linkImport.setAttribute("rel", "stylesheet");
+                    doc.head.insertBefore(linkImport, rd);
+                });
+                #endregion
                 rd.delete();
                 var newHtml = doc.html;
                 if (isLocal)
