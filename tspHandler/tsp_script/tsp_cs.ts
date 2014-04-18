@@ -13,6 +13,7 @@ module tsp.cs {
     //#region Interfaces
     export interface ICascadingHandler {
         selectorNodeTest?: string;
+        selectorNodeVoidTest?: string;
         handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
         //test?: (el: HTMLElement) => boolean;
         containerID?: string;
@@ -34,19 +35,44 @@ module tsp.cs {
                     var evtHandler = evtHandlers[evt.type];
                     if (evtHandler) {
                         for (var i = 0, n = evtHandler.length; i < n; i++) {
-                            var cascadeHandler = evtHandler[i];
+                            var cascadeHandler = <ICascadingHandler> evtHandler[i];
+                            if (cascadeHandler.selectorNodeVoidTest) {
+                                debugger;
+                                var containerEl : HTMLElement;
+                                if (cascadeHandler.containerID) {
+                                    containerEl = <HTMLElement> document.querySelector(cascadeHandler.containerID);
+                                } else {
+                                    containerEl = document.body;
+                                }
+                                var testContainer = containerEl.querySelector(cascadeHandler.selectorNodeVoidTest);
+                                if (testContainer) {
+                                    var testChild = el;
+                                    var bIsContainer = false;
+                                    while (testChild && testChild.tagName != 'BODY') {
+                                        if (testChild === testContainer) {
+                                            bIsContainer = true;
+                                            break;
+                                        }
+                                        testChild = <HTMLElement> testChild.parentNode;
+                                    }
+                                    if (bIsContainer) continue;
+                                    cascadeHandler.handler(evt, cascadeHandler);
+                                }
+                                continue;
+                            }
                             var doesMatch = false;
                             if (cascadeHandler.selectorNodeTest) {
                                 //var matchor = el['mozMatchesSelector'] || el['webkitMatchesSelector'] || el.msMatchesSelector;
                                 if (evtEl.msMatchesSelector) {
                                     doesMatch = evtEl.msMatchesSelector(cascadeHandler.selectorNodeTest);
+                                    //console.log(evtEl.tagName + '?' + cascadeHandler.selectorNodeTest + ' doesMatch = ' + doesMatch);
                                 } else {//need to test other browsers with native support
                                     doesMatch = matchesSelector(evtEl, cascadeHandler.selectorNodeTest);
                                 }
                             }
                             if (doesMatch) {
                                 cascadeHandler.handler(evt, cascadeHandler);
-                                return;
+                                return;  //TODO:  really?  return?
                             }
                         }
                     }
@@ -57,6 +83,10 @@ module tsp.cs {
         }
 
 
+    }
+
+    function handleCloseOnClickOut(evt: Event, cascadeHandler: ICascadingHandler) {
+        $(cascadeHandler.selectorNodeVoidTest).hide();
     }
 
     function handleScroll(evt: Event) {
@@ -114,10 +144,16 @@ module tsp.cs {
         db.notifyListeners(dt);
     }
 
+    function handleDisplayOnHover(evt: Event, cascadeInfo: ICascadingHandler) {
+        var evtEl = evt.srcElement;
+        var doho = <b.IDisplayOnHoverOptions> cascadeInfo.data;
+        $('#' + doho.targetID).show();
+    }
+
     function handleHideColumn(evt: Event, cascadeInfo: ICascadingHandler) {
         var evtEl = evt.srcElement;
         var templEl = document.getElementById(cascadeInfo.containerID);
-        var fgo = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
+        var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
         var actionCell = evtEl;
         var ac = actionCell.getAttribute('data-ac');
         while (actionCell && !ac) {
@@ -170,15 +206,34 @@ module tsp.cs {
 
     //#region Scroll Support
     export function sizeScroll(el: HTMLElement, scrollOptions?: tsp.b.IScrollOptions, innerDiv?: HTMLDivElement) {
-        console.log('tsp.cs.sizeScroll');
+        //console.log('tsp.cs.sizeScroll');
         if (!scrollOptions) scrollOptions = <tsp.b.IScrollOptions> db.extractDirective(el, 'scrollOptions');
         if (!innerDiv) innerDiv = <HTMLDivElement> el.firstChild;
         var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
-        console.log('maxValue = ' + maxValue);
+        //console.log('maxValue = ' + maxValue);
         var innerDim = scrollOptions.maxElementSize * maxValue;
-        console.log('innerDim = ' + innerDim);
+        //console.log('innerDim = ' + innerDim);
         var styleDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'height' : 'width');
         innerDiv.style[styleDim] = innerDim + 'px';
+    }
+
+    
+
+    export function addDisplayOnHover(el: HTMLElement) {
+        var displayOnHoverOptions = <b.IDisplayOnHoverOptions> db.extractDirective(el, 'displayOnHoverOptions');
+        if (!displayOnHoverOptions) return;
+        displayOnHoverOptions.targetID = db.getOrCreateID(el);
+        var ch: ICascadingHandler = {
+            selectorNodeTest: displayOnHoverOptions.hotspotSelector,
+            handler: handleDisplayOnHover,
+            data: displayOnHoverOptions
+        };
+        _when('mousemove', ch);
+        var ch2: ICascadingHandler = {
+            handler: handleCloseOnClickOut,
+            selectorNodeVoidTest: '#' + db.getOrCreateID(el),
+        };
+        _when('click', ch2);
     }
 
     export function addScroll(el: HTMLElement) {
@@ -273,10 +328,10 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
-        var test = el.querySelectorAll('.fa-minus-square-o');
+        var test = el.querySelectorAll('th>span.fa-minus-square-o');
         if (test.length > 0) {
             _when('click', {
-                selectorNodeTest: '.fa-minus-square-o',
+                selectorNodeTest: 'th>span.fa-minus-square-o',
                 containerID: db.getOrCreateID(el),
                 handler: handleHideColumn,
             });
@@ -324,6 +379,7 @@ module tsp.cs {
             }
         }
         eventHandler[eventHandler.length] = cascadingHandler;
+        return tsp.cs;
     }
 
     //#endregion

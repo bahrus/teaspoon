@@ -61,6 +61,11 @@ module tsp.b {
         elementID?: string;
     }
 
+    export interface IDisplayOnHoverOptions {
+        hotspotSelector?: string;
+        targetID?: string;
+    }
+
     export enum TreeType {
         none,
         simple,
@@ -241,7 +246,11 @@ module tsp.b {
             } else if (tnIdx == col) {
                 val = TreeGridColumnRenderer(dRow[col]);
             } else {
-                var val = dRow[col];
+                if (dataTable.colView) {
+                    val = dRow[dataTable.colView[col]];
+                } else {
+                    val = dRow[col];
+                }
             }
             var fc  = f[col];
             if (fc.renderer) val = fc.renderer(val, rc, dRow);
