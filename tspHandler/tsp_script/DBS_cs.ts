@@ -206,7 +206,7 @@ module DBS.cs {
                 case 'SCRIPT':
                     var sd: IScriptDirective = {
                         scriptTag: <HTMLScriptElement> attributeLinkNode,
-                        targetElements: document.querySelectorAll(attributeLinkNode.className.replace(' ', ','))
+                        targetElements: document.querySelectorAll('.' + attributeLinkNode.className.replace(' ', ','))
                     };
                     scriptDirectives.push(sd);
                     break;

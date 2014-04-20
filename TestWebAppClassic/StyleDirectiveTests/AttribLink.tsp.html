@@ -28,14 +28,23 @@
             var spTest = document.getElementById('output');
             spTest.innerHTML = "I am here";
         }
+
+        function test2(el) {
+            //debugger;
+            el.innerHTML = "you are there";
+        }
     </script>
     <script class="myClassAttributes">
         test;
+    </script>
+    <script class="myClass2" data-attribute-link>
+        test2;
     </script>
 
     <form>
         <input name="input1" value="Input 1" class="myClass"/>
     </form>
     <span id="output"></span>
+    <span id="output2" class="myClass2"></span>
 </body>
 </html>
