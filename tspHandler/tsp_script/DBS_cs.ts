@@ -114,43 +114,107 @@ module DBS.cs {
         return regExp.exec(input).length;
     }
 
-    
+    function copyAttributes(srcElement: HTMLElement, scriptDirectives: IScriptDirective[], targetElements: NodeList) {
+        var elMode = srcElement.getAttribute('data-mode');
+        if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) return;
+        if (srcElement.tagName == 'SCRIPT') {
+            var sd: IScriptDirective = {
+                scriptTag: <HTMLScriptElement> srcElement,
+                targetElements: targetElements,
+            };
+            scriptDirectives.push(sd);
+        }
 
-    function applyDirectives(selectableNode: NodeSelector) {
-        var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
-        var docOrder = 0;
-        var directives: IStyleDirective[] = [];
-        var scriptDirectives: IScriptDirective[] = [];
-        for (var i = 0, n = attributeLinkStyles.length; i < n; i++) {
-            //#region analyze style tag
-            var attribeLinkStyleNode = <HTMLStyleElement> attributeLinkStyles[i];
-            var attributeLink = attribeLinkStyleNode.getAttribute('data-attribute-link');
-            if (attributeLink.length === 0) attributeLink = 'Attributes';
-            var attributeClasses: IStyleDirective[] = [];
-            var content = attribeLinkStyleNode.innerHTML;
-            var styleSheet = rulesForCssText(content);
-            for (var j = 0, m = styleSheet.length; j < m; j++) {
-                //#region analyze style
-                var rule = <CSSRule> styleSheet[j];
-                var styleDirective: IStyleDirective = {
-                    CSSRule: rule,
-                    DocOrder: docOrder++,
-                    //Node = attribeLinkStyleNode,
-                };
-                if (rule.cssText.indexOf(attributeLink) > -1) {
-                    attributeClasses.push(styleDirective);
-                }
-                else {
 
-                    if (attributeClasses.length > 0) {
-                        directives.push(styleDirective);
-                        styleDirective.AttributeDirectives = attributeClasses;
-                        attributeClasses = [];
-                    }
+        var attribs = srcElement.attributes;
+        for (var j1 = 0, m1 = targetElements.length; j1 < m1; j1++) {
+            var targetElement = <HTMLElement> targetElements[j1];
+            for (var k1 = 0, l1 = attribs.length; k1 < l1; k1++) {
+                //#region escapes
+                var attrib = attribs[k1];
+                var nm = attrib.name;
+                switch (nm) {
+                    case "class":
+                    case "hidden":
+                    case "data-mode":
+                    case "data-attribute-link":
+                        continue;
+                    case "data-class":
+                        //targetElement.addClass(attrib.value);
+                        alert('not implemented');
+                        debugger;
+                        break;
+                    case "data-hidden":
+                        targetElement.setAttribute("hidden", attrib.value);
+                        break;
+                    case "data-data-mode":
+                        targetElement.setAttribute("data-mode", attrib.value);
+                        break;
+                    default:
+                        //console.log('setting ' + nm + ' to ' + attrib.value);
+                         targetElement.setAttribute(nm, attrib.value);
+                        break;
+
                 }
                 //#endregion
             }
-            //#endregion
+        }
+
+    }
+
+    function applyDirectives(selectableNode: NodeSelector) {
+        //var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
+        var attributeLinks = document.querySelectorAll('*[data-attribute-link]');
+        var docOrder = 0;
+        var directives: IStyleDirective[] = [];
+        var scriptDirectives: IScriptDirective[] = [];
+        for (var i = 0, n = attributeLinks.length; i < n; i++) {
+           
+            var attributeLinkNode = <HTMLElement> attributeLinks[i];
+            switch (attributeLinkNode.tagName) {
+                case 'STYLE':
+                    //#region analyze style tag
+                    var attribeLinkStyleNode = <HTMLStyleElement> attributeLinks[i];
+                    var attributeLink = attribeLinkStyleNode.getAttribute('data-attribute-link');
+                    if (attributeLink.length === 0) attributeLink = 'Attributes';
+                    var attributeClasses: IStyleDirective[] = [];
+                    var content = attribeLinkStyleNode.innerHTML;
+                    var styleSheet = rulesForCssText(content);
+                    for (var j = 0, m = styleSheet.length; j < m; j++) {
+                        //#region analyze style
+                        var rule = <CSSRule> styleSheet[j];
+                        var styleDirective: IStyleDirective = {
+                            CSSRule: rule,
+                            DocOrder: docOrder++,
+                            //Node = attribeLinkStyleNode,
+                        };
+                        if (rule.cssText.indexOf(attributeLink) > -1) {
+                            attributeClasses.push(styleDirective);
+                        }
+                        else {
+
+                            if (attributeClasses.length > 0) {
+                                directives.push(styleDirective);
+                                styleDirective.AttributeDirectives = attributeClasses;
+                                attributeClasses = [];
+                            }
+                        }
+                        //#endregion
+                    }
+                    //#endregion
+                    break;
+                case 'SCRIPT':
+                    var sd: IScriptDirective = {
+                        scriptTag: <HTMLScriptElement> attributeLinkNode,
+                        targetElements: document.querySelectorAll(attributeLinkNode.className.replace(' ', ','))
+                    };
+                    scriptDirectives.push(sd);
+                    break;
+                default:
+                    var targetElements = document.querySelectorAll('.' + attributeLinkNode.className.replace(' ', ','));
+                    copyAttributes(attributeLinkNode, scriptDirectives, targetElements);
+                    break;
+            }
         }
         var sortedDirectives = directives.sort(sortFn);
         for (var i = 0, n = sortedDirectives.length; i < n; i++) {
@@ -163,46 +227,7 @@ module DBS.cs {
                     var srcElements = document.querySelectorAll(attributeDir.CSSRule['selectorText']);
                     for (var i1 = 0, n1 = srcElements.length; i1 < n1; i1++) {
                         var srcElement = <HTMLElement> srcElements[i1];
-                        var elMode = srcElement.getAttribute('data-mode');
-                        if (elMode && (elMode.length > 0) && (elMode != 'client-side-only')) continue;
-                        if (srcElement.tagName == 'SCRIPT') {
-                            var sd: IScriptDirective = {
-                                scriptTag: <HTMLScriptElement> srcElement,
-                                targetElements: targetElements,
-                            };
-                            scriptDirectives.push(sd);
-                        }
-
-
-                        var attribs = srcElement.attributes;
-                        for (var j1 = 0, m1 = targetElements.length; j1 < m1; j1++) {
-                            var targetElement = <HTMLElement> targetElements[j1];
-                            for (var k1 = 0, l1 = attribs.length; k1 < l1; k1++) {
-                                var attrib = attribs[k1];
-                                var nm = attrib.name;
-                                switch (nm) {
-                                    case "class":
-                                    case "hidden":
-                                    case "data-mode":
-                                        continue;
-                                    case "data-class":
-                                        //targetElement.addClass(attrib.value);
-                                        alert('not implemented');
-                                        debugger;
-                                        break;
-                                    case "data-hidden":
-                                        targetElement.setAttribute("hidden", attrib.value);
-                                        break;
-                                    case "data-data-mode":
-                                        targetElement.setAttribute("data-mode", attrib.value);
-                                        break;
-                                    default:
-                                        targetElement.setAttribute(nm, attrib.value);
-                                        break;
-
-                                }
-                            }
-                        }
+                        copyAttributes(srcElement, scriptDirectives, targetElements);
                     }
                 }
             }
@@ -250,6 +275,7 @@ module DBS.cs {
             var tes = sd.targetElements;
             for (var j = 0, m = tes.length; j < m; j++) {
                 var te = <HTMLElement> tes[j];
+                if (te.hasAttribute('data-attribute-link')) continue;
                 if (fn) {
                     fn(te);
                 } else {

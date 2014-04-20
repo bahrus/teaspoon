@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>DBS.Attr test</title>
+    <script src="../Scripts/emmet.js" data-genid=""></script><script src="../tsp_script/DBS.js" data-genid=""></script><script src="../Scripts/jquery-2.0.3.js" data-genid=""></script><script src="../tsp_script/DBS_b.js" data-genid=""></script><script src="../tsp_script/DBS_cs.js" data-genid=""></script>
+</head>
+<body>
+    
+
+    <style type="text/css" data-attribute-link="Attributes">
+        
+        input.myClassAttributes {}
+        script.myClassAttributes { }
+        input.myClass {
+            color:green;
+        }
+
+    </style>
+
+    <input hidden="hidden" class="myClassAttributes" data-attrib1="test" onclick="alert('iah');">
+
+    <input hidden="hidden" class="myClassAttributes" data-attrib2="test2">
+
+    <input hidden="hidden" class="myClass" data-attribute-link="" data-attrib3="test3">
+    
+    <script>
+        function test() {
+            var spTest = document.getElementById('output');
+            spTest.innerHTML = "I am here";
+        }
+    </script>
+    <script class="myClassAttributes">
+        test;
+    </script>
+
+    <form>
+        <input name="input1" value="Input 1" class="myClass">
+    </form>
+    <span id="output"></span>
+</body>
+</html>
