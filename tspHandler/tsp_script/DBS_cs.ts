@@ -162,6 +162,22 @@ module DBS.cs {
 
     }
 
+    function getExpression(expr: string, bStringify: boolean) {
+        var len = expr.length;
+        var exprVal;
+        if (len > 1) {
+            if (expr.lastIndexOf(';') == len - 1) {
+                expr = expr.substr(0, len - 1);
+            }
+        }
+        if (bStringify) {
+            exprVal = expr;
+        } else {
+            exprVal = eval('(' + expr + ')');
+        }
+        return exprVal;
+    }
+
     function applyDirectives(selectableNode: NodeSelector) {
         //var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
         var attributeLinks = document.querySelectorAll('*[data-attribute-link]');
@@ -206,7 +222,7 @@ module DBS.cs {
                 case 'SCRIPT':
                     var sd: IScriptDirective = {
                         scriptTag: <HTMLScriptElement> attributeLinkNode,
-                        targetElements: document.querySelectorAll('.' + attributeLinkNode.className.replace(' ', ','))
+                        targetElements: document.querySelectorAll('.' + attributeLinkNode.className.replace(' ', ',.'))
                     };
                     scriptDirectives.push(sd);
                     break;
@@ -233,12 +249,14 @@ module DBS.cs {
             }
         }
         for (var i = 0, n = scriptDirectives.length; i < n; i++) {
+            //#region get function or attribute name
             var fn = null;
             var varNameD = null;
             var varName = null;
             var exprVal = null;
             var sd = scriptDirectives[i];
             var bStringify = sd.scriptTag.hasAttribute('data-stringify');
+            var linkAttrib = sd.scriptTag.getAttribute('data-attribute-link');
             var ih = sd.scriptTag.innerHTML.trim();
             var fnSearch = 'function ';
             var iPosOfFun = ih.indexOf(fnSearch);
@@ -247,31 +265,32 @@ module DBS.cs {
                 var sc = ih.substring(iPosOfFun + fnSearch.length, iPosOfParen);
                 fn = eval(sc);
             } else {
-                var varSearch = 'var ';
-                var iPosOfVar = ih.indexOf(varSearch);
-                if (iPosOfVar > -1) {
-                    var iPosOfEquals = ih.indexOf('=');
-                    varName = ih.substring(iPosOfVar + varSearch.length, iPosOfEquals).trim();
+                if (linkAttrib.length > 0) {
+                    varName = linkAttrib;
                     if (bStringify) {
                         varNameD = 'data-' + DBS.b.toSnakeCase(varName);
                     }
-                    var expr = ih.substring(iPosOfEquals + 1).trim();
-                    var len = expr.length;
-                    if (len > 1) {
-                        if (expr.lastIndexOf(';') == len - 1) {
-                            expr = expr.substr(0, len - 1);
-                        }
-                    }
-                    if (bStringify) {
-                        exprVal = expr;
-                    } else {
-                        exprVal = eval('(' +  expr + ')');
-                    }
+                    var expr = ih.trim();
+                    exprVal = getExpression(expr, bStringify);
                 } else {
-                    var sc = sd.scriptTag.innerHTML.replace(';', '').trim();
-                    fn = eval(sc);
+                    var varSearch = 'var ';
+                    var iPosOfVar = ih.indexOf(varSearch);
+                    if (iPosOfVar > -1) {
+                        var iPosOfEquals = ih.indexOf('=');
+                        varName = ih.substring(iPosOfVar + varSearch.length, iPosOfEquals).trim();
+                        if (bStringify) {
+                            varNameD = 'data-' + DBS.b.toSnakeCase(varName);
+                        }
+                        var expr = ih.substring(iPosOfEquals + 1).trim();
+                        exprVal = getExpression(expr, bStringify);
+                    } else {
+                        var sc = sd.scriptTag.innerHTML.replace(';', '').trim();
+                        fn = eval(sc);
+                    }
                 }
             }
+            //#endregion
+            //#region Apply to target Elements
             var tes = sd.targetElements;
             for (var j = 0, m = tes.length; j < m; j++) {
                 var te = <HTMLElement> tes[j];
@@ -286,6 +305,7 @@ module DBS.cs {
                     }
                 }
             }
+            //#endregion
         }
 
     }

@@ -5,7 +5,7 @@ module tsp.b {
 
     var db = DBS.b;
 
-    export interface IDataTable extends DBS.b.INotifyListeners {
+    export interface IDataTable  {
         data?: any[][];
         fields?: IDataField[];
 
@@ -13,6 +13,8 @@ module tsp.b {
         //rowDontView?: number[];
 
         colView?: number[];
+
+        changeNotifier?: DBS.b.ChangeNotifier<IDataTable>;
     
     }
 
@@ -39,15 +41,33 @@ module tsp.b {
     export interface IFillGridOptions {
         //templateSelector: string;
         //verticalOffsetCtlSelector?: 
+        
         horizontalOffsetFld?: HTMLInputElement;
         verticalOffsetFld?: HTMLInputElement;
-        getDataTable?: (el: HTMLElement) => IDataTable;
+        dataTableFn?: (el: HTMLElement) => IDataTable;
         suppressVerticalVirtualization?: boolean;
         //supportRowSelection?: boolean;
         rowSelection?: SelectionOptions;
+        columnRemove?: IColumnRemoveOptions;
         treeColumn?: TreeType;
         //supportToolTips?: boolean;
         titleFill?: TitleFillOptions;
+    }
+
+    export interface ICascadingHandler {
+        selectorNodeTest?: string;
+        selectorNodeVoidTest?: string;
+        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
+        //test?: (el: HTMLElement) => boolean;
+        containerID?: string;
+        container?: HTMLElement;
+        data?: any;
+        
+    }
+
+    export interface IColumnRemoveOptions {
+        selector: string;
+        removeHandler: (evt: Event, cascadeInfo: ICascadingHandler) => void;
     }
 
     export interface IScrollOptions {
@@ -57,7 +77,7 @@ module tsp.b {
         maxValueFn?: () => number;
         formTargets: any;
         currentValue?: number;
-        maxValueChangeNotifier?: DBS.b.INotifyListeners;
+        maxValueChangeNotifier?: DBS.b.ChangeNotifier<IScrollOptions>;
         elementID?: string;
     }
 
@@ -98,7 +118,7 @@ module tsp.b {
     }
 
     export function applyTreeView(templEl: HTMLElement, populateRule: IFillGridOptions) {
-        var dt = populateRule.getDataTable(templEl);
+        var dt = populateRule.dataTableFn(templEl);
         var expanded = {};
         var treeFldIdx = getNodeFldIdx(dt);
         if (treeFldIdx == -1) {
@@ -128,7 +148,7 @@ module tsp.b {
         var vSlider = db.data(templEl).slider;
         if (vSlider) vSlider.slider('option', 'max', view.length);
         console.log('tsp.n.applyTreeView.notifyListeners');
-        db.notifyListeners(dt);
+        if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
     }
 
 
@@ -154,8 +174,17 @@ module tsp.b {
             var inpFld;
             if (inpFlds.length == 0) {
                 inpFld = document.createElement('input');
-                var $inpFld = $(inpFld);
-                $inpFld.attr('type', 'hidden').attr('name', inputName.replace('_value', '')).addClass(inputName);
+                db.$({
+                    el: <HTMLElement> inpFld,
+                    attribs: {
+                        'type': 'hidden',
+                        'name': inputName.replace('_value', '')
+                    },
+                    addClassList: [inputName],
+                });
+                  
+                //var $inpFld = $(inpFld);
+                //$inpFld.attr('type', 'hidden').attr('name', inputName.replace('_value', '')).addClass(inputName);
                 frm.appendChild(inpFld);
                 callBack(inpFld);
             } else {
@@ -173,7 +202,7 @@ module tsp.b {
         var fgo = fillGridOptions;
         var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         var hcs = el.querySelectorAll('th[data-hc]');
-        var dataTable = fgo.getDataTable(el);
+        var dataTable = fgo.dataTableFn(el);
         var fields = dataTable.fields;
         for (var i = 0, n = hcs.length; i < n; i++) {
             var fldIdx = Math.min(fields.length - 1, i + colOffset);
@@ -214,7 +243,7 @@ module tsp.b {
         var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         var rcs = el.querySelectorAll('*[data-rc]');
         var rule = fgo ? fgo : <IFillGridOptions> db.data(el).populateRule;
-        var dataTable = rule.getDataTable(el);
+        var dataTable = rule.dataTableFn(el);
         var dt = dataTable.data;
         var f = dataTable.fields;
         var view = dataTable.rowView;

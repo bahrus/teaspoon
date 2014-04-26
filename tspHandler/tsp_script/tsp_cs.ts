@@ -11,15 +11,7 @@ module tsp.cs {
 
 
     //#region Interfaces
-    export interface ICascadingHandler {
-        selectorNodeTest?: string;
-        selectorNodeVoidTest?: string;
-        handler: (evt: Event, cascadingHandlerInfo: ICascadingHandler) => void;
-        //test?: (el: HTMLElement) => boolean;
-        containerID?: string;
-        container?: HTMLElement;
-        data?: any;
-    }
+    
     //#endregion
 
     //#region Event Handlers
@@ -35,9 +27,8 @@ module tsp.cs {
                     var evtHandler = evtHandlers[evt.type];
                     if (evtHandler) {
                         for (var i = 0, n = evtHandler.length; i < n; i++) {
-                            var cascadeHandler = <ICascadingHandler> evtHandler[i];
+                            var cascadeHandler = <b.ICascadingHandler> evtHandler[i];
                             if (cascadeHandler.selectorNodeVoidTest) {
-                                debugger;
                                 var containerEl : HTMLElement;
                                 if (cascadeHandler.containerID) {
                                     containerEl = <HTMLElement> document.querySelector(cascadeHandler.containerID);
@@ -85,13 +76,14 @@ module tsp.cs {
 
     }
 
-    function handleCloseOnClickOut(evt: Event, cascadeHandler: ICascadingHandler) {
+    function handleCloseOnClickOut(evt: Event, cascadeHandler: b.ICascadingHandler) {
         $(cascadeHandler.selectorNodeVoidTest).hide();
     }
 
     function handleScroll(evt: Event) {
 
         //console.log(evt);
+
         var src = <HTMLDivElement> evt.srcElement;
         var scrollOptions = <tsp.b.IScrollOptions> DBS.b.data(src)['scrollOptions'];
         var newVal;
@@ -116,7 +108,7 @@ module tsp.cs {
         }
     }
 
-    function handleTreeNodeToggle(evt: Event, cascadeInfo: ICascadingHandler) {
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
         var evtEl = evt.srcElement;
         var $evtEl = $(evtEl);
         $evtEl.toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
@@ -132,7 +124,7 @@ module tsp.cs {
         var templEl = document.getElementById(cascadeInfo.containerID);
         var rule = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
         //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
-        var dt = rule.getDataTable(templEl);
+        var dt = rule.dataTableFn(templEl);
         //var dtRow = dt.data[rowNo];
         var dtRow = dt.data[dt.rowView[rowNo]];
         var ndFldIdx = b.getNodeFldIdx(dt);
@@ -141,16 +133,16 @@ module tsp.cs {
         nd[b.nodeIdxes.numChildren] = -1 * numChildren;
         b.applyTreeView(templEl, rule);
         b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
-        db.notifyListeners(dt);
+        if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
     }
 
-    function handleDisplayOnHover(evt: Event, cascadeInfo: ICascadingHandler) {
+    function handleDisplayOnHover(evt: Event, cascadeInfo: b.ICascadingHandler) {
         var evtEl = evt.srcElement;
         var doho = <b.IDisplayOnHoverOptions> cascadeInfo.data;
         $('#' + doho.targetID).show();
     }
 
-    function handleHideColumn(evt: Event, cascadeInfo: ICascadingHandler) {
+    export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
         var evtEl = evt.srcElement;
         var templEl = document.getElementById(cascadeInfo.containerID);
         var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
@@ -161,7 +153,7 @@ module tsp.cs {
             ac = actionCell.getAttribute('data-ac');
         }
         var colNo = parseInt(ac.split(',')[1]) - 1;
-        var dt = fgo.getDataTable(templEl);
+        var dt = fgo.dataTableFn(templEl);
         if (!dt.colView) {
             var colView: number[] = [];
             for (var i = 0, n = dt.fields.length; i < n; i++) {
@@ -178,7 +170,7 @@ module tsp.cs {
         b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
         b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
         //debugger;
-        db.notifyListeners(dt);
+        if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
     }
     //#endregion
 
@@ -223,13 +215,13 @@ module tsp.cs {
         var displayOnHoverOptions = <b.IDisplayOnHoverOptions> db.extractDirective(el, 'displayOnHoverOptions');
         if (!displayOnHoverOptions) return;
         displayOnHoverOptions.targetID = db.getOrCreateID(el);
-        var ch: ICascadingHandler = {
+        var ch: b.ICascadingHandler = {
             selectorNodeTest: displayOnHoverOptions.hotspotSelector,
             handler: handleDisplayOnHover,
             data: displayOnHoverOptions
         };
         _when('mousemove', ch);
-        var ch2: ICascadingHandler = {
+        var ch2: b.ICascadingHandler = {
             handler: handleCloseOnClickOut,
             selectorNodeVoidTest: '#' + db.getOrCreateID(el),
         };
@@ -328,14 +320,21 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
-        var test = el.querySelectorAll('th>span.fa-minus-square-o');
-        if (test.length > 0) {
+        if (fgo.columnRemove) {
             _when('click', {
-                selectorNodeTest: 'th>span.fa-minus-square-o',
+                selectorNodeTest: fgo.columnRemove.selector,
                 containerID: db.getOrCreateID(el),
-                handler: handleHideColumn,
+                handler: fgo.columnRemove.removeHandler,
             });
         }
+        //var test = el.querySelectorAll('th>span.fa-minus-square-o');
+        //if (test.length > 0) {
+        //    _when('click', {
+        //        selectorNodeTest: 'th>span.fa-minus-square-o',
+        //        containerID: db.getOrCreateID(el),
+        //        handler: handleHideColumn,
+        //    });
+        //}
     }
 
 
@@ -353,7 +352,7 @@ module tsp.cs {
         return false;
     };
 
-    export function _when(eventName: string, cascadingHandler: ICascadingHandler) {
+    export function _when(eventName: string, cascadingHandler: b.ICascadingHandler) {
         var el: HTMLElement;
         if (cascadingHandler.containerID) {
             el = document.getElementById(cascadingHandler.containerID);
@@ -363,7 +362,7 @@ module tsp.cs {
             el = document.body;
         }
         //var eventHandlers = handlers[eventName];
-        var eventHandlers: { [key: string]: ICascadingHandler[]; } = db.data(el).handlers;
+        var eventHandlers: { [key: string]: b.ICascadingHandler[]; } = db.data(el).handlers;
         if (!eventHandlers) {
             eventHandlers = {};
             db.data(el).handlers = eventHandlers;

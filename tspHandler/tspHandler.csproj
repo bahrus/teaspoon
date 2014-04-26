@@ -96,6 +96,7 @@
     <Compile Include="tspProcessor_partials\tspProcessor_Merge.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Resource.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Script.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Script_Model.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_style.cs" />
     <Compile Include="ScriptFile.cs" />
   </ItemGroup>
@@ -128,7 +129,9 @@
     <Content Include="Schemas\VS2012\CSS\tsp_diff.xml" />
     <Content Include="Schemas\VS2013\CSS\css-main.xml" />
     <Content Include="Schemas\VS2013\CSS\original_css-main.xml" />
-    <Content Include="Schemas\VS2013\CSS\tsp.xml" />
+    <Content Include="Schemas\VS2013\CSS\tsp.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE60.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE70.XML" />
     <Content Include="Schemas\WebExpress4\CSS\CSS-IE80.XML" />
