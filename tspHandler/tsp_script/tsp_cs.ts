@@ -143,13 +143,14 @@ module tsp.cs {
     }
 
     export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        var evtEl = evt.srcElement;
+        console.log('in handleHideColumn');
+        var evtEl = <HTMLElement> evt.srcElement;
         var templEl = document.getElementById(cascadeInfo.containerID);
         var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
         var actionCell = evtEl;
         var ac = actionCell.getAttribute('data-ac');
         while (actionCell && !ac) {
-            actionCell = <Element> actionCell.parentNode;
+            actionCell = <HTMLElement> actionCell.parentNode;
             ac = actionCell.getAttribute('data-ac');
         }
         var colNo = parseInt(ac.split(',')[1]) - 1;
@@ -171,6 +172,25 @@ module tsp.cs {
         b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
         //debugger;
         if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
+        var ft = fgo.columnRemove.formTargets;
+        if (ft) {
+            if (ft.id) { //assume form element
+                var frm = <HTMLFormElement> ft;
+                var id = db.getOrCreateID(evtEl) + 'ck_box';
+                var lblId = id + '_lbl';
+                var inp = <HTMLElement> frm.querySelector('#' + id);
+                var lbl = <HTMLElement> frm.querySelector('#' + lblId);
+                if (!inp) {
+                    var emmetS = 'input#{id}[type="checkbox"]+label#{lblId}[for="{id}"]{iah}';
+                    emmetS = db.format(emmetS, {
+                        id: id,
+                        lblId: lblId
+                    });
+                    db.$$(emmetS).appendTo(frm);
+                    
+                }
+            }
+        }
     }
     //#endregion
 

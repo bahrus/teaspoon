@@ -68,6 +68,7 @@ module tsp.b {
     export interface IColumnRemoveOptions {
         selector: string;
         removeHandler: (evt: Event, cascadeInfo: ICascadingHandler) => void;
+        formTargets: any;
     }
 
     export interface IScrollOptions {
@@ -173,19 +174,16 @@ module tsp.b {
             var inpFlds = frm.querySelectorAll('.' + inputName);
             var inpFld;
             if (inpFlds.length == 0) {
-                inpFld = document.createElement('input');
-                db.$({
-                    el: <HTMLElement> inpFld,
-                    attribs: {
-                        'type': 'hidden',
-                        'name': inputName.replace('_value', '')
-                    },
-                    addClassList: [inputName],
+                
+                var emmetS = db.format('input[type="hidden"][name="{name}"].{inputName}', {
+                    name: inputName.replace('_value', ''),
+                    inputName: inputName
                 });
+                db.$$(emmetS).appendTo(frm);
                   
                 //var $inpFld = $(inpFld);
                 //$inpFld.attr('type', 'hidden').attr('name', inputName.replace('_value', '')).addClass(inputName);
-                frm.appendChild(inpFld);
+                //frm.appendChild(inpFld);
                 callBack(inpFld);
             } else {
                 for (var j = 0, n1 = inpFlds.length; j < n1; j++) {

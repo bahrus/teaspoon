@@ -41,15 +41,94 @@ module DBS.b{
         return cache[nCacheIndex];
     }
 
+    //export function subBefore(val: string, search: string): ISearchBeforeResult {
+    //    var iPos = val.indexOf(search);
+    //    return {
+    //        val: val,
+    //        cursor: iPos,
+    //        result: iPos == -1 ? val : val.substr(0, iPos)
+    //    };
+    //}
+
+    //export function subAfter(sbr: ISearchBeforeResult, seatch: string) {
+
+    //}
+
+    //export interface ISearchBeforeResult {
+    //    val: string;
+    //    cursor: number;
+    //    result: string;
+    //}
+
+    //export function partSplit(val: string, delim: string, num: number) {
+    //    var sp: string[] = [];
+    //    var i = 0, n = val.length, currLen = 0;
+    //    while (i < n) {
+    //        var c = val.charAt(i);
+    //        i++;
+    //    }
+
+    //}
+
+    //export function divideString(val: string, search: string): IDividedString{
+    //    var iPos = val.indexOf(search);
+    //    return {
+    //        before: iPos == -1 ? val : val.substr(0, iPos),
+    //        after: iPos == -1 ? '' : val.substr(iPos + search.length),
+    //    };
+    //}
+
+    export interface IDividedString {
+        before: string;
+        after: string;
+    }
+
     export interface IPropsManager {
-        el: HTMLElement;
-        attribs?: { [name: string]: string };
+        el?: HTMLElement;
+        emmetString?: string;
+        tagName?: string;
+        attr?: { [name: string]: string };
         addClassList?: string[];
-        add?: (props: IPropsManager) => IPropsManager;
+        $?: (props: IPropsManager) => IPropsManager;
+        appendTo?: (parent: HTMLElement) => IPropsManager;
+        text?: string;
+    }
+
+    export function $$(emmetS: string): IPropsManager {
+        //var headTail = divideString(emmetS, '>');
+        //var el = document.createElement(headTail.before);
+        //el.innerHTML = expEmmet(headTail.after);
+        ////var expand = emmet.expandAbbreviation(
+        //var props : IPropsManager =  {
+        //    el: el,
+        //};
+        var props: IPropsManager = { emmetString: emmetS };
+        applyMethods(props);
+        return props;
+    }
+
+    function applyMethods(props: IPropsManager) {
+        if (!props.$) props.$ = partial($, props);
+        if (!props.appendTo) props.appendTo = partial(appendTo, props);
+    }
+
+    export function format(str: string, props: any) {
+        var res = str;
+        for (var key in props) {
+            res = res.replace('{' + key + '}', props[key]);
+        }
+        return res;
     }
 
     export function $(props: IPropsManager) {
-        var pa = props.attribs, el = props.el, acl = props.addClassList;
+        var pa = props.attr, el = props.el, acl = props.addClassList;
+        if (!el) {
+            var tn = props.tagName;
+            if (tn) {
+                props.el = document.createElement(tn);
+                el = props.el;
+            }
+        }
         if (pa ){
             for (var a in pa) {
                 el.setAttribute(a, pa[a]);
@@ -62,12 +141,26 @@ module DBS.b{
                 if (!cl.contains(ac)) cl.add(ac);
             }
         }
-        if (!props.add) {
-            props.add = partial($, props);
+        if (props.text) {
+            el.textContent = props.text;
         }
+        applyMethods(props);
         return props;
     }
 
+    function appendTo(props: IPropsManager, parent: HTMLElement): IPropsManager {
+        if (props.el) {
+            parent.appendChild(props.el);
+            return props;
+        }
+        if (props.emmetString) {
+            parent.insertAdjacentHTML('beforeend', expEmmet(props.emmetString));
+        }
+    }
+
+    function expEmmet(str: string) {
+        return emmet.expandAbbreviation(str, 'html', 'html', null).split('${0}').join('');
+    }
 
     export function applyEmmet(selectedNode: NodeSelector) {
         var cs = isCSMode();
@@ -82,7 +175,7 @@ module DBS.b{
         for (var i = 0, n = emmetNodes.length; i < n; i++) {
             var nd = <HTMLElement> emmetNodes[i];
             var inner = nd.innerHTML.trim();
-            var content = emmet.expandAbbreviation(inner, 'html', 'html', null).split('${0}').join('');
+            var content = expEmmet(inner);
             //var templ = nd.getAttribute('data-processor');
             //if (templ) {
             //    var fn = eval(templ);
