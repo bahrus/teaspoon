@@ -7,10 +7,6 @@ module DBS.b{
         return (typeof (mode) == 'undefined' || mode !== 'server');
     }
 
-    //export function isClientSideMode() {
-    //    return typeof (mode) == 'undefined' || mode !== 'server'
-    //}
-
     var uidCounter = 0;
 
     export function getOrCreateID(el: HTMLElement) {
@@ -23,14 +19,10 @@ module DBS.b{
     export var dataExpando = isCSMode() ? 'data-cs-cache' : 'data-ss-cache';
     var cache = [{}];
     export function data(elem: HTMLElement): any {
-        //var $el = $(elem);
         var cacheIndex = elem.getAttribute(dataExpando), nextCacheIndex = cache.length;
-        //var cacheIndex = $el.attr(expando), nextCacheIndex = cache.length;
         var nCacheIndex: number;
         if (!cacheIndex) {
             elem.setAttribute(dataExpando, nextCacheIndex.toString());
-            //$el.attr(dataExpando, nextCacheIndex.toString());
-            //elem.setAttribute(expando, nextCacheIndex.toString());
             cache[nextCacheIndex] = {};
             nCacheIndex = nextCacheIndex;
         } else {
@@ -41,42 +33,7 @@ module DBS.b{
         return cache[nCacheIndex];
     }
 
-    //export function subBefore(val: string, search: string): ISearchBeforeResult {
-    //    var iPos = val.indexOf(search);
-    //    return {
-    //        val: val,
-    //        cursor: iPos,
-    //        result: iPos == -1 ? val : val.substr(0, iPos)
-    //    };
-    //}
-
-    //export function subAfter(sbr: ISearchBeforeResult, seatch: string) {
-
-    //}
-
-    //export interface ISearchBeforeResult {
-    //    val: string;
-    //    cursor: number;
-    //    result: string;
-    //}
-
-    //export function partSplit(val: string, delim: string, num: number) {
-    //    var sp: string[] = [];
-    //    var i = 0, n = val.length, currLen = 0;
-    //    while (i < n) {
-    //        var c = val.charAt(i);
-    //        i++;
-    //    }
-
-    //}
-
-    //export function divideString(val: string, search: string): IDividedString{
-    //    var iPos = val.indexOf(search);
-    //    return {
-    //        before: iPos == -1 ? val : val.substr(0, iPos),
-    //        after: iPos == -1 ? '' : val.substr(iPos + search.length),
-    //    };
-    //}
+ 
 
     export interface IDividedString {
         before: string;
@@ -95,13 +52,6 @@ module DBS.b{
     }
 
     export function $$(emmetS: string): IPropsManager {
-        //var headTail = divideString(emmetS, '>');
-        //var el = document.createElement(headTail.before);
-        //el.innerHTML = expEmmet(headTail.after);
-        ////var expand = emmet.expandAbbreviation(
-        //var props : IPropsManager =  {
-        //    el: el,
-        //};
         var props: IPropsManager = { emmetString: emmetS };
         applyMethods(props);
         return props;
@@ -244,27 +194,6 @@ module DBS.b{
             }
         }
     }
-
-    //export function attachNotifyListeners<T extends INotifyListeners>(t: T) {
-    //    console.log('DBS.b.attachNotifyListeners');
-    //    t.addChangeListener = partial(addChangeListener, t);
-    //}
-
-    //function addChangeListener<T extends INotifyListeners>(t: T, callBack: (T) => void) {
-    //    if (!t.changeListeners) t.changeListeners = [];
-    //    console.log('DBS.b.addChangeListener');
-    //    t.changeListeners.push(callBack);
-    //}
-
-    //export function notifyListeners(listenerContainer: INotifyListeners) {
-    //    console.log('DBS.b.notifyListeners');
-    //    var cls = listenerContainer.changeListeners;
-    //    if (!cls) return;
-    //    for (var i = 0, n = cls.length; i < n; i++) {
-    //        var cl = cls[i];
-    //        cl(listenerContainer);
-    //    }
-    //}
 
     function partial(func, arg1?, arg2?, arg3?, arg4?, arg5?, arg6?, arg7?) {
         var args = Array.prototype.slice.call(arguments, 1);

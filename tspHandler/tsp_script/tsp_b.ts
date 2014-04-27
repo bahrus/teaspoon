@@ -62,6 +62,7 @@ module tsp.b {
         containerID?: string;
         container?: HTMLElement;
         data?: any;
+        timeStamp?: number;
         
     }
 

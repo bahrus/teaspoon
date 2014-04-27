@@ -17,6 +17,9 @@ module tsp.cs {
     //#region Event Handlers
     function handleCascadingEvent(evt: Event) {
         var el = <HTMLElement> evt.srcElement;
+        //if (evt.type == 'click') {
+        //    console.log(el.outerHTML);
+        //}
         var evtEl = el;
         while (el) {
             var bCheckedBody = (el.tagName == 'BODY');
@@ -143,8 +146,12 @@ module tsp.cs {
     }
 
     export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
         console.log('in handleHideColumn');
         var evtEl = <HTMLElement> evt.srcElement;
+        //console.log('in handleHideColumn evtEl.outerHTML = ' + evtEl.outerHTML);
         var templEl = document.getElementById(cascadeInfo.containerID);
         var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
         var actionCell = evtEl;
@@ -155,19 +162,21 @@ module tsp.cs {
         }
         var colNo = parseInt(ac.split(',')[1]) - 1;
         var dt = fgo.dataTableFn(templEl);
+        var colFieldNo = 0;
         if (!dt.colView) {
+            colFieldNo = colNo;
             var colView: number[] = [];
             for (var i = 0, n = dt.fields.length; i < n; i++) {
-                if (i != colNo) colView.push(i);
+                if (i != colNo) {
+                    colView.push(i);
+                }
             }
             dt.colView = colView;
         } else {
-            //var idx = dt.colView.indexOf(colNo);
-            //if (idx > -1) {
-            //dt.colView.splice(idx, 1);
-            //}
+            colFieldNo = dt.colView[colNo];
             dt.colView.splice(colNo, 1);
         }
+        console.log('colFieldNo = ' + colFieldNo);
         b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
         b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
         //debugger;
@@ -176,15 +185,19 @@ module tsp.cs {
         if (ft) {
             if (ft.id) { //assume form element
                 var frm = <HTMLFormElement> ft;
-                var id = db.getOrCreateID(evtEl) + 'ck_box';
-                var lblId = id + '_lbl';
+                var id = 'tsp_cs_col_ck_box_' + colFieldNo;
+                var lblId = 'tsp_cs_col_lbl_' + colFieldNo;
                 var inp = <HTMLElement> frm.querySelector('#' + id);
                 var lbl = <HTMLElement> frm.querySelector('#' + lblId);
                 if (!inp) {
-                    var emmetS = 'input#{id}[type="checkbox"]+label#{lblId}[for="{id}"]{iah}';
+                    //var th = evtEl.parentNode;
+                    var fld = dt.fields[colFieldNo];
+                    var colText = fld.header ? fld.header : fld.name;
+                    var emmetS = 'input#{id}[type="checkbox"]+label#{lblId}[for="{id}"]{{colText}}';
                     emmetS = db.format(emmetS, {
                         id: id,
-                        lblId: lblId
+                        lblId: lblId,
+                        colText: colText,
                     });
                     db.$$(emmetS).appendTo(frm);
                     
@@ -341,20 +354,19 @@ module tsp.cs {
             }
         }
         if (fgo.columnRemove) {
+            //var colRemovers = el.querySelectorAll(fgo.columnRemove.selector);
+            //for (var i = 0, n = colRemovers.length; i < n; i++) {
+            //    var colRemover = colRemovers[i];
+            //    colRemover.addEventListener('click', fgo.columnRemove.removeHandler);
+            //}
+            console.log('attach click event');
             _when('click', {
                 selectorNodeTest: fgo.columnRemove.selector,
                 containerID: db.getOrCreateID(el),
                 handler: fgo.columnRemove.removeHandler,
             });
         }
-        //var test = el.querySelectorAll('th>span.fa-minus-square-o');
-        //if (test.length > 0) {
-        //    _when('click', {
-        //        selectorNodeTest: 'th>span.fa-minus-square-o',
-        //        containerID: db.getOrCreateID(el),
-        //        handler: handleHideColumn,
-        //    });
-        //}
+        
     }
 
 
@@ -373,6 +385,7 @@ module tsp.cs {
     };
 
     export function _when(eventName: string, cascadingHandler: b.ICascadingHandler) {
+        console.log('_when ' + eventName + 'node Test ' + cascadingHandler.selectorNodeTest);
         var el: HTMLElement;
         if (cascadingHandler.containerID) {
             el = document.getElementById(cascadingHandler.containerID);
