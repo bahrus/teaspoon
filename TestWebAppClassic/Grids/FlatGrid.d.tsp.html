@@ -3,7 +3,7 @@
     <title>Flat Grid Test</title>
 
 
-    <script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><link href="../Content/font-awesome-4.0.3/css/font-awesome.min.css" data-genid="lib" rel="stylesheet"><link href="../tsp_script/tsp.css" data-genid="lib" rel="stylesheet">
+    <script src="../Scripts/typings/underscore/underscore.d.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><link href="../Content/font-awesome-4.0.3/css/font-awesome.min.css" data-genid="lib" rel="stylesheet"><link href="../tsp_script/tsp.css" data-genid="lib" rel="stylesheet">
     
     
     <script> var x;</script>
@@ -75,6 +75,13 @@
 <script class="ac" data-attribute-link="">
     x = tsp.cs.addDisplayOnHover;
 </script>
+<script class="gridState">
+    x = function(el){
+        el.addEventListener('change', function(evt){
+            alert('iah');
+        })
+    }
+</script>
 <script type="text/emmet" data-mode="client-side-only">
         (table>
             (tr>
@@ -104,7 +111,7 @@
         )
 
 </script>
-<form id="gridState">
+<form id="gridState" class="gridState">
     <input id="vs_ScrollVal" name="vs_ScrollVal" type="hidden">
     <input id="hs_ScrollVal" name="hs_ScrollVal" type="hidden">
 </form>

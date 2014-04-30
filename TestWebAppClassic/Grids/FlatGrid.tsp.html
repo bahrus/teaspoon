@@ -75,6 +75,13 @@
 <script class="ac" data-attribute-link>
     x = tsp.cs.addDisplayOnHover;
 </script>
+<script class="gridState">
+    x = function(el){
+        el.addEventListener('change', function(evt){
+            alert('iah');
+        })
+    }
+</script>
 <script type="text/emmet" data-mode="client-side-only">
         (table>
             (tr>
@@ -104,7 +111,7 @@
         )
 
 </script>
-<form id="gridState">
+<form id="gridState" class="gridState">
     <input id="vs_ScrollVal" name="vs_ScrollVal" type="hidden">
     <input id="hs_ScrollVal" name="hs_ScrollVal" type="hidden">
 </form>

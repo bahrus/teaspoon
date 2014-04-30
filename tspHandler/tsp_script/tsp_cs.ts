@@ -1,4 +1,5 @@
 ﻿///<reference path='../Scripts/typings/jquery/jquery.d.ts'/>
+///<reference path='../Scripts/typings/underscore/underscore.d.ts'/>
 ///<reference path='tsp_b.ts'/>
 ///<reference path='DBS_cs.ts'/>
 
@@ -17,9 +18,7 @@ module tsp.cs {
     //#region Event Handlers
     function handleCascadingEvent(evt: Event) {
         var el = <HTMLElement> evt.srcElement;
-        //if (evt.type == 'click') {
-        //    console.log(el.outerHTML);
-        //}
+        //console.log(evt.type);
         var evtEl = el;
         while (el) {
             var bCheckedBody = (el.tagName == 'BODY');
@@ -145,8 +144,28 @@ module tsp.cs {
         $('#' + doho.targetID).show();
     }
 
-    export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        
+    export function handleToggleColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        var evtEl = <HTMLElement> evt.srcElement;
+        var subCI = <b.ICascadingHandler> cascadeInfo.data.cascadeInfo;
+        var colFieldNo = <number> cascadeInfo.data.colFieldNo;
+        var templEl = document.getElementById(subCI.containerID);
+        var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
+        var dt = fgo.dataTableFn(templEl);
+        dt.colView.push(colFieldNo);
+        var cv = dt.colView;
+        var closestIndex = 0;
+        for (var i = 0, n = cv.length; i < n; i++) {
+            var cvi = cv[i];
+            if (cvi < colFieldNo && cvi > cv[closestIndex]) {
+                closestIndex = i;
+            }
+        }
+        cv.splice(closestIndex + 1, 0, colFieldNo);
+        b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
+        b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
+    }
+
+    export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {        
         if (cascadeInfo.timeStamp === evt.timeStamp) return;
         cascadeInfo.timeStamp = evt.timeStamp;
         console.log('in handleHideColumn');
@@ -185,9 +204,9 @@ module tsp.cs {
         if (ft) {
             if (ft.id) { //assume form element
                 var frm = <HTMLFormElement> ft;
-                var id = 'tsp_cs_col_ck_box_' + colFieldNo;
+                var chkBoxId = 'tsp_cs_col_ck_box_' + colFieldNo;
                 var lblId = 'tsp_cs_col_lbl_' + colFieldNo;
-                var inp = <HTMLElement> frm.querySelector('#' + id);
+                var inp = <HTMLElement> frm.querySelector('#' + chkBoxId);
                 var lbl = <HTMLElement> frm.querySelector('#' + lblId);
                 if (!inp) {
                     //var th = evtEl.parentNode;
@@ -195,12 +214,21 @@ module tsp.cs {
                     var colText = fld.header ? fld.header : fld.name;
                     var emmetS = 'input#{id}[type="checkbox"]+label#{lblId}[for="{id}"]{{colText}}';
                     emmetS = db.format(emmetS, {
-                        id: id,
+                        id: chkBoxId,
                         lblId: lblId,
                         colText: colText,
                     });
                     db.$$(emmetS).appendTo(frm);
-                    
+                    var chkbox = frm.querySelector('#' + chkBoxId);
+                    _when('change', {
+                        selectorNodeTest: db.format('input#{id}', { id: chkBoxId }),
+                        handler: handleToggleColumn,
+                        data: {
+                            cascadeInfo: cascadeInfo,
+                            colFieldNo: colFieldNo,
+                        }
+                    });
+                    //chkbox.addEventListener('change', handleToggleColumn);
                 }
             }
         }
