@@ -266,6 +266,7 @@
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\slick.headerbuttons.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\slickgrid\SlickGrid.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\underscore\underscore.d.ts" />
     <TypeScriptCompile Include="ScrollTests\ScrollTest1.ts" />
   </ItemGroup>
   <ItemGroup>

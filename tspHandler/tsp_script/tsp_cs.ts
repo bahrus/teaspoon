@@ -144,13 +144,42 @@ module tsp.cs {
         $('#' + doho.targetID).show();
     }
 
+    export function handleToggleLockColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        var gh = new gridHelper(evt, cascadeInfo);
+        var fgo = gh.getDataTable
+        
+    }
+
+    class gridHelper {
+        _evt: Event;
+        _templEl: HTMLElement;
+        _ci: b.ICascadingHandler;
+        _evtEl: HTMLElement;
+        _fgo: b.IFillGridOptions;
+        constructor(evt: Event, cascadeInfo: b.ICascadingHandler) {
+            this._evt = evt;
+            this._ci = cascadeInfo;
+            this._evtEl = <HTMLElement> this._evt.srcElement;
+            this._templEl = <HTMLElement> document.getElementById(this._ci.containerID);
+            this._fgo = <b.IFillGridOptions> db.extractDirective(this._templEl, 'fillGridOptions');
+        }
+        getFillGridOptions() : b.IFillGridOptions {
+            return this._fgo;
+        }
+        refreshHeaderAndBody() {
+            b.refreshHeaderTemplateWithRectCoords(this._templEl, this._fgo);
+            b.refreshBodyTemplateWithRectCoords(this._templEl, this._fgo.verticalOffsetFld, this._fgo);
+        }
+        getDataTable() : b.IDataTable {
+            return this.getFillGridOptions().dataTableFn(this._templEl);
+        }
+    }
+
     export function handleToggleColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        var evtEl = <HTMLElement> evt.srcElement;
         var subCI = <b.ICascadingHandler> cascadeInfo.data.cascadeInfo;
         var colFieldNo = <number> cascadeInfo.data.colFieldNo;
-        var templEl = document.getElementById(subCI.containerID);
-        var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
-        var dt = fgo.dataTableFn(templEl);
+        var gh = new gridHelper(evt, subCI);
+        var dt = gh.getDataTable();
         dt.colView.push(colFieldNo);
         var cv = dt.colView;
         var closestIndex = 0;
@@ -161,8 +190,7 @@ module tsp.cs {
             }
         }
         cv.splice(closestIndex + 1, 0, colFieldNo);
-        b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
-        b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
+        gh.refreshHeaderAndBody();
     }
 
     export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {        
@@ -170,7 +198,6 @@ module tsp.cs {
         cascadeInfo.timeStamp = evt.timeStamp;
         console.log('in handleHideColumn');
         var evtEl = <HTMLElement> evt.srcElement;
-        //console.log('in handleHideColumn evtEl.outerHTML = ' + evtEl.outerHTML);
         var templEl = document.getElementById(cascadeInfo.containerID);
         var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
         var actionCell = evtEl;
@@ -381,20 +408,30 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
-        if (fgo.columnRemove) {
-            //var colRemovers = el.querySelectorAll(fgo.columnRemove.selector);
-            //for (var i = 0, n = colRemovers.length; i < n; i++) {
-            //    var colRemover = colRemovers[i];
-            //    colRemover.addEventListener('click', fgo.columnRemove.removeHandler);
-            //}
-            console.log('attach click event');
-            _when('click', {
-                selectorNodeTest: fgo.columnRemove.selector,
-                containerID: db.getOrCreateID(el),
-                handler: fgo.columnRemove.removeHandler,
-            });
-        }
-        
+        //if (fgo.columnRemove) {
+        //    //var colRemovers = el.querySelectorAll(fgo.columnRemove.selector);
+        //    //for (var i = 0, n = colRemovers.length; i < n; i++) {
+        //    //    var colRemover = colRemovers[i];
+        //    //    colRemover.addEventListener('click', fgo.columnRemove.removeHandler);
+        //    //}
+        //    console.log('attach click event');
+        //    _when('click', {
+        //        selectorNodeTest: fgo.columnRemove.selector,
+        //        containerID: db.getOrCreateID(el),
+        //        handler: fgo.columnRemove.handler
+        //    });
+        //}
+        attachIActObj(fgo.columnRemove, 'click', el);
+        attachIActObj(fgo.columnLock,   'click', el);
+    }
+
+    function attachIActObj(obj: b.IActOptions, evtName: string, container: HTMLElement) {
+        if (!obj) return;
+        _when(evtName, {
+            selectorNodeTest: obj.selector,
+            containerID: db.getOrCreateID(container),
+            handler: obj.handler
+        });
     }
 
 

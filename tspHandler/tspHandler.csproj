@@ -120,6 +120,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\underscore\underscore.d.ts" />
     <TypeScriptCompile Include="tsp_script\DBS_b.ts" />
     <Content Include="Schemas\VS2012\CSS\css-main.xml" />
     <Content Include="Schemas\VS2012\CSS\original_css-main.xml" />

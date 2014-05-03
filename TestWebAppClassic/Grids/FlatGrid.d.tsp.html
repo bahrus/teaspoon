@@ -57,8 +57,13 @@
         horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
         columnRemove: {
             selector: 'th>span.fa-minus-square-o',
-            removeHandler : tsp.cs.handleHideColumn,
+            handler : tsp.cs.handleHideColumn,
             formTargets :  document.getElementById('gridState')
+        },
+        columnLock: {
+            selector:'th>span.fa-minus-square-o',
+            formTargets :  document.getElementById('gridState'),
+            handler: tsp.cs.handleToggleLockColumn
         }
     };
 </script>
@@ -82,6 +87,11 @@
         })
     }
 </script>
+<style>
+    table.RC,#hs.HScrollBar{
+        width:500px;
+    }
+</style>
 <script type="text/emmet" data-mode="client-side-only">
         (table>
             (tr>
@@ -90,7 +100,7 @@
                         (thead>
                             (tr.ac[style=display:none]>(th[data-ac=1,$]>
                                     (span[title='Hide'].fa.fa-minus-square-o{&nbsp;})
-                                    + (span[title='Freeze'].fa.fa-anchor{&nbsp;})
+                                    + (span[title='Freeze'].fa.fa-lock{&nbsp;})
                                     + (span[title='Move Left'].fa.fa-arrow-circle-left{&nbsp;})
                                     + (span[title='Move Right'].fa.fa-arrow-circle-right{&nbsp;})
                                  )*3)
@@ -107,7 +117,7 @@
                   div#vs.VScrollBar[style=height:200px]
                 )
             )
-            + tr>td>div#hs.HScrollBar[style=width:200px]
+            + tr>td>div#hs.HScrollBar
         )
 
 </script>

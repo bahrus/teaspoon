@@ -48,7 +48,8 @@ module tsp.b {
         suppressVerticalVirtualization?: boolean;
         //supportRowSelection?: boolean;
         rowSelection?: SelectionOptions;
-        columnRemove?: IColumnRemoveOptions;
+        columnRemove?: IActOptions;
+        columnLock?: IActOptions;
         treeColumn?: TreeType;
         //supportToolTips?: boolean;
         titleFill?: TitleFillOptions;
@@ -66,11 +67,17 @@ module tsp.b {
         
     }
 
-    export interface IColumnRemoveOptions {
+    export interface IActOptions {
         selector: string;
-        removeHandler: (evt: Event, cascadeInfo: ICascadingHandler) => void;
+        handler: (evt: Event, cascadeInfo: ICascadingHandler) => void;
         formTargets: any;
     }
+
+    //export interface IColumnRemoveOptions {
+    //    selector: string;
+    //    removeHandler: (evt: Event, cascadeInfo: ICascadingHandler) => void;
+    //    formTargets: any;
+    //}
 
     export interface IScrollOptions {
         direction: DirectionOptions;
