@@ -145,10 +145,15 @@ module tsp.cs {
     }
 
     export function handleToggleLockColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
         var gh = new gridHelper(evt, cascadeInfo);
         var dt = gh.getDataTable();
-
-        
+        var colNo = gh.getColNo();
+        var colFieldNo = gh.getColFieldNo(colNo, dt);
+        if (!dt.frozenCol) dt.frozenCol = {};
+        dt.frozenCol['' + (colNo + 1)] = colFieldNo;
+        gh.hideColumn(colFieldNo, dt);
     }
 
     class gridHelper {
@@ -197,6 +202,7 @@ module tsp.cs {
             return  (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         }
         hideColumn(colFieldNo: number, dt: b.IDataTable) {
+            console.log('hide ' + colFieldNo);
             if (!dt.colView) {
                 var colView: number[] = [];
                 for (var i = 0, n = dt.fields.length; i < n; i++) {
@@ -209,9 +215,11 @@ module tsp.cs {
             this.refreshHeaderAndBody();
             if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
         }
+        
     }
 
     export function handleToggleColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        
         var subCI = <b.ICascadingHandler> cascadeInfo.data.cascadeInfo;
         var colFieldNo = <number> cascadeInfo.data.colFieldNo;
         var gh = new gridHelper(evt, subCI);
@@ -237,22 +245,6 @@ module tsp.cs {
         var dt = gh.getDataTable();
         var colFieldNo = gh.getColFieldNo(colNo, dt);
         gh.hideColumn(colFieldNo, dt);
-        //var colFieldNo = 0;
-        //if (!dt.colView) {
-        //    colFieldNo = colNo;
-        //    var colView: number[] = [];
-        //    for (var i = 0, n = dt.fields.length; i < n; i++) {
-        //        if (i != colNo) {
-        //            colView.push(i);
-        //        }
-        //    }
-        //    dt.colView = colView;
-        //} else {
-        //    colFieldNo = dt.colView[colNo];
-        //    dt.colView.splice(colNo, 1);
-        //}
-        //console.log('colFieldNo = ' + colFieldNo);
-        //gh.refreshHeaderAndBody();
         
         var ft =  gh._fgo.columnRemove.formTargets;
         if (ft) {

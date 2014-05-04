@@ -12,6 +12,7 @@ module tsp.b {
         rowView?: number[];
         //rowDontView?: number[];
 
+        frozenCol?: { [key: string]: number };
         colView?: number[];
 
         changeNotifier?: DBS.b.ChangeNotifier<IDataTable>;
@@ -209,28 +210,31 @@ module tsp.b {
         var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         var hcs = el.querySelectorAll('th[data-hc]');
         var dataTable = fgo.dataTableFn(el);
-        var fields = dataTable.fields;
+        var f = dataTable.fields;
+        var fLen = f.length;
         for (var i = 0, n = hcs.length; i < n; i++) {
-            var fldIdx = Math.min(fields.length - 1, i + colOffset);
+            var hc = <HTMLTableCellElement> hcs[i];
+            var coord = hc.getAttribute('data-hc').split(',');
+            var fc = dataTable.frozenCol;
+            var colS = coord[1];
             var field;
-            if (dataTable.colView) {
-                field = fields[dataTable.colView[fldIdx]];
-            } else {
-                field = fields[fldIdx];
+            if (fc && (typeof(fc[colS]) != 'undefined')) {
+                field = f[fc[colS]];
+            }else{
+                var col = Math.min(parseInt(colS) - 1 + colOffset, fLen - 1);
+                if (dataTable.colView) {
+                    field = f[dataTable.colView[col]];
+                } else {
+                    field = f[col];
+                }
             }
             if (field.renderer) {
                 if (typeof (field.renderer) == 'string') {
                     field.renderer = eval(field.renderer);
                 }
             }
-            //var hc;
-            //if (dataTable.colView) {
-            //    hc = <HTMLTableCellElement> hcs[dataTable.colView[i]];
-            //} else {
-            //    hc = <HTMLTableCellElement> hcs[i];
-            //}
-            //if(hc) 
-            var hc = <HTMLTableCellElement> hcs[i];
+            
+            
             hc.innerHTML = field.header ? field.header : field.name;
         }
     }
@@ -259,11 +263,12 @@ module tsp.b {
                 tnIdx = <number> db.data(el).treeNodeIndex;
                 break;
         }
+        var fLen = f.length;
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
             var row = parseInt(coord[0]) - 1 + rowOffset;
-            var col = Math.min( parseInt(coord[1]) - 1 + colOffset, f.length - 1);
+            var col = Math.min( parseInt(coord[1]) - 1 + colOffset, fLen - 1);
             var dRow;
             if (view) {
                 row = (row < view.length) ? view[row] : -1
