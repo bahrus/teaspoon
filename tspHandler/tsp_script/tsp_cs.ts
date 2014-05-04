@@ -184,6 +184,31 @@ module tsp.cs {
             var colNo = parseInt(ac.split(',')[1]) - 1;
             return colNo;
         }
+        getColFieldNo(colNo: number, dt: b.IDataTable): number {
+            var co = this.getColOffset();
+            var virtualColNo = colNo + co;
+            if (dt.colView) {
+                return dt.colView[virtualColNo];
+            }
+            return virtualColNo;
+        }
+        getColOffset() {
+            var fgo = this._fgo;
+            return  (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
+        }
+        hideColumn(colFieldNo: number, dt: b.IDataTable) {
+            if (!dt.colView) {
+                var colView: number[] = [];
+                for (var i = 0, n = dt.fields.length; i < n; i++) {
+                    colView.push(i);
+                }
+                dt.colView = colView;
+            } 
+                
+            dt.colView.splice(colFieldNo, 1);
+            this.refreshHeaderAndBody();
+            if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
+        }
     }
 
     export function handleToggleColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
@@ -208,32 +233,27 @@ module tsp.cs {
         if (cascadeInfo.timeStamp === evt.timeStamp) return;
         cascadeInfo.timeStamp = evt.timeStamp;
         var gh = new gridHelper(evt, cascadeInfo);
-        //var actionCell = gh._evtEl;
-        //var ac = actionCell.getAttribute('data-ac');
-        //while (actionCell && !ac) {
-        //    actionCell = <HTMLElement> actionCell.parentNode;
-        //    ac = actionCell.getAttribute('data-ac');
-        //}
-        //var colNo = parseInt(ac.split(',')[1]) - 1;
         var colNo = gh.getColNo();
         var dt = gh.getDataTable();
-        var colFieldNo = 0;
-        if (!dt.colView) {
-            colFieldNo = colNo;
-            var colView: number[] = [];
-            for (var i = 0, n = dt.fields.length; i < n; i++) {
-                if (i != colNo) {
-                    colView.push(i);
-                }
-            }
-            dt.colView = colView;
-        } else {
-            colFieldNo = dt.colView[colNo];
-            dt.colView.splice(colNo, 1);
-        }
-        console.log('colFieldNo = ' + colFieldNo);
-        gh.refreshHeaderAndBody();
-        if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
+        var colFieldNo = gh.getColFieldNo(colNo, dt);
+        gh.hideColumn(colFieldNo, dt);
+        //var colFieldNo = 0;
+        //if (!dt.colView) {
+        //    colFieldNo = colNo;
+        //    var colView: number[] = [];
+        //    for (var i = 0, n = dt.fields.length; i < n; i++) {
+        //        if (i != colNo) {
+        //            colView.push(i);
+        //        }
+        //    }
+        //    dt.colView = colView;
+        //} else {
+        //    colFieldNo = dt.colView[colNo];
+        //    dt.colView.splice(colNo, 1);
+        //}
+        //console.log('colFieldNo = ' + colFieldNo);
+        //gh.refreshHeaderAndBody();
+        
         var ft =  gh._fgo.columnRemove.formTargets;
         if (ft) {
             if (ft.id) { //assume form element
