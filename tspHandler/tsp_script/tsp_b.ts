@@ -257,6 +257,7 @@ module tsp.b {
         var dt = dataTable.data;
         var f = dataTable.fields;
         var view = dataTable.rowView;
+        var frozCols = dataTable.frozenCol;
         var tnIdx = -1;
         switch (rule.treeColumn) {
             case TreeType.simple:
@@ -267,6 +268,7 @@ module tsp.b {
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
+            var colS = coord[1];
             var row = parseInt(coord[0]) - 1 + rowOffset;
             var col = Math.min( parseInt(coord[1]) - 1 + colOffset, fLen - 1);
             var dRow;
@@ -286,10 +288,14 @@ module tsp.b {
             } else if (tnIdx == col) {
                 val = TreeGridColumnRenderer(dRow[col]);
             } else {
-                if (dataTable.colView) {
-                    val = dRow[dataTable.colView[col]];
+            if (frozCols && (typeof (frozCols[colS]) != 'undefined')) {
+                val = dRow[frozCols[colS]];
                 } else {
-                    val = dRow[col];
+                    if (dataTable.colView) {
+                        val = dRow[dataTable.colView[col]];
+                    } else {
+                        val = dRow[col];
+                    }
                 }
             }
             var fc  = f[col];
