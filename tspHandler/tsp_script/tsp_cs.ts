@@ -146,7 +146,8 @@ module tsp.cs {
 
     export function handleToggleLockColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {
         var gh = new gridHelper(evt, cascadeInfo);
-        var fgo = gh.getDataTable
+        var dt = gh.getDataTable();
+
         
     }
 
@@ -163,15 +164,25 @@ module tsp.cs {
             this._templEl = <HTMLElement> document.getElementById(this._ci.containerID);
             this._fgo = <b.IFillGridOptions> db.extractDirective(this._templEl, 'fillGridOptions');
         }
-        getFillGridOptions() : b.IFillGridOptions {
-            return this._fgo;
-        }
+        //getFillGridOptions() : b.IFillGridOptions {
+        //    return this._fgo;
+        //}
         refreshHeaderAndBody() {
             b.refreshHeaderTemplateWithRectCoords(this._templEl, this._fgo);
             b.refreshBodyTemplateWithRectCoords(this._templEl, this._fgo.verticalOffsetFld, this._fgo);
         }
         getDataTable() : b.IDataTable {
-            return this.getFillGridOptions().dataTableFn(this._templEl);
+            return this._fgo.dataTableFn(this._templEl);
+        }
+        getColNo() : number {
+            var actionCell = this._evtEl;
+            var ac = actionCell.getAttribute('data-ac');
+            while (actionCell && !ac) {
+                actionCell = <HTMLElement> actionCell.parentNode;
+                ac = actionCell.getAttribute('data-ac');
+            }
+            var colNo = parseInt(ac.split(',')[1]) - 1;
+            return colNo;
         }
     }
 
@@ -196,18 +207,16 @@ module tsp.cs {
     export function handleHideColumn(evt: Event, cascadeInfo: b.ICascadingHandler) {        
         if (cascadeInfo.timeStamp === evt.timeStamp) return;
         cascadeInfo.timeStamp = evt.timeStamp;
-        console.log('in handleHideColumn');
-        var evtEl = <HTMLElement> evt.srcElement;
-        var templEl = document.getElementById(cascadeInfo.containerID);
-        var fgo = <b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
-        var actionCell = evtEl;
-        var ac = actionCell.getAttribute('data-ac');
-        while (actionCell && !ac) {
-            actionCell = <HTMLElement> actionCell.parentNode;
-            ac = actionCell.getAttribute('data-ac');
-        }
-        var colNo = parseInt(ac.split(',')[1]) - 1;
-        var dt = fgo.dataTableFn(templEl);
+        var gh = new gridHelper(evt, cascadeInfo);
+        //var actionCell = gh._evtEl;
+        //var ac = actionCell.getAttribute('data-ac');
+        //while (actionCell && !ac) {
+        //    actionCell = <HTMLElement> actionCell.parentNode;
+        //    ac = actionCell.getAttribute('data-ac');
+        //}
+        //var colNo = parseInt(ac.split(',')[1]) - 1;
+        var colNo = gh.getColNo();
+        var dt = gh.getDataTable();
         var colFieldNo = 0;
         if (!dt.colView) {
             colFieldNo = colNo;
@@ -223,11 +232,9 @@ module tsp.cs {
             dt.colView.splice(colNo, 1);
         }
         console.log('colFieldNo = ' + colFieldNo);
-        b.refreshHeaderTemplateWithRectCoords(templEl, fgo);
-        b.refreshBodyTemplateWithRectCoords(templEl, fgo.verticalOffsetFld, fgo);
-        //debugger;
+        gh.refreshHeaderAndBody();
         if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
-        var ft = fgo.columnRemove.formTargets;
+        var ft =  gh._fgo.columnRemove.formTargets;
         if (ft) {
             if (ft.id) { //assume form element
                 var frm = <HTMLFormElement> ft;
@@ -236,7 +243,6 @@ module tsp.cs {
                 var inp = <HTMLElement> frm.querySelector('#' + chkBoxId);
                 var lbl = <HTMLElement> frm.querySelector('#' + lblId);
                 if (!inp) {
-                    //var th = evtEl.parentNode;
                     var fld = dt.fields[colFieldNo];
                     var colText = fld.header ? fld.header : fld.name;
                     var emmetS = 'input#{id}[type="checkbox"]+label#{lblId}[for="{id}"]{{colText}}';
@@ -255,7 +261,6 @@ module tsp.cs {
                             colFieldNo: colFieldNo,
                         }
                     });
-                    //chkbox.addEventListener('change', handleToggleColumn);
                 }
             }
         }
