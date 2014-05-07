@@ -50,6 +50,9 @@
 <script class="RC" data-attribute-link>
     x = DBS.b.MakeRCsUnique;
 </script>
+<script>
+    var gridState = document.getElementById('gridState');
+</script>
 <script class="RC" data-attribute-link="fillGridOptions">
     x = {
         dataTableFn: function(){return model.dataTable;},
@@ -58,12 +61,17 @@
         columnRemove: {
             selector: 'th>span.fa-minus-square-o',
             handler : tsp.cs.handleHideColumn,
-            formTargets :  document.getElementById('gridState')
+            formTargets :  gridState
         },
         columnLock: {
             selector:'th>span.fa-lock',
-            formTargets :  document.getElementById('gridState'),
+            formTargets :  gridState,
             handler: tsp.cs.handleToggleLockColumn
+        },
+        columnMoveLeft:{
+            selector:'th>span.fa-arrow-circle-left',
+            formTargets : gridState,
+            handler: tsp.cs.handleMoveColumnLeft
         }
     };
 </script>

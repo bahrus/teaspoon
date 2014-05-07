@@ -51,6 +51,8 @@ module tsp.b {
         rowSelection?: SelectionOptions;
         columnRemove?: IActOptions;
         columnLock?: IActOptions;
+        columnMoveLeft?: IActOptions;
+        columnMoveRight?: IActOptions;
         treeColumn?: TreeType;
         //supportToolTips?: boolean;
         titleFill?: TitleFillOptions;

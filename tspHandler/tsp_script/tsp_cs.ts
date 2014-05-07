@@ -156,6 +156,28 @@ module tsp.cs {
         gh.hideColumn(colFieldNo, dt);
     }
 
+    export function handleMoveColumnLeft(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
+        var gh = new gridHelper(evt, cascadeInfo);
+        
+        var dt = gh.getDataTable();
+        gh.initiateColView(dt);
+        var colNo = gh.getColNo();
+        var colFieldNo = gh.getColFieldNo(colNo, dt);
+        gh.moveColumn(colFieldNo, dt, -1);
+    }
+
+    export function handleMoveColumnRight(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
+        var gh = new gridHelper(evt, cascadeInfo);
+        var dt = gh.getDataTable();
+        var colNo = gh.getColNo();
+        var colFieldNo = gh.getColFieldNo(colNo, dt);
+        gh.moveColumn(colFieldNo, dt, 1);
+    }
+
     class gridHelper {
         _evt: Event;
         _templEl: HTMLElement;
@@ -201,8 +223,7 @@ module tsp.cs {
             var fgo = this._fgo;
             return  (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         }
-        hideColumn(colFieldNo: number, dt: b.IDataTable) {
-            console.log('hide ' + colFieldNo);
+        initiateColView(dt: b.IDataTable) {
             if (!dt.colView) {
                 var colView: number[] = [];
                 for (var i = 0, n = dt.fields.length; i < n; i++) {
@@ -210,10 +231,28 @@ module tsp.cs {
                 }
                 dt.colView = colView;
             } 
-                
+        }
+        hideColumn(colFieldNo: number, dt: b.IDataTable) {
+            console.log('hide ' + colFieldNo);
+            this.initiateColView(dt);
             dt.colView.splice(colFieldNo, 1);
             this.refreshHeaderAndBody();
             if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
+        }
+        moveColumn(colFieldNo: number, dt: b.IDataTable, places: number) {
+            var colView = dt.colView;
+            switch (places) {
+                case -1:
+                    if (colFieldNo == 0) return;
+                    break;
+                case 1: 
+                    if (colFieldNo >= colView.length - 1) return;     
+                    break;
+            }
+            var tmp = colView[colFieldNo + places];
+            colView[colFieldNo + places] = colView[colFieldNo];
+            colView[colFieldNo] = tmp;
+            this.refreshHeaderAndBody();
         }
         
     }
@@ -439,7 +478,8 @@ module tsp.cs {
         //    });
         //}
         attachIActObj(fgo.columnRemove, 'click', el);
-        attachIActObj(fgo.columnLock,   'click', el);
+        attachIActObj(fgo.columnLock, 'click', el);
+        attachIActObj(fgo.columnMoveLeft, 'click', el);
     }
 
     function attachIActObj(obj: b.IActOptions, evtName: string, container: HTMLElement) {
