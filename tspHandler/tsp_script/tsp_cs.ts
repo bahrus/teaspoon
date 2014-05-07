@@ -157,25 +157,22 @@ module tsp.cs {
     }
 
     export function handleMoveColumnLeft(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        handleMoveColumn(evt, cascadeInfo, -1);
+    }
+
+    export function handleMoveColumnRight(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        handleMoveColumn(evt, cascadeInfo, 1);
+    }
+
+    export function handleMoveColumn(evt: Event, cascadeInfo: b.ICascadingHandler, dir: number) {
         if (cascadeInfo.timeStamp === evt.timeStamp) return;
         cascadeInfo.timeStamp = evt.timeStamp;
         var gh = new gridHelper(evt, cascadeInfo);
-        
         var dt = gh.getDataTable();
         gh.initiateColView(dt);
         var colNo = gh.getColNo();
         var colFieldNo = gh.getColFieldNo(colNo, dt);
-        gh.moveColumn(colFieldNo, dt, -1);
-    }
-
-    export function handleMoveColumnRight(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        if (cascadeInfo.timeStamp === evt.timeStamp) return;
-        cascadeInfo.timeStamp = evt.timeStamp;
-        var gh = new gridHelper(evt, cascadeInfo);
-        var dt = gh.getDataTable();
-        var colNo = gh.getColNo();
-        var colFieldNo = gh.getColFieldNo(colNo, dt);
-        gh.moveColumn(colFieldNo, dt, 1);
+        gh.moveColumn(colFieldNo, dt, dir);
     }
 
     class gridHelper {
@@ -464,22 +461,10 @@ module tsp.cs {
                 DBS.cs.onPropChange(fgo.horizontalOffsetFld, 'value', horizontalOffsetChangeHandler);
             }
         }
-        //if (fgo.columnRemove) {
-        //    //var colRemovers = el.querySelectorAll(fgo.columnRemove.selector);
-        //    //for (var i = 0, n = colRemovers.length; i < n; i++) {
-        //    //    var colRemover = colRemovers[i];
-        //    //    colRemover.addEventListener('click', fgo.columnRemove.removeHandler);
-        //    //}
-        //    console.log('attach click event');
-        //    _when('click', {
-        //        selectorNodeTest: fgo.columnRemove.selector,
-        //        containerID: db.getOrCreateID(el),
-        //        handler: fgo.columnRemove.handler
-        //    });
-        //}
         attachIActObj(fgo.columnRemove, 'click', el);
         attachIActObj(fgo.columnLock, 'click', el);
         attachIActObj(fgo.columnMoveLeft, 'click', el);
+        attachIActObj(fgo.columnMoveRight, 'click', el);
     }
 
     function attachIActObj(obj: b.IActOptions, evtName: string, container: HTMLElement) {
