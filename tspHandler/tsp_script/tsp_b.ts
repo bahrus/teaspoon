@@ -210,12 +210,12 @@ module tsp.b {
     export function refreshHeaderTemplateWithRectCoords(el: HTMLElement, fillGridOptions?: IFillGridOptions) {
         var fgo = fillGridOptions;
         var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
-        var hcs = el.querySelectorAll('th[data-hc]');
+        var hcs = el.querySelectorAll('*[data-hc]');
         var dataTable = fgo.dataTableFn(el);
         var f = dataTable.fields;
         var fLen = f.length;
         for (var i = 0, n = hcs.length; i < n; i++) {
-            var hc = <HTMLTableCellElement> hcs[i];
+            var hc = <HTMLElement> hcs[i];
             var coord = hc.getAttribute('data-hc').split(',');
             var fc = dataTable.frozenCol;
             var colS = coord[1];

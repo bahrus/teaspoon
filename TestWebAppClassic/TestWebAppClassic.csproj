@@ -71,6 +71,7 @@
     <Content Include="ClearScriptV8-32.pdb" />
     <Content Include="ClearScriptV8-64.dll" />
     <Content Include="ClearScriptV8-64.pdb" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome-4.0.3\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.0.3\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome-4.0.3\fonts\fontawesome-webfont.svg" />
@@ -88,6 +89,7 @@
     <Content Include="Grids\FlatGrid.tsp.html" />
     <Content Include="Grids\GridRefs.html" />
     <Content Include="Grids\TreeGrid.tsp.html" />
+    <Content Include="Scratch.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />
     <Content Include="FormsTests\ClientSideWithAction.tsp.html" />
@@ -146,6 +148,9 @@
     <Content Include="Scripts\jquery.layout-1.30.79.js" />
     <Content Include="Scripts\jquery.layout.min-1.30.79.js" />
     <Content Include="DBS_Specs.html" />
+    <Content Include="Content\jquery.resizableColumns.css" />
+    <Content Include="Scripts\jquery.resizableColumns.js" />
+    <Content Include="Scripts\jquery.resizableColumns.min.js" />
     <Content Include="Scripts\Mappings.html" />
     <Content Include="Scripts\slickGrid\slick.core.js" />
     <Content Include="Scripts\slickGrid\slick.dataview.js" />
@@ -154,6 +159,7 @@
     <Content Include="Scripts\slickGrid\slick.grid.js" />
     <Content Include="Scripts\slickGrid\slick.groupitemmetadataprovider.js" />
     <Content Include="Scripts\slickGrid\slick.remotemodel.js" />
+    <Content Include="Scripts\store.js" />
     <Content Include="ScrollTests\ScrollTest1.tsp.html" />
     <Content Include="ScrollTests\ScrollTest1Refs.html" />
     <Content Include="skin\slick.grid.css" />
