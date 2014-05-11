@@ -14,6 +14,12 @@
         .RC {
             width:800px;
             overflow-x:hidden;
+            border-spacing: 10px;
+        }
+    </style>
+    <style>
+        .vScrollTD{
+            width:18px;
         }
     </style>
 
@@ -509,7 +515,7 @@
     </script>
 
     <script>
-        DBS.b.attachNotifyListeners(model.treeTable)
+        model.treeTable.changeNotifier = new DBS.b.ChangeNotifier();
 
     </script>
 
@@ -523,7 +529,7 @@
             },
             maxElementSize: 24,
             formTargets: $('#scrollValues'),
-            maxValueChangeNotifier: model.treeTable
+            maxValueChangeNotifier: model.treeTable.changeNotifier
         };
     </script>
 
@@ -548,7 +554,7 @@
             dataTableFn: function(){return model.treeTable},
             verticalOffsetFld: document.getElementById('vs_ScrollVal'),
             horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
-            treeColumn: tsp.b.TreeType.simple
+            treeColumn: tsp.b.TreeType.triState
         };
     </script>
     <script class="RCAttributes">
@@ -567,7 +573,7 @@
                         )
                     )
                 )
-                + (td>
+                + (td.vScrollTD>
                   div#vs.VScrollBar[style=height:200px]
                 )
             )

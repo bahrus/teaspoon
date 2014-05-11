@@ -389,6 +389,7 @@ module tsp.cs {
     function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
         var nl = scrollOptions.maxValueChangeNotifier;
         if (nl) {
+            debugger;
             nl.addChangeListener(function (d: b.IDataTable) {
                 sizeScroll(document.getElementById(scrollOptions.elementID));
             });

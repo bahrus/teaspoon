@@ -101,6 +101,7 @@ module tsp.b {
     export enum TreeType {
         none,
         simple,
+        triState,
     }
 
     export enum DirectionOptions {
@@ -212,6 +213,9 @@ module tsp.b {
         var colOffset = (fgo && fgo.horizontalOffsetFld && fgo.horizontalOffsetFld.value.length > 0) ? parseInt(fgo.horizontalOffsetFld.value) : 0;
         var hcs = el.querySelectorAll('*[data-hc]');
         var dataTable = fgo.dataTableFn(el);
+        if (!dataTable.changeNotifier) {
+            dataTable.changeNotifier = new db.ChangeNotifier<IDataTable>();
+        }
         var f = dataTable.fields;
         var fLen = f.length;
         for (var i = 0, n = hcs.length; i < n; i++) {

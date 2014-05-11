@@ -265,7 +265,7 @@ module DBS.cs {
                 var sc = ih.substring(iPosOfFun + fnSearch.length, iPosOfParen);
                 fn = eval(sc);
             } else {
-                if (linkAttrib.length > 0) {
+                if (linkAttrib && linkAttrib.length > 0) {
                     varName = linkAttrib;
                     if (bStringify) {
                         varNameD = 'data-' + DBS.b.toSnakeCase(varName);

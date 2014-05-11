@@ -13,6 +13,12 @@
         .RC {
             width:800px;
             overflow-x:hidden;
+            border-spacing: 10px;
+        }
+    </style>
+    <style>
+        .vScrollTD{
+            width:18px;
         }
     </style>
 
@@ -26,7 +32,7 @@
         .HScrollBar {
         }
     </style>
-    <script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script>
+    <script src="../Scripts/typings/underscore/underscore.d.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><link href="../Content/font-awesome-4.0.3/css/font-awesome.min.css" data-genid="lib" rel="stylesheet"><link href="../tsp_script/tsp.css" data-genid="lib" rel="stylesheet">
     
     
 </head>
@@ -508,7 +514,7 @@
     </script>
 
     <script>
-        DBS.b.attachNotifyListeners(model.treeTable)
+        model.treeTable.changeNotifier = new DBS.b.ChangeNotifier();
 
     </script>
 
@@ -522,7 +528,7 @@
             },
             maxElementSize: 24,
             formTargets: $('#scrollValues'),
-            maxValueChangeNotifier: model.treeTable
+            maxValueChangeNotifier: model.treeTable.changeNotifier
         };
     </script>
 
@@ -544,7 +550,7 @@
     </script>
     <script class="RCAttributes">
         var fillGridOptions = {
-            getDataTable: function(){return model.treeTable},
+            dataTableFn: function(){return model.treeTable},
             verticalOffsetFld: document.getElementById('vs_ScrollVal'),
             horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
             treeColumn: tsp.b.TreeType.simple
@@ -566,7 +572,7 @@
                         )
                     )
                 )
-                + (td>
+                + (td.vScrollTD>
                   div#vs.VScrollBar[style=height:200px]
                 )
             )
