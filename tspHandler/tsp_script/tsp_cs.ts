@@ -121,7 +121,11 @@ module tsp.cs {
         var $evtEl = $(gh._evtEl);
         var n = b.nodeIdxes;
         if (nd[n.numChildren] == 0) {
-            nd[n.selected] = 2;
+            if(typeof (nd[n.selected]) == 'undefined') {
+                nd[n.selected] = 2;
+            } else {
+                nd[n.selected] = 2 - nd[n.selected];
+            }
             var parentId = nd[n.parentId];
             if (!dt.nodeToRowIdxMapping) {
                 b.mapParentChildRel(dt, b.getNodeFldIdx(dt));

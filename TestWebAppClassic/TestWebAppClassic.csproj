@@ -89,6 +89,7 @@
     <Content Include="Grids\FlatGrid.tsp.html" />
     <Content Include="Grids\GridRefs.html" />
     <Content Include="Grids\TreeGrid.tsp.html" />
+    <Content Include="Grids\TreeGridSampleData.js" />
     <Content Include="Scratch.html" />
     <Content Include="Scripts\emmet.js" />
     <Content Include="Scripts\emmet.min.js" />

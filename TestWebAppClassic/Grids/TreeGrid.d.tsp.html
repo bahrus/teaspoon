@@ -559,6 +559,25 @@
     <script class="RCAttributes">
         tsp.cs.fillGrid;
     </script>
+    <script>
+        function expandAll() {
+            var data = model.treeTable.data;
+            var tnIdx = tsp.b.getNodeFldIdx(model.treeTable);
+            var n = tsp.b.nodeIdxes;
+            var chIdx = n.numChildren;
+            for(var i = 0, n = data.length; i < n; i++){
+                var row = data[i];
+                var tn = row[tnIdx];
+                tn[chIdx] = -Math.abs(tn[chIdx]);
+            }
+            var tabl = document.querySelector('table.RC');
+            var svScroll = document.querySelector('input#vs_ScrollVal');
+            tsp.b.applyTreeView(tabl, fillGridOptions);
+            tsp.b.refreshBodyTemplateWithRectCoords(tabl, svScroll, fillGridOptions);
+        }
+    </script>
+    <input type="button" onclick="expandAll()" value="Expand All">
+
     <script type="text/emmet" data-mode="client-side-only">
         (table>
             (tr>
