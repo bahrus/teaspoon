@@ -110,31 +110,55 @@ module tsp.cs {
         }
     }
 
-    function handleTreeNodeToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        var evtEl = evt.srcElement;
-        var $evtEl = $(evtEl);
-        $evtEl.toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
-        var dataCell = evtEl;
-
-        var rc = dataCell.getAttribute('data-rc');
-        while (dataCell && !rc) {
-            dataCell = <Element> dataCell.parentNode;
-            rc = dataCell.getAttribute('data-rc');
+    function handleTreeNodeGridSelectToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
+        var gh = new gridHelper(evt, cascadeInfo);
+        var dt = gh.getDataTable();
+        var data = dt.data;
+        var dtRow = gh.getDataRow(dt);
+        var nd = gh.getTreeNode(dt, dtRow);
+        var $evtEl = $(gh._evtEl);
+        var n = b.nodeIdxes;
+        if (nd[n.numChildren] == 0) {
+            nd[n.selected] = 2;
+            var parentId = nd[n.parentId];
+            if (!dt.nodeToRowIdxMapping) {
+                b.mapParentChildRel(dt, b.getNodeFldIdx(dt));
+            }
+            var parentRowNo = dt.nodeToRowIdxMapping[parentId];
+            var colIdx = b.getNodeFldIdx(dt);
+            while (parentRowNo != null) {
+                var parentNd = data[parentRowNo][colIdx];
+                //parentNd[n.selected] = 1;
+                //debugger;
+                console.log('parentRowNo = ' + parentRowNo);
+                parentNd[n.selected] = null;
+                //debugger;
+                var sel = b.getTriStateForParentNode(parentNd, dt, colIdx);
+                parentNd[n.selected] = sel;
+                console.log('sel = ' + sel);
+                parentId = parentNd[n.parentId];
+                parentRowNo = dt.nodeToRowIdxMapping[parentId];
+            }
         }
-        if (!dataCell) return;
-        var rowNo = parseInt(rc.split(',')[0]) - 1;
-        var templEl = document.getElementById(cascadeInfo.containerID);
-        var rule = <tsp.b.IFillGridOptions> db.extractDirective(templEl, 'fillGridOptions');
-        //var rule = <tsp.b.IFillGridOptions> db.data(templEl).populateRule;
-        var dt = rule.dataTableFn(templEl);
-        //var dtRow = dt.data[rowNo];
-        var dtRow = dt.data[dt.rowView[rowNo]];
-        var ndFldIdx = b.getNodeFldIdx(dt);
-        var nd = dtRow[ndFldIdx];
+
+        b.refreshBodyTemplateWithRectCoords(gh._templEl, null, gh._fgo);
+    }
+
+    function handleTreeNodeToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
+        var gh = new gridHelper(evt, cascadeInfo);
+        var dt = gh.getDataTable();
+        var dtRow = gh.getDataRow(dt);
+        var $evtEl = $(gh._evtEl);
+        //$evtEl.toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
+        var nd = gh.getTreeNode(dt, dtRow);
         var numChildren = nd[b.nodeIdxes.numChildren];
         nd[b.nodeIdxes.numChildren] = -1 * numChildren;
-        b.applyTreeView(templEl, rule);
-        b.refreshBodyTemplateWithRectCoords(templEl, null, rule);
+        b.applyTreeView(gh._templEl, gh._fgo);
+        b.refreshBodyTemplateWithRectCoords(gh._templEl, null, gh._fgo);
         if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
     }
 
@@ -197,6 +221,22 @@ module tsp.cs {
         }
         getDataTable() : b.IDataTable {
             return this._fgo.dataTableFn(this._templEl);
+        }
+        getDataRow(dt: b.IDataTable): any[]{
+            var dataCell = this._evtEl;
+            var rc = dataCell.getAttribute('data-rc');
+            while (dataCell && !rc) {
+                dataCell = <HTMLElement> dataCell.parentNode;
+                rc = dataCell.getAttribute('data-rc');
+            }
+            if (!dataCell) return null;
+            var rowNo = parseInt(rc.split(',')[0]) - 1;
+            var dtRow = dt.data[dt.rowView[rowNo]];
+            return dtRow;
+        }
+        getTreeNode(dt: b.IDataTable, dtRow: any[]) {
+            var ndFldIdx = b.getNodeFldIdx(dt);
+            return dtRow[ndFldIdx];
         }
         getColNo() : number {
             var actionCell = this._evtEl;
@@ -389,7 +429,6 @@ module tsp.cs {
     function subscribeToScrollDimensionChange(scrollOptions: b.IScrollOptions) {
         var nl = scrollOptions.maxValueChangeNotifier;
         if (nl) {
-            debugger;
             nl.addChangeListener(function (d: b.IDataTable) {
                 sizeScroll(document.getElementById(scrollOptions.elementID));
             });
@@ -428,6 +467,14 @@ module tsp.cs {
         });
     }
 
+    export function addTreeGridSelectToggle(el: HTMLElement) {
+        _when('click', {
+            containerID: db.getOrCreateID(el),
+            handler: handleTreeNodeGridSelectToggle,
+            selectorNodeTest: 'span.treeNodeSelector',
+        });
+    }
+
     //#endregion
 
     
@@ -435,9 +482,15 @@ module tsp.cs {
     export function fillGrid(el: HTMLElement) {
         var fgo = b.fillGrid(el);
         switch (fgo.treeColumn) {
+            case b.TreeType.triState:
+                addTreeGridSelectToggle(el);
+                addTreeGridNodeToggle(el); 
+                break;
             case b.TreeType.simple:
-                addTreeGridNodeToggle(el);   
+                addTreeGridNodeToggle(el);
+                break;   
         }
+        
         if (fgo.verticalOffsetFld) {
             if (db.isCSMode()) {
                 var vof = fgo.verticalOffsetFld;

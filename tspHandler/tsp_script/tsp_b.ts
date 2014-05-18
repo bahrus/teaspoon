@@ -16,6 +16,16 @@ module tsp.b {
         colView?: number[];
 
         changeNotifier?: DBS.b.ChangeNotifier<IDataTable>;
+
+        /**
+         * Given node id as key, value is row index of data
+         */
+        nodeToRowIdxMapping?: { [key: string]: number };
+
+        /**
+         * Given parent id as key, value is list of row indexes of children in data
+         */
+        parentToChildMapping?: { [key: string]: number[] };
     
     }
 
@@ -115,6 +125,7 @@ module tsp.b {
         parentId = 2,
         level = 3,
         numChildren = 4,
+        selected = 5
     }
 
     export function getNodeFldIdx(dt: IDataTable): number {
@@ -266,11 +277,13 @@ module tsp.b {
         var frozCols = dataTable.frozenCol;
         var tnIdx = -1;
         switch (rule.treeColumn) {
+            case TreeType.triState:
             case TreeType.simple:
                 tnIdx = <number> db.data(el).treeNodeIndex;
                 break;
         }
         var fLen = f.length;
+        var dtLen = dt.length;
         for (var i = 0, n = rcs.length; i < n; i++) {
             var rc = <HTMLElement> rcs[i];
             var coord = rc.getAttribute('data-rc').split(',');
@@ -285,14 +298,14 @@ module tsp.b {
             if (row < 0) {
                 dRow = null;
             } else {
-                dRow = row < dt.length ? dt[row] : null;
+                dRow = row < dtLen ? dt[row] : null;
 
             }
             var val;
             if (dRow == null) {
                 val = '&nbsp;';
             } else if (tnIdx == col) {
-                val = TreeGridColumnRenderer(dRow[col]);
+                val = TreeGridColumnRenderer(dRow[col], fgo, dataTable);
             } else {
             if (frozCols && (typeof (frozCols[colS]) != 'undefined')) {
                 val = dRow[frozCols[colS]];
@@ -310,19 +323,107 @@ module tsp.b {
         }
     }
 
-    export function TreeGridColumnRenderer(node: any[]): string {
+    export function getTriStateForParentNode(node: any[], dt: IDataTable, colIdx: number): number {
+        if (node[nodeIdxes.selected] !== null) return node[nodeIdxes.selected];
+        if (!dt.parentToChildMapping) {
+            mapParentChildRel(dt, colIdx);
+        }
+
+        var bEncountered0 = false;
+        var bEncountered2 = false;
+
+        var childIdxs = dt.parentToChildMapping[node[nodeIdxes.id]];
+        var data = dt.data;
+
+        for (var i = 0, n = childIdxs.length; i < n; i++) {
+            //#region examine child
+            var idx = childIdxs[i];
+            var child = data[idx];
+            var childTN = child[colIdx];
+            var sel = childTN[nodeIdxes.selected];
+            if (typeof (sel) == 'undefined') sel = 0;
+            switch (sel) {
+                case 0:
+                    bEncountered0 = true;
+                    if (bEncountered2) return 1;
+                    break;
+                case 1:
+                    return 1;
+                case 2:
+                    bEncountered2 = true;
+                    if (bEncountered0) return 1;
+                    break;
+            }
+        }
+        if (bEncountered0) {
+            return bEncountered2 ? 1 : 0;
+        } else {
+            return 2;
+        }
+    }
+
+    export function mapParentChildRel(dt: IDataTable, colIdx: number) {
+        var data = dt.data;
+        var nodeToRowIdxMapping: { [key: string]: number } = {};
+        for (var i = 0, n = data.length; i < n; i++) {
+            var r = data[i];
+            var t = r[colIdx];
+            var id = t[nodeIdxes.id];
+            nodeToRowIdxMapping[id] = i;
+        }
+        dt.nodeToRowIdxMapping = nodeToRowIdxMapping;
+        var parentToChildrenMapping: { [key: string]: number[] } = {};
+        for (var i = 0, n = data.length; i < n; i++) {
+            var r = data[i];
+            var t = r[colIdx];
+            var id = t[nodeIdxes.id];
+            var par = t[nodeIdxes.parentId];
+            var parRel = parentToChildrenMapping[par];
+            if (!parRel) {
+                parRel = [];
+                parentToChildrenMapping[par] = parRel;
+            }
+            parRel.push(i);
+            
+        }
+        dt.parentToChildMapping = parentToChildrenMapping;
+    }
+
+    export function TreeGridColumnRenderer(node: any[], fgo: IFillGridOptions, dt: IDataTable): string {
         var sR;
-        //var nd4 = node[4];
         var nd4 = node[nodeIdxes.numChildren];
         var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
+        var selectToggle = '';
+        switch (fgo.treeColumn) {
+            case TreeType.triState:
+                selectToggle = '<span class="treeNodeSelector fa {checkClass}">&nbsp;</span>';
+                var checkClass;
+                switch (node[nodeIdxes.selected]) {
+                    case 2:
+                        checkClass = 'fa-check-square-o'
+                        break;
+                    case 1:
+                        checkClass = 'fa-edit';
+                        break;
+                    default:
+                        checkClass = 'fa-square-o';
+                }
+                selectToggle = db.format(selectToggle, {
+                    checkClass: checkClass
+                });
+                break;
+
+        }
+        
         if (nd4 > 0) {
-            //sR = '<span class="dynatree-expander treeNodeToggler">&nbsp;</span>';
             sR = '<span class="treeNodeToggler fa fa-plus-square-o">&nbsp;</span>';
         } else if (nd4 == 0) {
             sR = '';
         } else {
             sR = '<span class="treeNodeToggler fa fa-minus-square-o">&nbsp;</span>';
+            
         }
+        sR += selectToggle;
         return sp + sR + node[nodeIdxes.text];
     }
 
