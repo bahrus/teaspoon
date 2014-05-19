@@ -110,28 +110,27 @@ module tsp.cs {
         }
     }
 
-    function handleTreeNodeGridSelectToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        if (cascadeInfo.timeStamp === evt.timeStamp) return;
-        cascadeInfo.timeStamp = evt.timeStamp;
-        var gh = new gridHelper(evt, cascadeInfo);
-        var dt = gh.getDataTable();
-        var data = dt.data;
-        var dtRow = gh.getDataRow(dt);
-        var nd = gh.getTreeNode(dt, dtRow);
-        var $evtEl = $(gh._evtEl);
+    function toggleNode(nd: any, dt: b.IDataTable, data: any[], bCheckItem?: boolean) {
         var n = b.nodeIdxes;
+        if (!dt.nodeToRowIdxMapping) {
+            b.mapParentChildRel(dt, b.getNodeFldIdx(dt));
+        }
+        var colIdx = b.getNodeFldIdx(dt);
         if (nd[n.numChildren] == 0) {
-            if(typeof (nd[n.selected]) == 'undefined') {
-                nd[n.selected] = 2;
+            //#region number of children = 0
+            if (typeof (bCheckItem) == 'undefined') {
+                if (typeof (nd[n.selected]) == 'undefined') {
+                    nd[n.selected] = 2;
+                } else {
+                    nd[n.selected] = 2 - nd[n.selected];
+                }
             } else {
-                nd[n.selected] = 2 - nd[n.selected];
+                nd[n.selected] = bCheckItem ? 2 : 0;
             }
             var parentId = nd[n.parentId];
-            if (!dt.nodeToRowIdxMapping) {
-                b.mapParentChildRel(dt, b.getNodeFldIdx(dt));
-            }
+            
             var parentRowNo = dt.nodeToRowIdxMapping[parentId];
-            var colIdx = b.getNodeFldIdx(dt);
+            
             while (parentRowNo != null) {
                 var parentNd = data[parentRowNo][colIdx];
                 //parentNd[n.selected] = 1;
@@ -145,7 +144,68 @@ module tsp.cs {
                 parentId = parentNd[n.parentId];
                 parentRowNo = dt.nodeToRowIdxMapping[parentId];
             }
+            //#endregion
+        } else {
+            var children = dt.parentToChildMapping[nd[n.id]];
+        if (!children) {
+            debugger;
         }
+            var bCheckChildItem = (typeof (nd[n.selected]) == 'undefined') || nd[n.selected] < 2;
+            
+            for (var i = 0, l = children.length; i < l; i++) {
+                var childRowNo = children[i];
+                var child = data[childRowNo];
+                var childNd = child[colIdx];
+                toggleNode(childNd, dt, data, bCheckChildItem);
+            }
+        }
+    }
+
+    function handleTreeNodeGridSelectToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
+        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        cascadeInfo.timeStamp = evt.timeStamp;
+        var gh = new gridHelper(evt, cascadeInfo);
+        var dt = gh.getDataTable();
+        var data = dt.data;
+        var dtRow = gh.getDataRow(dt);
+        var nd = gh.getTreeNode(dt, dtRow);
+        var $evtEl = $(gh._evtEl);
+        toggleNode(nd, dt, data);
+        //var n = b.nodeIdxes;
+        //if (nd[n.numChildren] == 0) {
+        //    //#region number of children = 0
+        //    if (typeof (nd[n.selected]) == 'undefined') {
+        //        nd[n.selected] = 2;
+        //    } else {
+        //        nd[n.selected] = 2 - nd[n.selected];
+        //    }
+        //    var parentId = nd[n.parentId];
+        //    if (!dt.nodeToRowIdxMapping) {
+        //        b.mapParentChildRel(dt, b.getNodeFldIdx(dt));
+        //    }
+        //    var parentRowNo = dt.nodeToRowIdxMapping[parentId];
+        //    var colIdx = b.getNodeFldIdx(dt);
+        //    while (parentRowNo != null) {
+        //        var parentNd = data[parentRowNo][colIdx];
+        //        //parentNd[n.selected] = 1;
+        //        //debugger;
+        //        console.log('parentRowNo = ' + parentRowNo);
+        //        parentNd[n.selected] = null;
+        //        //debugger;
+        //        var sel = b.getTriStateForParentNode(parentNd, dt, colIdx);
+        //        parentNd[n.selected] = sel;
+        //        console.log('sel = ' + sel);
+        //        parentId = parentNd[n.parentId];
+        //        parentRowNo = dt.nodeToRowIdxMapping[parentId];
+        //    }
+        //    //#endregion
+        //} else {
+        //    var children = dt.parentToChildMapping[nd[n.id]];
+        //    for (var i = 0, l = children.length; i < l; i++) {
+        //        var child = children[i];
+
+        //    }
+        //}
 
         b.refreshBodyTemplateWithRectCoords(gh._templEl, null, gh._fgo);
     }
