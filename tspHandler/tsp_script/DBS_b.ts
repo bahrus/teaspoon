@@ -112,7 +112,7 @@ module DBS.b{
         return emmet.expandAbbreviation(str, 'html', 'html', null).split('${0}').join('');
     }
 
-    export function applyEmmet(selectedNode: NodeSelector) {
+    export function applyEmmet(selectedNode: NodeSelector, branch?: string) {
         var cs = isCSMode();
         var emmetSelector = 'script[type="text/emmet"][data-mode="';
         if (cs) {
@@ -121,6 +121,9 @@ module DBS.b{
             emmetSelector += 'server-side-only'
         }
         emmetSelector += '"]';
+        if (branch) {
+            emmetSelector += '.dependsOn_' + branch; 
+        }
         var emmetNodes = selectedNode.querySelectorAll(emmetSelector);
         for (var i = 0, n = emmetNodes.length; i < n; i++) {
             var nd = <HTMLElement> emmetNodes[i];

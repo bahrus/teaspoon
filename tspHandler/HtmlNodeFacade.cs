@@ -213,6 +213,15 @@ namespace tspHandler
             _node.SetAttributeValue(key, val);
         }
 
+        public void appendAttribute(string key, string val, string delimiter)
+        {
+            var currAttr = this.getAttribute(key);
+            if(!string.IsNullOrEmpty(currAttr) && !string.IsNullOrEmpty(delimiter)){
+                currAttr += delimiter;
+            }
+            this.setAttribute(key, currAttr + val);
+        }
+
         public string innerHTML
         {
             get

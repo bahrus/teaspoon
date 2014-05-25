@@ -171,42 +171,7 @@ module tsp.cs {
         var nd = gh.getTreeNode(dt, dtRow);
         var $evtEl = $(gh._evtEl);
         toggleNode(nd, dt, data);
-        //var n = b.nodeIdxes;
-        //if (nd[n.numChildren] == 0) {
-        //    //#region number of children = 0
-        //    if (typeof (nd[n.selected]) == 'undefined') {
-        //        nd[n.selected] = 2;
-        //    } else {
-        //        nd[n.selected] = 2 - nd[n.selected];
-        //    }
-        //    var parentId = nd[n.parentId];
-        //    if (!dt.nodeToRowIdxMapping) {
-        //        b.mapParentChildRel(dt, b.getNodeFldIdx(dt));
-        //    }
-        //    var parentRowNo = dt.nodeToRowIdxMapping[parentId];
-        //    var colIdx = b.getNodeFldIdx(dt);
-        //    while (parentRowNo != null) {
-        //        var parentNd = data[parentRowNo][colIdx];
-        //        //parentNd[n.selected] = 1;
-        //        //debugger;
-        //        console.log('parentRowNo = ' + parentRowNo);
-        //        parentNd[n.selected] = null;
-        //        //debugger;
-        //        var sel = b.getTriStateForParentNode(parentNd, dt, colIdx);
-        //        parentNd[n.selected] = sel;
-        //        console.log('sel = ' + sel);
-        //        parentId = parentNd[n.parentId];
-        //        parentRowNo = dt.nodeToRowIdxMapping[parentId];
-        //    }
-        //    //#endregion
-        //} else {
-        //    var children = dt.parentToChildMapping[nd[n.id]];
-        //    for (var i = 0, l = children.length; i < l; i++) {
-        //        var child = children[i];
-
-        //    }
-        //}
-
+        
         b.refreshBodyTemplateWithRectCoords(gh._templEl, null, gh._fgo);
     }
 
@@ -261,6 +226,10 @@ module tsp.cs {
         var colNo = gh.getColNo();
         var colFieldNo = gh.getColFieldNo(colNo, dt);
         gh.moveColumn(colFieldNo, dt, dir);
+    }
+
+    export function handleAsyncModelLoad(e) {
+        var evt = window.event;
     }
 
     class gridHelper {

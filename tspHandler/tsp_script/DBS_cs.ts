@@ -2,6 +2,8 @@
 ///<reference path='DBS_b.ts'/>
 ///<reference path='../Scripts/typings/jquery/jquery.d.ts'/>
 
+declare var model: any;
+
 module DBS.cs {
     export interface ISnippetConfig {
         destID: string
@@ -178,9 +180,10 @@ module DBS.cs {
         return exprVal;
     }
 
-    function applyDirectives(selectableNode: NodeSelector) {
-        //var attributeLinkStyles = document.querySelectorAll('style[data-attribute-link]');
-        var attributeLinks = document.querySelectorAll('*[data-attribute-link]');
+    function applyDirectives(selectableNode: NodeSelector, branch?: string) {
+        var sQryFilter = '*[data-attribute-link]';
+        if (branch) sQryFilter += '.dependsOn_' + branch;
+        var attributeLinks = document.querySelectorAll(sQryFilter);
         var docOrder = 0;
         var directives: IStyleDirective[] = [];
         var scriptDirectives: IScriptDirective[] = [];
@@ -220,9 +223,11 @@ module DBS.cs {
                     //#endregion
                     break;
                 case 'SCRIPT':
+                    var cl = attributeLinkNode.classList;
+                    var sQuery = _.filter(cl, c => c.indexOf('dependsOn_') != 0).map(c => "." + c).join(',');
                     var sd: IScriptDirective = {
                         scriptTag: <HTMLScriptElement> attributeLinkNode,
-                        targetElements: document.querySelectorAll('.' + attributeLinkNode.className.replace(' ', ',.'))
+                        targetElements: document.querySelectorAll(sQuery)
                     };
                     scriptDirectives.push(sd);
                     break;
@@ -260,18 +265,27 @@ module DBS.cs {
             var ih = sd.scriptTag.innerHTML.trim();
             var fnSearch = 'function ';
             var iPosOfFun = ih.indexOf(fnSearch);
-            if (iPosOfFun > -1) {
-                var iPosOfParen = ih.indexOf('(');
-                var sc = ih.substring(iPosOfFun + fnSearch.length, iPosOfParen);
-                fn = eval(sc);
-            } else {
+            //if (iPosOfFun > -1) {
+            //    var iPosOfParen = ih.indexOf('(');
+            //    var sc = ih.substring(iPosOfFun + fnSearch.length, iPosOfParen);
+            //    fn = eval(sc);
+            //} else {
                 if (linkAttrib && linkAttrib.length > 0) {
                     varName = linkAttrib;
                     if (bStringify) {
                         varNameD = 'data-' + DBS.b.toSnakeCase(varName);
                     }
                     var expr = ih.trim();
-                    exprVal = getExpression(expr, bStringify);
+                    var exprValTest = getExpression(expr, bStringify);
+                    var sType = typeof (exprValTest);
+                    switch (sType) {
+                        case 'function':
+                            exprVal = exprValTest();
+                            break;
+                        case 'object':
+                            exprVal = exprValTest;
+                            break;
+                    }
                 } else {
                     var varSearch = 'var ';
                     var iPosOfVar = ih.indexOf(varSearch);
@@ -288,7 +302,7 @@ module DBS.cs {
                         fn = eval(sc);
                     }
                 }
-            }
+            //}
             //#endregion
             //#region Apply to target Elements
             var tes = sd.targetElements;
@@ -318,11 +332,17 @@ module DBS.cs {
         
     }
 
-    function applyDBS(selectableNode: NodeSelector) {
-        DBS.b.applyEmmet(selectableNode);
-        applyDirectives(selectableNode);
-        configureCSForms(selectableNode);
-        watchForLazyLoadElements(selectableNode);
+    export function onLoadModel(branch: string) {
+        var modelBranch = model[branch];
+        if (!modelBranch.changeNotifier) modelBranch.changeNotifier = new DBS.b.ChangeNotifier();
+        applyDBS(document, branch);
+    }
+
+    function applyDBS(selectableNode: NodeSelector, branch?:string) {
+        DBS.b.applyEmmet(selectableNode, branch);
+        applyDirectives(selectableNode, branch);
+        configureCSForms(selectableNode, branch);
+        watchForLazyLoadElements(selectableNode, branch);
     }
 
     function sortFn(a: IStyleDirective, b: IStyleDirective): number {
@@ -365,7 +385,10 @@ module DBS.cs {
 
     }
 
-    function configureCSForms(selectableNode: NodeSelector) {
+    function configureCSForms(selectableNode: NodeSelector, branch?: string) {
+        if (branch) {
+            //TODO:
+        }
         var frms: NodeList;
         if (selectableNode['tagName'] == 'FORM') {
             var frm2 = <HTMLFormElement> selectableNode;
@@ -383,7 +406,10 @@ module DBS.cs {
     }
 
     //#region LazyLoad
-    function watchForLazyLoadElements(selectableNode: NodeSelector) {
+    function watchForLazyLoadElements(selectableNode: NodeSelector, branch?: string) {
+        if (branch) {
+            //TODO:
+        }
         var nds = selectableNode.querySelectorAll('.reserved_lazyLoad');
         for (var j = 0, n = nds.length; j < n; j++) {
             var nd = <HTMLElement> nds[j];

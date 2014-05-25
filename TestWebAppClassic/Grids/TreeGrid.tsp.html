@@ -23,22 +23,14 @@
         }
     </style>
 
-    <style data-attribute-link="Attributes">
-        script.VScrollBarAttributes {
-        }
-        .VScrollBar {
-        }
-        script.HScrollBarAttributes {
-        }
-        .HScrollBar {
-        }
-    </style>
     <link href="GridRefs.html" rel="import" id="lib">
     <script data-genid="lib" src="../tsp_script/DBS_b.js"></script>
     <script data-genid="lib" src="../tsp_script/tsp_c.js"></script>
+    <script> var x;</script>
 </head>
 <body>
-    <script data-mode="both" data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeTable">
+
+    <script data-mode="client-side-only" async data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeTable">
     if(typeof(model)=='undefined') model = {};
     model['treeTable'] = {
         "fields": [
@@ -514,50 +506,51 @@
 
     </script>
 
-    <script>
-        model.treeTable.changeNotifier = new DBS.b.ChangeNotifier();
-
+    <script class="VScrollBar dependsOn_treeTable" data-attribute-link="scrollOptions">
+        x = function() {
+            return {
+                direction: tsp.b.DirectionOptions.Vertical,
+                //maxValue: model.treeTable.data.length,
+                maxValueFn: function () {
+                    var v = model.treeTable.rowView;
+                    return v ? v.length : 0;
+                },
+                maxElementSize: 24,
+                formTargets: $('#scrollValues'),
+                maxValueChangeNotifier: model.treeTable.changeNotifier
+            };
+        }
     </script>
 
-    <script class="VScrollBarAttributes">
-        var scrollOptions = {
-            direction: tsp.b.DirectionOptions.Vertical,
-            //maxValue: model.treeTable.data.length,
-            maxValueFn: function(){
-                var v = model.treeTable.rowView;
-                return v ? v.length : 0;
-            },
-            maxElementSize: 24,
-            formTargets: $('#scrollValues'),
-            maxValueChangeNotifier: model.treeTable.changeNotifier
-        };
+    <script class="HScrollBar dependsOn_treeTable"  data-attribute-link="scrollOptions">
+        x = function() {
+            return {
+                direction: tsp.b.DirectionOptions.Horizontal,
+                maxValue: model.treeTable.fields.length,
+                maxElementSize: 100,
+                formTargets: $('#scrollValues')
+            };
+        }
     </script>
 
-    <script class="HScrollBarAttributes">
-        var scrollOptions = {
-            direction: tsp.b.DirectionOptions.Horizontal,
-            maxValue: model.treeTable.fields.length,
-            maxElementSize: 100,
-            formTargets: $('#scrollValues')
-        };
-    </script>
-
-    <script class="VScrollBarAttributes HScrollBarAttributes">
+    <script data-attribute-link class="VScrollBarAttributes HScrollBarAttributes dependsOn_treeTable">
         tsp.cs.addScroll;
     </script>
 
-    <script class="RCAttributes">
+    <script data-attribute-link class="RCAttributes dependsOn_treeTable">
         DBS.b.MakeRCsUnique;
     </script>
-    <script class="RCAttributes">
-        var fillGridOptions = {
-            dataTableFn: function(){return model.treeTable},
-            verticalOffsetFld: document.getElementById('vs_ScrollVal'),
-            horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
-            treeColumn: tsp.b.TreeType.triState
+    <script data-attribute-link="fillGridOptions" class="RCAttributes  dependsOn_treeTable">
+        x  = function() {
+            return {
+                dataTableFn: function(){return model.treeTable},
+                verticalOffsetFld: document.getElementById('vs_ScrollVal'),
+                        horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
+                    treeColumn: tsp.b.TreeType.triState
+            };
         };
     </script>
-    <script class="RCAttributes">
+    <script data-attribute-link class="RCAttributes dependsOn_treeTable">
         tsp.cs.fillGrid;
     </script>
     <script>

@@ -28,7 +28,8 @@ namespace tspHandler
             string json = JsonConvert.SerializeObject(result);
             string modelScript = @"
 if(!model) var model = {};
-model['" + idV + "'] = " + json + ";";
+model['" + idV + "'] = " + json + @";
+if(DBS) DBS.cs.onLoadModel('" + idV + "');";
             resp.ContentType = "application/javascript";
             context.Response.Write(modelScript);
         }

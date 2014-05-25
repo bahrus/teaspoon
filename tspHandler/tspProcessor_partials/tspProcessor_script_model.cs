@@ -120,6 +120,7 @@ namespace tspHandler
                         string src = "model.tsp.js?" + tspModelHandler.getMethod + "=" + server.UrlEncode(modelProcessingInfo.StaticMethodString) + "&" + tspModelHandler.id + "=" + server.UrlEncode(id);
                         node.innerHTML = string.Empty;
                         node.setAttribute("src", src);
+                        node.appendAttribute("onload", "tsp.cs.handleAsyncModelLoad();", ";");
                     }
                     else
                     {

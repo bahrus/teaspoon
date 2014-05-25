@@ -88,12 +88,12 @@ namespace TestWebAppClassic
             var stack = new Stack<int>();
             stack.Push(20);
             stack.Push(20);
-            stack.Push(10);
+            stack.Push(20);
             stack.Push(30);
             CreateNode(dt.data, totalColumns, string.Empty, string.Empty, stack, 0);
 
-            //int iLevel1Rows = 300;// 10;
-            //int iLevel2Rows = 20; // 5;
+            // = 300;// 10;
+            //int iLint iLevel1Rowsevel2Rows = 20; // 5;
             //int iLevel3Rows = 20;// 5;
             ////int iLevel4Rows = 20;
 
