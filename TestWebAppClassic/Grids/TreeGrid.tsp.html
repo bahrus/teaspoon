@@ -10,7 +10,6 @@
     <link rel=stylesheet" type="text/css" href="../tsp_script/tsp.css" >
 
     <style data-attribute-link="Attributes">
-        .RCAttributes {}
         .RC {
             width:800px;
             overflow-x:hidden;
@@ -506,11 +505,28 @@
 
     </script>
 
+    <script data-attribute-link class="RC dependsOn_treeTable">
+        DBS.b.MakeRCsUnique;
+    </script>
+    <script data-attribute-link="fillGridOptions" class="RC dependsOn_treeTable">
+        x  = function() {
+            return {
+                dataTableFn: function(){return model.treeTable},
+                verticalOffsetFld: document.getElementById('vs_ScrollVal'),
+                horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
+                treeColumn: tsp.b.TreeType.triState
+            };
+        };
+    </script>
+    <script data-attribute-link class="RC dependsOn_treeTable">
+        tsp.cs.fillGrid;
+    </script>
+
     <script class="VScrollBar dependsOn_treeTable" data-attribute-link="scrollOptions">
         x = function() {
             return {
-                direction: tsp.b.DirectionOptions.Vertical,
                 //maxValue: model.treeTable.data.length,
+                direction: tsp.b.DirectionOptions.Vertical,
                 maxValueFn: function () {
                     var v = model.treeTable.rowView;
                     return v ? v.length : 0;
@@ -533,26 +549,11 @@
         }
     </script>
 
-    <script data-attribute-link class="VScrollBarAttributes HScrollBarAttributes dependsOn_treeTable">
+    <script data-attribute-link class="VScrollBar HScrollBar dependsOn_treeTable">
         tsp.cs.addScroll;
     </script>
 
-    <script data-attribute-link class="RCAttributes dependsOn_treeTable">
-        DBS.b.MakeRCsUnique;
-    </script>
-    <script data-attribute-link="fillGridOptions" class="RCAttributes  dependsOn_treeTable">
-        x  = function() {
-            return {
-                dataTableFn: function(){return model.treeTable},
-                verticalOffsetFld: document.getElementById('vs_ScrollVal'),
-                        horizontalOffsetFld: document.getElementById('hs_ScrollVal'),
-                    treeColumn: tsp.b.TreeType.triState
-            };
-        };
-    </script>
-    <script data-attribute-link class="RCAttributes dependsOn_treeTable">
-        tsp.cs.fillGrid;
-    </script>
+
     <script>
         function expandAll() {
             var data = model.treeTable.data;
@@ -566,8 +567,9 @@
             }
             var tabl = document.querySelector('table.RC');
             var svScroll = document.querySelector('input#vs_ScrollVal');
-            tsp.b.applyTreeView(tabl, fillGridOptions);
-            tsp.b.refreshBodyTemplateWithRectCoords(tabl, svScroll, fillGridOptions);
+            var fgo = DBS.b.data(tabl)['fillGridOptions'];
+            tsp.b.applyTreeView(tabl, fgo);
+            tsp.b.refreshBodyTemplateWithRectCoords(tabl, svScroll, fgo);
         }
     </script>
     <input type="button" onclick="expandAll()" value="Expand All"/>

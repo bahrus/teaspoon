@@ -228,9 +228,9 @@ module tsp.cs {
         gh.moveColumn(colFieldNo, dt, dir);
     }
 
-    export function handleAsyncModelLoad(e) {
-        var evt = window.event;
-    }
+    //export function handleAsyncModelLoad(e) {
+    //    var evt = window.event;
+    //}
 
     class gridHelper {
         _evt: Event;
