@@ -179,7 +179,6 @@ module tsp.b {
         //dt.rowDontView = dontView;
         var vSlider = db.data(templEl).slider;
         if (vSlider) vSlider.slider('option', 'max', view.length);
-        console.log('tsp.n.applyTreeView.notifyListeners');
         if (dt.changeNotifier) dt.changeNotifier.notifyListeners(dt);
     }
 

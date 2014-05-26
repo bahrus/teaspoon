@@ -3,7 +3,9 @@
     vertical-align:middle;
     cursor:pointer;
 }
-
+.treeNodeSelector{
+    cursor: default;
+}
 th[data-ac]>span.fa{
     cursor:hand;
 }

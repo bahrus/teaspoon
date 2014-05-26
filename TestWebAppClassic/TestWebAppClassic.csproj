@@ -247,6 +247,7 @@
     <Content Include="Scripts\emmet.min.js.map">
       <DependentUpon>emmet.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\jquery-1.11.1.js" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />

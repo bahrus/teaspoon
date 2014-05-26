@@ -80,7 +80,8 @@ module DBS.cs {
     }
 
     //from http://stackoverflow.com/questions/3326494/parsing-css-in-javascript-jquery
-    export function rulesForCssText(styleContent: string) : CSSRuleList {
+    export function rulesForCssText(styleContent: string): CSSRuleList {
+            
         var doc = document.implementation.createHTMLDocument(""),
         styleElement = document.createElement("style");
 
@@ -192,6 +193,7 @@ module DBS.cs {
             var attributeLinkNode = <HTMLElement> attributeLinks[i];
             switch (attributeLinkNode.tagName) {
                 case 'STYLE':
+                    if (!document.implementation.createHTMLDocument) continue;
                     //#region analyze style tag
                     var attribeLinkStyleNode = <HTMLStyleElement> attributeLinks[i];
                     var attributeLink = attribeLinkStyleNode.getAttribute('data-attribute-link');
@@ -223,8 +225,11 @@ module DBS.cs {
                     //#endregion
                     break;
                 case 'SCRIPT':
-                    var cl = attributeLinkNode.classList;
-                    var sQuery = _.filter(cl, c => c.indexOf('dependsOn_') != 0).map(c => "." + c).join(',');
+                    //var cl = attributeLinkNode.classList;
+                    var cl = attributeLinkNode.className.split(' ');  //ie8 compatibility
+                    var filteredList = _.filter(cl, c => c.indexOf('dependsOn_') != 0);
+                    var toClass = _.map(filteredList, c => "." + c);
+                    var sQuery = toClass.join(',');
                     var sd: IScriptDirective = {
                         scriptTag: <HTMLScriptElement> attributeLinkNode,
                         targetElements: document.querySelectorAll(sQuery)
@@ -327,7 +332,11 @@ module DBS.cs {
     
 
     export function ready() {
-        window.removeEventListener('load', ready);
+        if (window.removeEventListener) {
+            window.removeEventListener('load', ready);
+        } else {
+            window.detachEvent('load', ready);
+        }
         applyDBS(document);
         
     }
@@ -440,4 +449,8 @@ module DBS.cs {
     }
     //#endregion
 }
-window.addEventListener("load", DBS.cs.ready, false);
+if (window.addEventListener) {
+    window.addEventListener("load", DBS.cs.ready, false);
+} else {
+    window.attachEvent('onload', DBS.cs.ready);
+}

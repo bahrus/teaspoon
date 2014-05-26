@@ -1,6 +1,18 @@
 ///<reference path='emmet.d.ts'/>
 
 declare var mode: string;
+
+//ie8 polyfill
+if (!String.prototype.trim) {
+    String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g, '');
+    };
+}
+
+function trim(str: string) {
+    return str.replace(/^\s+|\s+$/g, '');
+}
+
 module DBS.b{
 
     export function isCSMode() : boolean {
@@ -188,7 +200,7 @@ module DBS.b{
             this._changeListeners.push(callBack);
         }
         notifyListeners(t: T) {
-            console.log('DBS.b.notifyListeners');
+            //console.log('DBS.b.notifyListeners');
             var cls = this._changeListeners;
             if (!cls) return;
             for (var i = 0, n = cls.length; i < n; i++) {

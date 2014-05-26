@@ -99,7 +99,7 @@ module tsp.cs {
         }
 
         if (newVal !== scrollOptions.currentValue) {
-            console.log(newVal);
+            //console.log(newVal);
             scrollOptions.currentValue = newVal;
             var ft = scrollOptions.formTargets;
             var fields = getOrCreateFormElements$(ft, src.id + '_ScrollVal');
@@ -135,12 +135,12 @@ module tsp.cs {
                 var parentNd = data[parentRowNo][colIdx];
                 //parentNd[n.selected] = 1;
                 //debugger;
-                console.log('parentRowNo = ' + parentRowNo);
+                //console.log('parentRowNo = ' + parentRowNo);
                 parentNd[n.selected] = null;
                 //debugger;
                 var sel = b.getTriStateForParentNode(parentNd, dt, colIdx);
                 parentNd[n.selected] = sel;
-                console.log('sel = ' + sel);
+                //console.log('sel = ' + sel);
                 parentId = parentNd[n.parentId];
                 parentRowNo = dt.nodeToRowIdxMapping[parentId];
             }
@@ -303,7 +303,7 @@ module tsp.cs {
             } 
         }
         hideColumn(colFieldNo: number, dt: b.IDataTable) {
-            console.log('hide ' + colFieldNo);
+            //console.log('hide ' + colFieldNo);
             this.initiateColView(dt);
             dt.colView.splice(colFieldNo, 1);
             this.refreshHeaderAndBody();
@@ -454,7 +454,11 @@ module tsp.cs {
         el.appendChild(innerDiv);
         var ft = scrollOptions.formTargets;
         if (ft) {
-            el.addEventListener('scroll', handleScroll, false);
+            if (el.addEventListener) {
+                el.addEventListener('scroll', handleScroll, false);
+            } else {
+                el.attachEvent('onscroll', handleScroll);
+            }
         }
         subscribeToScrollDimensionChange(scrollOptions);
     }
@@ -579,7 +583,7 @@ module tsp.cs {
     };
 
     export function _when(eventName: string, cascadingHandler: b.ICascadingHandler) {
-        console.log('_when ' + eventName + 'node Test ' + cascadingHandler.selectorNodeTest);
+        //console.log('_when ' + eventName + 'node Test ' + cascadingHandler.selectorNodeTest);
         var el: HTMLElement;
         if (cascadingHandler.containerID) {
             el = document.getElementById(cascadingHandler.containerID);
