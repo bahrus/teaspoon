@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ClassGenMacros;
 using System.Web;
+using System.Configuration;
 
 namespace tspHandler
 {
@@ -53,6 +54,19 @@ namespace tspHandler
         {
             var resourceDependencies = doc.head.querySelectorAll("link[rel='import']").ToList();
             var isLocal = HttpContext.Current.Request.IsLocal;
+            Dictionary<string, string> CustomAppMapping = null;
+            var staticPathMappings = ConfigurationManager.AppSettings["StaticPathMappings"];
+            if (!string.IsNullOrEmpty(staticPathMappings))
+            {
+                CustomAppMapping = new Dictionary<string, string>();
+                var mappings = staticPathMappings.Split(',');
+                foreach (string mapping in mappings)
+                {
+                    var LHS = mapping.SubstringBefore("=>");
+                    var RHS = mapping.SubstringAfter("=>");
+                    CustomAppMapping[LHS] = RHS;
+                }
+            }
             resourceDependencies.ForEach(rd =>
             {
                 var relPath = rd.getAttribute("href");
@@ -130,6 +144,13 @@ namespace tspHandler
                         if (src.EndsWith(".ts"))
                         {
                             src = src.ReplaceLast(".ts").With(".js");
+                        }
+                        if (CustomAppMapping != null)
+                        {
+                            foreach (var kvp in CustomAppMapping)
+                            {
+                                src = src.Replace(kvp.Key, kvp.Value);
+                            }
                         }
                         scriptImport.setAttribute("src", src);
                         if (!string.IsNullOrEmpty(mode))
