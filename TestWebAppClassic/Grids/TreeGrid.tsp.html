@@ -7,7 +7,7 @@
     <!--<link rel="stylesheet" type="text/css" href="../Content/themes/smoothness/jquery-ui.css" >-->
     <!--<link rel="stylesheet" type="text/css" href="../Content/themes/base/jquery.ui.theme.css" >-->
     <link rel="stylesheet" type="text/css" href="../Content/font-awesome-4.0.3/css/font-awesome.min.css">
-    <link rel=stylesheet" type="text/css" href="../tsp_script/tsp.css" >
+    <link rel="stylesheet" type="text/css" href="../tsp_script/tsp.css" >
 
     <style data-attribute-link="Attributes">
         .RC {
@@ -29,9 +29,7 @@
 </head>
 <body>
 
-    <script data-mode="client-side-only" async data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeTable" src="TreeGridSampleData.js">
 
-    </script>
 
     <script data-attribute-link class="RC dependsOn_treeTable">
         DBS.b.MakeRCsUnique;
@@ -125,6 +123,10 @@
             (input#vs_ScrollVal[name=vs_ScrollVal][type='hidden'])
             + (input#hs_ScrollVal[name=hs_ScrollVal][type='hidden'])
 </script>
+
+    <script data-mode="client-side-only" async data-model="[TestWebAppClassic.TreeGridTestModel, TestWebAppClassic].GetTreeGrid" id="treeTable" src="TreeGridSampleData.js">
+
+    </script>
 
 </body>
 </html>
