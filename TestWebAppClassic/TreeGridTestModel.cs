@@ -86,10 +86,14 @@ namespace TestWebAppClassic
             var totalColumns = dt.fields.Count;
 
             var stack = new Stack<int>();
-            stack.Push(20);
-            stack.Push(20);
-            stack.Push(20);
-            stack.Push(30);
+            for (int i = 1; i < 5; i++)
+            {
+                stack.Push(3);
+            }
+            //    stack.Push(20);
+            //stack.Push(20);
+            //stack.Push(20);
+            //stack.Push(30);
             CreateNode(dt.data, totalColumns, string.Empty, string.Empty, stack, 0);
 
             // = 300;// 10;

@@ -162,7 +162,7 @@ module tsp.cs {
     }
 
     function handleTreeNodeGridSelectToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        if (evt.timeStamp && (cascadeInfo.timeStamp === evt.timeStamp)) return;
         cascadeInfo.timeStamp = evt.timeStamp;
         var gh = new gridHelper(evt, cascadeInfo);
         var dt = gh.getDataTable();
@@ -176,7 +176,7 @@ module tsp.cs {
     }
 
     function handleTreeNodeToggle(evt: Event, cascadeInfo: b.ICascadingHandler) {
-        if (cascadeInfo.timeStamp === evt.timeStamp) return;
+        if (evt.timeStamp && (cascadeInfo.timeStamp === evt.timeStamp)) return;
         cascadeInfo.timeStamp = evt.timeStamp;
         var gh = new gridHelper(evt, cascadeInfo);
         var dt = gh.getDataTable();
