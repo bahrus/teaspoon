@@ -187,6 +187,10 @@ var DBS;
             var scriptDirectives = [];
             for (var i = 0, n = attributeLinks.length; i < n; i++) {
                 var attributeLinkNode = attributeLinks[i];
+                if (!branch) {
+                    if (attributeLinkNode.className.indexOf('dependsOn_') > -1)
+                        continue;
+                }
                 switch (attributeLinkNode.tagName) {
                     case 'STYLE':
                         if (!document.implementation.createHTMLDocument)

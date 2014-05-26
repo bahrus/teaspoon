@@ -139,6 +139,9 @@ module DBS.b{
         var emmetNodes = selectedNode.querySelectorAll(emmetSelector);
         for (var i = 0, n = emmetNodes.length; i < n; i++) {
             var nd = <HTMLElement> emmetNodes[i];
+            if (!branch) {
+                if (nd.className.indexOf('dependsOn_') > -1) continue;
+            }
             var inner = nd.innerHTML.trim();
             var content = expEmmet(inner);
             //var templ = nd.getAttribute('data-processor');
