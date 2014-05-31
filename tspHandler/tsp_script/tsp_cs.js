@@ -100,6 +100,10 @@ var tsp;
                 for (var i = 0, n = fields.length; i < n; i++) {
                     var fld = fields[i];
                     fld.value = newVal.toString();
+                    if (fld.hasAttribute('leh')) {
+                        var leh = db.data(fld)['legacyEventHandler'];
+                        leh(fld);
+                    }
                 }
             }
         }
@@ -147,7 +151,12 @@ var tsp;
                 if (!children) {
                     debugger;
                 }
-                var bCheckChildItem = (typeof (nd[5 /* selected */]) == 'undefined') || nd[5 /* selected */] < 2;
+                var bCheckChildItem;
+                if (typeof (bCheckItem) == 'undefined') {
+                    bCheckChildItem = (typeof (nd[5 /* selected */]) == 'undefined') || nd[5 /* selected */] < 2;
+                } else {
+                    bCheckChildItem = bCheckItem;
+                }
 
                 for (var i = 0, l = children.length; i < l; i++) {
                     var childRowNo = children[i];
@@ -537,7 +546,6 @@ var tsp;
                     addTreeGridNodeToggle(el);
                     break;
             }
-
             if (fgo.verticalOffsetFld) {
                 if (db.isCSMode()) {
                     var vof = fgo.verticalOffsetFld;

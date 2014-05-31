@@ -72,6 +72,9 @@ var DBS;
                         return;
                     handler(ev.srcElement);
                 });
+            } else if (attrName == 'value') {
+                el.setAttribute('leh', 'legacyEventHandler');
+                DBS.b.data(el)['legacyEventHandler'] = handler;
             }
         }
         cs.onPropChange = onPropChange;

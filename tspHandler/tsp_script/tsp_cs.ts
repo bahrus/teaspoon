@@ -106,6 +106,10 @@ module tsp.cs {
             for (var i = 0, n = fields.length; i < n; i++) {
                 var fld = fields[i];
                 fld.value = newVal.toString();
+                if (fld.hasAttribute('leh')) {
+                    var leh = db.data(fld)['legacyEventHandler'];
+                    leh(fld);
+                }
             }
         }
     }
@@ -147,11 +151,16 @@ module tsp.cs {
             //#endregion
         } else {
             var children = dt.parentToChildMapping[nd[n.id]];
-        if (!children) {
-            debugger;
-        }
-            var bCheckChildItem = (typeof (nd[n.selected]) == 'undefined') || nd[n.selected] < 2;
-            
+            if (!children) {
+                debugger;
+            }
+            var bCheckChildItem;
+            if (typeof (bCheckItem) == 'undefined') {
+                bCheckChildItem = (typeof (nd[n.selected]) == 'undefined') || nd[n.selected] < 2;
+            } else {
+                bCheckChildItem = bCheckItem;
+            }
+            //var bUncheckChildren = (typeof (nd[n.selected]) != 'undefined') && nd[n.selected] == 2;
             for (var i = 0, l = children.length; i < l; i++) {
                 var childRowNo = children[i];
                 var child = data[childRowNo];
@@ -527,7 +536,6 @@ module tsp.cs {
                 addTreeGridNodeToggle(el);
                 break;   
         }
-        
         if (fgo.verticalOffsetFld) {
             if (db.isCSMode()) {
                 var vof = fgo.verticalOffsetFld;

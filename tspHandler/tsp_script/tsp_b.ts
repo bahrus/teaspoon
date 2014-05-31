@@ -74,6 +74,7 @@ module tsp.b {
         fullCss?: string;
         partialCss?: string;
         emptyCss?: string;
+        indentTemplate?: string;
     }
 
     export interface ICascadingHandler {
@@ -398,16 +399,22 @@ module tsp.b {
     export function setDefaultTreeColumnOptions(options: ISelectNodeOptions, bOverride: boolean) : ISelectNodeOptions {
         if (bOverride || !options.emptyCss) options.emptyCss = 'fa-square-o';
         if (bOverride || !options.fullCss) options.fullCss = 'fa-check-square-o';
-        if (bOverride || !options.partialCss) options.partialCss = 'fa-edit';
+        if (bOverride || !options.partialCss) options.partialCss = 'fa-check-square';
         if (bOverride || !options.selectToggleTemplate) options.selectToggleTemplate = '<span class="treeNodeSelector fa {checkClass}">&nbsp;</span> ';
+        if (bOverride || !options.indentTemplate) options.indentTemplate = '<span class="treeNodeIndent fa fa-ellipsis-h">&nbsp;</span>';
         return options;
     }
     export function TreeGridColumnRenderer(node: any[], fgo: IFillGridOptions, dt: IDataTable): string {
         var sR;
         var nd4 = node[nodeIdxes.numChildren];
-        var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
-        var selectToggle = '';
         var tgso = fgo.treeNodeSelectOptions;
+        var sp = '';
+        for (var i = 0, n = node[nodeIdxes.level]; i < n; i++){
+            sp += tgso.indentTemplate;
+        }
+        //var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
+        var selectToggle = '';
+        
         switch (fgo.treeColumn) {
             case TreeType.triState:
                 selectToggle = tgso.selectToggleTemplate; // '<span class="treeNodeSelector fa {checkClass}">&nbsp;</span>';

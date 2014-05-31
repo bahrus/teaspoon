@@ -314,18 +314,26 @@ var tsp;
             if (bOverride || !options.fullCss)
                 options.fullCss = 'fa-check-square-o';
             if (bOverride || !options.partialCss)
-                options.partialCss = 'fa-edit';
+                options.partialCss = 'fa-check-square';
             if (bOverride || !options.selectToggleTemplate)
                 options.selectToggleTemplate = '<span class="treeNodeSelector fa {checkClass}">&nbsp;</span> ';
+            if (bOverride || !options.indentTemplate)
+                options.indentTemplate = '<span class="treeNodeIndent fa fa-ellipsis-h">&nbsp;</span>';
             return options;
         }
         b.setDefaultTreeColumnOptions = setDefaultTreeColumnOptions;
         function TreeGridColumnRenderer(node, fgo, dt) {
             var sR;
             var nd4 = node[4 /* numChildren */];
-            var sp = '<span style="display:inline-block;width:' + (node[3 /* level */] * 10) + 'px">&nbsp;</span>';
-            var selectToggle = '';
             var tgso = fgo.treeNodeSelectOptions;
+            var sp = '';
+            for (var i = 0, n = node[3 /* level */]; i < n; i++) {
+                sp += tgso.indentTemplate;
+            }
+
+            //var sp = '<span style="display:inline-block;width:' + (node[nodeIdxes.level] * 10) + 'px">&nbsp;</span>';
+            var selectToggle = '';
+
             switch (fgo.treeColumn) {
                 case 2 /* triState */:
                     selectToggle = tgso.selectToggleTemplate; // '<span class="treeNodeSelector fa {checkClass}">&nbsp;</span>';

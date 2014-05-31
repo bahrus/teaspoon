@@ -1,10 +1,16 @@
-﻿.treeNodeToggler{
-    display:inline-block;
+﻿.treenodeselector, .treenodetoggler, .treeNodeIndent{
     vertical-align:middle;
+    display:inline-block;
+}
+
+.treeNodeToggler{
     cursor:pointer;
 }
 .treeNodeSelector{
     cursor: default;
+}
+.treeNodeIndent{
+    color:gray;
 }
 th[data-ac]>span.fa{
     cursor:hand;

@@ -24,7 +24,7 @@
 
     <link href="GridRefs.html" rel="import" id="lib">
     <script data-genid="lib" src="../tsp_script/DBS_b.js"></script>
-    <script data-genid="lib" src="../tsp_script/tsp_c.js"></script>
+    <script data-genid="lib" src="../tsp_script/tsp_cs.js"></script>
     <script> var x;</script>
 </head>
 <body>
@@ -57,7 +57,7 @@
                     var v = model.treeTable.rowView;
                     return v ? v.length : 0;
                 },
-                maxElementSize: 24,
+                maxElementSize: 40,
                 formTargets: $('#scrollValues'),
                 maxValueChangeNotifier: model.treeTable.changeNotifier
             };

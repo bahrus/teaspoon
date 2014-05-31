@@ -76,6 +76,9 @@ module DBS.cs {
                 if (ev['propertyName'] !== attrName) return;
                 handler(<HTMLElement> ev.srcElement);
             });
+        } else if (attrName == 'value') {
+            el.setAttribute('leh', 'legacyEventHandler');
+            DBS.b.data(el)['legacyEventHandler'] = handler;
         }
     }
 
