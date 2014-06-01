@@ -29,6 +29,8 @@ namespace tspHandler
             string modelScript = @"
 if(!model) var model = {};
 model['" + idV + "'] = " + json + @";
+console.log('done loading');
+console.log('DBS = ' + DBS);
 if(DBS) DBS.cs.onLoadModel('" + idV + "');";
             resp.ContentType = "application/javascript";
             context.Response.Write(modelScript);
