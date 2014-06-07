@@ -301,7 +301,10 @@ module tsp.b {
             var dRow;
             if (view) {
                 row = (row < view.length) ? view[row] : -1
-
+                console.log('row = ' + row);
+                if (row == -1) {
+                    debugger;
+                }
             }
             if (row < 0) {
                 dRow = null;

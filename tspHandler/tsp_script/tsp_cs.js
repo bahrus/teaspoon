@@ -88,12 +88,13 @@ var tsp;
                     newVal = Math.floor(src.scrollLeft / scrollOptions.maxElementSize);
                     break;
                 case 0 /* Vertical */:
-                    newVal = Math.floor(src.scrollTop / scrollOptions.maxElementSize);
+                    console.log('scrollTop  = ' + (src.scrollTop));
+                    newVal = Math.floor((src.scrollTop) / scrollOptions.maxElementSize);
                     break;
             }
 
             if (newVal !== scrollOptions.currentValue) {
-                //console.log(newVal);
+                console.log(newVal);
                 scrollOptions.currentValue = newVal;
                 var ft = scrollOptions.formTargets;
                 var fields = getOrCreateFormElements$(ft, src.id + '_ScrollVal');
@@ -436,10 +437,12 @@ var tsp;
             var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
 
             //console.log('maxValue = ' + maxValue);
-            var innerDim = scrollOptions.maxElementSize * maxValue;
-
-            //console.log('innerDim = ' + innerDim);
+            //debugger;
             var styleDim = (scrollOptions.direction == 0 /* Vertical */ ? 'height' : 'width');
+            var clientDim = (scrollOptions.direction == 0 /* Vertical */ ? 'Height' : 'Width');
+            var innerDim = scrollOptions.maxElementSize * (maxValue + 1) + (el['client' + clientDim] - 6 * scrollOptions.maxElementSize);
+            console.log('innerDim = ' + innerDim);
+
             innerDiv.style[styleDim] = innerDim + 'px';
         }
         cs.sizeScroll = sizeScroll;

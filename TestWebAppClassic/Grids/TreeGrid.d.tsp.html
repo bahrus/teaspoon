@@ -56,7 +56,7 @@
                     var v = model.treeTable.rowView;
                     return v ? v.length : 0;
                 },
-                maxElementSize: 40,
+                maxElementSize: 29.667,
                 formTargets: $('#scrollValues'),
                 maxValueChangeNotifier: model.treeTable.changeNotifier
             };
@@ -96,8 +96,26 @@
             tsp.b.applyTreeView(tabl, fgo);
             tsp.b.refreshBodyTemplateWithRectCoords(tabl, svScroll, fgo);
         }
+
+        function collapseAll(){
+            var data = model.treeTable.data;
+            var tnIdx = tsp.b.getNodeFldIdx(model.treeTable);
+            var n = tsp.b.nodeIdxes;
+            var chIdx = n.numChildren;
+            for(var i = 0, n = data.length; i < n; i++){
+                var row = data[i];
+                var tn = row[tnIdx];
+                tn[chIdx] = Math.abs(tn[chIdx]);
+            }
+            var tabl = document.querySelector('table.RC');
+            var svScroll = document.querySelector('input#vs_ScrollVal');
+            var fgo = DBS.b.data(tabl)['fillGridOptions'];
+            tsp.b.applyTreeView(tabl, fgo);
+            tsp.b.refreshBodyTemplateWithRectCoords(tabl, svScroll, fgo);
+        }
     </script>
     <input type="button" onclick="expandAll()" value="Expand All">
+    <input type="button" onclick="collapseAll()" value="Collapse All">
 
     <script type="text/emmet" data-mode="client-side-only" class="dependsOn_treeTable">(table>(tr>(td>table.RC>((thead>tr>th[data-hc=1,$]*3)+(tbody>(tr>(td[data-rc=r,$]*3))*6)))+(td.vScrollTD>div#vs.VScrollBar[style=height:200px]))+tr>td>div#hs.HScrollBar[style=width:600px])+form#scrollValues>(input#vs_ScrollVal[name=vs_ScrollVal][type='hidden'])+(input#hs_ScrollVal[name=hs_ScrollVal][type='hidden'])</script>
 

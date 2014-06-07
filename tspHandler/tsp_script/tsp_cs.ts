@@ -94,12 +94,13 @@ module tsp.cs {
                 newVal = Math.floor(src.scrollLeft / scrollOptions.maxElementSize);
                 break;
             case b.DirectionOptions.Vertical:
-                newVal = Math.floor(src.scrollTop / scrollOptions.maxElementSize);
+                console.log('scrollTop  = ' + (src.scrollTop /*+ src.clientHeight */));
+                newVal = Math.floor((src.scrollTop /*+ src.clientHeight*/) / scrollOptions.maxElementSize);
                 break;
         }
 
         if (newVal !== scrollOptions.currentValue) {
-            //console.log(newVal);
+            console.log(newVal);
             scrollOptions.currentValue = newVal;
             var ft = scrollOptions.formTargets;
             var fields = getOrCreateFormElements$(ft, src.id + '_ScrollVal');
@@ -426,9 +427,12 @@ module tsp.cs {
         if (!innerDiv) innerDiv = <HTMLDivElement> el.firstChild;
         var maxValue = scrollOptions.maxValueFn ? scrollOptions.maxValueFn() : scrollOptions.maxValue;
         //console.log('maxValue = ' + maxValue);
-        var innerDim = scrollOptions.maxElementSize * maxValue;
-        //console.log('innerDim = ' + innerDim);
+        //debugger;
         var styleDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'height' : 'width');
+        var clientDim = (scrollOptions.direction == b.DirectionOptions.Vertical ? 'Height' : 'Width');
+        var innerDim = scrollOptions.maxElementSize * (maxValue + 1) + (el['client' + clientDim] - 6 * scrollOptions.maxElementSize);
+        console.log('innerDim = ' + innerDim);
+        
         innerDiv.style[styleDim] = innerDim + 'px';
     }
 

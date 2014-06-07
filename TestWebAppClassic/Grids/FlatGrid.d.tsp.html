@@ -3,7 +3,7 @@
     <title>Flat Grid Test</title>
 
 
-    <script src="../Scripts/typings/underscore/underscore.d.js" data-genid="lib"></script><script src="../Scripts/jquery-2.0.3.js" data-genid="lib"></script><script src="../tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../tsp_script/DBS_b.js" data-genid="lib"></script><script src="../tsp_script/tsp_b.js" data-genid="lib"></script><script src="../tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../tsp_script/tsp_cs.js" data-genid="lib"></script><link href="../Content/font-awesome-4.0.3/css/font-awesome.min.css" data-genid="lib" rel="stylesheet"><link href="../tsp_script/tsp.css" data-genid="lib" rel="stylesheet">
+    <script src="../Scripts/typings/underscore/underscore.d.js" data-genid="lib"></script><script src="../Scripts/jquery-1.11.1.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/DBS.js" data-genid="lib"></script><script src="../Scripts/emmet.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/DBS_b.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/tsp_b.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/DBS_cs.js" data-genid="lib"></script><script src="../../tspHandler/tsp_script/tsp_cs.js" data-genid="lib"></script><link href="../Content/font-awesome-4.0.3/css/font-awesome.min.css" data-genid="lib" rel="stylesheet"><link href="../tsp_script/tsp.css" data-genid="lib" rel="stylesheet">
     
     
     <script> var x;</script>
@@ -140,41 +140,7 @@
         overflow: hidden;
     }
 </style>
-<script type="text/emmet" data-mode="client-side-only">
-        (table>
-            (tr>
-                (td>
-                    table.RC>(
-                        (thead>
-                            (tr.ac[style=display:none]>(th[data-ac=1,$]>
-                                    (span[title='Hide'].fa.fa-minus-square-o{&nbsp;})
-                                    + (span[title='Freeze'].fa.fa-lock{&nbsp;})
-                                    + (span[title='Move Left'].fa.fa-arrow-circle-left{&nbsp;})
-                                    + (span[title='Move Right'].fa.fa-arrow-circle-right{&nbsp;})
-                                 )*3
-                            )
-                            +
-                            (tr>(
-                                th.hRow>
-                                    (div.gridTableSeparator+div[data-hc=1,$])
-                                )*3
-                            )
-                         )
-                      + (tbody>
-                            (tr>
-                                (td[data-rc=r,$]*3)
-                            )*6
-                        )
-                    )
-                )
-                + (td>
-                  div#vs.VScrollBar[style=height:200px]
-                )
-            )
-            + tr>td>div#hs.HScrollBar
-        )
-
-</script>
+<script type="text/emmet" data-mode="client-side-only">(table>(tr>(td>table.RC>((thead>(tr.ac[style=display:none]>(th[data-ac=1,$]>(span[title='Hide'].fa.fa-minus-square-o{&nbsp;})+(span[title='Freeze'].fa.fa-lock{&nbsp;})+(span[title='MoveLeft'].fa.fa-arrow-circle-left{&nbsp;})+(span[title='MoveRight'].fa.fa-arrow-circle-right{&nbsp;}))*3)+(tr>(th.hRow>(div.gridTableSeparator+div[data-hc=1,$]))*3))+(tbody>(tr>(td[data-rc=r,$]*3))*6)))+(td>div#vs.VScrollBar[style=height:200px]))+tr>td[colspan=2]>div#hs.HScrollBar)</script>
 <form id="gridState" class="gridState">
     <input id="vs_ScrollVal" name="vs_ScrollVal" type="hidden">
     <input id="hs_ScrollVal" name="hs_ScrollVal" type="hidden">
