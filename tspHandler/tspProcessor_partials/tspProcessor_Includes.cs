@@ -27,7 +27,7 @@ namespace tspHandler
             var serversideIncludeTags = doc.querySelectorAll(configSettings.Selector).ToList();
             //var serversideIframes = iframes
             //    .Where(_TestForServerSide).ToList();
-            serversideIncludeTags.ForEach(iframe =>
+            serversideIncludeTags.ForEach(includeTag =>
             {
                 #region Process iframe
                 var savedDom = HttpContext.Current.Items[SavedIFrameDomsKey] as Dictionary<string, HtmlDocumentFacade>;
@@ -36,20 +36,25 @@ namespace tspHandler
                     savedDom = new Dictionary<string, HtmlDocumentFacade>();
                     HttpContext.Current.Items[SavedIFrameDomsKey] = savedDom;
                 }
-                var src = iframe.getAttribute("src");
+                var src = includeTag.getAttribute("src");
+                if (src.StartsWith("'") && src.EndsWith("'"))
+                {
+                    //angularjs support
+                    src = src.Trim('\'');
+                }
                 var domID = src.SubstringAfter("#");
                 string selector = "#" + domID;
                 if (string.IsNullOrEmpty(domID))
                 {
-                    string selectorTest = iframe.getAttribute(SelectorAttribute);
+                    string selectorTest = includeTag.getAttribute(SelectorAttribute);
                     if (string.IsNullOrEmpty(selectorTest))
                     {
-                        throw new Exception("No selector specified for iframe with id " + iframe.id);
+                        selector = null;
                     }
                     selector = selectorTest;
                 }
                 src = src.SubstringBefore('#');
-                string parentId = iframe.id;
+                string parentId = includeTag.id;
                 #region GetDoc
                 HtmlDocumentFacade subDoc = null;
                 if (savedDom.ContainsKey(src))
@@ -65,27 +70,31 @@ namespace tspHandler
                     savedDom[src] = subDoc;
                 }
                 #endregion
-                var matches = subDoc.querySelectorAll(selector);
-                if (matches.Count == 0)
+                var rootNode = subDoc.documentElement;
+                if (!string.IsNullOrEmpty(selector))
                 {
-                    throw new Exception("No Element with selector " + selector + " found.");
+                    var matches = subDoc.querySelectorAll(selector);
+                    if (matches.Count == 0)
+                    {
+                        throw new Exception("No Element with selector " + selector + " found.");
+                    }
+                    rootNode = matches[0];
                 }
-                var el = matches[0];
                 #region see if this needs to be merged
                 var mergeNodes = doc.ProcessContext.IFrameMergingNodes;
-                if (mergeNodes != null && mergeNodes.ContainsKey(iframe.id))
+                if (mergeNodes != null && mergeNodes.ContainsKey(includeTag.id))
                 {
-                    var transformNodes = mergeNodes[iframe.id];
+                    var transformNodes = mergeNodes[includeTag.id];
                     foreach (var child in transformNodes)
                     {
-                        ProcessTransform(el, child);
+                        ProcessTransform(rootNode, child);
                     }
                 }
 
 
                 #endregion
                 #region name space all id's
-                el.DoForThisAndAllAncestors(node =>
+                rootNode.DoForThisAndAllAncestors(node =>
                 {
                     string currId = node.id;
                     if (!string.IsNullOrEmpty(currId) && !currId.StartsWith(parentId + "_"))
@@ -95,18 +104,18 @@ namespace tspHandler
                 });
                 #endregion
                 #region insert content
-                var div = doc.createElement(el.tagName.ToLower());
-                foreach (var attrib in el.attributes)
+                var div = doc.createElement(rootNode.tagName.ToLower());
+                foreach (var attrib in rootNode.attributes)
                 {
                     div.setAttribute(attrib.name, attrib.value);
                 }
                 div.id = parentId;
-                string parentClassName = iframe.className;
-                if (!string.IsNullOrEmpty(parentClassName)) div.className = iframe.className;
-                div.innerHTML = el.innerHTML;
-                var parent = iframe.parentNode;
-                parent.insertBefore(div, iframe);
-                parent.removeChild(iframe);
+                string parentClassName = includeTag.className;
+                if (!string.IsNullOrEmpty(parentClassName)) div.className = includeTag.className;
+                div.innerHTML = rootNode.innerHTML;
+                var parent = includeTag.parentNode;
+                parent.insertBefore(div, includeTag);
+                parent.removeChild(includeTag);
                 #endregion
                 var header = doc.head;
                 var body = doc.body;

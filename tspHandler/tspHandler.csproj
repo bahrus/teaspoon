@@ -94,7 +94,7 @@
     <Compile Include="tspProcessor.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Emmet.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Form.cs" />
-    <Compile Include="tspProcessor_partials\tspProcessor_IFrame.cs" />
+    <Compile Include="tspProcessor_partials\tspProcessor_Includes.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Lazy.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Merge.cs" />
     <Compile Include="tspProcessor_partials\tspProcessor_Resource.cs" />

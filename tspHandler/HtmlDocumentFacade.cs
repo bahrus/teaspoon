@@ -164,7 +164,9 @@ namespace tspHandler
         {
             get
             {
-                return this.getElementsByTagName("head")[0];
+                var heads = this.getElementsByTagName("head");
+                if (heads.Count > 0) return heads[0];
+                return null;
             }
         }
 

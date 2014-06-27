@@ -52,6 +52,7 @@ namespace tspHandler
 
         public static HtmlDocumentFacade ProcessResourceDependencies(this HtmlDocumentFacade doc)
         {
+            if (doc.head == null) return doc;
             var resourceDependencies = doc.head.querySelectorAll("link[rel='import']").ToList();
             var isLocal = HttpContext.Current.Request.IsLocal;
             Dictionary<string, string> CustomAppMapping = null;

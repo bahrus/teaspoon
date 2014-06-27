@@ -11,17 +11,21 @@ namespace tspHandler
         public static HtmlDocumentFacade ProcessServerSideForms(this HtmlDocumentFacade doc)
         {
             var head = doc.head;
-            var metaTags = head.querySelectorAll("meta[name='DBS.FormPrepopulate']");//"[content='Disable:True")
             var foundDisableTag = false;
-            metaTags.ForEach(metaTag =>
+            if (head != null)
             {
-                var contentAttrib = metaTag.getAttribute("content");
-                if (contentAttrib != null && contentAttrib.Contains("disable:true"))
+                var metaTags = head.querySelectorAll("meta[name='DBS.FormPrepopulate']");//"[content='Disable:True")
+                
+                metaTags.ForEach(metaTag =>
                 {
-                    foundDisableTag = true;
-                    return;
-                }
-            });
+                    var contentAttrib = metaTag.getAttribute("content");
+                    if (contentAttrib != null && contentAttrib.Contains("disable:true"))
+                    {
+                        foundDisableTag = true;
+                        return;
+                    }
+                });
+            }
             if (foundDisableTag) return doc;
             //var reqParams = HttpContext.Current.Request.QueryString;
             var reqParams = HttpContext.Current.Request.Params;
