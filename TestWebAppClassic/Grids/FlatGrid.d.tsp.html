@@ -122,9 +122,10 @@
 </script>
 
 <style>
-    table.RC,#hs.HScrollBar{
-        width:500px;
+    table.RC{
+        width:800px;
     }
+
     .gridTableSeparator
     {
         width: 3px;
@@ -140,7 +141,7 @@
         overflow: hidden;
     }
 </style>
-<script type="text/emmet" data-mode="client-side-only">(table>(tr>(td>table.RC>((thead>(tr.ac[style=display:none]>(th[data-ac=1,$]>(span[title='Hide'].fa.fa-minus-square-o{&nbsp;})+(span[title='Freeze'].fa.fa-lock{&nbsp;})+(span[title='MoveLeft'].fa.fa-arrow-circle-left{&nbsp;})+(span[title='MoveRight'].fa.fa-arrow-circle-right{&nbsp;}))*3)+(tr>(th.hRow>(div.gridTableSeparator+div[data-hc=1,$]))*3))+(tbody>(tr>(td[data-rc=r,$]*3))*6)))+(td>div#vs.VScrollBar[style=height:200px]))+tr>td[colspan=2]>div#hs.HScrollBar)</script>
+<script type="text/emmet" data-mode="client-side-only">(table[style=width:1000px]>(tr>(td[style=width:900px]>table.RC>((thead>(tr.ac[style=display:none]>(th[data-ac=1,$]>(span[title='Hide'].fa.fa-minus-square-o{&nbsp;})+(span[title='Freeze'].fa.fa-lock{&nbsp;})+(span[title='MoveLeft'].fa.fa-arrow-circle-left{&nbsp;})+(span[title='MoveRight'].fa.fa-arrow-circle-right{&nbsp;}))*3)+(tr>(th.hRow>(div.gridTableSeparator+div[data-hc=1,$]))*3))+(tbody>(tr>(td[data-rc=r,$]*3))*6)))+(td>div#vs.VScrollBar[style=height:200px]))+tr>((td>div#hs.HScrollBar[style=width:600px])+(td>{&nbsp;})))</script>
 <form id="gridState" class="gridState">
     <input id="vs_ScrollVal" name="vs_ScrollVal" type="hidden">
     <input id="hs_ScrollVal" name="hs_ScrollVal" type="hidden">

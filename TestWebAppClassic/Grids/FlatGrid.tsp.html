@@ -122,9 +122,10 @@
 </script>
 
 <style>
-    table.RC,#hs.HScrollBar{
-        width:500px;
+    table.RC{
+        width:800px;
     }
+
     .gridTableSeparator
     {
         width: 3px;
@@ -141,9 +142,9 @@
     }
 </style>
 <script type="text/emmet" data-mode="client-side-only">
-        (table>
+        (table[style=width:1000px]>
             (tr>
-                (td>
+                (td[style=width:900px]>
                     table.RC>(
                         (thead>
                             (tr.ac[style=display:none]>(th[data-ac=1,$]>
@@ -171,7 +172,10 @@
                   div#vs.VScrollBar[style=height:200px]
                 )
             )
-            + tr>td[colspan=2]>div#hs.HScrollBar
+            + tr>(
+                (td>div#hs.HScrollBar[style=width:600px])
+                + (td>{&nbsp;})
+                )
         )
 
 </script>
