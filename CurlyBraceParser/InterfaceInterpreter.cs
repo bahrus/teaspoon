@@ -17,13 +17,19 @@ namespace CurlyBraceParser
         public static bool IsInterface(this ILiveStatement statement)
         {
             if (statement == null || string.IsNullOrEmpty(statement.Statement)) return false;
-            var am = statement as IHaveAccessModifier;
-            string statementWithoutPublicKeyword = (am!= null && am.Public) ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
+            //var am = statement as IHaveAccessModifier;
+            //string statementWithoutPublicKeyword = (am!= null && am.Public) ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
+            string statementWithoutPublicKeyword = statement.GetStatementIsPublic() ? statement.GetStatementWithoutPublicKeyWord() : statement.Statement;
             return statementWithoutPublicKeyword.StartsWith(InterfaceKeyword);
         }
 
 
-
+        public static string GetInterfaceName(this IOpenBraceStatement statement)
+        {
+            string signatureWithoutInterfaceKeyWord = statement.GetStatementWithoutPublicKeyWord().Substring(InterfaceKeyword.Length + 1).TrimStart();
+            string name = signatureWithoutInterfaceKeyWord.SubstringBefore(' ', '{');
+            return name;
+        }
 
         #endregion
     }

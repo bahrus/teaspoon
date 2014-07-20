@@ -21,5 +21,7 @@ namespace CurlyBraceParser
                 return _FrontTrimmedLiveStatement;
             }
         }
+
+        
     }
 }

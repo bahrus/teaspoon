@@ -79,6 +79,7 @@
     <Compile Include="ProcessingContext.cs" />
     <Compile Include="ScriptTag.cs" />
     <Compile Include="StyleDirective.cs" />
+    <Compile Include="tsDocHandler.cs" />
     <Compile Include="tspConfigSettings.cs" />
     <Compile Include="tspModelHandler.cs" />
     <Compile Include="Context.cs" />

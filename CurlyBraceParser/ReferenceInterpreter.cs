@@ -22,14 +22,19 @@ namespace CurlyBraceParser
             return line.Comment.StartsWith(referenceLink);
         }
 
-        public static ReferenceStatement ToReferenceStatement(this Line line)
-        {
+        public static string GetReferencePath(this ILine line){
             string path = line.Comment.SubstringBetween(referenceLink).And("/>");
             if (string.IsNullOrEmpty(path)) throw new Exception("No Path found in " + line.Comment);
             path = path.Trim().Replace("\"", "").Replace("'", "");
+            return path;
+        }
+
+        public static ReferenceStatement ToReferenceStatement(this ILine line)
+        {
+            
             var refStatement = new ReferenceStatement(Line: line)
             {
-                ClientSideReference = path,
+                ClientSideReference = line.GetReferencePath(),
             };
             return refStatement;
         }

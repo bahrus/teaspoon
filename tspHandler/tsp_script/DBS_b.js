@@ -47,6 +47,8 @@ var DBS;
         }
         b.data = data;
 
+        
+
         function $$(emmetS) {
             var props = { emmetString: emmetS };
             applyMethods(props);

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
 	<style type="text/css">
 	.auto-style1 {
@@ -25,7 +25,7 @@
     <div id="nutshell">
         <h3>In a nutshell</h3>
         <p id="recentTrends">
-            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript, such as JQuery based frameworks, or more recently, directive based frameworks such as AngularJS or Knockout. 
+            Many recent innovations in the area of web development have centered around client-side frameworks based on JavaScript. 
             These frameworks have largely shunted the benefits which could derive from synergies with server-side processing. 
             Part of this trend towards pure client-side frameworks may be motivated by a desire to avoid committing to a single server-side platform, such as .net, Python, Java, etc. 
             Another motivation is it becomes more difficult to maintain if developers need to work with two very different languages, and the question &quot;where is this content coming from?&quot; is hard to answer.</p>
@@ -626,6 +626,45 @@
                 The script will make an AJAX call on the client, which will load the page on the server, where server-side processing will take place. The page will be serialized to html, and the portion matching the selector attribute will be embedded in the calling page.</p>
         </div>
     </div>
+    <div id="declarativeJavaScript">
+        <h3>Declarative JavaScript</h3>
+        A common task in web development is associating client-side JavaScript configuration options with DOM elements.  
+        The DBS taps into its integration with the server in order to provide several approaches for doing this.   
+        The goals of the DBS hooks for JavaScript are:
+        <ul>
+            <li>
+                Integrate well with modern JavaScript IDE's, so the developer can take advantage of support for intellisense, code navigation, refactoring.
+            </li>
+            <li>
+                Minimize the page payload, both the size of the page as well as the amount of parsing required by the browser.
+            </li>
+        </ul>
+        <h4>Tag replacement</h4>
+        It can be useful to provide the client tags containing a block of inert, declarative JavaScript.
+        During design time, the script tag (with type=text/JavaScript)  is often the best vehicle for editing such JavaScript.
+        However, on the client side, we may want to prevent the browser from parsing / executing this JavaScript.  
+        This can be accomplished using the data-client-side-markup attribute:
+
+<script data-client-side-markup="div[hidden]{.}">
+
+</script>
+
+<pre style="font-family:Consolas;font-size:13;color:black;background:white;"><span style="color:blue;">&lt;</span><span style="color:maroon;">script</span>&nbsp;<span style="color:red;">data-client-side-markup</span><span style="color:blue;">=</span><span style="color:blue;">&quot;div[hidden]{.}&quot;</span><span style="color:blue;">&gt;</span>
+ 
+<span style="color:blue;">&lt;/</span><span style="color:maroon;">script</span><span style="color:blue;">&gt;</span></pre>
+
+        <script data-attribute-name="ng-controller">myNamespace.myController</script>
+        <div>...</div>
+
+        <script data-classInit class="??? dependsOn_treeTable"> </script>
+
+
+        <input hidden myAttrib1="foo" myAttrib="bar" data-applyAttributes="server-side-only">
+            <script>$('.myClass')</script>
+
+        </input>
+
+    </div>
     <div id="styleDirectives">
         <h3>CSS attributes</h3>
         <p id="JQuery">
@@ -634,7 +673,7 @@
             However, JQuery is still very much a programming API.
             While JQuery may tend to encourage &quot;declarative programming&quot; coding styles, it does not provide a declarative <em>syntax</em> consisting of directives like AngularJS.
         </p>
-        <p id="DeclativeDefinitions">
+        <p id="DeclativeDefinitions" class="myClass">
             The distinction between "declarative syntax" and "declarative programming" is somewhat murky, particularly in common parlance.
             Declarative programming actually has a formal definition - programming without mutable values.
             For our purposes, we define declarative syntax to mean syntax containing data elements only --

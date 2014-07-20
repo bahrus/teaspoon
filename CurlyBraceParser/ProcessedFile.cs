@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using ClassGenMacros;
 
 namespace CurlyBraceParser
 {
@@ -36,6 +37,11 @@ namespace CurlyBraceParser
         //    }
         //    return sb.ToString();
         //}
+
+        public override string ToString()
+        {
+            return this.FilePath.SubstringAfterLast("\\");
+        }
     }
 
     public class ProcessedFiles : Dictionary<string, ProcessedFile>

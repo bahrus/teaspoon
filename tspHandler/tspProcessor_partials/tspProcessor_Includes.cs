@@ -23,8 +23,8 @@ namespace tspHandler
         private static HtmlDocumentFacade ProcessServerSideIncludes(this HtmlDocumentFacade doc)
         {
             var configSettings = System.Configuration.ConfigurationManager.GetSection(
-        "tspServerSideIncludeSettingsGroup/tspServerSideInclude") as tspServerSideIncludeSection;
-            var serversideIncludeTags = doc.querySelectorAll(configSettings.Selector).ToList();
+        "tspSettingsGroup/tspSettings") as tspConfigSettings;
+            var serversideIncludeTags = doc.querySelectorAll(configSettings.ServerSideIncludeSelector).ToList();
             //var serversideIframes = iframes
             //    .Where(_TestForServerSide).ToList();
             serversideIncludeTags.ForEach(includeTag =>

@@ -34,6 +34,12 @@ namespace CurlyBraceParser
 
         //}
 
+        public static string GetClassName(this IOpenBraceStatement statement)
+        {
+            string name = statement.GetStatementWithoutPublicKeyWord().Substring(ClassKeyword.Length + 1).TrimStart();
+            return name;
+        }
+
         #endregion
     }
 #endif

@@ -31,6 +31,7 @@ namespace CurlyBraceParser
             {
                 #region each line
                 bool insideString = false;
+                char stringChar = '"';
                 bool insideFinalComment = false;
                 Stack<char> openChars = null;
                 var chars = line.ToCharArray();
@@ -94,7 +95,7 @@ namespace CurlyBraceParser
                     if (insideString)
                     {
                         #region check if string ended
-                        if (c == '"')
+                        if (c == stringChar)
                         {
                             if (chars[charNo - 1] != '\\')
                             {
@@ -105,9 +106,10 @@ namespace CurlyBraceParser
                     }
                     else
                     {
-                        if (c == '"')
+                        if (c == '"' || c == '\'')
                         {
                             insideString = true;
+                            stringChar = c;
                         }
                         else
                         {

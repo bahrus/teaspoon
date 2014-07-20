@@ -46,9 +46,17 @@ module DBS.b{
     }
 
  
-
+    /**
+     * Interface for storing parsed string
+     */
     export interface IDividedString {
+        /**
+         * substring before search
+         */
         before: string;
+        /**
+         * substring after search
+         */
         after: string;
     }
 

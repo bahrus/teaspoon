@@ -48,7 +48,11 @@ namespace CurlyBraceParser
             {
                 if (line.IsReference())
                 {
-                    var refStatement = new ReferenceStatement(Line: line);
+                    var refStatement = new ReferenceStatement(
+                        Line: line,
+                        ClientSideReference: line.GetReferencePath()
+                    );
+                    //var refStatement = line.ToReferenceStatement();
                     pf.References[refStatement.ClientSideReference] = refStatement;
                     OutputLines.Add(refStatement);
                 }
@@ -65,7 +69,8 @@ namespace CurlyBraceParser
                 var interfaceStatement = new Interface(
                     OpenBraceStatementBase: statement,
                     LiveStatementBase: statement.LiveStatementBase,
-                    Line: statement.Line
+                    Line: statement.Line,
+                    Name: statement.GetInterfaceName()
                 );
                 pf.Interfaces[interfaceStatement.Name] = interfaceStatement;
                 statement = interfaceStatement as IOpenBraceStatement;
@@ -77,15 +82,19 @@ namespace CurlyBraceParser
                 var functionStatement = new StaticFunction(
                     OpenBraceStatementBase: statement, 
                     LiveStatementBase:  statement.LiveStatementBase, 
-                    Line: statement.Line);
-                pf.Functions[functionStatement.GetFullName()] = functionStatement; 
+                    Line: statement.Line,
+                    Name:  statement.GetFunctionName()
+                );
+                string functionName = functionStatement.GetFullName();
+                pf.Functions[functionName] = functionStatement; 
             }
             else if (statement.IsClass())
             {
                 var classStatement = new Class(
                     OpenBraceStatementBase: statement,
                     LiveStatementBase: statement.LiveStatementBase,
-                    Line: statement.Line
+                    Line: statement.Line,
+                    Name: statement.GetClassName()
                 );
                 pf.Classes[classStatement.Name] = classStatement;
                 statement = classStatement;
@@ -96,7 +105,8 @@ namespace CurlyBraceParser
                 var moduleStatement = new Module(
                     OpenBraceStatementBase: statement,
                     LiveStatementBase: statement.LiveStatementBase,
-                    Line: statement.Line
+                    Line: statement.Line,
+                    FullName: statement.FrontTrimmedLiveStatement.Trim('{').Trim()
                 );
                 pf.Modules[moduleStatement.FullName] = moduleStatement;
                 statement = moduleStatement;

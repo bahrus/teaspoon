@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClassGenMacros;
 
 
 namespace CurlyBraceParser
@@ -35,7 +36,14 @@ namespace CurlyBraceParser
             return statementWithoutPublicKeyword.StartsWith(FunctionKeyword);
         }
 
+        public static string GetFunctionName(this IOpenBraceStatement statement)
+        {
+            string signatureWithoutFunctionKeyWord = statement.GetStatementWithoutPublicKeyWord().Substring(FunctionKeyword.Length + 1).TrimStart();
+            string name = signatureWithoutFunctionKeyWord.SubstringBefore(' ', '(');
+            return name;
+        }
 
+        
 
         //public static StaticFunctionStatement ToFunction(this OpenBraceStatementBase statement)
         //{

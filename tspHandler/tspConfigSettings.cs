@@ -6,20 +6,30 @@ using System.Text;
 
 namespace tspHandler
 {
-    public class tspServerSideIncludeSection : ConfigurationSection
+    public class tspConfigSettings : ConfigurationSection
     {
-        public const string selector = "selector";
+        public const string _serverSideIncludeSelectorKey = "serverSideIncludeSelector";
+       // private const string server
 
-        [ConfigurationProperty(selector, DefaultValue = "iframe[data-mode='server-side-only']", IsRequired = false)]
-        public string Selector {
+        [ConfigurationProperty(_serverSideIncludeSelectorKey, DefaultValue = "iframe[data-mode='server-side-only']", IsRequired = false)]
+        public string ServerSideIncludeSelector {
             get
             {
-                return this[selector] as string;
+                return this[_serverSideIncludeSelectorKey] as string;
             }
             set
             {
-                this[selector] = value;
+                this[_serverSideIncludeSelectorKey] = value;
             }
         }
+
+        //public bool SupportServerSideForms
+        //{
+        //    get
+        //    {
+        //        return this
+        //    }
+        //}
+        
     }
 }
