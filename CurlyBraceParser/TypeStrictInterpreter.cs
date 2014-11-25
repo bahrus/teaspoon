@@ -73,6 +73,7 @@ namespace CurlyBraceParser
                     Name: statement.GetInterfaceName()
                 );
                 pf.Interfaces[interfaceStatement.Name] = interfaceStatement;
+                interfaceStatement.Process();
                 statement = interfaceStatement as IOpenBraceStatement;
                 recurse = false;
             }

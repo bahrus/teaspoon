@@ -171,6 +171,16 @@ namespace CurlyBraceParser{
 			this.ReturnType = ReturnType;
 		}
 	}
+	public partial class DataElement : IDataElement{
+		public System.String HelpText{get;set;}
+		public System.String Type{get;set;}
+		public System.String Name{get;set;}
+		public DataElement(System.String HelpText = null, System.String Type = null, System.String Name = null){
+			this.HelpText = HelpText;
+			this.Type = Type;
+			this.Name = Name;
+		}
+	}
 	public partial class StaticFunction : IStaticFunction{
 		public System.Int32 LineNumber{
 			get {return this.Line.LineNumber;}
@@ -331,19 +341,35 @@ namespace CurlyBraceParser{
 			get {return this.OpenBraceStatementBase.ClosingLine;}
 			set{this.OpenBraceStatementBase.ClosingLine = this.OpenBraceStatementBase.ClosingLine;}
 		}
+		public System.String HelpText{get;set;}
 		public IOpenBraceStatement OpenBraceStatementBase{get;set;}
 		public System.Boolean Public{get;set;}
 		public ILine Line{get;set;}
 		public ILiveStatement LiveStatementBase{get;set;}
 		public System.Collections.Generic.List<System.String> Extends{get;set;}
 		public System.String Name{get;set;}
-		public Interface(IOpenBraceStatement OpenBraceStatementBase, ILine Line, ILiveStatement LiveStatementBase, System.Boolean Public = false, System.Collections.Generic.List<System.String> Extends = null, System.String Name = null){
+		public System.Collections.Generic.List<IField> Fields{get;set;}
+		public Interface(IOpenBraceStatement OpenBraceStatementBase, ILine Line, ILiveStatement LiveStatementBase, System.String HelpText = null, System.Boolean Public = false, System.Collections.Generic.List<System.String> Extends = null, System.String Name = null, System.Collections.Generic.List<IField> Fields = null){
+			this.HelpText = HelpText;
 			this.OpenBraceStatementBase = OpenBraceStatementBase;
 			this.Public = Public;
 			this.Line = Line;
 			this.LiveStatementBase = LiveStatementBase;
 			this.Extends = Extends;
 			this.Name = Name;
+			this.Fields = Fields;
+		}
+	}
+	public partial class Field : IField{
+		public System.String HelpText{get;set;}
+		public System.String Type{get;set;}
+		public System.String Name{get;set;}
+		public System.Boolean Optional{get;set;}
+		public Field(System.String HelpText = null, System.String Type = null, System.String Name = null, System.Boolean Optional = false){
+			this.HelpText = HelpText;
+			this.Type = Type;
+			this.Name = Name;
+			this.Optional = Optional;
 		}
 	}
 	public partial class Class : IClass{

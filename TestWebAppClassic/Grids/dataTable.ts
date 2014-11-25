@@ -11,6 +11,7 @@ var model_dataTable: tsp.b.IDataTable = {
             "header": null,
             "footer": null
         },
+        //#region begin
         {
             "name": "Column 1",
             "isTreeNodeInfo": false,
@@ -41,6 +42,7 @@ var model_dataTable: tsp.b.IDataTable = {
             "header": null,
             "footer": null
         },
+        //#endregion
         {
             "name": "Column 6",
             "isTreeNodeInfo": false,

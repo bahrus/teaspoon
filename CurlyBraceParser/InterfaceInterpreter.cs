@@ -31,6 +31,50 @@ namespace CurlyBraceParser
             return name;
         }
 
+        public static Interface Process(this Interface iface)
+        {
+            var afterExtends = iface.GetStatementWithoutPublicKeyWord().SubstringAfter("extends").SubstringBefore("{");
+            afterExtends = afterExtends.Replace(" ", "");
+            var extenders = afterExtends.Split(',');
+            iface.Extends = extenders.ToList();
+            if (iface.Children != null)
+            {
+                var JSDoc = new StringBuilder();
+                foreach (var line in iface.Children)
+                {
+                    var ls = line as LiveStatement;
+                    if (ls == null)
+                    {
+                        var comment = line.Comment.Trim();
+                        if (comment.StartsWith("*"))
+                        {
+                            JSDoc.Append(comment.Substring(1));
+                        }
+                        continue;
+                    }
+                    var ftls = ls.FrontTrimmedLiveStatement;
+                    if (ftls.Trim() == string.Empty) continue;
+                    if (!ftls.Contains("("))
+                    {
+                        string name = ftls.SubstringBefore(":").Trim();
+                        bool optional = name.EndsWith("?");
+                        if (optional) name = name.TrimEnd('?');
+                        var de = new Field
+                        {
+                            Name = name,
+                            Type = ftls.SubstringAfter(":").SubstringBefore(";").Trim(),
+                            Optional = optional,
+                            HelpText = JSDoc.ToString(),
+                        };
+                        JSDoc.Clear();
+                        if (iface.Fields == null) iface.Fields = new List<IField>();
+                        iface.Fields.Add(de);
+                    }
+                }
+            }
+            return iface;
+        }
+
         #endregion
     }
 #endif

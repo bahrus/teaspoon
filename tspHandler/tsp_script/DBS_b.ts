@@ -45,11 +45,16 @@ module DBS.b{
         return cache[nCacheIndex];
     }
 
+    export interface IBaseTemp {
+    }
+
+    export interface IBaseTemp2 { }
+
  
     /**
      * Interface for storing parsed string
      */
-    export interface IDividedString {
+    export interface IDividedString extends IBaseTemp, IBaseTemp2 {
         /**
          * substring before search
          */
