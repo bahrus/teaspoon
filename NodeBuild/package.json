@@ -1,0 +1,10 @@
+{
+  "name": "NodeBuild",
+  "version": "0.0.0",
+  "description": "NodeBuild",
+  "main": "app.js",
+  "author": {
+    "name": "Bruce",
+    "email": ""
+  }
+}
