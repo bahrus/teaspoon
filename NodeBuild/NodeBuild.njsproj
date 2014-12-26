@@ -39,8 +39,8 @@
     <Content Include="README.md" />
     <TypeScriptCompile Include="buildConfig.ts" />
     <TypeScriptCompile Include="Interfaces.ts" />
-    <TypeScriptCompile Include="NodeBuildActions.ts" />
-    <TypeScriptCompile Include="NodeBuildConfig.ts" />
+    <TypeScriptCompile Include="NodeJSBuildActions.ts" />
+    <TypeScriptCompile Include="NodeJSBuildConfig.ts" />
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
