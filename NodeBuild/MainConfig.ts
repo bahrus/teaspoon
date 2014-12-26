@@ -1,7 +1,7 @@
 ﻿import Is = require('./Interfaces');
 import fsa = require('./FileSystemActions');
-import buildConfig = require('./buildConfig');
-export module tsp.NodeBuildConfig {
+import buildConfig = require('./DOMBuildDirectives');
+//export module tsp.NodeBuildConfig {
     var htmlFileSelector: Is.IFileSelectorAction = {
         do: fsa.selectFiles,
         fileTest: fsa.testForHtmlFileName,
@@ -18,4 +18,4 @@ export module tsp.NodeBuildConfig {
         fileSelector: htmlFileSelector,
         fileProcessor: htmlFileProcessor,
     }
-}
+//}

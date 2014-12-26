@@ -15,9 +15,9 @@
         }
     }
 
-    export function performTreeNodeAction(action: Is.IDOMTransformTreeNodeBuildAction, context: Is.IBuildContext) {
+    export function performTreeNodeAction(action: Is.IDOMTransformAction, context: Is.IBuildContext) {
         var elements : JQuery;
-        var p: Is.IDOMTransformTreeNodeBuildAction;
+        var p: Is.IDOMTransformAction;
         if (action.state) {
             p = action.state.parent;
         }

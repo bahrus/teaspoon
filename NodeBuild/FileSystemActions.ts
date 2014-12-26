@@ -36,7 +36,7 @@ import Is = require('Interfaces');
             action.state.$ = <JQueryStatic> $any;
             if (action.fileSubProcessActions) {
                 for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
-                    var fspa = <Is.IDOMTransformTreeNodeBuildAction> action.fileSubProcessActions[i];
+                    var fspa = <Is.IDOMTransformAction> action.fileSubProcessActions[i];
                     fspa.state = {
                         $: action.state.$,
                     };
@@ -56,7 +56,7 @@ import Is = require('Interfaces');
     }
 
     export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildContext) {
-        if (action.debug) debugger;
+        if (this.debug) debugger;
         var fs = action.fileSelector;
         fs.do(fs, context);
         var fp = action.fileProcessor;

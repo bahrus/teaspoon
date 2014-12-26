@@ -53,12 +53,12 @@
     }
 
     export interface IHTMLFileBuildAction extends IFileBuildAction {
-        domTransformActions: IDOMTransformTreeNodeBuildAction[];
+        domTransformActions: IDOMTransformAction[];
     }
 
     interface IDOMElementBuildActionState extends IDOMState {
         element: JQuery;
-        treeNode?: IDOMTransformTreeNodeBuildAction;
+        treeNode?: IDOMTransformAction;
     }
 
     export interface IDOMElementBuildAction extends IBuildAction{
@@ -77,7 +77,7 @@
     interface IDOMElementCSSSelectorState extends IDOMState {
         relativeTo?: JQuery;
         elements?: JQuery;
-        treeNode?: IDOMTransformTreeNodeBuildAction;
+        treeNode?: IDOMTransformAction;
     }
 
     export interface IDOMElementCSSSelector extends IDOMElementSelector{
@@ -85,16 +85,16 @@
         state?: IDOMElementCSSSelectorState;
     }
 
-    interface IDOMTransformTreeNodeBuildActionState extends IDOMState {
-        parent?: IDOMTransformTreeNodeBuildAction;
+    interface IDOMTransformActionState extends IDOMState {
+        parent?: IDOMTransformAction;
     }
 
-    export interface IDOMTransformTreeNodeBuildAction extends IBuildAction{
+    export interface IDOMTransformAction extends IBuildAction{
         selector: IDOMElementCSSSelector;
         elementAction?: IDOMElementBuildAction;
         //parent?: IDOMTransformTree
-        children?: IDOMTransformTreeNodeBuildAction[];
-        state?: IDOMTransformTreeNodeBuildActionState;
+        children?: IDOMTransformAction[];
+        state?: IDOMTransformActionState;
     }
 
 

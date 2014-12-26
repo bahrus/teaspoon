@@ -2,7 +2,7 @@
 import DOMActions = require('./DOMActions');
 export module tsp {
     var sa = DOMActions;
-    var removeBuildAction: Is.IDOMTransformTreeNodeBuildAction = {
+    var removeBuildAction: Is.IDOMTransformAction = {
         do: sa.performTreeNodeAction,
         selector: {
             cssSelector: 'tsp-design-time',
