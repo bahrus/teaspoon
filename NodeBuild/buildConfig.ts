@@ -7,6 +7,7 @@ export module tsp {
         selector: {
             cssSelector: 'tsp-design-time',
             do: sa.selectElements,
+            //debug: true,
         },
         elementAction: {
             do: sa.removeAction

@@ -5,6 +5,7 @@
         rootDirectory?: string;
         HTMLOutputs?: { [key: string]: JQueryStatic };
         JSOutputs?: { [key: string]: string };
+        
     }
 
     export interface IBuildAction {
@@ -19,12 +20,19 @@
 
     interface IFileProcessorActionState {
         filePath: string;
-        $:  JQueryStatic
     }
 
     export interface IFileProcessorAction extends IBuildAction {
         state?: IFileProcessorActionState;
         fileSubProcessActions?: IBuildAction[];
+    }
+
+    interface IHTMLFileProcessorActionState extends IFileProcessorActionState {
+        $:  JQueryStatic
+    }
+
+    export interface IHTMLFileProcessorAction extends IFileProcessorAction {
+        state?: IHTMLFileProcessorActionState;
     }
 
     export interface IFileSelectorActionState {

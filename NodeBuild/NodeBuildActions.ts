@@ -5,21 +5,43 @@ import Interfaces = require('Interfaces');
 export module tsp.NodeBuildActions {
 
     export function testForHtmlFileName(s: string) {
-        return s.lastIndexOf('.html') > s.length - 5;
+        var iPosOfHtml = s.lastIndexOf('.html');
+        if (iPosOfHtml == -1) return false;
+        return iPosOfHtml == s.length - 5;
     }
     export function selectFiles(action: Interfaces.tsp.IFileSelectorAction, context: Interfaces.tsp.IBuildContext) {
         if (action.debug) debugger;
         var files = fs.readdirSync(action.state.rootDirectory);
         if (action.fileTest) files = files.filter(action.fileTest);
+        files = files.map(s => action.state.rootDirectory + s);
         action.state.selectedFilePaths = files;
     }
 
-    export function processHTMLFile(action: Interfaces.tsp.IFileProcessorAction, context: Interfaces.tsp.IBuildContext) {
+    export function processHTMLFile(action: Interfaces.tsp.IHTMLFileProcessorAction, context: Interfaces.tsp.IBuildContext) {
         fs.readFile(action.state.filePath, 'utf8', (err, data) => {
+            if (action.debug) debugger;
             var $ = <CheerioStatic> cheerio.load(data);
             var $any = <any> $;
             action.state.$ = <JQueryStatic> $any;
+            if (action.fileSubProcessActions) {
+                for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
+                    var fspa = <Interfaces.tsp.IDOMTransformTreeNodeBuildAction> action.fileSubProcessActions[i];
+                    fspa.state = {
+                        $: action.state.$,
+                    };
+                    fspa.do(fspa, context);
+                }
+            }
+            if (!context.HTMLOutputs) context.HTMLOutputs = {};
+            context.HTMLOutputs[action.state.filePath] = action.state.$;
+            if (action.debug) {
+                var $any = <any> action.state.$;
+                var $cheerio = <CheerioStatic> $any;
+                var sOutput = $cheerio.html();
+                debugger;
+            }
         });
+        
     }
 
     export function fileBuilder(action: Interfaces.tsp.IFileBuildAction, context: Interfaces.tsp.IBuildContext) {
@@ -32,8 +54,14 @@ export module tsp.NodeBuildActions {
         }
         fs.do(fs, context);
         var fp = action.fileProcessor;
+        
         for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
             var filePath = fs.state.selectedFilePaths[i];
+            if (!fp.state) {
+                fp.state = {
+                    filePath: filePath,
+                };
+            }
             fp.state.filePath = filePath;
             fp.do(fp, context);
         }

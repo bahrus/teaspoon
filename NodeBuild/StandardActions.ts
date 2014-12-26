@@ -6,6 +6,7 @@ export module tsp.StandardActions {
     }
 
     export function selectElements(action: Interfaces.tsp.IDOMElementCSSSelector, context: Interfaces.tsp.IBuildContext) {
+        if (action.debug) debugger;
         var aS = action.state;
         if (aS.relativeTo) {
             aS.elements = aS.relativeTo.find(action.cssSelector);
@@ -21,9 +22,11 @@ export module tsp.StandardActions {
             p = action.state.parent;
         }
         var aSel = action.selector;
-        if (!aSel.state) aSel.state = {
-            $: action.state.$,
-        };
+        if (!aSel.state) {
+            aSel.state = {
+                $: action.state.$,
+            };
+        } 
         var aSelSt = aSel.state;
         aSelSt.treeNode = action;
         if (p && p.elementAction) {
