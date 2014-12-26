@@ -1,20 +1,54 @@
 ﻿export module tsp {
     export interface IBuildContext {
-        $: JQueryStatic;
+        //$: JQueryStatic;
         //currentElement?: JQuery;
-        outputs?: {[key: string] : JQueryStatic};
+        rootDirectory?: string;
+        HTMLOutputs?: { [key: string]: JQueryStatic };
+        JSOutputs?: { [key: string]: string };
     }
 
     export interface IBuildAction {
         do: (action: IBuildAction, context: IBuildContext) => void;
-        
+        debug?: boolean;
+        log?: boolean;
     }
 
     export interface IBuildConfig{
         buildActions: IBuildAction[];
     }
 
-    interface IDOMElementBuildActionState {
+    interface IFileProcessorActionState {
+        filePath: string;
+        $:  JQueryStatic
+    }
+
+    export interface IFileProcessorAction extends IBuildAction {
+        state?: IFileProcessorActionState;
+        fileSubProcessActions?: IBuildAction[];
+    }
+
+    export interface IFileSelectorActionState {
+        rootDirectory: string;
+        selectedFilePaths?: string[];
+    }
+
+
+    export interface IFileSelectorAction extends IBuildAction {
+        fileTest?: (s: string) => boolean;
+        recursive?: boolean;
+        state?: IFileSelectorActionState;
+    }
+
+    export interface IFileBuildAction extends IBuildAction {
+        fileSelector: IFileSelectorAction
+        fileProcessor: IFileProcessorAction;
+    }
+
+    export interface IHTMLFileBuildAction extends IFileBuildAction {
+        domTransformActions: IDOMTransformTreeNodeBuildAction[];
+    }
+
+    interface IDOMElementBuildActionState extends IDOMState {
         element: JQuery;
         treeNode?: IDOMTransformTreeNodeBuildAction;
     }
@@ -28,11 +62,14 @@
         //isDOMElementSelector?: (action: IBuildAction) => boolean;
     }
 
-    interface IDOMElementCSSSelectorState {
+    interface IDOMState {
+        $: JQueryStatic;
+    }
+
+    interface IDOMElementCSSSelectorState extends IDOMState {
         relativeTo?: JQuery;
         elements?: JQuery;
         treeNode?: IDOMTransformTreeNodeBuildAction;
-
     }
 
     export interface IDOMElementCSSSelector extends IDOMElementSelector{
@@ -40,7 +77,7 @@
         state?: IDOMElementCSSSelectorState;
     }
 
-    interface IDOMTransformTreeNodeBuildActionState {
+    interface IDOMTransformTreeNodeBuildActionState extends IDOMState {
         parent?: IDOMTransformTreeNodeBuildAction;
     }
 

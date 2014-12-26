@@ -12,7 +12,7 @@ export module tsp {
             do: sa.removeAction
         },
     };
-    export var buildConfig: Interfaces.tsp.IBuildConfig = {
+    export var htmlFileBuildConfig: Interfaces.tsp.IBuildConfig = {
         buildActions: [removeBuildAction],
     };
 }
