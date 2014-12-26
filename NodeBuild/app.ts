@@ -1,12 +1,12 @@
 ﻿import cheerio = require('cheerio');
-import tspInterfaces = require('./Interfaces');
+import Is = require('./Interfaces');
 //import buildConfig = require('./buildConfig');
 import nodeBuildConfig = require('./NodeJSBuildConfig');
 var pathOfScript = process.argv[1];
 //var pathOfHtmlFile = pathOfScript.replace('app.js', 'HTML1.html');
 //var fs = require('fs');
 var rootDir = pathOfScript.replace('app.js', '');
-var context: tspInterfaces.tsp.IBuildContext = {
+var context: Is.IBuildContext = {
     //rootDirectory: rootDir,
 };
 var htmlFileBuild = nodeBuildConfig.tsp.NodeBuildConfig.htmlFileBuild;
@@ -15,7 +15,7 @@ htmlFileBuild.do(htmlFileBuild, context);
 //fs.readFile(pathOfHtmlFile, 'utf8', (err, data) => {
 //    var $ = <CheerioStatic> cheerio.load(data);
 //    var $any = <any> $;
-//    var context: tspInterfaces.tsp.IBuildContext = {
+//    var context: tspIs.IBuildContext = {
 //        rootDirectory
 //        //$: <JQueryStatic> $any,
 //    };

@@ -1,11 +1,11 @@
-﻿import Interfaces = require('Interfaces');
+﻿import Is = require('Interfaces');
 export module tsp.StandardActions {
     
-    export function removeAction(action: Interfaces.tsp.IDOMElementBuildAction ) {
+    export function removeAction(action: Is.IDOMElementBuildAction ) {
         action.state.element.remove();
     }
 
-    export function selectElements(action: Interfaces.tsp.IDOMElementCSSSelector, context: Interfaces.tsp.IBuildContext) {
+    export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IBuildContext) {
         if (action.debug) debugger;
         var aS = action.state;
         if (aS.relativeTo) {
@@ -15,9 +15,9 @@ export module tsp.StandardActions {
         }
     }
 
-    export function performTreeNodeAction(action: Interfaces.tsp.IDOMTransformTreeNodeBuildAction, context: Interfaces.tsp.IBuildContext) {
+    export function performTreeNodeAction(action: Is.IDOMTransformTreeNodeBuildAction, context: Is.IBuildContext) {
         var elements : JQuery;
-        var p: Interfaces.tsp.IDOMTransformTreeNodeBuildAction;
+        var p: Is.IDOMTransformTreeNodeBuildAction;
         if (action.state) {
             p = action.state.parent;
         }

@@ -1,4 +1,4 @@
-﻿export module tsp {
+﻿//module tsp {
     export interface IBuildContext {
         //$: JQueryStatic;
         //currentElement?: JQuery;
@@ -98,4 +98,5 @@
     }
 
 
-}
+//}
+

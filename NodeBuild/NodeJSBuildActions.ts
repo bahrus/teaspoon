@@ -1,7 +1,7 @@
 ﻿import fs = require('fs');
 import path = require('path');
 import cheerio = require('cheerio');
-import Interfaces = require('Interfaces');
+import Is = require('Interfaces');
 export module tsp.NodeBuildActions {
 
     export function testForHtmlFileName(s: string) {
@@ -15,7 +15,7 @@ export module tsp.NodeBuildActions {
         return rootDir;
     }
 
-    export function selectFiles(action: Interfaces.tsp.IFileSelectorAction, context: Interfaces.tsp.IBuildContext) {
+    export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildContext) {
         if (action.debug) debugger;
         if (!action.state) {
             action.state = {
@@ -28,7 +28,7 @@ export module tsp.NodeBuildActions {
         action.state.selectedFilePaths = files;
     }
 
-    export function processHTMLFile(action: Interfaces.tsp.IHTMLFileProcessorAction, context: Interfaces.tsp.IBuildContext) {
+    export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
         fs.readFile(action.state.filePath, 'utf8', (err, data) => {
             if (action.debug) debugger;
             var $ = <CheerioStatic> cheerio.load(data);
@@ -36,7 +36,7 @@ export module tsp.NodeBuildActions {
             action.state.$ = <JQueryStatic> $any;
             if (action.fileSubProcessActions) {
                 for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
-                    var fspa = <Interfaces.tsp.IDOMTransformTreeNodeBuildAction> action.fileSubProcessActions[i];
+                    var fspa = <Is.IDOMTransformTreeNodeBuildAction> action.fileSubProcessActions[i];
                     fspa.state = {
                         $: action.state.$,
                     };
@@ -55,7 +55,7 @@ export module tsp.NodeBuildActions {
         
     }
 
-    export function fileBuilder(action: Interfaces.tsp.IFileBuildAction, context: Interfaces.tsp.IBuildContext) {
+    export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildContext) {
         if (action.debug) debugger;
         var fs = action.fileSelector;
         fs.do(fs, context);

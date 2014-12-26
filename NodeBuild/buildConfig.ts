@@ -1,8 +1,8 @@
-﻿import Interfaces = require('./Interfaces');
+﻿import Is = require('./Interfaces');
 import StandardActions = require('./StandardActions');
 export module tsp {
     var sa = StandardActions.tsp.StandardActions
-    var removeBuildAction: Interfaces.tsp.IDOMTransformTreeNodeBuildAction = {
+    var removeBuildAction: Is.IDOMTransformTreeNodeBuildAction = {
         do: sa.performTreeNodeAction,
         selector: {
             cssSelector: 'tsp-design-time',
@@ -13,7 +13,7 @@ export module tsp {
             do: sa.removeAction
         },
     };
-    export var htmlFileBuildConfig: Interfaces.tsp.IBuildConfig = {
+    export var htmlFileBuildConfig: Is.IBuildConfig = {
         buildActions: [removeBuildAction],
     };
 }
