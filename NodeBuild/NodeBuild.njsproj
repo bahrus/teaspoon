@@ -44,7 +44,7 @@
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
-    <TypeScriptCompile Include="StandardActions.ts" />
+    <TypeScriptCompile Include="DOMActions.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\" />

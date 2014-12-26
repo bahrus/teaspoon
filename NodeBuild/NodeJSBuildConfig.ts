@@ -1,5 +1,4 @@
 ﻿import Is = require('./Interfaces');
-//import StandardActions = require('./StandardActions'); 
 import fsa = require('./FileSystemActions');
 import buildConfig = require('./buildConfig');
 export module tsp.NodeBuildConfig {

@@ -1,7 +1,7 @@
 ﻿import Is = require('./Interfaces');
-import StandardActions = require('./StandardActions');
+import DOMActions = require('./DOMActions');
 export module tsp {
-    var sa = StandardActions.tsp.StandardActions
+    var sa = DOMActions;
     var removeBuildAction: Is.IDOMTransformTreeNodeBuildAction = {
         do: sa.performTreeNodeAction,
         selector: {

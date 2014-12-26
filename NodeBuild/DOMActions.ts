@@ -1,5 +1,5 @@
 ﻿import Is = require('Interfaces');
-export module tsp.StandardActions {
+//export module tsp.StandardActions {
     
     export function removeAction(action: Is.IDOMElementBuildAction ) {
         action.state.element.remove();
@@ -59,4 +59,4 @@ export module tsp.StandardActions {
     }
 
     
-}
+//}
