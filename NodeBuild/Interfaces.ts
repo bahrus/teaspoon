@@ -2,7 +2,7 @@
     export interface IBuildContext {
         //$: JQueryStatic;
         //currentElement?: JQuery;
-        rootDirectory?: string;
+        //rootDirectory?: string;
         HTMLOutputs?: { [key: string]: JQueryStatic };
         JSOutputs?: { [key: string]: string };
         
@@ -40,8 +40,8 @@
         selectedFilePaths?: string[];
     }
 
-
     export interface IFileSelectorAction extends IBuildAction {
+        rootDirectoryRetriever?: () => string;
         fileTest?: (s: string) => boolean;
         recursive?: boolean;
         state?: IFileSelectorActionState;

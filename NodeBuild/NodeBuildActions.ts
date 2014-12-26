@@ -9,8 +9,19 @@ export module tsp.NodeBuildActions {
         if (iPosOfHtml == -1) return false;
         return iPosOfHtml == s.length - 5;
     }
+    export function rootDirectoryRetriever() {
+        var pathOfScript = process.argv[1];
+        var rootDir = pathOfScript.replace('app.js', '');
+        return rootDir;
+    }
+
     export function selectFiles(action: Interfaces.tsp.IFileSelectorAction, context: Interfaces.tsp.IBuildContext) {
         if (action.debug) debugger;
+        if (!action.state) {
+            action.state = {
+                rootDirectory: action.rootDirectoryRetriever(),
+            };
+        }
         var files = fs.readdirSync(action.state.rootDirectory);
         if (action.fileTest) files = files.filter(action.fileTest);
         files = files.map(s => action.state.rootDirectory + s);
@@ -47,11 +58,6 @@ export module tsp.NodeBuildActions {
     export function fileBuilder(action: Interfaces.tsp.IFileBuildAction, context: Interfaces.tsp.IBuildContext) {
         if (action.debug) debugger;
         var fs = action.fileSelector;
-        if (!fs.state) {
-            fs.state = {
-                rootDirectory: context.rootDirectory,
-            };
-        }
         fs.do(fs, context);
         var fp = action.fileProcessor;
         

@@ -6,6 +6,7 @@ export module tsp.NodeBuildConfig {
     var htmlFileSelector: Interfaces.tsp.IFileSelectorAction = {
         do: NodeBuildActions.tsp.NodeBuildActions.selectFiles,
         fileTest: NodeBuildActions.tsp.NodeBuildActions.testForHtmlFileName,
+        rootDirectoryRetriever: NodeBuildActions.tsp.NodeBuildActions.rootDirectoryRetriever,
     };
     var htmlFileProcessor: Interfaces.tsp.IFileProcessorAction = {
         do: NodeBuildActions.tsp.NodeBuildActions.processHTMLFile,
@@ -14,6 +15,7 @@ export module tsp.NodeBuildConfig {
     };
     export var htmlFileBuild: Interfaces.tsp.IFileBuildAction = {
         do: NodeBuildActions.tsp.NodeBuildActions.fileBuilder,
+
         fileSelector: htmlFileSelector,
         fileProcessor: htmlFileProcessor,
     }

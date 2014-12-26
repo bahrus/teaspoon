@@ -7,7 +7,7 @@ var pathOfScript = process.argv[1];
 //var fs = require('fs');
 var rootDir = pathOfScript.replace('app.js', '');
 var context: tspInterfaces.tsp.IBuildContext = {
-    rootDirectory: rootDir,
+    //rootDirectory: rootDir,
 };
 var htmlFileBuild = nodeBuildConfig.tsp.NodeBuildConfig.htmlFileBuild;
 htmlFileBuild.do(htmlFileBuild, context);
