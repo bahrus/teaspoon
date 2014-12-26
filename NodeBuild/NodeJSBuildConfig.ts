@@ -1,20 +1,20 @@
 ﻿import Is = require('./Interfaces');
 //import StandardActions = require('./StandardActions'); 
-import NodeBuildActions = require('./NodeJSBuildActions');
+import fsa = require('./FileSystemActions');
 import buildConfig = require('./buildConfig');
 export module tsp.NodeBuildConfig {
     var htmlFileSelector: Is.IFileSelectorAction = {
-        do: NodeBuildActions.tsp.NodeBuildActions.selectFiles,
-        fileTest: NodeBuildActions.tsp.NodeBuildActions.testForHtmlFileName,
-        rootDirectoryRetriever: NodeBuildActions.tsp.NodeBuildActions.rootDirectoryRetriever,
+        do: fsa.selectFiles,
+        fileTest: fsa.testForHtmlFileName,
+        rootDirectoryRetriever: fsa.rootDirectoryRetriever,
     };
     var htmlFileProcessor: Is.IFileProcessorAction = {
-        do: NodeBuildActions.tsp.NodeBuildActions.processHTMLFile,
+        do: fsa.processHTMLFile,
         fileSubProcessActions: buildConfig.tsp.htmlFileBuildConfig.buildActions,
         debug: true,
     };
     export var htmlFileBuild: Is.IFileBuildAction = {
-        do: NodeBuildActions.tsp.NodeBuildActions.fileBuilder,
+        do: fsa.fileBuilder,
 
         fileSelector: htmlFileSelector,
         fileProcessor: htmlFileProcessor,

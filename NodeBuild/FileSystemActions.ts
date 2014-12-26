@@ -2,7 +2,7 @@
 import path = require('path');
 import cheerio = require('cheerio');
 import Is = require('Interfaces');
-export module tsp.NodeBuildActions {
+//export module tsp.NodeBuildActions {
 
     export function testForHtmlFileName(s: string) {
         var iPosOfHtml = s.lastIndexOf('.html');
@@ -73,4 +73,4 @@ export module tsp.NodeBuildActions {
         }
     }
     
-}
+//}
