@@ -1,7 +1,7 @@
 ﻿import cheerio = require('cheerio');
 import tspInterfaces = require('./Interfaces');
 //import buildConfig = require('./buildConfig');
-import nodeBuildConfig = require('./NodeBuildConfig');
+import nodeBuildConfig = require('./NodeJSBuildConfig');
 var pathOfScript = process.argv[1];
 //var pathOfHtmlFile = pathOfScript.replace('app.js', 'HTML1.html');
 //var fs = require('fs');

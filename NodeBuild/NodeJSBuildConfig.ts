@@ -1,6 +1,6 @@
 ﻿import Interfaces = require('./Interfaces');
 //import StandardActions = require('./StandardActions'); 
-import NodeBuildActions = require('./NodeBuildActions');
+import NodeBuildActions = require('./NodeJSBuildActions');
 import buildConfig = require('./buildConfig');
 export module tsp.NodeBuildConfig {
     var htmlFileSelector: Interfaces.tsp.IFileSelectorAction = {
