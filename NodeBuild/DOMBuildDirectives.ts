@@ -1,19 +1,25 @@
 ﻿import Is = require('./Interfaces');
 import DOMActions = require('./DOMActions');
-export module tsp {
-    var sa = DOMActions;
-    var removeBuildAction: Is.IDOMTransformAction = {
-        do: sa.performTreeNodeAction,
-        selector: {
-            cssSelector: 'tsp-design-time',
-            do: sa.selectElements,
-            //debug: true,
-        },
-        elementAction: {
-            do: sa.removeAction
-        },
-    };
-    export var htmlFileBuildConfig: Is.IBuildConfig = {
-        buildActions: [removeBuildAction],
-    };
-}
+var dom = DOMActions;
+var removeBuildDirective: Is.IDOMTransformAction = {
+    do: dom.DOMTransform,
+    selector: {
+        cssSelector: 'tsp-design-time',
+        do: dom.selectElements,
+    },
+    elementAction: {
+        do: dom.remove
+    },
+};
+var makeJSClobDirective: Is.IDOMTransformAction = {
+    do: dom.DOMTransform,
+    selector: {
+        cssSelector: 'head>script[src]',
+        do: dom.selectElements,
+        //debug: true,
+    },
+    elementAction: {
+        do: dom.addToJSClob,
+    },
+};
+export var All: Is.IBuildAction[] = [removeBuildDirective, makeJSClobDirective];

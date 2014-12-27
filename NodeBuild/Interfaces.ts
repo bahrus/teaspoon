@@ -14,9 +14,9 @@
         log?: boolean;
     }
 
-    export interface IBuildConfig{
-        buildActions: IBuildAction[];
-    }
+    //export interface IBuildConfig{
+    //    buildActions: IBuildAction[];
+    //}
 
     interface IFileProcessorActionState {
         filePath: string;
@@ -58,7 +58,7 @@
 
     interface IDOMElementBuildActionState extends IDOMState {
         element: JQuery;
-        treeNode?: IDOMTransformAction;
+        DOMTransform?: IDOMTransformAction;
     }
 
     export interface IDOMElementBuildAction extends IBuildAction{
@@ -70,8 +70,11 @@
         //isDOMElementSelector?: (action: IBuildAction) => boolean;
     }
 
-    interface IDOMState {
-        $: JQueryStatic;
+    interface IDOMState extends IHTMLFileProcessorActionState{
+    }
+
+    export interface IUglify {
+        uglify(pathOfReferencingFile: string, relativeURL: string): string;
     }
 
     interface IDOMElementCSSSelectorState extends IDOMState {
