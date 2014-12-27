@@ -1,6 +1,7 @@
 ﻿import fs = require('fs');
 import path = require('path');
 import Is = require('./Interfaces');
+import cheerio = require('cheerio');
 
 export class NodeJSWebFileManager implements Is.IWebFileManager {
     readTextFileSync(filePath: string) {
@@ -12,5 +13,10 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
     }
     listDirectorySync(dirPath: string) {
         return fs.readdirSync(dirPath);
+    }
+    loadHTML(html: string) {
+        var $ = cheerio.load(html);
+        var $any = <any> $;
+        return <JQueryStatic> $any;
     }
 }

@@ -1,6 +1,6 @@
 ﻿//import fs = require('fs');
-import path = require('path');
-import cheerio = require('cheerio');
+//import path = require('path');
+//import cheerio = require('cheerio');
 import Is = require('./Interfaces');
 import u = require('./tspUtil');
 
@@ -30,9 +30,11 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
     var data = context.WebFileManager.readTextFileSync(action.state.filePath);
 
     if (action.debug) debugger;
-    var $ = <CheerioStatic> cheerio.load(<string> data);
-    var $any = <any> $;
-    action.state.$ = <JQueryStatic> $any;
+    //var $ = <CheerioStatic> cheerio.load(<string> data);
+    //var $any = <any> $;
+    //var $ = context.WebFileManager.loadH
+    var $ = context.WebFileManager.loadHTML(data);
+    action.state.$ = $;
     if (action.fileSubProcessActions) {
         for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
             var fspa = <Is.IDOMTransformAction> action.fileSubProcessActions[i];

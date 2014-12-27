@@ -9,7 +9,6 @@ export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IBuil
     var src = action.state.element.attr('src');
     var referringDir = context.WebFileManager.resolve(state.filePath, '..', src);
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
-    debugger;
 }
 
 export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IBuildContext) {

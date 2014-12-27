@@ -103,7 +103,9 @@
     export interface IWebFileManager {
         resolve(...pathSegments: any[]) : string;
         readTextFileSync(filePath: string) : string;
-        listDirectorySync(dirPath: string) : string[];
+        listDirectorySync(dirPath: string): string[];
+        loadHTML?: (html: string) => JQueryStatic
+
     }
     
 
