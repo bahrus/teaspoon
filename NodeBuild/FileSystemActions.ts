@@ -1,4 +1,4 @@
-﻿import fs = require('fs');
+﻿//import fs = require('fs');
 import path = require('path');
 import cheerio = require('cheerio');
 import Is = require('./Interfaces');
@@ -20,17 +20,17 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildCo
             rootDirectory: action.rootDirectoryRetriever(),
         };
     }
-    var files = fs.readdirSync(action.state.rootDirectory);
+    var files = context.WebFileManager.listDirectorySync(action.state.rootDirectory);
     if (action.fileTest) files = files.filter(action.fileTest);
     files = files.map(s => action.state.rootDirectory + s);
     action.state.selectedFilePaths = files;
 }
 
 export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
-    var data = fs.readFileSync(action.state.filePath, { encoding: 'utf8' });
+    var data = context.WebFileManager.readTextFileSync(action.state.filePath);
 
     if (action.debug) debugger;
-    var $ = <CheerioStatic> cheerio.load(data.toString());
+    var $ = <CheerioStatic> cheerio.load(<string> data);
     var $any = <any> $;
     action.state.$ = <JQueryStatic> $any;
     if (action.fileSubProcessActions) {

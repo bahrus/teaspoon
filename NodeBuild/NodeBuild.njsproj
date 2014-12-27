@@ -41,6 +41,7 @@
     <TypeScriptCompile Include="Interfaces.ts" />
     <TypeScriptCompile Include="FileSystemActions.ts" />
     <TypeScriptCompile Include="MainConfig.ts" />
+    <TypeScriptCompile Include="NodeJSWebFileManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node-minify\node-minify.d.ts" />

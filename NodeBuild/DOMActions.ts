@@ -6,6 +6,9 @@ export function remove(action: Is.IDOMElementBuildAction ) {
 
 export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IBuildContext) {
     var state = action.state;
+    var src = action.state.element.attr('src');
+    var referringDir = context.WebFileManager.resolve(state.filePath, '..', src);
+    //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
     debugger;
 }
 

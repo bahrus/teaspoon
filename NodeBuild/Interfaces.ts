@@ -5,7 +5,7 @@
         //rootDirectory?: string;
         HTMLOutputs?: { [key: string]: JQueryStatic };
         JSOutputs?: { [key: string]: string };
-        
+        WebFileManager: IWebFileManager;
     }
 
     export interface IBuildAction {
@@ -100,6 +100,12 @@
         state?: IDOMTransformActionState;
     }
 
+    export interface IWebFileManager {
+        resolve(...pathSegments: any[]) : string;
+        readTextFileSync(filePath: string) : string;
+        listDirectorySync(dirPath: string) : string[];
+    }
+    
 
 //}
 
