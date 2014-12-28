@@ -68,24 +68,49 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IBuild
         } else {
             console.log('Uglified ' + filePath);
         }
+        if (action.callback) action.callback(err);
     });
+    
 }
 
 export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildContext) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);
+    var selectedFilePaths = fs.state.selectedFilePaths;
+    var len = selectedFilePaths.length;
+    if (len === 0) return;
     var fp = action.fileProcessor;
-        
-    for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
-        var filePath = fs.state.selectedFilePaths[i];
-        if (!fp.state) {
-            fp.state = {
-                filePath: filePath,
-            };
+    
+    if (action.asynchronous) {
+        var idx = 0;
+        fp.callback = (err) => {
+            if (idx < len) {
+                var filePath = selectedFilePaths[idx];
+                idx++;
+                if (!fp.state) {
+                    fp.state = {
+                        filePath: filePath,
+                    }
+                } else {
+                    fp.state.filePath = filePath;
+                }
+                fp.do(fp, context);
+            }
         }
-        fp.state.filePath = filePath;
-        fp.do(fp, context);
+        fp.callback(null);
+    } else {
+        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
+            var filePath = fs.state.selectedFilePaths[i];
+            if (!fp.state) {
+                fp.state = {
+                    filePath: filePath,
+                };
+            } else {
+                fp.state.filePath = filePath;
+            }
+            fp.do(fp, context);
+        }
     }
 }
     

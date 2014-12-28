@@ -25,6 +25,8 @@
     export interface IFileProcessorAction extends IBuildAction {
         state?: IFileProcessorActionState;
         fileSubProcessActions?: IBuildAction[];
+        callback?: (err) => void;
+
     }
 
     interface IHTMLFileProcessorActionState extends IFileProcessorActionState {
@@ -50,6 +52,7 @@
     export interface IFileBuildAction extends IBuildAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;
+        asynchronous?: boolean;
     }
 
     export interface IHTMLFileBuildAction extends IFileBuildAction {

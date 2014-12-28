@@ -29,4 +29,5 @@ export var jsMinifyFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
+    asynchronous: true,
 }
