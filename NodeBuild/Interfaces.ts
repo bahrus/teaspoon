@@ -41,7 +41,7 @@
     }
 
     export interface IFileSelectorAction extends IBuildAction {
-        rootDirectoryRetriever?: () => string;
+        rootDirectoryRetriever?: (context: IBuildContext) => string;
         fileTest?: (s: string) => boolean;
         recursive?: boolean;
         state?: IFileSelectorActionState;
@@ -102,10 +102,12 @@
 
     export interface IWebFileManager {
         resolve(...pathSegments: any[]): string;
+        getSeparator(): string;
         readTextFileSync(filePath: string): string;
         listDirectorySync(dirPath: string): string[];
         loadHTML: (html: string) => JQueryStatic
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
+        getExecutingScriptFilePath: () => void;
     }
     
 

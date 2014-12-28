@@ -17,3 +17,16 @@ export var htmlFileBuild: Is.IFileBuildAction = {
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
 }
+var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
+    do: fsa.selectFiles,
+    fileTest: fsa.testForNonMinifiedJSFileName,
+    rootDirectoryRetriever: fsa.rootDirectoryRetriever,
+};
+var jsFileMinifier: Is.IFileProcessorAction = {
+    do: fsa.minifyJSFile,
+}
+export var jsMinifyFileBuild: Is.IFileBuildAction = {
+    do: fsa.fileBuilder,
+    fileSelector: jsNonMinifiedFileSelector,
+    fileProcessor: jsFileMinifier,
+}

@@ -30,4 +30,11 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
             callback: callback,
         });
     }
+    getExecutingScriptFilePath() {
+        var pathOfScript = process.argv[1];
+        return pathOfScript;
+    }
+    getSeparator() {
+        return path.sep;
+    }
 }

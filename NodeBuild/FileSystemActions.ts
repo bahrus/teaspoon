@@ -4,17 +4,23 @@ import u = require('./tspUtil');
 export function testForHtmlFileName(s: string) {
     return u.endsWith(s, '.html');
 }
-export function rootDirectoryRetriever() {
-    var pathOfScript = process.argv[1];
-    var rootDir = pathOfScript.replace('app.js', '');
-    return rootDir;
+
+export function testForNonMinifiedJSFileName(s: string) {
+    return u.endsWith(s, '.js') && !u.endsWith(s, '.min.js');
+}
+
+export function rootDirectoryRetriever(context: Is.IBuildContext) {
+    var wfm = context.WebFileManager;
+    var executingFilePath = wfm.getExecutingScriptFilePath();
+    var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
+    return returnStr;
 }
 
 export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildContext) {
     if (action.debug) debugger;
     if (!action.state) {
         action.state = {
-            rootDirectory: action.rootDirectoryRetriever(),
+            rootDirectory: action.rootDirectoryRetriever(context),
         };
     }
     var files = context.WebFileManager.listDirectorySync(action.state.rootDirectory);
@@ -51,6 +57,18 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
         debugger;
     }
         
+}
+
+export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IBuildContext) {
+    console.log('Uglifying ' + action.state.filePath);
+    var filePath = action.state.filePath;
+    context.WebFileManager.minify(filePath, (err, min) => {
+        if (err) {
+            console.log('Error uglifying ' + filePath);
+        } else {
+            console.log('Uglified ' + filePath);
+        }
+    });
 }
 
 export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildContext) {
