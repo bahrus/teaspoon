@@ -5,11 +5,11 @@
     callback: (err: Error, min: string) => void;
     buffer?: number;
     options?: string[];
-    tempPath: string;
+    tempPath?: string;
 }
 
 
-declare module "compressor" {
+declare module "node-minify" {
     export class minify {
         constructor(options: Options);
     }

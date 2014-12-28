@@ -1,7 +1,4 @@
-﻿//import fs = require('fs');
-//import path = require('path');
-//import cheerio = require('cheerio');
-import Is = require('./Interfaces');
+﻿import Is = require('./Interfaces');
 import u = require('./tspUtil');
 
 export function testForHtmlFileName(s: string) {

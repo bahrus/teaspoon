@@ -2,6 +2,8 @@
 import path = require('path');
 import Is = require('./Interfaces');
 import cheerio = require('cheerio');
+import tspUtils = require('./tspUtil');
+import compressor = require('node-minify');
 
 export class NodeJSWebFileManager implements Is.IWebFileManager {
     readTextFileSync(filePath: string) {
@@ -18,5 +20,14 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
         var $ = cheerio.load(html);
         var $any = <any> $;
         return <JQueryStatic> $any;
+    }
+    minify(filePath: string, callback: (err: Error, min: string) => void) {
+        var destPath = tspUtils.replaceEndWith(filePath, '.js', '.min.js');
+        new compressor.minify({
+            type: 'uglifyjs',
+            fileIn: filePath,
+            fileOut: destPath,
+            callback: callback,
+        });
     }
 }

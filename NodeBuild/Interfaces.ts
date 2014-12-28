@@ -101,11 +101,11 @@
     }
 
     export interface IWebFileManager {
-        resolve(...pathSegments: any[]) : string;
-        readTextFileSync(filePath: string) : string;
+        resolve(...pathSegments: any[]): string;
+        readTextFileSync(filePath: string): string;
         listDirectorySync(dirPath: string): string[];
-        loadHTML?: (html: string) => JQueryStatic
-
+        loadHTML: (html: string) => JQueryStatic
+        minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
     }
     
 
