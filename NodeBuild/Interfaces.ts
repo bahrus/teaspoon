@@ -10,26 +10,28 @@
 
     export interface IBuildAction {
         do: (action: IBuildAction, context: IBuildContext) => void;
+        sync?: boolean;
         debug?: boolean;
         log?: boolean;
+        state?: IActionState;
     }
 
     //export interface IBuildConfig{
     //    buildActions: IBuildAction[];
     //}
 
-    interface IFileProcessorActionState {
+    interface IFileProcessorActionState extends IActionState {
         filePath: string;
     }
 
     export interface IFileProcessorAction extends IBuildAction {
         state?: IFileProcessorActionState;
         fileSubProcessActions?: IBuildAction[];
-        callback?: (err) => void;
+        
 
     }
 
-    interface IHTMLFileProcessorActionState extends IFileProcessorActionState {
+    interface IHTMLFileProcessorActionState extends IFileProcessorActionState, IActionState {
         $:  JQueryStatic
     }
 
@@ -52,7 +54,7 @@
     export interface IFileBuildAction extends IBuildAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;
-        sync?: boolean;
+        
     }
 
     export interface IHTMLFileBuildAction extends IFileBuildAction {
@@ -73,6 +75,10 @@
         //isDOMElementSelector?: (action: IBuildAction) => boolean;
     }
 
+    interface IActionState {
+        callback?: (err) => void;
+    }
+
     interface IDOMState extends IHTMLFileProcessorActionState{
     }
 
@@ -80,7 +86,7 @@
         uglify(pathOfReferencingFile: string, relativeURL: string): string;
     }
 
-    interface IDOMElementCSSSelectorState extends IDOMState {
+    export interface IDOMElementCSSSelectorState extends IDOMState {
         relativeTo?: JQuery;
         elements?: JQuery;
         treeNode?: IDOMTransformAction;
@@ -99,7 +105,7 @@
         selector: IDOMElementCSSSelector;
         elementAction?: IDOMElementBuildAction;
         //parent?: IDOMTransformTree
-        children?: IDOMTransformAction[];
+        //children?: IDOMTransformAction[];
         state?: IDOMTransformActionState;
     }
 

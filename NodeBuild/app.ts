@@ -33,7 +33,8 @@ for (var i = 0, n = process.argv.length; i < n; i++) {
         }
     }
 }
-if (!foundJob) {
+//if (!foundJob)
+{
     showUsage();
     var stdin = process['openStdin']();
     process.stdin['setRawMode']();
@@ -42,9 +43,7 @@ if (!foundJob) {
         process.stdout.write('Get Chunk: ' + chunk + '\n');
         if (key && key.ctrl && key.name == 'c') process.exit();
     });
-} else {
-    
-}
+} 
 
 
 

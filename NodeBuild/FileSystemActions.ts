@@ -55,11 +55,11 @@ function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: I
 
 export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
     var wfm = context.WebFileManager;
-    if (action.callback) {
+    console.log('processing ' + action.state.filePath);
+    if (action.state.callback) {
         wfm.readTextFileAsync(action.state.filePath, (err, data) => {
-            debugger;
             processHTMLFileSubRules(action, context, data);
-            action.callback(err);
+            action.state.callback(err);
         });
     } else {
         var data = wfm.readTextFileSync(action.state.filePath);
@@ -78,7 +78,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IBuild
         } else {
             console.log('Uglified ' + filePath);
         }
-        if (action.callback) action.callback(err);
+        if (action.state.callback) action.state.callback(err);
     });
     
 }
@@ -107,7 +107,7 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildConte
         
     } else {
         var idx = 0;
-        fp.callback = (err) => {
+        fp.state.callback = (err) => {
             if (idx < len) {
                 var filePath = selectedFilePaths[idx];
                 idx++;
@@ -121,7 +121,7 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildConte
                 fp.do(fp, context);
             }
         }
-        fp.callback(null);
+        fp.state.callback(null);
     }
 }
     
