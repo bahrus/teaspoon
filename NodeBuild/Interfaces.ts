@@ -52,7 +52,7 @@
     export interface IFileBuildAction extends IBuildAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;
-        asynchronous?: boolean;
+        sync?: boolean;
     }
 
     export interface IHTMLFileBuildAction extends IFileBuildAction {
@@ -107,6 +107,7 @@
         resolve(...pathSegments: any[]): string;
         getSeparator(): string;
         readTextFileSync(filePath: string): string;
+        readTextFileAsync(filePath: string, callback:  (err: Error, data: string) => void);
         listDirectorySync(dirPath: string): string[];
         loadHTML: (html: string) => JQueryStatic
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;

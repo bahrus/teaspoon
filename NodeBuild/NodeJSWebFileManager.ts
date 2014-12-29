@@ -10,6 +10,9 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
         var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
         return <string> data;
     }
+    readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void) {
+        fs.readFile(filePath, { encoding: 'utf8' }, callback);
+    }
     resolve(...pathSegments: any[]) {
         return path.resolve.apply(this, pathSegments);
     }

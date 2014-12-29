@@ -29,13 +29,8 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildCo
     action.state.selectedFilePaths = files;
 }
 
-export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
-    var data = context.WebFileManager.readTextFileSync(action.state.filePath);
-
+function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext, data: string) {
     if (action.debug) debugger;
-    //var $ = <CheerioStatic> cheerio.load(<string> data);
-    //var $any = <any> $;
-    //var $ = context.WebFileManager.loadH
     var $ = context.WebFileManager.loadHTML(data);
     action.state.$ = $;
     if (action.fileSubProcessActions) {
@@ -55,6 +50,21 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
         var $cheerio = <CheerioStatic> $any;
         var sOutput = $cheerio.html();
         debugger;
+    }
+}
+
+export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
+    var wfm = context.WebFileManager;
+    if (action.callback) {
+        wfm.readTextFileAsync(action.state.filePath, (err, data) => {
+            debugger;
+            processHTMLFileSubRules(action, context, data);
+            action.callback(err);
+        });
+    } else {
+        var data = wfm.readTextFileSync(action.state.filePath);
+        processHTMLFileSubRules(action, context, data);
+        
     }
         
 }
@@ -82,7 +92,20 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildConte
     if (len === 0) return;
     var fp = action.fileProcessor;
     
-    if (action.asynchronous) {
+    if (action.sync) {
+        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
+            var filePath = fs.state.selectedFilePaths[i];
+            if (!fp.state) {
+                fp.state = {
+                    filePath: filePath,
+                };
+            } else {
+                fp.state.filePath = filePath;
+            }
+            fp.do(fp, context);
+        }
+        
+    } else {
         var idx = 0;
         fp.callback = (err) => {
             if (idx < len) {
@@ -99,18 +122,6 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildConte
             }
         }
         fp.callback(null);
-    } else {
-        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
-            var filePath = fs.state.selectedFilePaths[i];
-            if (!fp.state) {
-                fp.state = {
-                    filePath: filePath,
-                };
-            } else {
-                fp.state.filePath = filePath;
-            }
-            fp.do(fp, context);
-        }
     }
 }
     

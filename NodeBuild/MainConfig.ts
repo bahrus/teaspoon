@@ -16,6 +16,7 @@ export var htmlFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
+    sync: false
 }
 var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
     do: fsa.selectFiles,
@@ -29,5 +30,5 @@ export var jsMinifyFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
-    asynchronous: true,
+    sync: false,
 }
