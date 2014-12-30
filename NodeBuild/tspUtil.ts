@@ -1,4 +1,7 @@
-﻿//from http://stackoverflow.com/questions/280634/endswith-in-javascript
+﻿//#region[mode='cs'] module tsp.util{
+import Is = require('./Interfaces');
+
+//from http://stackoverflow.com/questions/280634/endswith-in-javascript
 export function endsWith(str: string, suffix: string) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
@@ -17,4 +20,9 @@ export function replaceEndWith(str: string, suffix: string, replaceText: string)
     if (iPosOfEnd === -1) return str;
     return str.substr(0, iPosOfEnd) + replaceText;
 }
+
+export function endAction(action: Is.IAction) {
+    if (action.state && action.state.callback) action.state.callback(null);
+}
+//#endregion[mode='cs'] }
 

@@ -1,20 +1,18 @@
-﻿//module tsp {
-    export interface IBuildContext {
-        //$: JQueryStatic;
-        //currentElement?: JQuery;
-        //rootDirectory?: string;
+﻿//#region[mode='cs'] module tsp.Is {
+    export interface IWebContext {
         HTMLOutputs?: { [key: string]: JQueryStatic };
         JSOutputs?: { [key: string]: string };
         WebFileManager: IWebFileManager;
     }
 
-    export interface IBuildAction {
-        do: (action: IBuildAction, context: IBuildContext) => void;
+    export interface IAction {
+        do: (action: IAction, context: IWebContext) => void;
         sync?: boolean;
         debug?: boolean;
         log?: boolean;
         state?: IActionState;
     }
+
 
     //export interface IBuildConfig{
     //    buildActions: IBuildAction[];
@@ -24,9 +22,9 @@
         filePath: string;
     }
 
-    export interface IFileProcessorAction extends IBuildAction {
+    export interface IFileProcessorAction extends IAction {
         state?: IFileProcessorActionState;
-        fileSubProcessActions?: IBuildAction[];
+        fileSubProcessActions?: IAction[];
         
 
     }
@@ -44,14 +42,14 @@
         selectedFilePaths?: string[];
     }
 
-    export interface IFileSelectorAction extends IBuildAction {
-        rootDirectoryRetriever?: (context: IBuildContext) => string;
+    export interface IFileSelectorAction extends IAction {
+        rootDirectoryRetriever?: (context: IWebContext) => string;
         fileTest?: (s: string) => boolean;
         recursive?: boolean;
         state?: IFileSelectorActionState;
     }
 
-    export interface IFileBuildAction extends IBuildAction {
+    export interface IFileBuildAction extends IAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;
         
@@ -66,12 +64,12 @@
         DOMTransform?: IDOMTransformAction;
     }
 
-    export interface IDOMElementBuildAction extends IBuildAction{
+    export interface IDOMElementBuildAction extends IAction{
         state?: IDOMElementBuildActionState;
         //isDOMElementAction?: (action: IBuildAction) => boolean; 
     }
     
-    export interface IDOMElementSelector extends IBuildAction{
+    export interface IDOMElementSelector extends IAction{
         //isDOMElementSelector?: (action: IBuildAction) => boolean;
     }
 
@@ -101,7 +99,7 @@
         parent?: IDOMTransformAction;
     }
 
-    export interface IDOMTransformAction extends IBuildAction{
+    export interface IDOMTransformAction extends IAction{
         selector: IDOMElementCSSSelector;
         elementAction?: IDOMElementBuildAction;
         //parent?: IDOMTransformTree
@@ -121,5 +119,5 @@
     }
     
 
-//}
+//#endregion[mode='cs'] }
 

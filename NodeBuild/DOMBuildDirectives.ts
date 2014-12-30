@@ -10,6 +10,7 @@ var removeBuildDirective: Is.IDOMTransformAction = {
     elementAction: {
         do: dom.remove
     },
+    sync: true,
 };
 var makeJSClobDirective: Is.IDOMTransformAction = {
     do: dom.DOMTransform,
@@ -21,5 +22,6 @@ var makeJSClobDirective: Is.IDOMTransformAction = {
     elementAction: {
         do: dom.addToJSClob,
     },
+    sync: true,
 };
-export var All: Is.IBuildAction[] = [removeBuildDirective, makeJSClobDirective];
+export var All: Is.IAction[] = [removeBuildDirective, makeJSClobDirective];

@@ -1,19 +1,30 @@
-﻿import Is = require('Interfaces');
+﻿/*//#region[mode='cs'] 
+module tsp.DOMActions{
+*///#endregion[mode='cs']
+//#region[mode='ss'] 
+import tsp_Is = require('./Interfaces');
+import u = require('./tspUtil');
+//#endregion[mode='ss'] 
+/*//#region[mode='cs']
+var tsp_Is = tsp.Is;
+var u = tsp.util
+*///#endregion
     
-export function remove(action: Is.IDOMElementBuildAction ) {
+export function remove(action: tsp_Is.IDOMElementBuildAction ) {
     action.state.element.remove();
-    if (action.state.callback) action.state.callback(null);
+    u.endAction(action);
 }
 
-export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IBuildContext) {
+export function addToJSClob(action: tsp_Is.IDOMElementBuildAction, context: tsp_Is.IWebContext) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.WebFileManager.resolve(state.filePath, '..', src);
-    if (action.state.callback) action.state.callback(null);
+    u.endAction(action);
+    debugger;
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
 }
 
-export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IBuildContext) {
+export function selectElements(action: tsp_Is.IDOMElementCSSSelector, context: tsp_Is.IWebContext) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -21,19 +32,16 @@ export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IB
     } else {
         aS.elements = aS.$(action.cssSelector);
     }
-    if (action.state.callback) action.state.callback(null);
+    u.endAction(action);
 }
 
 //function doDomTransformOnElement(i: number, len: number, eA: Is.IDOMElementBuildAction, aSelSt: Is.IDOMElementCSSSelectorState) {
 //    if (i >= len) return;
 
 //}
-function endAction(action: Is.IBuildAction) {
-    if (action.state && action.state.callback) action.state.callback(null);
-}
-export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IBuildContext) {
-    var elements : JQuery;
-    var p: Is.IDOMTransformAction;
+export function DOMTransform(action: tsp_Is.IDOMTransformAction, context: tsp_Is.IWebContext) {
+    var elements: JQuery;
+    var p: tsp_Is.IDOMTransformAction;
     if (action.state) {
         p = action.state.parent;
     }
@@ -43,7 +51,7 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IBuildC
             $: action.state.$,
             filePath: action.state.filePath,
         };
-    } 
+    }
     var aSelSt = aSel.state;
     aSelSt.treeNode = action;
     if (p && p.elementAction) {
@@ -65,7 +73,7 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IBuildC
                 eA.state.element = $elem;
                 eA.do(eA, context);
             }
-            endAction(action);
+            u.endAction(action);
         } else {
             var i = 0;
             var n = aSelSt.elements.length;
@@ -76,16 +84,19 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IBuildC
                     eA.state.element = $elem;
                     eA.do(eA, context);
                 } else {
-                    endAction(action);
+                    u.endAction(action);
                 }
             };
         }
         //#endregion
     } else {
-        endAction(action);
+        u.endAction(action);
     }
     
     
 }
+/*//#region[mode='cs']
+}
+*///#endregion[mode='cs']
 
     

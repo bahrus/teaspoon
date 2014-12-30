@@ -9,14 +9,14 @@ export function testForNonMinifiedJSFileName(s: string) {
     return u.endsWith(s, '.js') && !u.endsWith(s, '.min.js');
 }
 
-export function rootDirectoryRetriever(context: Is.IBuildContext) {
+export function rootDirectoryRetriever(context: Is.IWebContext) {
     var wfm = context.WebFileManager;
     var executingFilePath = wfm.getExecutingScriptFilePath();
     var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
     return returnStr;
 }
 
-export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildContext) {
+export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebContext) {
     if (action.debug) debugger;
     if (!action.state) {
         action.state = {
@@ -29,7 +29,7 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IBuildCo
     action.state.selectedFilePaths = files;
 }
 
-function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext, data: string) {
+function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
     if (action.debug) debugger;
     var $ = context.WebFileManager.loadHTML(data);
     action.state.$ = $;
@@ -53,7 +53,7 @@ function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: I
     }
 }
 
-export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IBuildContext) {
+export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext) {
     var wfm = context.WebFileManager;
     console.log('processing ' + action.state.filePath);
     if (action.state.callback) {
@@ -69,7 +69,7 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
         
 }
 
-export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IBuildContext) {
+export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebContext) {
     console.log('Uglifying ' + action.state.filePath);
     var filePath = action.state.filePath;
     context.WebFileManager.minify(filePath, (err, min) => {
@@ -78,12 +78,15 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IBuild
         } else {
             console.log('Uglified ' + filePath);
         }
-        if (action.state.callback) action.state.callback(err);
+        if (!action.state.callback) {
+            throw "Unable to minify JS files synchronously";
+        }
+        u.endAction(action);
     });
     
 }
 
-export function fileBuilder(action: Is.IFileBuildAction, context: Is.IBuildContext) {
+export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);

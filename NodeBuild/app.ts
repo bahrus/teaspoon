@@ -8,7 +8,7 @@ function showUsage() {
     console.log('Usage: node app.js job:jobName');
     console.log('Where jobName = [htmlFileBuild, minifyFiles]');
 }
-var context: Is.IBuildContext = {
+var context: Is.IWebContext = {
     WebFileManager: new nodeJSWebServerFileHost.NodeJSWebFileManager(),
 };
 var foundJob = false;
