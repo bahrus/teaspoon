@@ -1,21 +1,20 @@
 ﻿/*//#region[mode='cs'] 
 module tsp.DOMActions{
+    var Is = tsp.Is;
+    var u = tsp.util;
 *///#endregion[mode='cs']
 //#region[mode='ss'] 
-import tsp_Is = require('./Interfaces');
+import Is = require('./Interfaces');
 import u = require('./tspUtil');
 //#endregion[mode='ss'] 
-/*//#region[mode='cs']
-var tsp_Is = tsp.Is;
-var u = tsp.util
-*///#endregion
+
     
-export function remove(action: tsp_Is.IDOMElementBuildAction ) {
+export function remove(action: Is.IDOMElementBuildAction ) {
     action.state.element.remove();
     u.endAction(action);
 }
 
-export function addToJSClob(action: tsp_Is.IDOMElementBuildAction, context: tsp_Is.IWebContext) {
+export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebContext) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.WebFileManager.resolve(state.filePath, '..', src);
@@ -24,7 +23,7 @@ export function addToJSClob(action: tsp_Is.IDOMElementBuildAction, context: tsp_
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
 }
 
-export function selectElements(action: tsp_Is.IDOMElementCSSSelector, context: tsp_Is.IWebContext) {
+export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IWebContext) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -39,9 +38,9 @@ export function selectElements(action: tsp_Is.IDOMElementCSSSelector, context: t
 //    if (i >= len) return;
 
 //}
-export function DOMTransform(action: tsp_Is.IDOMTransformAction, context: tsp_Is.IWebContext) {
+export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebContext) {
     var elements: JQuery;
-    var p: tsp_Is.IDOMTransformAction;
+    var p: Is.IDOMTransformAction;
     if (action.state) {
         p = action.state.parent;
     }

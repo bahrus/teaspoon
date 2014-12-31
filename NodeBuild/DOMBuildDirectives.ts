@@ -24,4 +24,4 @@ var makeJSClobDirective: Is.IDOMTransformAction = {
     },
     sync: true,
 };
-export var All: Is.IAction[] = [removeBuildDirective, makeJSClobDirective];
+export var All: Is.IWebAction[] = [removeBuildDirective, makeJSClobDirective];

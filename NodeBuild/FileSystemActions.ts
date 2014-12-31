@@ -9,11 +9,27 @@ export function testForNonMinifiedJSFileName(s: string) {
     return u.endsWith(s, '.js') && !u.endsWith(s, '.min.js');
 }
 
-export function rootDirectoryRetriever(context: Is.IWebContext) {
+export function retrieveRootDirectory(context: Is.IWebContext) {
     var wfm = context.WebFileManager;
     var executingFilePath = wfm.getExecutingScriptFilePath();
     var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
     return returnStr;
+}
+
+export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebContext) {
+    var rootdirectory = action.rootDirectoryRetriever(context);
+    var wfm = context.WebFileManager;
+    var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
+    action.state = {
+        content:wfm.readTextFileSync(filePath),
+    };   
+}
+
+export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext) {
+    action.fileReaderAction.do(action.fileReaderAction, context);
+    context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
+    u.endAction(action);
+
 }
 
 export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebContext) {
