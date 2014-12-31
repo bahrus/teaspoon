@@ -90,6 +90,9 @@
         fileReaderAction: ITextFileReaderAction;
     }
 
+    export interface IWaitForUserInput extends IAction {
+    }
+
     export interface IFileBuildAction extends IWebAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;

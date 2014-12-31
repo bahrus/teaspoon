@@ -61,9 +61,12 @@ var jsMinifyFileBuild: Is.IFileBuildAction = {
 }
 //#endregion
 //#endregion
+var waitForUserInput: Is.IWaitForUserInput = {
+    do: fsa.waitForUserInput,
+}
 export var MainActions: Is.IActionList = {
     do: ua.doSequenceOfActions,
-    subActions: [cacheVersion, jsMinifyFileBuild, htmlFileBuild],
+    subActions: [cacheVersion, jsMinifyFileBuild, htmlFileBuild, waitForUserInput],
     async: true
 };
 

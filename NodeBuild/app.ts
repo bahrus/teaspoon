@@ -9,15 +9,11 @@ var context: Is.IWebContext = {
     HTMLOutputs: {},
     FileManager: new nodeJSWebServerFileHost.NodeJSWebFileManager(),
 };
-programConfig.MainActions.do(programConfig.MainActions, context);
+var callback: Is.ICallback = (err) => {
+    //console.log('finished processing');
+};
+programConfig.MainActions.do(programConfig.MainActions, context, callback);
 
-var stdin = process['openStdin']();
-process.stdin['setRawMode']();
-console.log('Press ctrl c to exit');
-stdin.on('keypress', function (chunk, key) {
-    process.stdout.write('Get Chunk: ' + chunk + '\n');
-    if (key && key.ctrl && key.name == 'c') process.exit();
-});
 
 
 

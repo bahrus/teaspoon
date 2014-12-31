@@ -25,6 +25,17 @@ export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebC
     };   
 }
 
+export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebContext, callback: Is.ICallback) {
+    var stdin = process['openStdin']();
+    process.stdin['setRawMode']();
+    console.log('Press ctrl c to exit');
+    stdin.on('keypress', function (chunk, key) {
+        process.stdout.write('Get Chunk: ' + chunk + '\n');
+        if (key && key.ctrl && key.name == 'c') process.exit();
+    });
+    u.endAction(action, callback);
+}
+
 export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
@@ -80,6 +91,7 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
     } else {
         var data = wfm.readTextFileSync(action.state.filePath);
         processHTMLFileSubRules(action, context, data);
+        u.endAction(action, callback);
     }
         
 }
@@ -107,7 +119,10 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
     fs.do(fs, context);
     var selectedFilePaths = fs.state.selectedFilePaths;
     var len = selectedFilePaths.length;
-    if (len === 0) return;
+    if (len === 0) {
+        u.endAction(action, callback);
+        return;
+    }
     var fp = action.fileProcessor;
     if (action.async) {
         var idx = 0;
