@@ -20,6 +20,7 @@ export function doSequenceOfActions(action: Is.IActionList, context: Is.IContext
                 u.endAction(action, callback);
             }
         };
+        seqCallback(null);
     } else {
         for (var i = 0, n = action.subActions.length; i < n; i++) {
             var subAction = action.subActions[i];
