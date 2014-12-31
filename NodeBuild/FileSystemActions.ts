@@ -69,18 +69,17 @@ function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: I
     }
 }
 
-export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext) {
+export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
     var wfm = context.FileManager;
     console.log('processing ' + action.state.filePath);
-    if (action.state.callback) {
+    if (callback) {
         wfm.readTextFileAsync(action.state.filePath, (err, data) => {
             processHTMLFileSubRules(action, context, data);
-            action.state.callback(err);
+            callback(err);
         });
     } else {
         var data = wfm.readTextFileSync(action.state.filePath);
         processHTMLFileSubRules(action, context, data);
-        
     }
         
 }
@@ -94,7 +93,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
         } else {
             console.log('Uglified ' + filePath);
         }
-        if (!action.state.callback) {
+        if (!callback) {
             throw "Unable to minify JS files synchronously";
         }
         u.endAction(action, callback);
@@ -102,7 +101,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
     
 }
 
-export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext) {
+export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);
@@ -112,7 +111,7 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
     var fp = action.fileProcessor;
     if (action.async) {
         var idx = 0;
-        fp.state.callback = (err) => {
+        var fpCallback = (err) => {
             if (idx < len) {
                 var filePath = selectedFilePaths[idx];
                 idx++;
@@ -123,10 +122,12 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
                 } else {
                     fp.state.filePath = filePath;
                 }
-                fp.do(fp, context);
+                fp.do(fp, context, fpCallback);
+            } else {
+                u.endAction(action, callback);
             }
         }
-        fp.state.callback(null);
+        fpCallback(null);
     } else {
         for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
             var filePath = fs.state.selectedFilePaths[i];
@@ -139,6 +140,7 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
             }
             fp.do(fp, context);
         }
+        u.endAction(action, callback);
     }
      
     

@@ -12,7 +12,7 @@
     }
 
     interface IActionState {
-        callback?: (err) => void;
+        //callback?: (err) => void;
     }
 
     export interface ICallback {
