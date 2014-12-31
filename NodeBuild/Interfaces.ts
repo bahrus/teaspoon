@@ -1,14 +1,14 @@
 ﻿//#region[mode='cs'] module tsp.Is {
 
     export interface IContext {
-        stringCache?: { [key: string]: string };
+        stringCache: { [key: string]: string };
+        FileManager?: IFileManager;
     }
 
     export interface IWebContext extends IContext {
-        HTMLOutputs?: { [key: string]: JQueryStatic };
+        HTMLOutputs: { [key: string]: JQueryStatic };
         JSOutputs?: { [key: string]: string };
-        WebFileManager: IWebFileManager;
-        stringCache?: { [key: string]: string };
+        FileManager: IWebFileManager;
     }
 
     interface IActionState {
@@ -16,7 +16,7 @@
     }
 
     export interface IAction {
-        do: (action: IWebAction, context: IContext) => void;
+        do: (action: IAction, context: IContext) => void;
         state?: IActionState;
         debug?: boolean;
         log?: boolean;
@@ -24,7 +24,7 @@
 
     export interface IWebAction extends IAction {
         do: (action: IWebAction, context: IWebContext) => void;
-        sync?: boolean;
+        async?: boolean;
     }
 
     //#region Action Management
@@ -143,17 +143,19 @@
     }
 
     //#endregion
-
-    
-    export interface IWebFileManager {
+    export interface IFileManager {
         resolve(...pathSegments: any[]): string;
         getSeparator(): string;
         readTextFileSync(filePath: string): string;
-        readTextFileAsync(filePath: string, callback:  (err: Error, data: string) => void);
+        readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void);
         listDirectorySync(dirPath: string): string[];
+        getExecutingScriptFilePath: () => void;
+    }
+    
+    export interface IWebFileManager extends IFileManager{
+        
         loadHTML: (html: string) => JQueryStatic
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
-        getExecutingScriptFilePath: () => void;
     }
     
 

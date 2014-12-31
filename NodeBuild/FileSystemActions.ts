@@ -10,7 +10,7 @@ export function testForNonMinifiedJSFileName(s: string) {
 }
 
 export function retrieveRootDirectory(context: Is.IWebContext) {
-    var wfm = context.WebFileManager;
+    var wfm = context.FileManager;
     var executingFilePath = wfm.getExecutingScriptFilePath();
     var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
     return returnStr;
@@ -18,7 +18,7 @@ export function retrieveRootDirectory(context: Is.IWebContext) {
 
 export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebContext) {
     var rootdirectory = action.rootDirectoryRetriever(context);
-    var wfm = context.WebFileManager;
+    var wfm = context.FileManager;
     var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
     action.state = {
         content:wfm.readTextFileSync(filePath),
@@ -39,7 +39,7 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
             rootDirectory: action.rootDirectoryRetriever(context),
         };
     }
-    var files = context.WebFileManager.listDirectorySync(action.state.rootDirectory);
+    var files = context.FileManager.listDirectorySync(action.state.rootDirectory);
     if (action.fileTest) files = files.filter(action.fileTest);
     files = files.map(s => action.state.rootDirectory + s);
     action.state.selectedFilePaths = files;
@@ -47,7 +47,7 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
 
 function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
     if (action.debug) debugger;
-    var $ = context.WebFileManager.loadHTML(data);
+    var $ = context.FileManager.loadHTML(data);
     action.state.$ = $;
     if (action.fileSubProcessActions) {
         for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
@@ -70,7 +70,7 @@ function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: I
 }
 
 export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext) {
-    var wfm = context.WebFileManager;
+    var wfm = context.FileManager;
     console.log('processing ' + action.state.filePath);
     if (action.state.callback) {
         wfm.readTextFileAsync(action.state.filePath, (err, data) => {
@@ -88,7 +88,7 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
 export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebContext) {
     console.log('Uglifying ' + action.state.filePath);
     var filePath = action.state.filePath;
-    context.WebFileManager.minify(filePath, (err, min) => {
+    context.FileManager.minify(filePath, (err, min) => {
         if (err) {
             console.log('Error uglifying ' + filePath);
         } else {
@@ -110,21 +110,7 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
     var len = selectedFilePaths.length;
     if (len === 0) return;
     var fp = action.fileProcessor;
-    
-    if (action.sync) {
-        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
-            var filePath = fs.state.selectedFilePaths[i];
-            if (!fp.state) {
-                fp.state = {
-                    filePath: filePath,
-                };
-            } else {
-                fp.state.filePath = filePath;
-            }
-            fp.do(fp, context);
-        }
-        
-    } else {
+    if (action.async) {
         var idx = 0;
         fp.state.callback = (err) => {
             if (idx < len) {
@@ -141,6 +127,20 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
             }
         }
         fp.state.callback(null);
+    } else {
+        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
+            var filePath = fs.state.selectedFilePaths[i];
+            if (!fp.state) {
+                fp.state = {
+                    filePath: filePath,
+                };
+            } else {
+                fp.state.filePath = filePath;
+            }
+            fp.do(fp, context);
+        }
     }
+     
+    
 }
     

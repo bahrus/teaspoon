@@ -17,7 +17,7 @@ export function remove(action: Is.IDOMElementBuildAction ) {
 export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebContext) {
     var state = action.state;
     var src = action.state.element.attr('src');
-    var referringDir = context.WebFileManager.resolve(state.filePath, '..', src);
+    var referringDir = context.FileManager.resolve(state.filePath, '..', src);
     u.endAction(action);
     debugger;
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
@@ -66,14 +66,7 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebCon
             $: aSelSt.$,
             filePath: aSelSt.filePath,
         };
-        if (eA.sync) {
-            for (var i = 0, n = aSelSt.elements.length; i < n; i++) {
-                var $elem = aSelSt.$(aSelSt.elements[i]);
-                eA.state.element = $elem;
-                eA.do(eA, context);
-            }
-            u.endAction(action);
-        } else {
+        if (eA.async) {
             var i = 0;
             var n = aSelSt.elements.length;
             eA.state.callback = (err) => {
@@ -86,6 +79,13 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebCon
                     u.endAction(action);
                 }
             };
+        } else {
+            for (var i = 0, n = aSelSt.elements.length; i < n; i++) {
+                var $elem = aSelSt.$(aSelSt.elements[i]);
+                eA.state.element = $elem;
+                eA.do(eA, context);
+            }
+            u.endAction(action);
         }
         //#endregion
     } else {

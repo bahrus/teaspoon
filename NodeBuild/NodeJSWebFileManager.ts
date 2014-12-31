@@ -5,7 +5,7 @@ import cheerio = require('cheerio');
 import tspUtils = require('./tspUtil');
 import compressor = require('node-minify');
 
-export class NodeJSWebFileManager implements Is.IWebFileManager {
+export class NodeJSFileManager implements Is.IFileManager {
     readTextFileSync(filePath: string) {
         var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
         return <string> data;
@@ -19,6 +19,17 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
     listDirectorySync(dirPath: string) {
         return fs.readdirSync(dirPath);
     }
+    getExecutingScriptFilePath() {
+        var pathOfScript = process.argv[1];
+        return pathOfScript;
+    }
+    getSeparator() {
+        return path.sep;
+    }
+}
+
+export class NodeJSWebFileManager extends NodeJSFileManager implements Is.IWebFileManager {
+    
     loadHTML(html: string) {
         var $ = cheerio.load(html);
         var $any = <any> $;
@@ -33,11 +44,5 @@ export class NodeJSWebFileManager implements Is.IWebFileManager {
             callback: callback,
         });
     }
-    getExecutingScriptFilePath() {
-        var pathOfScript = process.argv[1];
-        return pathOfScript;
-    }
-    getSeparator() {
-        return path.sep;
-    }
+    
 }

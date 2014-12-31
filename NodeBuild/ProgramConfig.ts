@@ -31,19 +31,16 @@ var htmlFileSelector: Is.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForHtmlFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
-    sync: true,
 };
 var htmlFileProcessor: Is.IFileProcessorAction = {
     do: fsa.processHTMLFile,
     fileSubProcessActions: domDirectives.All,
-    sync: true,
     //debug: true,
 };
 var htmlFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
-    sync: true
 }
 //#endregion
 //#region JS Files
@@ -51,17 +48,14 @@ var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForNonMinifiedJSFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
-    sync: true,
 };
 var jsFileMinifier: Is.IFileProcessorAction = {
     do: fsa.minifyJSFile,
-    sync: false,
 }
 var jsMinifyFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
-    sync: true,
 }
 //#endregion
 //#endregion

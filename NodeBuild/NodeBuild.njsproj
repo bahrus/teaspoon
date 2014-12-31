@@ -7,7 +7,8 @@
     <RootNamespace>NodeBuild</RootNamespace>
     <NodeExeArguments>
     </NodeExeArguments>
-    <ScriptArguments>job:htmlFileBuild</ScriptArguments>
+    <ScriptArguments>
+    </ScriptArguments>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
