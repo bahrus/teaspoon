@@ -51,16 +51,19 @@ var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
 };
 var jsFileMinifier: Is.IFileProcessorAction = {
     do: fsa.minifyJSFile,
+    async: true,
 }
 var jsMinifyFileBuild: Is.IFileBuildAction = {
     do: fsa.fileBuilder,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
+    async: true,
 }
 //#endregion
 //#endregion
 export var MainActions: Is.IActionList = {
     do: ua.doSequenceOfActions,
     subActions: [cacheVersion, jsMinifyFileBuild, htmlFileBuild],
+    async: true
 };
 

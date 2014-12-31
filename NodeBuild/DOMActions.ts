@@ -9,21 +9,21 @@ import u = require('./tspUtil');
 //#endregion[mode='ss'] 
 
     
-export function remove(action: Is.IDOMElementBuildAction ) {
+export function remove(action: Is.IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback ) {
     action.state.element.remove();
-    u.endAction(action);
+    u.endAction(action, callback);
 }
 
-export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebContext) {
+export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.FileManager.resolve(state.filePath, '..', src);
-    u.endAction(action);
+    u.endAction(action, callback);
     debugger;
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
 }
 
-export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IWebContext) {
+export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -31,14 +31,14 @@ export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IW
     } else {
         aS.elements = aS.$(action.cssSelector);
     }
-    u.endAction(action);
+    u.endAction(action, callback);
 }
 
 //function doDomTransformOnElement(i: number, len: number, eA: Is.IDOMElementBuildAction, aSelSt: Is.IDOMElementCSSSelectorState) {
 //    if (i >= len) return;
 
 //}
-export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebContext) {
+export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
     var elements: JQuery;
     var p: Is.IDOMTransformAction;
     if (action.state) {
@@ -69,27 +69,28 @@ export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebCon
         if (eA.async) {
             var i = 0;
             var n = aSelSt.elements.length;
-            eA.state.callback = (err) => {
+            var eACallback = (err) => {
                 if (i < n) {
                     var $elem = aSelSt.$(aSelSt.elements[i]);
                     i++;
                     eA.state.element = $elem;
-                    eA.do(eA, context);
+                    eA.do(eA, context, eACallback);
                 } else {
-                    u.endAction(action);
+                    u.endAction(action, callback);
                 }
             };
+            eACallback(null);
         } else {
             for (var i = 0, n = aSelSt.elements.length; i < n; i++) {
                 var $elem = aSelSt.$(aSelSt.elements[i]);
                 eA.state.element = $elem;
                 eA.do(eA, context);
             }
-            u.endAction(action);
+            u.endAction(action, callback);
         }
         //#endregion
     } else {
-        u.endAction(action);
+        u.endAction(action, callback);
     }
     
     

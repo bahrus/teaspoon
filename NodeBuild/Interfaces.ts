@@ -15,16 +15,21 @@
         callback?: (err) => void;
     }
 
+    export interface ICallback {
+        (err) : void;
+    }
+
     export interface IAction {
-        do: (action: IAction, context: IContext) => void;
+        do: (action: IAction, context: IContext, callback?: ICallback) => void;
         state?: IActionState;
         debug?: boolean;
         log?: boolean;
+        async?: boolean;
     }
 
     export interface IWebAction extends IAction {
-        do: (action: IWebAction, context: IWebContext) => void;
-        async?: boolean;
+        do: (action: IWebAction, context: IWebContext, callback?: ICallback) => void;
+        
     }
 
     //#region Action Management

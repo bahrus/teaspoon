@@ -21,8 +21,8 @@ export function replaceEndWith(str: string, suffix: string, replaceText: string)
     return str.substr(0, iPosOfEnd) + replaceText;
 }
 
-export function endAction(action: Is.IWebAction) {
-    if (action.state && action.state.callback) action.state.callback(null);
+export function endAction(action: Is.IWebAction, callback: Is.ICallback) {
+    if (callback) callback(null);
 }
 //#endregion[mode='cs'] }
 

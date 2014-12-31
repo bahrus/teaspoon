@@ -25,10 +25,10 @@ export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebC
     };   
 }
 
-export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext) {
+export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
-    u.endAction(action);
+    u.endAction(action, callback);
 
 }
 
@@ -85,7 +85,7 @@ export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is
         
 }
 
-export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebContext) {
+export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
     console.log('Uglifying ' + action.state.filePath);
     var filePath = action.state.filePath;
     context.FileManager.minify(filePath, (err, min) => {
@@ -97,7 +97,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
         if (!action.state.callback) {
             throw "Unable to minify JS files synchronously";
         }
-        u.endAction(action);
+        u.endAction(action, callback);
     });
     
 }
