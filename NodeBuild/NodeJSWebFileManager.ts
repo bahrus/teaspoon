@@ -6,6 +6,7 @@ import tspUtils = require('./tspUtil');
 import compressor = require('node-minify');
 
 export class NodeJSFileManager implements Is.IFileManager {
+
     readTextFileSync(filePath: string) {
         var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
         return <string> data;
@@ -16,6 +17,7 @@ export class NodeJSFileManager implements Is.IFileManager {
     resolve(...pathSegments: any[]) {
         return path.resolve.apply(this, pathSegments);
     }
+    
     listDirectorySync(dirPath: string) {
         return fs.readdirSync(dirPath);
     }
@@ -25,6 +27,9 @@ export class NodeJSFileManager implements Is.IFileManager {
     }
     getSeparator() {
         return path.sep;
+    }
+    writeTextFileSync(filePath: string, content: string) {
+        fs.writeFileSync(filePath, content, { encoding: 'utf8' });
     }
 }
 

@@ -37,8 +37,8 @@ var htmlFileProcessor: Is.IFileProcessorAction = {
     fileSubProcessActions: domDirectives.All,
     //debug: true,
 };
-var htmlFileBuild: Is.IFileBuildAction = {
-    do: fsa.fileBuilder,
+var processHTMLFilesInMemory: Is.ISelectAndProcessFileAction = {
+    do: fsa.selectAndProcessFiles,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
 }
@@ -53,20 +53,24 @@ var jsFileMinifier: Is.IFileProcessorAction = {
     do: fsa.minifyJSFile,
     async: true,
 }
-var jsMinifyFileBuild: Is.IFileBuildAction = {
-    do: fsa.fileBuilder,
+
+var minifyJSFiles: Is.ISelectAndProcessFileAction = {
+    do: fsa.selectAndProcessFiles,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
     async: true,
 }
 //#endregion
 //#endregion
+var exportToFiles: Is.IExportDocumentsToFiles = {
+    do: fsa.exportProcessedDocumentsToFiles
+}
 var waitForUserInput: Is.IWaitForUserInput = {
     do: fsa.waitForUserInput,
 }
 export var MainActions: Is.IActionList = {
     do: ua.doSequenceOfActions,
-    subActions: [cacheVersion, jsMinifyFileBuild, htmlFileBuild, waitForUserInput],
+    subActions: [cacheVersion, minifyJSFiles, processHTMLFilesInMemory, exportToFiles, waitForUserInput],
     async: true
 };
 

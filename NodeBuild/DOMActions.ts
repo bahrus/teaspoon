@@ -18,9 +18,16 @@ export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebC
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.FileManager.resolve(state.filePath, '..', src);
-    u.endAction(action, callback);
-    debugger;
+    if (!context.JSOutputs) context.JSOutputs = {};
+    var jsOutputs = context.JSOutputs;
+    if (!jsOutputs[referringDir]) jsOutputs[state.filePath] = [];
+    var minifiedVersionFilePath = u.replaceEndWith(referringDir, '.js', '.min.js');
+    var minifiedContent = context.FileManager.readTextFileSync(minifiedVersionFilePath);
+    jsOutputs[state.filePath].push(minifiedContent);
+    action.state.element.remove();
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
+    u.endAction(action, callback);
+
 }
 
 export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {

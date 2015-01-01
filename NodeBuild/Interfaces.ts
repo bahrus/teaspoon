@@ -7,7 +7,7 @@
 
     export interface IWebContext extends IContext {
         HTMLOutputs: { [key: string]: JQueryStatic };
-        JSOutputs?: { [key: string]: string };
+        JSOutputs?: { [key: string]: string[] };
         FileManager: IWebFileManager;
     }
 
@@ -93,13 +93,13 @@
     export interface IWaitForUserInput extends IAction {
     }
 
-    export interface IFileBuildAction extends IWebAction {
+    export interface ISelectAndProcessFileAction extends IWebAction {
         fileSelector: IFileSelectorAction
         fileProcessor: IFileProcessorAction;
         
     }
 
-    export interface IHTMLFileBuildAction extends IFileBuildAction {
+    export interface IHTMLFileBuildAction extends ISelectAndProcessFileAction {
         domTransformActions: IDOMTransformAction[];
     }
 
@@ -158,6 +158,7 @@
         readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void);
         listDirectorySync(dirPath: string): string[];
         getExecutingScriptFilePath: () => void;
+        writeTextFileSync(filePath: string, content: string) : void;
     }
     
     export interface IWebFileManager extends IFileManager{
@@ -165,7 +166,11 @@
         loadHTML: (html: string) => JQueryStatic
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
     }
-    
+
+
+    export interface IExportDocumentsToFiles extends IWebAction {
+        rootDirectoryPath?: string;
+    }
 
 /*//#region[mode='cs'] 
 }

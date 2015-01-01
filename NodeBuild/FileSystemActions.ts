@@ -113,7 +113,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
     
 }
 
-export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function selectAndProcessFiles(action: Is.ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);
@@ -160,4 +160,10 @@ export function fileBuilder(action: Is.IFileBuildAction, context: Is.IWebContext
      
     
 }
-    
+
+export function exportProcessedDocumentsToFiles(action: Is.IExportDocumentsToFiles, context: Is.IWebContext, callback: Is.ICallback) {
+    for (var filePath in context.HTMLOutputs) {
+        var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
+        context.FileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
+    }
+}
