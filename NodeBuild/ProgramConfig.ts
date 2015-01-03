@@ -32,12 +32,12 @@ var htmlFileSelector: Is.IFileSelectorAction = {
     fileTest: fsa.testForHtmlFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
 };
-var htmlFileProcessor: Is.IFileProcessorAction = {
+var htmlFileProcessor: fsa.IFileProcessorAction = {
     do: fsa.processHTMLFile,
     fileSubProcessActions: domDirectives.All,
     //debug: true,
 };
-var processHTMLFilesInMemory: Is.ISelectAndProcessFileAction = {
+var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
     do: fsa.selectAndProcessFiles,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
@@ -49,12 +49,12 @@ var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
     fileTest: fsa.testForNonMinifiedJSFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
 };
-var jsFileMinifier: Is.IFileProcessorAction = {
+var jsFileMinifier: fsa.IFileProcessorAction = {
     do: fsa.minifyJSFile,
     async: true,
 }
 
-var minifyJSFiles: Is.ISelectAndProcessFileAction = {
+var minifyJSFiles: fsa.ISelectAndProcessFileAction = {
     do: fsa.selectAndProcessFiles,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,

@@ -3,6 +3,12 @@ import u = require('./tspUtil');
 import da = require('./DOMActions');
 import dbd = require('./DOMBuildDirectives');
 
+export interface ISelectAndProcessFileAction extends Is.IWebAction {
+    fileSelector: Is.IFileSelectorAction
+        fileProcessor: IFileProcessorAction;
+
+}
+
 export function testForHtmlFileName(s: string) {
     return u.endsWith(s, '.html');
 }
@@ -58,12 +64,20 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
     action.state.selectedFilePaths = files;
 }
 
+
+//#region File Processing
+
+
+export interface IFileProcessorAction extends Is.IWebAction {
+    state?: Is.IFileProcessorActionState;
+    fileSubProcessActions?: Is.IWebAction[];
+
+
+}
+
 //#region HTML File Processing
 
-
-
-
-export interface IHTMLFileProcessorAction extends Is.IFileProcessorAction {
+export interface IHTMLFileProcessorAction extends IFileProcessorAction {
     state?: Is.IHTMLFileProcessorActionState;
 }
 
@@ -106,8 +120,9 @@ export function processHTMLFile(action: IHTMLFileProcessorAction, context: Is.IW
     }
         
 }
+//#endregion
 
-export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function minifyJSFile(action: IFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
     console.log('Uglifying ' + action.state.filePath);
     var filePath = action.state.filePath;
     context.FileManager.minify(filePath, (err, min) => {
@@ -124,7 +139,9 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
     
 }
 
-export function selectAndProcessFiles(action: Is.ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
+//#endregion 
+
+export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);

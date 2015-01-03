@@ -6,6 +6,7 @@ module tsp.DOMActions{
 //#region[mode='ss'] 
 import Is = require('./Interfaces');
 import u = require('./tspUtil');
+import fsa = require('./FileSystemActions');
 //#endregion[mode='ss'] 
 
 //#region DOM Actions
@@ -27,7 +28,7 @@ interface IDOMState extends Is.IHTMLFileProcessorActionState {
 
 
 
-export interface IHTMLFileBuildAction extends Is.ISelectAndProcessFileAction {
+export interface IHTMLFileBuildAction extends fsa.ISelectAndProcessFileAction {
     domTransformActions: IDOMTransformAction[];
 }
 
@@ -107,7 +108,6 @@ export interface IDOMTransformAction extends Is.IWebAction {
     //children?: IDOMTransformAction[];
     state?: IDOMTransformActionState;
 }
-
 
 export function DOMTransform(action: IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
     var elements: JQuery;

@@ -40,17 +40,7 @@
 
     //#region FileActions
 
-    export interface IFileProcessorActionState extends IActionState {
-        filePath: string;
-    }
-
-    export interface IFileProcessorAction extends IWebAction {
-        state?: IFileProcessorActionState;
-        fileSubProcessActions?: IWebAction[];
-        
-
-    }
-
+    
 
     export interface IFileSelectorActionState {
         rootDirectory: string;
@@ -86,11 +76,7 @@
     export interface IWaitForUserInput extends IAction {
     }
 
-    export interface ISelectAndProcessFileAction extends IWebAction {
-        fileSelector: IFileSelectorAction
-        fileProcessor: IFileProcessorAction;
-        
-    }
+    
 
 
     //#endregion
@@ -111,6 +97,13 @@
         loadHTML: (html: string) => JQueryStatic
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
     }
+
+    export interface IFileProcessorActionState extends IActionState {
+        filePath: string;
+    }
+
+    
+
 
     export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, IActionState {
         $: JQueryStatic
