@@ -112,6 +112,9 @@
         minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
     }
 
+    export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, IActionState {
+        $: JQueryStatic
+    }
 
     export interface IExportDocumentsToFiles extends IWebAction {
         outputRootDirectoryPath?: string;

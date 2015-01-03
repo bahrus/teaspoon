@@ -18,18 +18,13 @@ export interface IUglify {
 }
 
 
-interface IDOMState extends IHTMLFileProcessorActionState {
+interface IDOMState extends Is.IHTMLFileProcessorActionState {
 }
 
 
 
-interface IHTMLFileProcessorActionState extends Is.IFileProcessorActionState, Is.IActionState {
-    $: JQueryStatic
-}
 
-export interface IHTMLFileProcessorAction extends Is.IFileProcessorAction {
-    state?: IHTMLFileProcessorActionState;
-}
+
 
 
 export interface IHTMLFileBuildAction extends Is.ISelectAndProcessFileAction {

@@ -58,7 +58,16 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
     action.state.selectedFilePaths = files;
 }
 
-function processHTMLFileSubRules(action: da.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
+//#region HTML File Processing
+
+
+
+
+export interface IHTMLFileProcessorAction extends Is.IFileProcessorAction {
+    state?: Is.IHTMLFileProcessorActionState;
+}
+
+function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
     if (action.debug) debugger;
     var $ = context.FileManager.loadHTML(data);
     action.state.$ = $;
@@ -82,7 +91,7 @@ function processHTMLFileSubRules(action: da.IHTMLFileProcessorAction, context: I
     }
 }
 
-export function processHTMLFile(action: da.IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function processHTMLFile(action: IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
     var wfm = context.FileManager;
     console.log('processing ' + action.state.filePath);
     if (callback) {
