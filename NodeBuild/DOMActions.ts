@@ -46,7 +46,7 @@ export interface IDOMElementBuildAction extends fsa.IWebAction {
 }  
 export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback ) {
     action.state.element.remove();
-    u.endAction(action, callback);
+    ca.endAction(action, callback);
 }
 
 export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback) {
@@ -61,7 +61,7 @@ export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebCon
     jsOutputs[state.filePath].push(minifiedContent);
     action.state.element.remove();
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
-    u.endAction(action, callback);
+    ca.endAction(action, callback);
 
 }
 
@@ -91,7 +91,7 @@ export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWeb
     } else {
         aS.elements = aS.$(action.cssSelector);
     }
-    u.endAction(action, callback);
+    ca.endAction(action, callback);
 }
 //#endregion
 
@@ -147,7 +147,7 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
                     eA.state.element = $elem;
                     eA.do(eA, context, eACallback);
                 } else {
-                    u.endAction(action, callback);
+                    ca.endAction(action, callback);
                 }
             };
             eACallback(null);
@@ -157,11 +157,11 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
                 eA.state.element = $elem;
                 eA.do(eA, context);
             }
-            u.endAction(action, callback);
+            ca.endAction(action, callback);
         }
         //#endregion
     } else {
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
     }
     
     

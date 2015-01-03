@@ -74,7 +74,7 @@ export interface ICacheFileContents extends ca.IAction {
 export function cacheTextFile(action: ICacheFileContents, context: IWebContext, callback: ca.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
-    u.endAction(action, callback);
+    ca.endAction(action, callback);
 
 }
 //#endregion
@@ -92,7 +92,7 @@ export function waitForUserInput(action: IWaitForUserInput, context: IWebContext
         process.stdout.write('Get Chunk: ' + chunk + '\n');
         if (key && key.ctrl && key.name == 'c') process.exit();
     });
-    u.endAction(action, callback);
+    ca.endAction(action, callback);
 }
 //#endregion
 
@@ -185,7 +185,7 @@ export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebC
     } else {
         var data = wfm.readTextFileSync(action.state.filePath);
         processHTMLFileSubRules(action, context, data);
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
     }
         
 }
@@ -204,7 +204,7 @@ export function minifyJSFile(action: IFileProcessorAction, context: IWebContext,
         if (!callback) {
             throw "Unable to minify JS files synchronously";
         }
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
     });
     
 }
@@ -226,7 +226,7 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
     var selectedFilePaths = fs.state.selectedFilePaths;
     var len = selectedFilePaths.length;
     if (len === 0) {
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
         return;
     }
     var fp = action.fileProcessor;
@@ -245,7 +245,7 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
                 }
                 fp.do(fp, context, fpCallback);
             } else {
-                u.endAction(action, callback);
+                ca.endAction(action, callback);
             }
         }
         fpCallback(null);
@@ -261,7 +261,7 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
             }
             fp.do(fp, context);
         }
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
     }
      
     

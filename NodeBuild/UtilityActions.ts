@@ -17,7 +17,7 @@ export function doSequenceOfActions(action: ca.IActionList, context: ca.IContext
                 i++;
                 subAction.do(subAction, context, seqCallback);
             } else {
-                u.endAction(action, callback);
+                ca.endAction(action, callback);
             }
         };
         seqCallback(null);
@@ -26,7 +26,7 @@ export function doSequenceOfActions(action: ca.IActionList, context: ca.IContext
             var subAction = action.subActions[i];
             subAction.do(subAction, context);
         }
-        u.endAction(action, callback);
+        ca.endAction(action, callback);
     }
 }
 
