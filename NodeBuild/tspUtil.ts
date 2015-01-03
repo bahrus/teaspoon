@@ -1,5 +1,5 @@
 ﻿//#region[mode='cs'] module tsp.util{
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 
 //from http://stackoverflow.com/questions/280634/endswith-in-javascript
@@ -22,7 +22,7 @@ export function replaceEndWith(str: string, suffix: string, replaceText: string)
     return str.substr(0, iPosOfEnd) + replaceText;
 }
 
-export function endAction(action: Is.IAction, callback: Is.ICallback) {
+export function endAction(action: ca.IAction, callback: ca.ICallback) {
     if (callback) callback(null);
 }
 //#endregion[mode='cs'] }

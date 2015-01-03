@@ -6,7 +6,7 @@ module tsp.MainConfig{
     var domDirectives = tsp.DOMBuildDirectives;
 *///#endregion[mode='cs']
 //#region[mode='ss']
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import ua = require('./UtilityActions');
 import fsa = require('./FileSystemActions');
 import domDirectives = require('./DOMBuildDirectives');
@@ -70,7 +70,7 @@ var exportInMemoryDocumentsToFiles: fsa.IExportDocumentsToFiles = {
 var waitForUserInput: fsa.IWaitForUserInput = {
     do: fsa.waitForUserInput,
 }
-export var MainActions: Is.IActionList = {
+export var MainActions: ca.IActionList = {
     do: ua.doSequenceOfActions,
     subActions: [cacheVersionLabel, minifyJSFiles, processHTMLFilesInMemory, exportInMemoryDocumentsToFiles, waitForUserInput],
     async: true

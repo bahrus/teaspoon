@@ -1,6 +1,6 @@
 ﻿import fs = require('fs');
 import path = require('path');
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 import cheerio = require('cheerio');
 import tspUtils = require('./tspUtil');

@@ -4,14 +4,14 @@ module tsp.UilityActions{
     var u = tsp.util
 *///#endregion[mode='cs']
 //#region[mode='ss']
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import u = require('./tspUtil');
 //#endregion[mode='ss']
 
-export function doSequenceOfActions(action: Is.IActionList, context: Is.IContext, callback: Is.ICallback) {
+export function doSequenceOfActions(action: ca.IActionList, context: ca.IContext, callback: ca.ICallback) {
     if (action.async) {
         var i = 0, n = action.subActions.length;
-        var seqCallback: Is.ICallback = (err) => {
+        var seqCallback: ca.ICallback = (err) => {
             if (i < n) {
                 var subAction = action.subActions[i];
                 i++;

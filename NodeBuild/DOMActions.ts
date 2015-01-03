@@ -4,7 +4,7 @@ module tsp.DOMActions{
     var u = tsp.util;
 *///#endregion[mode='cs']
 //#region[mode='ss'] 
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import u = require('./tspUtil');
 import fsa = require('./FileSystemActions');
 //#endregion[mode='ss'] 
@@ -44,12 +44,12 @@ export interface IDOMElementBuildAction extends fsa.IWebAction {
     state?: IDOMElementBuildActionState;
     //isDOMElementAction?: (action: IBuildAction) => boolean; 
 }  
-export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: Is.ICallback ) {
+export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback ) {
     action.state.element.remove();
     u.endAction(action, callback);
 }
 
-export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: Is.ICallback) {
+export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.FileManager.resolve(state.filePath, '..', src);
@@ -83,7 +83,7 @@ export interface IDOMElementCSSSelector extends IDOMElementSelector {
     state?: IDOMElementCSSSelectorState;
 }
 
-export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWebContext, callback: Is.ICallback) {
+export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWebContext, callback: ca.ICallback) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -109,7 +109,7 @@ export interface IDOMTransformAction extends fsa.IWebAction {
     state?: IDOMTransformActionState;
 }
 
-export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebContext, callback: Is.ICallback) {
+export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebContext, callback: ca.ICallback) {
     var elements: JQuery;
     var p: IDOMTransformAction;
     if (action.state) {

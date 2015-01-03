@@ -1,4 +1,4 @@
-﻿import Is = require('./Interfaces');
+﻿import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 import DOMActions = require('./DOMActions');
 

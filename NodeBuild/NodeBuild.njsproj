@@ -43,7 +43,7 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="DOMBuildDirectives.ts" />
-    <TypeScriptCompile Include="Interfaces.ts" />
+    <TypeScriptCompile Include="CommonActions.ts" />
     <TypeScriptCompile Include="FileSystemActions.ts" />
     <TypeScriptCompile Include="ProgramConfig.ts" />
     <TypeScriptCompile Include="NodeJSWebFileManager.ts" />

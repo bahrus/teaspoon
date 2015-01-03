@@ -1,5 +1,5 @@
 ﻿import cheerio = require('cheerio');
-import Is = require('./Interfaces');
+import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 import programConfig = require('./ProgramConfig');
 import nodeJSWebServerFileHost = require('./NodeJSWebFileManager');
@@ -10,7 +10,7 @@ var context: fsa.IWebContext = {
     HTMLOutputs: {},
     FileManager: new nodeJSWebServerFileHost.NodeJSWebFileManager(),
 };
-var callback: Is.ICallback = (err) => {
+var callback: ca.ICallback = (err) => {
     //console.log('finished processing');
 };
 programConfig.MainActions.do(programConfig.MainActions, context, callback);
