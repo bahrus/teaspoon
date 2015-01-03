@@ -9,41 +9,19 @@ import u = require('./tspUtil');
 //#endregion[mode='ss'] 
 
 //#region DOM Actions
-interface IDOMElementBuildActionState extends IDOMState {
-    element: JQuery;
-    DOMTransform?: IDOMTransformAction;
-}
 
-export interface IDOMElementBuildAction extends Is.IWebAction {
-    state?: IDOMElementBuildActionState;
-    //isDOMElementAction?: (action: IBuildAction) => boolean; 
-}
 
-export interface IDOMElementSelector extends Is.IWebAction {
-    //isDOMElementSelector?: (action: IBuildAction) => boolean;
-}
+
 
 export interface IUglify {
     uglify(pathOfReferencingFile: string, relativeURL: string): string;
 }
 
-export interface IDOMElementCSSSelectorState extends IDOMState {
-    relativeTo?: JQuery;
-    elements?: JQuery;
-    treeNode?: IDOMTransformAction;
-}
-
-export interface IDOMElementCSSSelector extends IDOMElementSelector {
-    cssSelector: string;
-    state?: IDOMElementCSSSelectorState;
-}
 
 interface IDOMState extends IHTMLFileProcessorActionState {
 }
 
-interface IDOMTransformActionState extends IDOMState {
-    parent?: IDOMTransformAction;
-}
+
 
 interface IHTMLFileProcessorActionState extends Is.IFileProcessorActionState, Is.IActionState {
     $: JQueryStatic
@@ -53,21 +31,23 @@ export interface IHTMLFileProcessorAction extends Is.IFileProcessorAction {
     state?: IHTMLFileProcessorActionState;
 }
 
-export interface IDOMTransformAction extends Is.IWebAction {
-    selector: IDOMElementCSSSelector;
-    elementAction?: IDOMElementBuildAction;
-    //parent?: IDOMTransformTree
-    //children?: IDOMTransformAction[];
-    state?: IDOMTransformActionState;
-}
 
 export interface IHTMLFileBuildAction extends Is.ISelectAndProcessFileAction {
     domTransformActions: IDOMTransformAction[];
 }
 
     //#endregion
+//#region Element Build Actions
 
-    
+interface IDOMElementBuildActionState extends IDOMState {
+    element: JQuery;
+    DOMTransform?: IDOMTransformAction;
+}
+
+export interface IDOMElementBuildAction extends Is.IWebAction {
+    state?: IDOMElementBuildActionState;
+    //isDOMElementAction?: (action: IBuildAction) => boolean; 
+}  
 export function remove(action: IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback ) {
     action.state.element.remove();
     u.endAction(action, callback);
@@ -89,6 +69,24 @@ export function addToJSClob(action: IDOMElementBuildAction, context: Is.IWebCont
 
 }
 
+//#endregion
+
+//#region DOM Element Css Selector
+export interface IDOMElementCSSSelectorState extends IDOMState {
+    relativeTo?: JQuery;
+    elements?: JQuery;
+    treeNode?: IDOMTransformAction;
+}
+
+export interface IDOMElementSelector extends Is.IWebAction {
+    //isDOMElementSelector?: (action: IBuildAction) => boolean;
+}
+
+export interface IDOMElementCSSSelector extends IDOMElementSelector {
+    cssSelector: string;
+    state?: IDOMElementCSSSelectorState;
+}
+
 export function selectElements(action: IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {
     if (action.debug) debugger;
     var aS = action.state;
@@ -99,11 +97,23 @@ export function selectElements(action: IDOMElementCSSSelector, context: Is.IWebC
     }
     u.endAction(action, callback);
 }
+//#endregion
 
-//function doDomTransformOnElement(i: number, len: number, eA: Is.IDOMElementBuildAction, aSelSt: Is.IDOMElementCSSSelectorState) {
-//    if (i >= len) return;
+//#region DOM Transform
 
-//}
+interface IDOMTransformActionState extends IDOMState {
+    parent?: IDOMTransformAction;
+}
+
+export interface IDOMTransformAction extends Is.IWebAction {
+    selector: IDOMElementCSSSelector;
+    elementAction?: IDOMElementBuildAction;
+    //parent?: IDOMTransformTree
+    //children?: IDOMTransformAction[];
+    state?: IDOMTransformActionState;
+}
+
+
 export function DOMTransform(action: IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
     var elements: JQuery;
     var p: IDOMTransformAction;
@@ -161,6 +171,9 @@ export function DOMTransform(action: IDOMTransformAction, context: Is.IWebContex
     
     
 }
+
+//#endregion
+
 /*//#region[mode='cs']
 }
 *///#endregion[mode='cs']
