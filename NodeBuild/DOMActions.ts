@@ -19,7 +19,7 @@ export interface IUglify {
 }
 
 
-interface IDOMState extends Is.IHTMLFileProcessorActionState {
+interface IDOMState extends fsa.IHTMLFileProcessorActionState {
 }
 
 

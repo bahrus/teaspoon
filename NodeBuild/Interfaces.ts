@@ -2,13 +2,9 @@
 
     export interface IContext {
         stringCache: { [key: string]: string };
-        //FileManager?: IFileManager;
     }
 
-    
-
     export interface IActionState {
-        //callback?: (err) => void;
     }
 
     export interface ICallback {
@@ -37,16 +33,7 @@
     
     
 
-    export interface IFileProcessorActionState extends IActionState {
-        filePath: string;
-    }
-
     
-
-
-    export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, IActionState {
-        $: JQueryStatic
-    }
 
     
 

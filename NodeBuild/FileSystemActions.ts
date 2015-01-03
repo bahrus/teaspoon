@@ -132,9 +132,15 @@ export function selectFiles(action: IFileSelectorAction, context: IWebContext) {
 
 //#region File Processing
 
+export interface IFileProcessorActionState extends Is.IActionState {
+    filePath: string;
+}
 
+export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, Is.IActionState {
+    $: JQueryStatic
+}
 export interface IFileProcessorAction extends IWebAction {
-    state?: Is.IFileProcessorActionState;
+    state?: IFileProcessorActionState;
     fileSubProcessActions?: IWebAction[];
 
 
@@ -143,7 +149,7 @@ export interface IFileProcessorAction extends IWebAction {
 //#region HTML File Processing
 
 export interface IHTMLFileProcessorAction extends IFileProcessorAction {
-    state?: Is.IHTMLFileProcessorActionState;
+    state?: IHTMLFileProcessorActionState;
 }
 
 function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
