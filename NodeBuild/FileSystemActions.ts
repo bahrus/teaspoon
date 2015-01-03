@@ -1,6 +1,5 @@
 ﻿import Is = require('./Interfaces');
 import u = require('./tspUtil');
-import da = require('./DOMActions');
 import dbd = require('./DOMBuildDirectives');
 //#region File Management
 export interface IFileManager {
@@ -158,7 +157,7 @@ function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWeb
     action.state.$ = $;
     if (action.fileSubProcessActions) {
         for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
-            var fspa = <da.IDOMTransformAction> action.fileSubProcessActions[i];
+            var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
             fspa.state = {
                 $: action.state.$,
                 filePath: action.state.filePath,
@@ -270,9 +269,12 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
 }
 
 //#endregion
+
+//#region Exporting Processed Documeents to Files
 export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: Is.ICallback) {
     for (var filePath in context.HTMLOutputs) {
         var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
         context.FileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
     }
 }
+//#endregion
