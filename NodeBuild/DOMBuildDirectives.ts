@@ -1,7 +1,8 @@
 ﻿import Is = require('./Interfaces');
 import DOMActions = require('./DOMActions');
+
 var dom = DOMActions;
-var removeBuildDirective: Is.IDOMTransformAction = {
+var removeBuildDirective: DOMActions.IDOMTransformAction = {
     do: dom.DOMTransform,
     selector: {
         cssSelector: 'tsp-design-time',
@@ -11,7 +12,7 @@ var removeBuildDirective: Is.IDOMTransformAction = {
         do: dom.remove
     },
 };
-var makeJSClobDirective: Is.IDOMTransformAction = {
+var makeJSClobDirective: DOMActions.IDOMTransformAction = {
     do: dom.DOMTransform,
     selector: {
         cssSelector: 'head>script[src]',

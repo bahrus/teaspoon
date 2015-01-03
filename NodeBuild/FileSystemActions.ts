@@ -1,5 +1,7 @@
 ﻿import Is = require('./Interfaces');
 import u = require('./tspUtil');
+import da = require('./DOMActions');
+import dbd = require('./DOMBuildDirectives');
 
 export function testForHtmlFileName(s: string) {
     return u.endsWith(s, '.html');
@@ -56,13 +58,13 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
     action.state.selectedFilePaths = files;
 }
 
-function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
+function processHTMLFileSubRules(action: da.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
     if (action.debug) debugger;
     var $ = context.FileManager.loadHTML(data);
     action.state.$ = $;
     if (action.fileSubProcessActions) {
         for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
-            var fspa = <Is.IDOMTransformAction> action.fileSubProcessActions[i];
+            var fspa = <da.IDOMTransformAction> action.fileSubProcessActions[i];
             fspa.state = {
                 $: action.state.$,
                 filePath: action.state.filePath,
@@ -80,7 +82,7 @@ function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: I
     }
 }
 
-export function processHTMLFile(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function processHTMLFile(action: da.IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
     var wfm = context.FileManager;
     console.log('processing ' + action.state.filePath);
     if (callback) {

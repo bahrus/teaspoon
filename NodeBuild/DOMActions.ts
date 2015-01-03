@@ -8,13 +8,72 @@ import Is = require('./Interfaces');
 import u = require('./tspUtil');
 //#endregion[mode='ss'] 
 
+//#region DOM Actions
+interface IDOMElementBuildActionState extends IDOMState {
+    element: JQuery;
+    DOMTransform?: IDOMTransformAction;
+}
+
+export interface IDOMElementBuildAction extends Is.IWebAction {
+    state?: IDOMElementBuildActionState;
+    //isDOMElementAction?: (action: IBuildAction) => boolean; 
+}
+
+export interface IDOMElementSelector extends Is.IWebAction {
+    //isDOMElementSelector?: (action: IBuildAction) => boolean;
+}
+
+export interface IUglify {
+    uglify(pathOfReferencingFile: string, relativeURL: string): string;
+}
+
+export interface IDOMElementCSSSelectorState extends IDOMState {
+    relativeTo?: JQuery;
+    elements?: JQuery;
+    treeNode?: IDOMTransformAction;
+}
+
+export interface IDOMElementCSSSelector extends IDOMElementSelector {
+    cssSelector: string;
+    state?: IDOMElementCSSSelectorState;
+}
+
+interface IDOMState extends IHTMLFileProcessorActionState {
+}
+
+interface IDOMTransformActionState extends IDOMState {
+    parent?: IDOMTransformAction;
+}
+
+interface IHTMLFileProcessorActionState extends Is.IFileProcessorActionState, Is.IActionState {
+    $: JQueryStatic
+}
+
+export interface IHTMLFileProcessorAction extends Is.IFileProcessorAction {
+    state?: IHTMLFileProcessorActionState;
+}
+
+export interface IDOMTransformAction extends Is.IWebAction {
+    selector: IDOMElementCSSSelector;
+    elementAction?: IDOMElementBuildAction;
+    //parent?: IDOMTransformTree
+    //children?: IDOMTransformAction[];
+    state?: IDOMTransformActionState;
+}
+
+export interface IHTMLFileBuildAction extends Is.ISelectAndProcessFileAction {
+    domTransformActions: IDOMTransformAction[];
+}
+
+    //#endregion
+
     
-export function remove(action: Is.IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback ) {
+export function remove(action: IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback ) {
     action.state.element.remove();
     u.endAction(action, callback);
 }
 
-export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function addToJSClob(action: IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.FileManager.resolve(state.filePath, '..', src);
@@ -30,7 +89,7 @@ export function addToJSClob(action: Is.IDOMElementBuildAction, context: Is.IWebC
 
 }
 
-export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {
+export function selectElements(action: IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -45,9 +104,9 @@ export function selectElements(action: Is.IDOMElementCSSSelector, context: Is.IW
 //    if (i >= len) return;
 
 //}
-export function DOMTransform(action: Is.IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function DOMTransform(action: IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
     var elements: JQuery;
-    var p: Is.IDOMTransformAction;
+    var p: IDOMTransformAction;
     if (action.state) {
         p = action.state.parent;
     }

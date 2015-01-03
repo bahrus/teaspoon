@@ -11,7 +11,7 @@
         FileManager: IWebFileManager;
     }
 
-    interface IActionState {
+    export interface IActionState {
         //callback?: (err) => void;
     }
 
@@ -40,7 +40,7 @@
 
     //#region FileActions
 
-    interface IFileProcessorActionState extends IActionState {
+    export interface IFileProcessorActionState extends IActionState {
         filePath: string;
     }
 
@@ -51,13 +51,6 @@
 
     }
 
-    interface IHTMLFileProcessorActionState extends IFileProcessorActionState, IActionState {
-        $:  JQueryStatic
-    }
-
-    export interface IHTMLFileProcessorAction extends IFileProcessorAction {
-        state?: IHTMLFileProcessorActionState;
-    }
 
     export interface IFileSelectorActionState {
         rootDirectory: string;
@@ -99,58 +92,10 @@
         
     }
 
-    export interface IHTMLFileBuildAction extends ISelectAndProcessFileAction {
-        domTransformActions: IDOMTransformAction[];
-    }
 
     //#endregion
 
-    //#region DOM Actions
-    interface IDOMElementBuildActionState extends IDOMState {
-        element: JQuery;
-        DOMTransform?: IDOMTransformAction;
-    }
-
-    export interface IDOMElementBuildAction extends IWebAction{
-        state?: IDOMElementBuildActionState;
-        //isDOMElementAction?: (action: IBuildAction) => boolean; 
-    }
     
-    export interface IDOMElementSelector extends IWebAction{
-        //isDOMElementSelector?: (action: IBuildAction) => boolean;
-    }
-
-    export interface IUglify {
-        uglify(pathOfReferencingFile: string, relativeURL: string): string;
-    }
-
-    export interface IDOMElementCSSSelectorState extends IDOMState {
-        relativeTo?: JQuery;
-        elements?: JQuery;
-        treeNode?: IDOMTransformAction;
-    }
-
-    export interface IDOMElementCSSSelector extends IDOMElementSelector {
-        cssSelector: string;
-        state?: IDOMElementCSSSelectorState;
-    }
-
-    interface IDOMState extends IHTMLFileProcessorActionState {
-    }
-
-    interface IDOMTransformActionState extends IDOMState {
-        parent?: IDOMTransformAction;
-    }
-
-    export interface IDOMTransformAction extends IWebAction {
-        selector: IDOMElementCSSSelector;
-        elementAction?: IDOMElementBuildAction;
-        //parent?: IDOMTransformTree
-        //children?: IDOMTransformAction[];
-        state?: IDOMTransformActionState;
-    }
-
-    //#endregion
     export interface IFileManager {
         resolve(...pathSegments: any[]): string;
         getSeparator(): string;
