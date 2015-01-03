@@ -11,7 +11,7 @@
         FileManager: IWebFileManager;
     }
 
-    export interface IActionState {
+    interface IActionState {
         //callback?: (err) => void;
     }
 
@@ -59,22 +59,49 @@
         state?: IHTMLFileProcessorActionState;
     }
 
-    
+    export interface IFileSelectorActionState {
+        rootDirectory: string;
+        selectedFilePaths?: string[];
+    }
 
-    
-    
-    
+    export interface IRootDirectoryRetriever {
+        rootDirectoryRetriever?: (context: IWebContext) => string;
+    }
 
+    export interface IFileSelectorAction extends IWebAction, IRootDirectoryRetriever {
+        
+        //fileName?: string;
+        fileTest?: (s: string) => boolean;
+        recursive?: boolean;
+        state?: IFileSelectorActionState;
+    }
     
+    interface IFileReaderActionState extends IActionState{
+        content?: string;
+    }
 
-    
+    export interface ITextFileReaderAction extends IAction, IRootDirectoryRetriever {
+        relativeFilePath: string;
+        state?: IFileReaderActionState;
+    }
+
+    export interface ICacheFileContents extends IAction {
+        cacheKey: string;
+        fileReaderAction: ITextFileReaderAction;
+    }
 
     export interface IWaitForUserInput extends IAction {
     }
 
-    
+    export interface ISelectAndProcessFileAction extends IWebAction {
+        fileSelector: IFileSelectorAction
+        fileProcessor: IFileProcessorAction;
+        
+    }
 
-    
+    export interface IHTMLFileBuildAction extends ISelectAndProcessFileAction {
+        domTransformActions: IDOMTransformAction[];
+    }
 
     //#endregion
 

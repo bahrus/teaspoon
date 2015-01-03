@@ -14,20 +14,20 @@ import domDirectives = require('./DOMBuildDirectives');
 
 var versionKey = 'version';
 //#region private actions
-var versionFileReader: fsa.ITextFileReaderAction = {
+var versionFileReader: Is.ITextFileReaderAction = {
     do: fsa.readTextFile,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
     relativeFilePath: 'Version.txt',
 };
 
-var cacheVersionLabel: fsa.ICacheFileContents = {
+var cacheVersionLabel: Is.ICacheFileContents = {
     do: fsa.cacheTextFile,
     cacheKey: versionKey,
     fileReaderAction: versionFileReader,
 };
 
 //#region Html Files
-var htmlFileSelector: fsa.IFileSelectorAction = {
+var htmlFileSelector: Is.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForHtmlFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
@@ -37,14 +37,14 @@ var htmlFileProcessor: Is.IFileProcessorAction = {
     fileSubProcessActions: domDirectives.All,
     //debug: true,
 };
-var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
+var processHTMLFilesInMemory: Is.ISelectAndProcessFileAction = {
     do: fsa.selectAndProcessFiles,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
 }
 //#endregion
 //#region JS Files
-var jsNonMinifiedFileSelector: fsa.IFileSelectorAction = {
+var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForNonMinifiedJSFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
@@ -54,7 +54,7 @@ var jsFileMinifier: Is.IFileProcessorAction = {
     async: true,
 }
 
-var minifyJSFiles: fsa.ISelectAndProcessFileAction = {
+var minifyJSFiles: Is.ISelectAndProcessFileAction = {
     do: fsa.selectAndProcessFiles,
     fileSelector: jsNonMinifiedFileSelector,
     fileProcessor: jsFileMinifier,
