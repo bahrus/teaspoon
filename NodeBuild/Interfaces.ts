@@ -59,19 +59,9 @@
         state?: IFileSelectorActionState;
     }
     
-    interface IFileReaderActionState extends IActionState{
-        content?: string;
-    }
+    
 
-    export interface ITextFileReaderAction extends IAction, IRootDirectoryRetriever {
-        relativeFilePath: string;
-        state?: IFileReaderActionState;
-    }
-
-    export interface ICacheFileContents extends IAction {
-        cacheKey: string;
-        fileReaderAction: ITextFileReaderAction;
-    }
+    
 
     export interface IWaitForUserInput extends IAction {
     }

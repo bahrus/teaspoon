@@ -14,13 +14,13 @@ import domDirectives = require('./DOMBuildDirectives');
 
 var versionKey = 'version';
 //#region private actions
-var versionFileReader: Is.ITextFileReaderAction = {
+var versionFileReader: fsa.ITextFileReaderAction = {
     do: fsa.readTextFile,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
     relativeFilePath: 'Version.txt',
 };
 
-var cacheVersionLabel: Is.ICacheFileContents = {
+var cacheVersionLabel: fsa.ICacheFileContents = {
     do: fsa.cacheTextFile,
     cacheKey: versionKey,
     fileReaderAction: versionFileReader,

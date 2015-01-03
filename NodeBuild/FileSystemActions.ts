@@ -8,7 +8,7 @@ export interface ISelectAndProcessFileAction extends Is.IWebAction {
         fileProcessor: IFileProcessorAction;
 
 }
-
+//#region helper functions
 export function testForHtmlFileName(s: string) {
     return u.endsWith(s, '.html');
 }
@@ -23,14 +23,29 @@ export function retrieveRootDirectory(context: Is.IWebContext) {
     var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
     return returnStr;
 }
+//#endregion
 
-export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebContext) {
+interface IFileReaderActionState extends Is.IActionState {
+    content?: string;
+}
+
+export interface ITextFileReaderAction extends Is.IAction, Is.IRootDirectoryRetriever {
+    relativeFilePath: string;
+    state?: IFileReaderActionState;
+}
+
+export function readTextFile(action: ITextFileReaderAction, context: Is.IWebContext) {
     var rootdirectory = action.rootDirectoryRetriever(context);
     var wfm = context.FileManager;
     var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
     action.state = {
         content:wfm.readTextFileSync(filePath),
     };   
+}
+
+export interface ICacheFileContents extends Is.IAction {
+    cacheKey: string;
+    fileReaderAction: ITextFileReaderAction;
 }
 
 export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebContext, callback: Is.ICallback) {
@@ -44,7 +59,7 @@ export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebC
     u.endAction(action, callback);
 }
 
-export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
+export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
     u.endAction(action, callback);
