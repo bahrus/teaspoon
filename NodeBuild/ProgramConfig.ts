@@ -16,7 +16,7 @@ var versionKey = 'version';
 //#region private actions
 var versionFileReader: fsa.ITextFileReaderAction = {
     do: fsa.readTextFile,
-    rootDirectoryRetriever: fsa.retrieveRootDirectory,
+    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
     relativeFilePath: 'Version.txt',
 };
 
@@ -29,8 +29,8 @@ var cacheVersionLabel: fsa.ICacheFileContents = {
 //#region Html Files
 var htmlFileSelector: fsa.IFileSelectorAction = {
     do: fsa.selectFiles,
-    fileTest: fsa.testForHtmlFileName,
-    rootDirectoryRetriever: fsa.retrieveRootDirectory,
+    fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
+    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
 };
 var htmlFileProcessor: fsa.IFileProcessorAction = {
     do: fsa.processHTMLFile,
@@ -46,8 +46,8 @@ var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
 //#region JS Files
 var jsNonMinifiedFileSelector: fsa.IFileSelectorAction = {
     do: fsa.selectFiles,
-    fileTest: fsa.testForNonMinifiedJSFileName,
-    rootDirectoryRetriever: fsa.retrieveRootDirectory,
+    fileTest: fsa.commonHelperFunctions.testForNonMinifiedJSFileName,
+    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
 };
 var jsFileMinifier: fsa.IFileProcessorAction = {
     do: fsa.minifyJSFile,

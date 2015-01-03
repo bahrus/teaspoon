@@ -7,7 +7,8 @@ export interface IFileManager {
     readTextFileSync(filePath: string): string;
     readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void);
     listDirectorySync(dirPath: string): string[];
-    getExecutingScriptFilePath: () => void;
+    getExecutingScriptFilePath: () => string;
+    getWorkingDirectoryPath: () => string;
     writeTextFileSync(filePath: string, content: string): void;
 }
 export interface IWebFileManager extends IFileManager {
@@ -33,19 +34,19 @@ export interface IExportDocumentsToFiles extends IWebAction {
 //#endregion
 
 //#region helper functions
-export function testForHtmlFileName(s: string) {
-    return pa.endsWith(s, '.html');
-}
+export module commonHelperFunctions {
+    export function testForHtmlFileName(s: string) {
+        return pa.endsWith(s, '.html');
+    }
 
-export function testForNonMinifiedJSFileName(s: string) {
-    return pa.endsWith(s, '.js') && !pa.endsWith(s, '.min.js');
-}
+    export function testForNonMinifiedJSFileName(s: string) {
+        return pa.endsWith(s, '.js') && !pa.endsWith(s, '.min.js');
+    }
 
-export function retrieveRootDirectory(context: IWebContext) {
-    var wfm = context.FileManager;
-    var executingFilePath = wfm.getExecutingScriptFilePath();
-    var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
-    return returnStr;
+    export function retrieveWorkingDirectory(context: IWebContext) {
+        var wfm = context.FileManager;
+        return wfm.getWorkingDirectoryPath() + wfm.getSeparator();
+    }
 }
 //#endregion
 

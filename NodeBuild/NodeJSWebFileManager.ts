@@ -32,6 +32,9 @@ export class NodeJSFileManager implements fsa.IFileManager {
     writeTextFileSync(filePath: string, content: string) {
         fs.writeFileSync(filePath, content, { encoding: 'utf8' });
     }
+    getWorkingDirectoryPath() {
+        return process.cwd();
+    }
 }
 
 export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebFileManager {
