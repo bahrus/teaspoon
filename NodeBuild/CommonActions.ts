@@ -1,5 +1,4 @@
 ﻿//#region[mode='cs'] module tsp.Is {
-    import u = require('./tspUtil');
     //  This file should not reference any libraries outside of the core Javascript
 
     export interface IContext {

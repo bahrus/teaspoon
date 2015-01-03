@@ -3,7 +3,7 @@ import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 import programConfig = require('./ProgramConfig');
 import nodeJSWebServerFileHost = require('./NodeJSWebFileManager');
-import u = require('./tspUtil');
+import pa = require('./ParserActions');
 
 var context: fsa.IWebContext = {
     stringCache: {},

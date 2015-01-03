@@ -45,6 +45,7 @@
     <TypeScriptCompile Include="DOMBuildDirectives.ts" />
     <TypeScriptCompile Include="CommonActions.ts" />
     <TypeScriptCompile Include="FileSystemActions.ts" />
+    <TypeScriptCompile Include="ParserActions.ts" />
     <TypeScriptCompile Include="ProgramConfig.ts" />
     <TypeScriptCompile Include="NodeJSWebFileManager.ts" />
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />
@@ -52,7 +53,6 @@
     <TypeScriptCompile Include="Scripts\typings\node-minify\node-minify.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="DOMActions.ts" />
-    <TypeScriptCompile Include="tspUtil.ts" />
     <TypeScriptCompile Include="UtilityActions.ts" />
   </ItemGroup>
   <ItemGroup>

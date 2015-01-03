@@ -5,7 +5,7 @@ module tsp.UilityActions{
 *///#endregion[mode='cs']
 //#region[mode='ss']
 import ca = require('./CommonActions');
-import u = require('./tspUtil');
+import pa = require('./ParserActions');
 //#endregion[mode='ss']
 
 export function doSequenceOfActions(action: ca.IActionList, context: ca.IContext, callback: ca.ICallback) {

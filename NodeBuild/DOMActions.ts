@@ -5,7 +5,7 @@ module tsp.DOMActions{
 *///#endregion[mode='cs']
 //#region[mode='ss'] 
 import ca = require('./CommonActions');
-import u = require('./tspUtil');
+import pa = require('./ParserActions');
 import fsa = require('./FileSystemActions');
 //#endregion[mode='ss'] 
 
@@ -56,7 +56,7 @@ export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebCon
     if (!context.JSOutputs) context.JSOutputs = {};
     var jsOutputs = context.JSOutputs;
     if (!jsOutputs[referringDir]) jsOutputs[state.filePath] = [];
-    var minifiedVersionFilePath = u.replaceEndWith(referringDir, '.js', '.min.js');
+    var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
     var minifiedContent = context.FileManager.readTextFileSync(minifiedVersionFilePath);
     jsOutputs[state.filePath].push(minifiedContent);
     action.state.element.remove();

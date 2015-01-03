@@ -3,7 +3,7 @@ import path = require('path');
 import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
 import cheerio = require('cheerio');
-import tspUtils = require('./tspUtil');
+import pa = require('./ParserActions');
 import compressor = require('node-minify');
 
 export class NodeJSFileManager implements fsa.IFileManager {
@@ -42,7 +42,7 @@ export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebF
         return <JQueryStatic> $any;
     }
     minify(filePath: string, callback: (err: Error, min: string) => void) {
-        var destPath = tspUtils.replaceEndWith(filePath, '.js', '.min.js');
+        var destPath = pa.replaceEndWith(filePath, '.js', '.min.js');
         new compressor.minify({
             type: 'uglifyjs',
             fileIn: filePath,

@@ -1,8 +1,5 @@
-﻿//#region[mode='cs'] module tsp.util{
-import ca = require('./CommonActions');
-import fsa = require('./FileSystemActions');
-
-//from http://stackoverflow.com/questions/280634/endswith-in-javascript
+﻿//from http://stackoverflow.com/questions/280634/endswith-in-javascript
+//#region Helper functions
 export function endsWith(str: string, suffix: string) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
@@ -21,6 +18,4 @@ export function replaceEndWith(str: string, suffix: string, replaceText: string)
     if (iPosOfEnd === -1) return str;
     return str.substr(0, iPosOfEnd) + replaceText;
 }
-
-//#endregion[mode='cs'] }
-
+//#endregion

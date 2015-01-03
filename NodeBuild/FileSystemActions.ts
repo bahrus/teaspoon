@@ -1,5 +1,5 @@
 ﻿import ca = require('./CommonActions');
-import u = require('./tspUtil');
+import pa = require('./ParserActions');
 //#region File Management
 export interface IFileManager {
     resolve(...pathSegments: any[]): string;
@@ -34,11 +34,11 @@ export interface IExportDocumentsToFiles extends IWebAction {
 
 //#region helper functions
 export function testForHtmlFileName(s: string) {
-    return u.endsWith(s, '.html');
+    return pa.endsWith(s, '.html');
 }
 
 export function testForNonMinifiedJSFileName(s: string) {
-    return u.endsWith(s, '.js') && !u.endsWith(s, '.min.js');
+    return pa.endsWith(s, '.js') && !pa.endsWith(s, '.min.js');
 }
 
 export function retrieveRootDirectory(context: IWebContext) {
