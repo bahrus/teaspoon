@@ -20,7 +20,7 @@ var versionFileReader: Is.ITextFileReaderAction = {
     relativeFilePath: 'Version.txt',
 };
 
-var cacheVersion: Is.ICacheFileContents = {
+var cacheVersionLabel: Is.ICacheFileContents = {
     do: fsa.cacheTextFile,
     cacheKey: versionKey,
     fileReaderAction: versionFileReader,
@@ -60,17 +60,19 @@ var minifyJSFiles: Is.ISelectAndProcessFileAction = {
     fileProcessor: jsFileMinifier,
     async: true,
 }
+
 //#endregion
 //#endregion
-var exportToFiles: Is.IExportDocumentsToFiles = {
-    do: fsa.exportProcessedDocumentsToFiles
+var exportInMemoryDocumentsToFiles: Is.IExportDocumentsToFiles = {
+    do: fsa.exportProcessedDocumentsToFiles,
+    outputRootDirectoryPath: "OutputTest"
 }
 var waitForUserInput: Is.IWaitForUserInput = {
     do: fsa.waitForUserInput,
 }
 export var MainActions: Is.IActionList = {
     do: ua.doSequenceOfActions,
-    subActions: [cacheVersion, minifyJSFiles, processHTMLFilesInMemory, exportToFiles, waitForUserInput],
+    subActions: [cacheVersionLabel, minifyJSFiles, processHTMLFilesInMemory, exportInMemoryDocumentsToFiles, waitForUserInput],
     async: true
 };
 

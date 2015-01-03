@@ -169,7 +169,8 @@
 
 
     export interface IExportDocumentsToFiles extends IWebAction {
-        rootDirectoryPath?: string;
+        outputRootDirectoryPath?: string;
+
     }
 
 /*//#region[mode='cs'] 
