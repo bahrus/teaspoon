@@ -67,7 +67,7 @@ var exportInMemoryDocumentsToFiles: Is.IExportDocumentsToFiles = {
     do: fsa.exportProcessedDocumentsToFiles,
     outputRootDirectoryPath: "OutputTest"
 }
-var waitForUserInput: Is.IWaitForUserInput = {
+var waitForUserInput: fsa.IWaitForUserInput = {
     do: fsa.waitForUserInput,
 }
 export var MainActions: Is.IActionList = {

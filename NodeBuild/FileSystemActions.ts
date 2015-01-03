@@ -25,6 +25,7 @@ export function retrieveRootDirectory(context: Is.IWebContext) {
 }
 //#endregion
 
+//#region File Reader
 interface IFileReaderActionState extends Is.IActionState {
     content?: string;
 }
@@ -42,13 +43,22 @@ export function readTextFile(action: ITextFileReaderAction, context: Is.IWebCont
         content:wfm.readTextFileSync(filePath),
     };   
 }
-
 export interface ICacheFileContents extends Is.IAction {
     cacheKey: string;
     fileReaderAction: ITextFileReaderAction;
 }
+export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
+    action.fileReaderAction.do(action.fileReaderAction, context);
+    context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
+    u.endAction(action, callback);
 
-export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebContext, callback: Is.ICallback) {
+}
+//#endregion
+
+export interface IWaitForUserInput extends Is.IAction {
+}
+
+export function waitForUserInput(action: IWaitForUserInput, context: Is.IWebContext, callback: Is.ICallback) {
     var stdin = process['openStdin']();
     process.stdin['setRawMode']();
     console.log('Press ctrl c to exit');
@@ -59,12 +69,7 @@ export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebC
     u.endAction(action, callback);
 }
 
-export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
-    action.fileReaderAction.do(action.fileReaderAction, context);
-    context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
-    u.endAction(action, callback);
 
-}
 
 export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebContext) {
     if (action.debug) debugger;
