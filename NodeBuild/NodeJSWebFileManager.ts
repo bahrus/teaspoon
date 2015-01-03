@@ -1,11 +1,12 @@
 ﻿import fs = require('fs');
 import path = require('path');
 import Is = require('./Interfaces');
+import fsa = require('./FileSystemActions');
 import cheerio = require('cheerio');
 import tspUtils = require('./tspUtil');
 import compressor = require('node-minify');
 
-export class NodeJSFileManager implements Is.IFileManager {
+export class NodeJSFileManager implements fsa.IFileManager {
 
     readTextFileSync(filePath: string) {
         var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
@@ -33,7 +34,7 @@ export class NodeJSFileManager implements Is.IFileManager {
     }
 }
 
-export class NodeJSWebFileManager extends NodeJSFileManager implements Is.IWebFileManager {
+export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebFileManager {
     
     loadHTML(html: string) {
         var $ = cheerio.load(html);

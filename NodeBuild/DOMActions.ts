@@ -40,16 +40,16 @@ interface IDOMElementBuildActionState extends IDOMState {
     DOMTransform?: IDOMTransformAction;
 }
 
-export interface IDOMElementBuildAction extends Is.IWebAction {
+export interface IDOMElementBuildAction extends fsa.IWebAction {
     state?: IDOMElementBuildActionState;
     //isDOMElementAction?: (action: IBuildAction) => boolean; 
 }  
-export function remove(action: IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback ) {
+export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: Is.ICallback ) {
     action.state.element.remove();
     u.endAction(action, callback);
 }
 
-export function addToJSClob(action: IDOMElementBuildAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: Is.ICallback) {
     var state = action.state;
     var src = action.state.element.attr('src');
     var referringDir = context.FileManager.resolve(state.filePath, '..', src);
@@ -74,7 +74,7 @@ export interface IDOMElementCSSSelectorState extends IDOMState {
     treeNode?: IDOMTransformAction;
 }
 
-export interface IDOMElementSelector extends Is.IWebAction {
+export interface IDOMElementSelector extends fsa.IWebAction {
     //isDOMElementSelector?: (action: IBuildAction) => boolean;
 }
 
@@ -83,7 +83,7 @@ export interface IDOMElementCSSSelector extends IDOMElementSelector {
     state?: IDOMElementCSSSelectorState;
 }
 
-export function selectElements(action: IDOMElementCSSSelector, context: Is.IWebContext, callback: Is.ICallback) {
+export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWebContext, callback: Is.ICallback) {
     if (action.debug) debugger;
     var aS = action.state;
     if (aS.relativeTo) {
@@ -101,7 +101,7 @@ interface IDOMTransformActionState extends IDOMState {
     parent?: IDOMTransformAction;
 }
 
-export interface IDOMTransformAction extends Is.IWebAction {
+export interface IDOMTransformAction extends fsa.IWebAction {
     selector: IDOMElementCSSSelector;
     elementAction?: IDOMElementBuildAction;
     //parent?: IDOMTransformTree
@@ -109,7 +109,7 @@ export interface IDOMTransformAction extends Is.IWebAction {
     state?: IDOMTransformActionState;
 }
 
-export function DOMTransform(action: IDOMTransformAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebContext, callback: Is.ICallback) {
     var elements: JQuery;
     var p: IDOMTransformAction;
     if (action.state) {

@@ -2,12 +2,38 @@
 import u = require('./tspUtil');
 import da = require('./DOMActions');
 import dbd = require('./DOMBuildDirectives');
+//#region File Management
+export interface IFileManager {
+    resolve(...pathSegments: any[]): string;
+    getSeparator(): string;
+    readTextFileSync(filePath: string): string;
+    readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void);
+    listDirectorySync(dirPath: string): string[];
+    getExecutingScriptFilePath: () => void;
+    writeTextFileSync(filePath: string, content: string): void;
+}
+export interface IWebFileManager extends IFileManager {
 
-export interface ISelectAndProcessFileAction extends Is.IWebAction {
-    fileSelector: Is.IFileSelectorAction
-        fileProcessor: IFileProcessorAction;
+    loadHTML: (html: string) => JQueryStatic
+        minify: (filePath: string, callback: (err: Error, min: string) => void) => void;
+}
+
+export interface IWebContext extends Is.IContext {
+    HTMLOutputs: { [key: string]: JQueryStatic };
+    JSOutputs?: { [key: string]: string[] };
+    FileManager: IWebFileManager;
+}
+export interface IWebAction extends Is.IAction {
+    do: (action: IWebAction, context: IWebContext, callback?: Is.ICallback) => void;
 
 }
+
+export interface IExportDocumentsToFiles extends IWebAction {
+    outputRootDirectoryPath?: string;
+
+}
+//#endregion
+
 //#region helper functions
 export function testForHtmlFileName(s: string) {
     return u.endsWith(s, '.html');
@@ -17,7 +43,7 @@ export function testForNonMinifiedJSFileName(s: string) {
     return u.endsWith(s, '.js') && !u.endsWith(s, '.min.js');
 }
 
-export function retrieveRootDirectory(context: Is.IWebContext) {
+export function retrieveRootDirectory(context: IWebContext) {
     var wfm = context.FileManager;
     var executingFilePath = wfm.getExecutingScriptFilePath();
     var returnStr = wfm.resolve(executingFilePath, '..') + wfm.getSeparator();
@@ -30,12 +56,12 @@ interface IFileReaderActionState extends Is.IActionState {
     content?: string;
 }
 
-export interface ITextFileReaderAction extends Is.IAction, Is.IRootDirectoryRetriever {
+export interface ITextFileReaderAction extends Is.IAction, IRootDirectoryRetriever {
     relativeFilePath: string;
     state?: IFileReaderActionState;
 }
 
-export function readTextFile(action: ITextFileReaderAction, context: Is.IWebContext) {
+export function readTextFile(action: ITextFileReaderAction, context: IWebContext) {
     var rootdirectory = action.rootDirectoryRetriever(context);
     var wfm = context.FileManager;
     var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
@@ -47,7 +73,7 @@ export interface ICacheFileContents extends Is.IAction {
     cacheKey: string;
     fileReaderAction: ITextFileReaderAction;
 }
-export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
+export function cacheTextFile(action: ICacheFileContents, context: IWebContext, callback: Is.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
     u.endAction(action, callback);
@@ -55,10 +81,12 @@ export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContex
 }
 //#endregion
 
+//#region Wait for User Input
 export interface IWaitForUserInput extends Is.IAction {
 }
 
-export function waitForUserInput(action: IWaitForUserInput, context: Is.IWebContext, callback: Is.ICallback) {
+export function waitForUserInput(action: IWaitForUserInput, context: IWebContext, callback: Is.ICallback) {
+    //Todo:  move code into file manager
     var stdin = process['openStdin']();
     process.stdin['setRawMode']();
     console.log('Press ctrl c to exit');
@@ -68,10 +96,27 @@ export function waitForUserInput(action: IWaitForUserInput, context: Is.IWebCont
     });
     u.endAction(action, callback);
 }
+//#endregion
 
+//#region File Selection
+export interface IRootDirectoryRetriever {
+    rootDirectoryRetriever?: (context: IWebContext) => string;
+}
 
+export interface IFileSelectorActionState {
+    rootDirectory: string;
+    selectedFilePaths?: string[];
+}
 
-export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebContext) {
+export interface IFileSelectorAction extends IWebAction, IRootDirectoryRetriever {
+
+    //fileName?: string;
+    fileTest?: (s: string) => boolean;
+    recursive?: boolean;
+    state?: IFileSelectorActionState;
+}
+
+export function selectFiles(action: IFileSelectorAction, context: IWebContext) {
     if (action.debug) debugger;
     if (!action.state) {
         action.state = {
@@ -83,14 +128,14 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
     files = files.map(s => action.state.rootDirectory + s);
     action.state.selectedFilePaths = files;
 }
-
+//#endregion
 
 //#region File Processing
 
 
-export interface IFileProcessorAction extends Is.IWebAction {
+export interface IFileProcessorAction extends IWebAction {
     state?: Is.IFileProcessorActionState;
-    fileSubProcessActions?: Is.IWebAction[];
+    fileSubProcessActions?: IWebAction[];
 
 
 }
@@ -101,7 +146,7 @@ export interface IHTMLFileProcessorAction extends IFileProcessorAction {
     state?: Is.IHTMLFileProcessorActionState;
 }
 
-function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
+function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
     if (action.debug) debugger;
     var $ = context.FileManager.loadHTML(data);
     action.state.$ = $;
@@ -125,7 +170,7 @@ function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: Is.I
     }
 }
 
-export function processHTMLFile(action: IHTMLFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: Is.ICallback) {
     var wfm = context.FileManager;
     console.log('processing ' + action.state.filePath);
     if (callback) {
@@ -142,7 +187,8 @@ export function processHTMLFile(action: IHTMLFileProcessorAction, context: Is.IW
 }
 //#endregion
 
-export function minifyJSFile(action: IFileProcessorAction, context: Is.IWebContext, callback: Is.ICallback) {
+//#region JS File Processing
+export function minifyJSFile(action: IFileProcessorAction, context: IWebContext, callback: Is.ICallback) {
     console.log('Uglifying ' + action.state.filePath);
     var filePath = action.state.filePath;
     context.FileManager.minify(filePath, (err, min) => {
@@ -158,10 +204,18 @@ export function minifyJSFile(action: IFileProcessorAction, context: Is.IWebConte
     });
     
 }
+//#endregion
 
 //#endregion 
 
-export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
+//#region File Select and Process
+export interface ISelectAndProcessFileAction extends IWebAction {
+    fileSelector: IFileSelectorAction
+        fileProcessor: IFileProcessorAction;
+
+}
+
+export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: Is.ICallback) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);
@@ -209,7 +263,8 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
     
 }
 
-export function exportProcessedDocumentsToFiles(action: Is.IExportDocumentsToFiles, context: Is.IWebContext, callback: Is.ICallback) {
+//#endregion
+export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: Is.ICallback) {
     for (var filePath in context.HTMLOutputs) {
         var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
         context.FileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());

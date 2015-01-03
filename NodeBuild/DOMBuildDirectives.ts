@@ -1,4 +1,5 @@
 ﻿import Is = require('./Interfaces');
+import fsa = require('./FileSystemActions');
 import DOMActions = require('./DOMActions');
 
 var dom = DOMActions;
@@ -23,4 +24,4 @@ var makeJSClobDirective: DOMActions.IDOMTransformAction = {
         do: dom.addToJSClob,
     },
 };
-export var All: Is.IWebAction[] = [removeBuildDirective, makeJSClobDirective];
+export var All: fsa.IWebAction[] = [removeBuildDirective, makeJSClobDirective];

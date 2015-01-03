@@ -27,7 +27,7 @@ var cacheVersionLabel: fsa.ICacheFileContents = {
 };
 
 //#region Html Files
-var htmlFileSelector: Is.IFileSelectorAction = {
+var htmlFileSelector: fsa.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForHtmlFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
@@ -44,7 +44,7 @@ var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
 }
 //#endregion
 //#region JS Files
-var jsNonMinifiedFileSelector: Is.IFileSelectorAction = {
+var jsNonMinifiedFileSelector: fsa.IFileSelectorAction = {
     do: fsa.selectFiles,
     fileTest: fsa.testForNonMinifiedJSFileName,
     rootDirectoryRetriever: fsa.retrieveRootDirectory,
@@ -63,7 +63,7 @@ var minifyJSFiles: fsa.ISelectAndProcessFileAction = {
 
 //#endregion
 //#endregion
-var exportInMemoryDocumentsToFiles: Is.IExportDocumentsToFiles = {
+var exportInMemoryDocumentsToFiles: fsa.IExportDocumentsToFiles = {
     do: fsa.exportProcessedDocumentsToFiles,
     outputRootDirectoryPath: "OutputTest"
 }
