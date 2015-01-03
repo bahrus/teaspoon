@@ -1,6 +1,6 @@
 ﻿import Is = require('./Interfaces');
 import u = require('./tspUtil');
-import dbd = require('./DOMBuildDirectives');
+//import dbd = require('./DOMBuildDirectives');
 //#region File Management
 export interface IFileManager {
     resolve(...pathSegments: any[]): string;
