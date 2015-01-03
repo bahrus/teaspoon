@@ -16,7 +16,15 @@ export function retrieveRootDirectory(context: Is.IWebContext) {
     return returnStr;
 }
 
-export function readTextFile(action: Is.ITextFileReaderAction, context: Is.IWebContext) {
+interface IFileReaderActionState extends Is.IActionState {
+    content?: string;
+}
+
+export interface ITextFileReaderAction extends Is.IAction, IRootDirectoryRetriever {
+    relativeFilePath: string;
+    state?: IFileReaderActionState;
+}
+export function readTextFile(action: ITextFileReaderAction, context: Is.IWebContext) {
     var rootdirectory = action.rootDirectoryRetriever(context);
     var wfm = context.FileManager;
     var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
@@ -36,14 +44,33 @@ export function waitForUserInput(action: Is.IWaitForUserInput, context: Is.IWebC
     u.endAction(action, callback);
 }
 
-export function cacheTextFile(action: Is.ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
+export interface ICacheFileContents extends Is.IAction {
+    cacheKey: string;
+    fileReaderAction: ITextFileReaderAction;
+}
+export function cacheTextFile(action: ICacheFileContents, context: Is.IWebContext, callback: Is.ICallback) {
     action.fileReaderAction.do(action.fileReaderAction, context);
     context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
     u.endAction(action, callback);
 
 }
+//#region file selection
+export interface IFileSelectorActionState {
+    rootDirectory: string;
+    selectedFilePaths?: string[];
+}
 
-export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebContext) {
+export interface IRootDirectoryRetriever {
+    rootDirectoryRetriever?: (context: Is.IWebContext) => string;
+}
+
+export interface IFileSelectorAction extends Is.IWebAction, IRootDirectoryRetriever {
+
+    fileTest?: (s: string) => boolean;
+    recursive?: boolean;
+    state?: IFileSelectorActionState;
+}
+export function selectFiles(action: IFileSelectorAction, context: Is.IWebContext) {
     if (action.debug) debugger;
     if (!action.state) {
         action.state = {
@@ -54,6 +81,17 @@ export function selectFiles(action: Is.IFileSelectorAction, context: Is.IWebCont
     if (action.fileTest) files = files.filter(action.fileTest);
     files = files.map(s => action.state.rootDirectory + s);
     action.state.selectedFilePaths = files;
+}
+//#endregion
+
+export interface ISelectAndProcessFileAction extends Is.IWebAction {
+    fileSelector: IFileSelectorAction
+        fileProcessor: Is.IFileProcessorAction;
+
+}
+
+export interface IHTMLFileBuildAction extends ISelectAndProcessFileAction {
+    domTransformActions: Is.IDOMTransformAction[];
 }
 
 function processHTMLFileSubRules(action: Is.IHTMLFileProcessorAction, context: Is.IWebContext, data: string) {
@@ -113,7 +151,7 @@ export function minifyJSFile(action: Is.IFileProcessorAction, context: Is.IWebCo
     
 }
 
-export function selectAndProcessFiles(action: Is.ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
+export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: Is.IWebContext, callback: Is.ICallback) {
     if (this.debug) debugger;
     var fs = action.fileSelector;
     fs.do(fs, context);
