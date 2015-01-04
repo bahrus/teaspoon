@@ -52,12 +52,12 @@ export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext,
 export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback) {
     var state = action.state;
     var src = action.state.element.attr('src');
-    var referringDir = context.FileManager.resolve(state.filePath, '..', src);
+    var referringDir = context.fileManager.resolve(state.filePath, '..', src);
     if (!context.JSOutputs) context.JSOutputs = {};
     var jsOutputs = context.JSOutputs;
     if (!jsOutputs[referringDir]) jsOutputs[state.filePath] = [];
     var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
-    var minifiedContent = context.FileManager.readTextFileSync(minifiedVersionFilePath);
+    var minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
     jsOutputs[state.filePath].push(minifiedContent);
     action.state.element.remove();
     //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);

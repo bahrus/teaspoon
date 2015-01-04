@@ -7,7 +7,6 @@ module tsp.MainConfig{
 *///#endregion[mode='cs']
 //#region[mode='ss']
 import ca = require('./CommonActions');
-import ua = require('./UtilityActions');
 import fsa = require('./FileSystemActions');
 import domDirectives = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
@@ -41,6 +40,7 @@ var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
     do: fsa.selectAndProcessFiles,
     fileSelector: htmlFileSelector,
     fileProcessor: htmlFileProcessor,
+    //debug: true,
 }
 //#endregion
 //#region JS Files
@@ -63,15 +63,24 @@ var minifyJSFiles: fsa.ISelectAndProcessFileAction = {
 
 //#endregion
 //#endregion
+//var myString = (function () {/*
+//   <div id="someId">
+//     some content<br />
+//     <a href="#someRef">someRefTxt</a>
+//    </div>        
+//*/}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
+
 var exportInMemoryDocumentsToFiles: fsa.IExportDocumentsToFiles = {
     do: fsa.exportProcessedDocumentsToFiles,
-    outputRootDirectoryPath: "OutputTest"
+    outputRootDirectoryPath: 'OutputTest',
+    //debug: true,
 }
 var waitForUserInput: fsa.IWaitForUserInput = {
     do: fsa.waitForUserInput,
+    //debug: true,
 }
 export var MainActions: ca.IActionList = {
-    do: ua.doSequenceOfActions,
+    do: ca.doSequenceOfActions,
     subActions: [cacheVersionLabel, minifyJSFiles, processHTMLFilesInMemory, exportInMemoryDocumentsToFiles, waitForUserInput],
     async: true
 };

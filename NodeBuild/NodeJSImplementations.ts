@@ -55,3 +55,15 @@ export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebF
     }
     
 }
+
+export class NodeJSProcessManager implements ca.IProcessManager {
+    WaitForUserInputAndExit(message: string, testForExit: (chunk: string, key: string) => boolean) {
+        var stdin = process['openStdin']();
+        process.stdin['setRawMode']();
+        console.log(message);
+        stdin.on('keypress', function (chunk, key) {
+            process.stdout.write('Get Chunk: ' + chunk + '\n');
+            if (testForExit(chunk, key)) process.exit();
+        });
+    }
+}
