@@ -6,6 +6,7 @@
   "author": "Bruce",
   "dependencies": {
     "cheerio": "^0.18.0",
+    "lodash": "^2.4.1",
     "node-minify": "^1.0.1"
   },
   "devDependencies": {},

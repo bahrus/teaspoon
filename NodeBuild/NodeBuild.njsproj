@@ -50,6 +50,7 @@
     <TypeScriptCompile Include="NodeJSImplementations.ts" />
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\lodash\lodash.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node-minify\node-minify.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="DOMActions.ts" />
@@ -59,6 +60,7 @@
     <Folder Include="Scripts\typings\" />
     <Folder Include="Scripts\typings\cheerio\" />
     <Folder Include="Scripts\typings\jquery\" />
+    <Folder Include="Scripts\typings\lodash\" />
     <Folder Include="Scripts\typings\node-minify\" />
     <Folder Include="Scripts\typings\node\" />
   </ItemGroup>

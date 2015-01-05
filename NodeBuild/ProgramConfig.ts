@@ -11,77 +11,72 @@ import fsa = require('./FileSystemActions');
 import domDirectives = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
 
+
+export interface IProgramConfig {
+    versionFileReader?: fsa.ITextFileReaderAction;
+    cacheVersionLabel?: fsa.ICacheFileContents;
+    minifyJSFiles?: fsa.ISelectAndProcessFileAction;
+    processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;
+    exportInMemoryDocumentsToFiles?: fsa.IExportDocumentsToFiles;
+    waitForUserInput: fsa.IWaitForUserInput;
+}
+
 var versionKey = 'version';
-//#region private actions
-var versionFileReader: fsa.ITextFileReaderAction = {
-    do: fsa.readTextFile,
-    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
-    relativeFilePath: 'Version.txt',
-};
 
-var cacheVersionLabel: fsa.ICacheFileContents = {
-    do: fsa.cacheTextFile,
-    cacheKey: versionKey,
-    fileReaderAction: versionFileReader,
-};
+var pC: IProgramConfig = {
 
-//#region Html Files
-var htmlFileSelector: fsa.IFileSelectorAction = {
-    do: fsa.selectFiles,
-    fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
-    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+    cacheVersionLabel: {
+        do: fsa.cacheTextFile,
+        fileReaderAction: {
+            do: fsa.readTextFile,
+            rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+            relativeFilePath: 'Version.txt',
+        },
+        cacheKey: versionKey
+    },
+    minifyJSFiles: {
+        //#region minify JS Files
+        do: fsa.selectAndProcessFiles,
+        fileSelector: {
+            do: fsa.selectFiles,
+            fileTest: fsa.commonHelperFunctions.testForNonMinifiedJSFileName,
+            rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+        },
+        fileProcessor: {
+            do: fsa.minifyJSFile,
+            async: true,
+        },
+        async: true,
+        //#endregion
+    },
+    processHTMLFilesInMemory: {
+        //#region Html Files
+        do: fsa.selectAndProcessFiles,
+        fileSelector: {
+            do: fsa.selectFiles,
+            fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
+            rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+        },
+        fileProcessor: {
+            do: fsa.processHTMLFile,
+            fileSubProcessActions: domDirectives.All,
+        },
+        //#endregion
+    },
+    exportInMemoryDocumentsToFiles: {
+        do: fsa.exportProcessedDocumentsToFiles,
+        outputRootDirectoryPath: 'OutputTest',
+    },
+    waitForUserInput: {
+        do: fsa.waitForUserInput,
+    }
 };
-var htmlFileProcessor: fsa.IFileProcessorAction = {
-    do: fsa.processHTMLFile,
-    fileSubProcessActions: domDirectives.All,
-    //debug: true,
-};
-var processHTMLFilesInMemory: fsa.ISelectAndProcessFileAction = {
-    do: fsa.selectAndProcessFiles,
-    fileSelector: htmlFileSelector,
-    fileProcessor: htmlFileProcessor,
-    //debug: true,
-}
-//#endregion
-//#region JS Files
-var jsNonMinifiedFileSelector: fsa.IFileSelectorAction = {
-    do: fsa.selectFiles,
-    fileTest: fsa.commonHelperFunctions.testForNonMinifiedJSFileName,
-    rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
-};
-var jsFileMinifier: fsa.IFileProcessorAction = {
-    do: fsa.minifyJSFile,
-    async: true,
-}
+export var programConfig = pC;
 
-var minifyJSFiles: fsa.ISelectAndProcessFileAction = {
-    do: fsa.selectAndProcessFiles,
-    fileSelector: jsNonMinifiedFileSelector,
-    fileProcessor: jsFileMinifier,
-    async: true,
-}
 
-//#endregion
-//#endregion
-//var myString = (function () {/*
-//   <div id="someId">
-//     some content<br />
-//     <a href="#someRef">someRefTxt</a>
-//    </div>        
-//*/}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
-
-var exportInMemoryDocumentsToFiles: fsa.IExportDocumentsToFiles = {
-    do: fsa.exportProcessedDocumentsToFiles,
-    outputRootDirectoryPath: 'OutputTest',
-    //debug: true,
-}
-var waitForUserInput: fsa.IWaitForUserInput = {
-    do: fsa.waitForUserInput,
-    //debug: true,
-}
 export var MainActions: ca.IActionList = {
     do: ca.doSequenceOfActions,
-    subActions: [cacheVersionLabel, minifyJSFiles, processHTMLFilesInMemory, exportInMemoryDocumentsToFiles, waitForUserInput],
+    subActions: [pC.cacheVersionLabel, pC.minifyJSFiles, pC.processHTMLFilesInMemory, pC.exportInMemoryDocumentsToFiles, pC.waitForUserInput],
     async: true
 };
 
