@@ -17,7 +17,7 @@ export interface ICallback {
 }
 
 export interface IAction {
-    do: (action: IAction, context: IContext, callback?: ICallback) => void;
+    do?: (action: IAction, context: IContext, callback?: ICallback) => void;
     state?: IActionState;
     debug?: boolean;
     log?: boolean;
@@ -55,7 +55,7 @@ export function logToConsole(messageAction: IMessageAction, context: IContext, c
 
 //#region Action Management
 export interface IActionList extends IAction {
-    subActions: IAction[];
+    subActions?: IAction[];
 }
 
 export function doSequenceOfActions(action: IActionList, context: IContext, callback: ICallback) {
@@ -78,6 +78,37 @@ export function doSequenceOfActions(action: IActionList, context: IContext, call
         }
         endAction(action, callback);
     }
+}
+export interface ITypedActionList<T> extends IAction {
+    subActionsGenerator?: [(t: T) => IAction];
+}
+
+export function doSequenceOfTypedActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
+    //doSequenceOfActions(action.subActionsGenerator(action), context, callback);
+    var t = <T> <any> action;
+    var actionList: IActionList = {
+        do: doSequenceOfActions,
+        subActions: _.map(action.subActionsGenerator, sag => sag(t)),
+        async: action.async,
+    };
+    //var subActions = [];
+    //for (var i = 0, n = action.subActionsGenerator.length; i < n; i++) {
+    //    var sag = action.subActionsGenerator[i];
+    //    var subAction = sag(t);
+    //    subActions.push(subAction);
+    //}
+    //actionList.subActions = subActions;
+    //debugger;
+    if (action.async) {
+        var myCallback: ICallback = err => {
+            endAction(action, callback);
+        };
+        doSequenceOfActions(actionList, context, myCallback);
+    } else {
+        doSequenceOfActions(actionList, context, callback);
+        endAction(action, callback);
+    }
+    
 }
 
 export interface IMergeAction<T> extends IAction {

@@ -12,19 +12,19 @@ import domDirectives = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
 
 
-export interface IProgramConfig {
-    versionFileReader?: fsa.ITextFileReaderAction;
+export interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     cacheVersionLabel?: fsa.ICacheFileContents;
     minifyJSFiles?: fsa.ISelectAndProcessFileAction;
     processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;
     exportInMemoryDocumentsToFiles?: fsa.IExportDocumentsToFiles;
-    waitForUserInput: fsa.IWaitForUserInput;
+    waitForUserInput?: fsa.IWaitForUserInput;
+    mainActions?: ca.ITypedActionList<IProgramConfig>;
 }
 
 var versionKey = 'version';
 
-var pC: IProgramConfig = {
-
+export var pC: IProgramConfig = {
+    do: ca.doSequenceOfTypedActions,
     cacheVersionLabel: {
         do: fsa.cacheTextFile,
         fileReaderAction: {
@@ -69,14 +69,23 @@ var pC: IProgramConfig = {
     },
     waitForUserInput: {
         do: fsa.waitForUserInput,
-    }
+    },
+    subActionsGenerator: [
+        ipc => ipc.cacheVersionLabel,
+        ipc => ipc.minifyJSFiles,
+        ipc => ipc.processHTMLFilesInMemory,
+        ipc => ipc.exportInMemoryDocumentsToFiles,
+        ipc => ipc.waitForUserInput
+    ],
+    async: true,
 };
-export var programConfig = pC;
+//export var main = pC;
 
 
-export var MainActions: ca.IActionList = {
-    do: ca.doSequenceOfActions,
-    subActions: [pC.cacheVersionLabel, pC.minifyJSFiles, pC.processHTMLFilesInMemory, pC.exportInMemoryDocumentsToFiles, pC.waitForUserInput],
-    async: true
-};
+//export var MainActions: ca.IActionList = {
+//    do: ca.doSequenceOfActions,
+//    subActions: [pC.cacheVersionLabel, pC.minifyJSFiles, pC.processHTMLFilesInMemory, pC.exportInMemoryDocumentsToFiles, pC.waitForUserInput],
+//    async: true
+//};
+//export var MainActions = pC.mainActions;
 
