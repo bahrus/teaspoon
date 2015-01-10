@@ -14,7 +14,7 @@ var context: fsa.IWebContext = {
 var callback: ca.ICallback = (err) => {
     //console.log('finished processing');
 };
-programConfig.pC.do(programConfig.pC, context, callback);
+programConfig.programConfig.do(programConfig.programConfig, context, callback);
 
 
 

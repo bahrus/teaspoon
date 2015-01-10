@@ -18,12 +18,11 @@ export interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;
     exportInMemoryDocumentsToFiles?: fsa.IExportDocumentsToFiles;
     waitForUserInput?: fsa.IWaitForUserInput;
-    mainActions?: ca.ITypedActionList<IProgramConfig>;
 }
 
 var versionKey = 'version';
 
-export var pC: IProgramConfig = {
+export var programConfig: IProgramConfig = {
     do: ca.doSequenceOfTypedActions,
     cacheVersionLabel: {
         do: fsa.cacheTextFile,
