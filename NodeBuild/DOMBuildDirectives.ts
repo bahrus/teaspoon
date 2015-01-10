@@ -18,18 +18,18 @@ var domBuildDirectives: IDOMBuildDirectives = {
             do: da.remove
         },
     },
+    makeJSClobDirective: {
+        do: da.DOMTransform,
+        selector: {
+            cssSelector: 'head>script[src]',
+            do: da.selectElements,
+            //debug: true,
+        },
+        elementAction: {
+            do: da.addToJSClob,
+        },
+    },
 };
 
 
-var makeJSClobDirective: da.IDOMTransformAction = {
-    do: da.DOMTransform,
-    selector: {
-        cssSelector: 'head>script[src]',
-        do: da.selectElements,
-        //debug: true,
-    },
-    elementAction: {
-        do: da.addToJSClob,
-    },
-};
-export var All: da.IDOMTransformAction[] = [domBuildDirectives.removeBuildDirective, makeJSClobDirective];
+export var All: da.IDOMTransformAction[] = [domBuildDirectives.removeBuildDirective, domBuildDirectives.makeJSClobDirective];
