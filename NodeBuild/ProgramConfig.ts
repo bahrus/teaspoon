@@ -12,7 +12,7 @@ import domDirectives = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
 
 
-export interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
+interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     cacheVersionLabel?: fsa.ICacheFileContents;
     minifyJSFiles?: fsa.ISelectAndProcessFileAction;
     processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;

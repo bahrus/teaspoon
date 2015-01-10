@@ -215,8 +215,7 @@ export function minifyJSFile(action: IFileProcessorAction, context: IWebContext,
 //#region File Select and Process
 export interface ISelectAndProcessFileAction extends IWebAction {
     fileSelector: IFileSelectorAction
-        fileProcessor: IFileProcessorAction;
-
+    fileProcessor: IFileProcessorAction;
 }
 
 export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: ca.ICallback) {
