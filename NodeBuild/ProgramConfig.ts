@@ -8,7 +8,7 @@ module tsp.MainConfig{
 //#region[mode='ss']
 import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
-import domDirectives = require('./DOMBuildDirectives');
+import dbd = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
 
 
@@ -18,6 +18,8 @@ interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;
     exportInMemoryDocumentsToFiles?: fsa.IExportDocumentsToFiles;
     waitForUserInput?: fsa.IWaitForUserInput;
+    //domProcessor?: dbd.domBuildDirectives;
+    domProcessor?: dbd.IDOMBuildDirectives;
 }
 
 var versionKey = 'version';
@@ -58,7 +60,7 @@ export var programConfig: IProgramConfig = {
         },
         fileProcessor: {
             do: fsa.processHTMLFile,
-            fileSubProcessActions: domDirectives.All,
+            fileSubProcessActions: dbd.All,
         },
         //#endregion
     },
@@ -70,11 +72,14 @@ export var programConfig: IProgramConfig = {
         do: fsa.waitForUserInput,
     },
     subActionsGenerator: [
-        ipc => ipc.cacheVersionLabel,
-        ipc => ipc.minifyJSFiles,
-        ipc => ipc.processHTMLFilesInMemory,
-        ipc => ipc.exportInMemoryDocumentsToFiles,
-        ipc => ipc.waitForUserInput
+        i => i.cacheVersionLabel,
+        i => i.minifyJSFiles,
+        i => i.processHTMLFilesInMemory,
+        i => i.exportInMemoryDocumentsToFiles,
+        i => i.waitForUserInput
+    ],
+    configOneLiners: [
+        i => { i.domProcessor.container = i.processHTMLFilesInMemory; },
     ],
     async: true,
 };

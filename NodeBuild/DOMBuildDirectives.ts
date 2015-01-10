@@ -2,12 +2,13 @@
 import fsa = require('./FileSystemActions');
 import da = require('./DOMActions');
 
-export interface IDOMBuildDirectives{
+export interface IDOMBuildDirectives extends ca.ITypedActionList<IDOMBuildDirectives>{
     removeBuildDirective?: da.IDOMTransformAction;
     makeJSClobDirective?: da.IDOMTransformAction;
+    container?: fsa.ISelectAndProcessFileAction;
 }
 
-var domBuildDirectives: IDOMBuildDirectives = {
+export var domBuildConfig: IDOMBuildDirectives = {
     removeBuildDirective:  {
         do: da.DOMTransform,
         selector: {
@@ -29,7 +30,11 @@ var domBuildDirectives: IDOMBuildDirectives = {
             do: da.addToJSClob,
         },
     },
+    subActionsGenerator: [
+        i => i.removeBuildDirective,
+        i => i.makeJSClobDirective
+    ],
 };
 
 
-export var All: da.IDOMTransformAction[] = [domBuildDirectives.removeBuildDirective, domBuildDirectives.makeJSClobDirective];
+export var All: da.IDOMTransformAction[] = [domBuildConfig.removeBuildDirective, domBuildConfig.makeJSClobDirective];

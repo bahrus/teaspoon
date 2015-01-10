@@ -80,6 +80,7 @@ export function doSequenceOfActions(action: IActionList, context: IContext, call
     }
 }
 export interface ITypedActionList<T> extends IAction {
+    configOneLiners?: [(t: T) => void];
     subActionsGenerator?: [(t: T) => IAction];
 }
 
