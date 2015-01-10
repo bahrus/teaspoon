@@ -78,13 +78,3 @@ export var programConfig: IProgramConfig = {
     ],
     async: true,
 };
-//export var main = pC;
-
-
-//export var MainActions: ca.IActionList = {
-//    do: ca.doSequenceOfActions,
-//    subActions: [pC.cacheVersionLabel, pC.minifyJSFiles, pC.processHTMLFilesInMemory, pC.exportInMemoryDocumentsToFiles, pC.waitForUserInput],
-//    async: true
-//};
-//export var MainActions = pC.mainActions;
-
