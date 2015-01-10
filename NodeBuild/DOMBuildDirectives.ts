@@ -1,27 +1,27 @@
 ﻿import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
-import DOMActions = require('./DOMActions');
+import da = require('./DOMActions');
 
-var dom = DOMActions;
-var removeBuildDirective: DOMActions.IDOMTransformAction = {
-    do: dom.DOMTransform,
+
+var removeBuildDirective: da.IDOMTransformAction = {
+    do: da.DOMTransform,
     selector: {
         cssSelector: 'tsp-design-time',
-        do: dom.selectElements,
+        do: da.selectElements,
     },
     elementAction: {
-        do: dom.remove
+        do: da.remove
     },
 };
-var makeJSClobDirective: DOMActions.IDOMTransformAction = {
-    do: dom.DOMTransform,
+var makeJSClobDirective: da.IDOMTransformAction = {
+    do: da.DOMTransform,
     selector: {
         cssSelector: 'head>script[src]',
-        do: dom.selectElements,
+        do: da.selectElements,
         //debug: true,
     },
     elementAction: {
-        do: dom.addToJSClob,
+        do: da.addToJSClob,
     },
 };
 export var All: fsa.IWebAction[] = [removeBuildDirective, makeJSClobDirective];
