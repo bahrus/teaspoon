@@ -15,15 +15,17 @@ import dbd = require('./DOMBuildDirectives');
 interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     cacheVersionLabel?: fsa.ICacheFileContents;
     minifyJSFiles?: fsa.ISelectAndProcessFileAction;
-    processHTMLFilesInMemory?: fsa.ISelectAndProcessFileAction;
+    selectAndReadHTMLFiles?: fsa.ISelectAndReadHTMLFilesAction;
     exportInMemoryDocumentsToFiles?: fsa.IExportDocumentsToFiles;
     waitForUserInput?: fsa.IWaitForUserInput;
     //domProcessor?: dbd.domBuildDirectives;
-    domProcessor?: dbd.IDOMBuildDirectives;
+    domBuildDirectives?: dbd.IDOMBuildDirectives;
+    domProcesor?: ca.DoForEachAction<IProgramConfig, fsa.IHTMLFile>;
 }
 
 var versionKey = 'version';
 
+  
 export var programConfig: IProgramConfig = {
     do: ca.doSequenceOfTypedActions,
     cacheVersionLabel: {
@@ -74,12 +76,26 @@ export var programConfig: IProgramConfig = {
     subActionsGenerator: [
         i => i.cacheVersionLabel,
         i => i.minifyJSFiles,
-        i => i.processHTMLFilesInMemory,
+        i => i.selectAndReadHTMLFiles,
         i => i.exportInMemoryDocumentsToFiles,
         i => i.waitForUserInput
     ],
     configOneLiners: [
-        i => { i.domProcessor.container = i.processHTMLFilesInMemory; },
+        i => { i.domBuildDirectives.container = i.selectAndReadHTMLFiles; },
+        //i => { i.domProcessor.removeBuildDirective.state.$ = i.processHTMLFilesInMemory.fileSelec
     ],
+    domProcesor: {
+        forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
+        subActionsGenerator: i => [
+            htmlFile => {
+                i.domBuildDirectives.removeBuildDirective.state.$ = htmlFile.$;
+                return i.domBuildDirectives.removeBuildDirective;
+            },
+            htmlFile => {
+                i.domBuildDirectives.makeJSClobDirective.state.$ = htmlFile.$;
+                return i.domBuildDirectives.makeJSClobDirective;
+            },
+        ],
+    },
     async: true,
 };

@@ -266,6 +266,21 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
     
 }
 
+export interface IHTMLFile {
+    filePath: string;
+    $: JQueryStatic;
+}
+
+interface ISelectAndReadHTLMFilesActionState {
+    htmlFiles?: IHTMLFile[];
+}
+
+export interface ISelectAndReadHTMLFilesAction extends IWebAction {
+    fileSelector: IFileSelectorAction;
+    fileProcessor: IFileProcessorAction;
+    state?: ISelectAndReadHTLMFilesActionState;
+}
+
 //#endregion
 
 //#region Exporting Processed Documeents to Files

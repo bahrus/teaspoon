@@ -123,6 +123,11 @@ export function merge<T>(mergeAction: IMergeAction<T>, context: IContext, callba
         _.merge(srcRef, mergeAction.destRef);
     }
 }
+
+export interface DoForEachAction<TContainer, TListItem> extends IAction  {
+    forEach?: (container: TContainer) => TListItem[];
+    subActionsGenerator?: (container: TContainer) => [(listItem: TListItem) => IAction];
+}
 //#endregion
 
 export interface IProcessManager {
