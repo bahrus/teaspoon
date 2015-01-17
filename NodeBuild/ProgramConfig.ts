@@ -95,16 +95,10 @@ export const programConfig: IProgramConfig = {
     
     async: true,
 };
-//var subMergeActionGenerator: (ipg: IProgramConfig) => ca.ISubMergeAction<da.IDOMTransformAction, fsa.IHTMLFile, da.IDOMTransformActionState> = (ipg: IProgramConfig) => {
-//    var returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
-//        destRef: ipg.domBuildDirectives.makeJSClobDirective,
-//        destinationPropertyGetter: i => i.state,
-//        srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
-//        sourcePropertyGetter: i => i,
-//    };
-//    return returnObj;
-//};
-var subMergeActionGenerator: (ipg: IProgramConfig) => da.ISubmergeHTMLFileIntoDomTransformActionState = (ipg: IProgramConfig) => {
+
+type SubmergeGetter = (ipg: IProgramConfig) => da.ISubmergeHTMLFileIntoDomTransformActionState;
+
+var subMergeActionGenerator: SubmergeGetter = (ipg) => {
     var returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
         destRefs: [ipg.domBuildDirectives.removeBuildDirective, ipg.domBuildDirectives.makeJSClobDirective],
         destinationPropertyGetter: i => i.state,
