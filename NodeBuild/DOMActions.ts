@@ -168,7 +168,7 @@ export type ISubmergeHTMLFileIntoDomTransformActionState = ca.ISubMergeAction<ID
 
 export interface IMergeAndDoForEachHTMLFileAction<TContainer, TListItem> {
     forEach?: (container: TContainer) => TListItem[];
-    submergeActionGenerator?: [ISubmergeHTMLFileIntoDomTransformActionState];
+    submergeActionGenerator?: [(container: TContainer) => ISubmergeHTMLFileIntoDomTransformActionState];
 }
 //#endregion
 

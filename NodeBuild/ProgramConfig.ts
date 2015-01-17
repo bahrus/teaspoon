@@ -100,13 +100,13 @@ type SubmergeGetter = (ipg: IProgramConfig) => da.ISubmergeHTMLFileIntoDomTransf
 
 var mergeAction: da.IMergeAndDoForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile> = {
     forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-    submergeActionGenerator: [(ipg) =>  {
-            const returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
-                destRefs: [ipg.domBuildDirectives.removeBuildDirective, ipg.domBuildDirectives.makeJSClobDirective],
-                destinationPropertyGetter: i => i.state,
-                srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
-            };
-            return returnObj;
+    submergeActionGenerator: [(ipg) => {
+        const returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
+            destRefs: [ipg.domBuildDirectives.removeBuildDirective, ipg.domBuildDirectives.makeJSClobDirective],
+            destinationPropertyGetter: i => i.state,
+            srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
+        };
+        return returnObj;
     }],
 };
 programConfig.domProcessor = mergeAction;

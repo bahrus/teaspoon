@@ -118,8 +118,8 @@ export function merge<T>(mergeAction: IMergeAction<T>, context: IContext, callba
 }
 
 export interface ISubMergeAction<TDestAction extends IAction, TSrc, TProp>  {
-    srcRefs?: TSrc[];
-    destRefs?: TDestAction[];
+    srcRefs: TSrc[];
+    destRefs: TDestAction[];
     destinationPropertyGetter?: (destAction: TDestAction) => TProp;
     sourcePropertyGetter?: (src: TSrc) => TProp;
 }
