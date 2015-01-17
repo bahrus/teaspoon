@@ -8,8 +8,10 @@ module tsp.MainConfig{
 //#region[mode='ss']
 import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
+import da = require('./DOMActions');
 import dbd = require('./DOMBuildDirectives');
 //#endregion[mode='ss']
+
 
 
 interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
@@ -20,7 +22,10 @@ interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     waitForUserInput?: fsa.IWaitForUserInput;
     //domProcessor?: dbd.domBuildDirectives;
     domBuildDirectives?: dbd.IDOMBuildDirectives;
-    domProcesor?: ca.DoForEachAction<IProgramConfig, fsa.IHTMLFile>;
+    //domProcesor?: ca.IDoForEachAction<IProgramConfig, fsa.IHTMLFile>;
+    domProcessor?: da.IMergeAndDoForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile>;
+    //mergeHTMLFileIntoRemoveDirective?: submergeHTMLFileIntoDomTransformActionState;
+    //mergeHTMLFileIntoJSSCobDirective?: submergeHTMLFileIntoDomTransformActionState; 
 }
 
 const versionKey = 'version';
@@ -52,20 +57,24 @@ export const programConfig: IProgramConfig = {
         //#endregion
     },
     domBuildDirectives: dbd.domBuildConfig,
-    domProcesor: {
+    
+    domProcessor: {
         forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-        subActionsGenerator: i => [
-            htmlFile => {
-                const directive = i.domBuildDirectives.removeBuildDirective;
-                directive.state.$ = htmlFile.$;
-                return directive;
-            },
-            htmlFile => {
-                const directive = i.domBuildDirectives.makeJSClobDirective;
-                directive.state.$ = htmlFile.$;
-                return directive;
-            },
-        ],
+        //submergeActionGenerator: i => [
+        //],
+        //submergeActionGenerator: i => [],
+        //subActionsGenerator: i => [
+        //    htmlFile => {
+        //        const directive = i.domBuildDirectives.removeBuildDirective;
+        //        directive.state.$ = htmlFile.$;
+        //        return directive;
+        //    },
+        //    htmlFile => {
+        //        const directive = i.domBuildDirectives.makeJSClobDirective;
+        //        directive.state.$ = htmlFile.$;
+        //        return directive;
+        //    },
+        //],
     },
     exportInMemoryDocumentsToFiles: {
         do: fsa.exportProcessedDocumentsToFiles,
@@ -78,7 +87,7 @@ export const programConfig: IProgramConfig = {
         i => i.cacheVersionLabel,
         i => i.minifyJSFiles,
         i => i.selectAndReadHTMLFiles,
-        i => i.domProcesor,
+        i => i.domProcessor,
         i => i.exportInMemoryDocumentsToFiles,
         i => i.waitForUserInput
     ],
@@ -86,3 +95,28 @@ export const programConfig: IProgramConfig = {
     
     async: true,
 };
+//var subMergeActionGenerator: (ipg: IProgramConfig) => ca.ISubMergeAction<da.IDOMTransformAction, fsa.IHTMLFile, da.IDOMTransformActionState> = (ipg: IProgramConfig) => {
+//    var returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
+//        destRef: ipg.domBuildDirectives.makeJSClobDirective,
+//        destinationPropertyGetter: i => i.state,
+//        srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
+//        sourcePropertyGetter: i => i,
+//    };
+//    return returnObj;
+//};
+var subMergeActionGenerator: (ipg: IProgramConfig) => da.ISubmergeHTMLFileIntoDomTransformActionState = (ipg: IProgramConfig) => {
+    var returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
+        destRefs: [ipg.domBuildDirectives.removeBuildDirective, ipg.domBuildDirectives.makeJSClobDirective],
+        destinationPropertyGetter: i => i.state,
+        srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
+        sourcePropertyGetter: i => i,
+    };
+    return returnObj;
+};
+var mergeAction: da.IMergeAndDoForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile> = {
+    forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
+    submergeActionGenerator: [subMergeActionGenerator],
+};
+programConfig.domProcessor = mergeAction;
+
+

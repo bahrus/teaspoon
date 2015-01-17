@@ -61,9 +61,9 @@ export interface ITextFileReaderAction extends ca.IAction, IRootDirectoryRetriev
 }
 
 export function readTextFile(action: ITextFileReaderAction, context: IWebContext) {
-    var rootdirectory = action.rootDirectoryRetriever(context);
-    var wfm = context.fileManager;
-    var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
+    const rootdirectory = action.rootDirectoryRetriever(context);
+    const wfm = context.fileManager;
+    const filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
     action.state = {
         content:wfm.readTextFileSync(filePath),
     };   
@@ -87,7 +87,7 @@ export interface IWaitForUserInput extends ca.IAction {
 export function waitForUserInput(action: IWaitForUserInput, context: IWebContext, callback: ca.ICallback) {
     if (action.debug) debugger;
     if (context.processManager) {
-        var test = (chunk: string, key: any) => {
+        const test = (chunk: string, key: any) => {
             return key && key.ctrl && key.name == 'c';
         }
         context.processManager.WaitForUserInputAndExit('Press ctrl c to exit', test);
@@ -121,7 +121,7 @@ export function selectFiles(action: IFileSelectorAction, context: IWebContext) {
             rootDirectory: action.rootDirectoryRetriever(context),
         };
     }
-    var files = context.fileManager.listDirectorySync(action.state.rootDirectory);
+    let files = context.fileManager.listDirectorySync(action.state.rootDirectory);
     if (action.fileTest) files = files.filter(action.fileTest);
     files = files.map(s => action.state.rootDirectory + s);
     action.state.selectedFilePaths = files;
@@ -175,7 +175,7 @@ function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWeb
 }
 
 export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: ca.ICallback) {
-    var wfm = context.fileManager;
+    const wfm = context.fileManager;
     console.log('processing ' + action.state.filePath);
     if (callback) {
         wfm.readTextFileAsync(action.state.filePath, (err, data) => {
@@ -183,7 +183,7 @@ export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebC
             callback(err);
         });
     } else {
-        var data = wfm.readTextFileSync(action.state.filePath);
+        const data = wfm.readTextFileSync(action.state.filePath);
         processHTMLFileSubRules(action, context, data);
         ca.endAction(action, callback);
     }
@@ -194,7 +194,7 @@ export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebC
 //#region JS File Processing
 export function minifyJSFile(action: IFileProcessorAction, context: IWebContext, callback: ca.ICallback) {
     console.log('Uglifying ' + action.state.filePath);
-    var filePath = action.state.filePath;
+    const filePath = action.state.filePath;
     context.fileManager.minify(filePath, (err, min) => {
         if (err) {
             console.log('Error uglifying ' + filePath);
@@ -220,20 +220,20 @@ export interface ISelectAndProcessFileAction extends IWebAction {
 
 export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: ca.ICallback) {
     if (this.debug) debugger;
-    var fs = action.fileSelector;
+    const fs = action.fileSelector;
     fs.do(fs, context);
-    var selectedFilePaths = fs.state.selectedFilePaths;
-    var len = selectedFilePaths.length;
+    const selectedFilePaths = fs.state.selectedFilePaths;
+    const len = selectedFilePaths.length;
     if (len === 0) {
         ca.endAction(action, callback);
         return;
     }
-    var fp = action.fileProcessor;
+    const fp = action.fileProcessor;
     if (action.async) {
         var idx = 0;
         var fpCallback = (err) => {
             if (idx < len) {
-                var filePath = selectedFilePaths[idx];
+                const filePath = selectedFilePaths[idx];
                 idx++;
                 if (!fp.state) {
                     fp.state = {
@@ -286,8 +286,8 @@ export interface ISelectAndReadHTMLFilesAction extends IWebAction {
 //#region Exporting Processed Documeents to Files
 export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: ca.ICallback) {
     if (action.debug) debugger;
-    for (var filePath in context.HTMLOutputs) {
-        var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
+    for (let filePath in context.HTMLOutputs) {
+        const $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
         context.fileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
     }
     ca.endAction(action, callback);

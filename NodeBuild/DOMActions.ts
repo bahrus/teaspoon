@@ -50,19 +50,17 @@ export function remove(action: IDOMElementBuildAction, context: fsa.IWebContext,
 }
 
 export function addToJSClob(action: IDOMElementBuildAction, context: fsa.IWebContext, callback: ca.ICallback) {
-    var state = action.state;
-    var src = action.state.element.attr('src');
-    var referringDir = context.fileManager.resolve(state.filePath, '..', src);
+    const state = action.state;
+    const src = action.state.element.attr('src');
+    const referringDir = context.fileManager.resolve(state.filePath, '..', src);
     if (!context.JSOutputs) context.JSOutputs = {};
-    var jsOutputs = context.JSOutputs;
+    const jsOutputs = context.JSOutputs;
     if (!jsOutputs[referringDir]) jsOutputs[state.filePath] = [];
-    var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
-    var minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
+    const minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
+    const minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
     jsOutputs[state.filePath].push(minifiedContent);
     action.state.element.remove();
-    //var filePathToScript = context.WebServerFileHost.readFileFromRelativeUrl(state.filePath, src);
     ca.endAction(action, callback);
-
 }
 
 //#endregion
@@ -75,7 +73,6 @@ export interface IDOMElementCSSSelectorState extends IDOMState {
 }
 
 export interface IDOMElementSelector extends fsa.IWebAction {
-    //isDOMElementSelector?: (action: IBuildAction) => boolean;
 }
 
 export interface IDOMElementCSSSelector extends IDOMElementSelector {
@@ -85,7 +82,7 @@ export interface IDOMElementCSSSelector extends IDOMElementSelector {
 
 export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWebContext, callback: ca.ICallback) {
     if (action.debug) debugger;
-    var aS = action.state;
+    const aS = action.state;
     if (aS.relativeTo) {
         aS.elements = aS.relativeTo.find(action.cssSelector);
     } else {
@@ -97,38 +94,36 @@ export function selectElements(action: IDOMElementCSSSelector, context: fsa.IWeb
 
 //#region DOM Transform
 
-interface IDOMTransformActionState extends IDOMState {
+export interface IDOMTransformActionState extends IDOMState {
     parent?: IDOMTransformAction;
 }
 
 export interface IDOMTransformAction extends fsa.IWebAction {
     selector: IDOMElementCSSSelector;
     elementAction?: IDOMElementBuildAction;
-    //parent?: IDOMTransformTree
-    //children?: IDOMTransformAction[];
     state?: IDOMTransformActionState;
 }
 
 export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebContext, callback: ca.ICallback) {
-    var elements: JQuery;
-    var p: IDOMTransformAction;
+    let elements: JQuery;
+    let p: IDOMTransformAction;
     if (action.state) {
         p = action.state.parent;
     }
-    var aSel = action.selector;
+    const aSel = action.selector;
     if (!aSel.state) {
         aSel.state = {
             $: action.state.$,
             filePath: action.state.filePath,
         };
     }
-    var aSelSt = aSel.state;
+    const aSelSt = aSel.state;
     aSelSt.treeNode = action;
     if (p && p.elementAction) {
         aSelSt.relativeTo = p.elementAction.state.element;
     }
     aSel.do(aSel, context);
-    var eA = action.elementAction;
+    const eA = action.elementAction;
     if (eA) {
         //#region element Action
         eA.state = {
@@ -138,11 +133,11 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
             filePath: aSelSt.filePath,
         };
         if (eA.async) {
-            var i = 0;
+            let i = 0;
             var n = aSelSt.elements.length;
-            var eACallback = (err) => {
+            const eACallback = (err) => {
                 if (i < n) {
-                    var $elem = aSelSt.$(aSelSt.elements[i]);
+                    const $elem = aSelSt.$(aSelSt.elements[i]);
                     i++;
                     eA.state.element = $elem;
                     eA.do(eA, context, eACallback);
@@ -152,8 +147,9 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
             };
             eACallback(null);
         } else {
-            for (var i = 0, n = aSelSt.elements.length; i < n; i++) {
-                var $elem = aSelSt.$(aSelSt.elements[i]);
+            const n = aSelSt.elements.length
+            for (let i = 0; i < n; i++) {
+                const $elem = aSelSt.$(aSelSt.elements[i]);
                 eA.state.element = $elem;
                 eA.do(eA, context);
             }
@@ -167,6 +163,13 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
     
 }
 
+export type ISubmergeHTMLFileIntoDomTransformActionState = ca.ISubMergeAction<IDOMTransformAction, fsa.IHTMLFile, IDOMTransformActionState>;
+
+
+export interface IMergeAndDoForEachHTMLFileAction<TContainer, TListItem> {
+    forEach?: (container: TContainer) => TListItem[];
+    submergeActionGenerator?: [(container: TContainer)  => ISubmergeHTMLFileIntoDomTransformActionState];
+}
 //#endregion
 
 /*//#region[mode='cs']

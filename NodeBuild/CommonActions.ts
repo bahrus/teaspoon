@@ -40,13 +40,13 @@ export interface IMessageAction extends IAction {
 }
 
 export function logToConsole(messageAction: IMessageAction, context: IContext, callback: ICallback) {
-    var mA = messageAction;
+    const mA = messageAction;
     mA.state = {
         dynamicMessage: mA.message ? mA.message : '',
     };
-    var mS = mA.state;
+    const mS = mA.state;
     if (mA.messageGenerator) {
-        var genMessage = mA.messageGenerator(mA);
+        let genMessage = mA.messageGenerator(mA);
         genMessage = (mS.dynamicMessage ? (mS.dynamicMessage + ' ') : '') + genMessage;
         mS.dynamicMessage = genMessage;
     }
@@ -60,10 +60,11 @@ export interface IActionList extends IAction {
 
 export function doSequenceOfActions(action: IActionList, context: IContext, callback: ICallback) {
     if (action.async) {
-        var i = 0, n = action.subActions.length;
-        var seqCallback: ICallback = (err) => {
+        let i = 0;
+        const n = action.subActions.length;
+        const seqCallback: ICallback = (err) => {
             if (i < n) {
-                var subAction = action.subActions[i];
+                const subAction = action.subActions[i];
                 i++;
                 subAction.do(subAction, context, seqCallback);
             } else {
@@ -72,7 +73,7 @@ export function doSequenceOfActions(action: IActionList, context: IContext, call
         };
         seqCallback(null);
     } else {
-        for (var i = 0, n = action.subActions.length; i < n; i++) {
+        for (let i = 0, n = action.subActions.length; i < n; i++) {
             var subAction = action.subActions[i];
             subAction.do(subAction, context);
         }
@@ -85,23 +86,14 @@ export interface ITypedActionList<T> extends IAction {
 }
 
 export function doSequenceOfTypedActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
-    //doSequenceOfActions(action.subActionsGenerator(action), context, callback);
-    var t = <T> <any> action;
-    var actionList: IActionList = {
+    const t = <T> <any> action;
+    const actionList: IActionList = {
         do: doSequenceOfActions,
         subActions: _.map(action.subActionsGenerator, sag => sag(t)),
         async: action.async,
     };
-    //var subActions = [];
-    //for (var i = 0, n = action.subActionsGenerator.length; i < n; i++) {
-    //    var sag = action.subActionsGenerator[i];
-    //    var subAction = sag(t);
-    //    subActions.push(subAction);
-    //}
-    //actionList.subActions = subActions;
-    //debugger;
     if (action.async) {
-        var myCallback: ICallback = err => {
+        const myCallback: ICallback = err => {
             endAction(action, callback);
         };
         doSequenceOfActions(actionList, context, myCallback);
@@ -118,16 +110,47 @@ export interface IMergeAction<T> extends IAction {
 }
 
 export function merge<T>(mergeAction: IMergeAction<T>, context: IContext, callback: ICallback) {
-    for (var i = 0, n = mergeAction.srcRefs.length; i < n; i++) {
-        var srcRef = mergeAction.srcRefs[i];
+    const n = mergeAction.srcRefs.length;
+    for (let i = 0; i < n; i++) {
+        const srcRef = mergeAction.srcRefs[i];
         _.merge(srcRef, mergeAction.destRef);
     }
 }
 
-export interface DoForEachAction<TContainer, TListItem> extends IAction  {
+export interface ISubMergeAction<TDestAction extends IAction, TSrc, TProp>  {
+    srcRefs?: TSrc[];
+    destRefs?: TDestAction[];
+    destinationPropertyGetter?: (destAction: TDestAction) => TProp;
+    sourcePropertyGetter?: (src: TSrc) => TProp;
+}
+
+export function subMerge<TDestAction extends IAction, TSrc, TProp>(subMergeAction: ISubMergeAction<TDestAction, TSrc, TProp>, context: IContext, callback: ICallback) {
+    const dpg = subMergeAction.destinationPropertyGetter;
+    const spg = subMergeAction.sourcePropertyGetter;
+    const srcRefs = subMergeAction.srcRefs;
+    const noOfSrcRefs = srcRefs.length;
+    const destRefs = subMergeAction.destRefs;
+    const noOfDestRefs = destRefs.length;
+    //const destProp = dpg(dr);
+    for (let i = 0; i < noOfSrcRefs; i++) {
+        const srcRef = srcRefs[i];
+        const srcProp = spg(srcRef);
+        for (let j = 0; j < noOfDestRefs; j++) {
+            const destRef = destRefs[j];
+            const destProp = dpg(destRef);
+            _.merge(srcProp, destProp);
+            destRef.do(destRef, context, callback);
+        }
+        
+    }
+}
+
+export interface IDoForEachAction<TContainer, TListItem> extends IAction  {
     forEach?: (container: TContainer) => TListItem[];
     subActionsGenerator?: (container: TContainer) => [(listItem: TListItem) => IAction];
 }
+
+
 
 //export function 
 //#endregion
