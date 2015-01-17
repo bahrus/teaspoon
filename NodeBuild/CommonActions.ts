@@ -128,6 +128,8 @@ export interface DoForEachAction<TContainer, TListItem> extends IAction  {
     forEach?: (container: TContainer) => TListItem[];
     subActionsGenerator?: (container: TContainer) => [(listItem: TListItem) => IAction];
 }
+
+//export function 
 //#endregion
 
 export interface IProcessManager {

@@ -23,10 +23,9 @@ interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     domProcesor?: ca.DoForEachAction<IProgramConfig, fsa.IHTMLFile>;
 }
 
-var versionKey = 'version';
+const versionKey = 'version';
 
-  
-export var programConfig: IProgramConfig = {
+export const programConfig: IProgramConfig = {
     do: ca.doSequenceOfTypedActions,
     cacheVersionLabel: {
         do: fsa.cacheTextFile,
@@ -52,19 +51,21 @@ export var programConfig: IProgramConfig = {
         async: true,
         //#endregion
     },
-    processHTMLFilesInMemory: {
-        //#region Html Files
-        do: fsa.selectAndProcessFiles,
-        fileSelector: {
-            do: fsa.selectFiles,
-            fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
-            rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
-        },
-        fileProcessor: {
-            do: fsa.processHTMLFile,
-            fileSubProcessActions: dbd.All,
-        },
-        //#endregion
+    domBuildDirectives: dbd.domBuildConfig,
+    domProcesor: {
+        forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
+        subActionsGenerator: i => [
+            htmlFile => {
+                const directive = i.domBuildDirectives.removeBuildDirective;
+                directive.state.$ = htmlFile.$;
+                return directive;
+            },
+            htmlFile => {
+                const directive = i.domBuildDirectives.makeJSClobDirective;
+                directive.state.$ = htmlFile.$;
+                return directive;
+            },
+        ],
     },
     exportInMemoryDocumentsToFiles: {
         do: fsa.exportProcessedDocumentsToFiles,
@@ -77,25 +78,11 @@ export var programConfig: IProgramConfig = {
         i => i.cacheVersionLabel,
         i => i.minifyJSFiles,
         i => i.selectAndReadHTMLFiles,
+        i => i.domProcesor,
         i => i.exportInMemoryDocumentsToFiles,
         i => i.waitForUserInput
     ],
-    configOneLiners: [
-        i => { i.domBuildDirectives.container = i.selectAndReadHTMLFiles; },
-        //i => { i.domProcessor.removeBuildDirective.state.$ = i.processHTMLFilesInMemory.fileSelec
-    ],
-    domProcesor: {
-        forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-        subActionsGenerator: i => [
-            htmlFile => {
-                i.domBuildDirectives.removeBuildDirective.state.$ = htmlFile.$;
-                return i.domBuildDirectives.removeBuildDirective;
-            },
-            htmlFile => {
-                i.domBuildDirectives.makeJSClobDirective.state.$ = htmlFile.$;
-                return i.domBuildDirectives.makeJSClobDirective;
-            },
-        ],
-    },
+    
+    
     async: true,
 };

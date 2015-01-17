@@ -8,7 +8,7 @@ export interface IDOMBuildDirectives extends ca.ITypedActionList<IDOMBuildDirect
     container?: fsa.ISelectAndProcessFileAction;
 }
 
-export var domBuildConfig: IDOMBuildDirectives = {
+export const domBuildConfig: IDOMBuildDirectives = {
     removeBuildDirective:  {
         do: da.DOMTransform,
         selector: {
@@ -37,4 +37,3 @@ export var domBuildConfig: IDOMBuildDirectives = {
 };
 
 
-export var All: da.IDOMTransformAction[] = [domBuildConfig.removeBuildDirective, domBuildConfig.makeJSClobDirective];
