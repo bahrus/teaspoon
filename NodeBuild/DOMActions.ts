@@ -174,7 +174,7 @@ export interface IDOMTransformForEachHTMLFileAction<TContainer, TListItem> {
     putHTMLFileIntoDomTransformGenerator?: [(container: TContainer) => IPutHTMLFileIntoDomTransformAction];
 }
 
-export function PutHTMLFileIntoDomTransform(action: IPutHTMLFileIntoDomTransformAction, context: ca.IContext, callback: ca.ICallback) {
+export function ApplyDOMTransformsOnHTMLFiles(action: IPutHTMLFileIntoDomTransformAction, context: ca.IContext, callback: ca.ICallback) {
     const sma: ISubMergeHTMLFileIntoDomTransform = {
         srcRefs: action.htmlFiles,
         destRefs: action.domTransforms,

@@ -59,15 +59,15 @@ export const programConfig: IProgramConfig = {
     domBuildDirectives: dbd.domBuildConfig,
 
     domProcessor: {
-        putHTMLFileIntoDomTransformGenerator: [(i) => {
-            const returnObj: da.IPutHTMLFileIntoDomTransformAction = {
-                do: da.PutHTMLFileIntoDomTransform,
-                htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
-                domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-            };
-            return returnObj;
-
-        }],
+        putHTMLFileIntoDomTransformGenerator: [
+            i => {
+                return {
+                    do: da.ApplyDOMTransformsOnHTMLFiles,
+                    htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
+                    domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
+                }
+            }
+        ],
         
     },
     exportInMemoryDocumentsToFiles: {
