@@ -17,7 +17,7 @@ export function replaceStartWith(str: string, prefix: string, replaceText: strin
 }
 
 export function replaceEndWith(str: string, suffix: string, replaceText: string) {
-    var iPosOfEnd = str.indexOf(suffix, str.length - suffix.length);
+    const iPosOfEnd = str.indexOf(suffix, str.length - suffix.length);
     if (iPosOfEnd === -1) return str;
     return str.substr(0, iPosOfEnd) + replaceText;
 }

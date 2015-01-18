@@ -74,7 +74,7 @@ export function doSequenceOfActions(action: IActionList, context: IContext, call
         seqCallback(null);
     } else {
         for (let i = 0, n = action.subActions.length; i < n; i++) {
-            var subAction = action.subActions[i];
+            const subAction = action.subActions[i];
             subAction.do(subAction, context);
         }
         endAction(action, callback);

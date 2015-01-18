@@ -1,17 +1,17 @@
 ﻿import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
-import programConfig = require('./ProgramConfig');
-import nodeJSImplementations = require('./NodeJSImplementations');
+import pc = require('./ProgramConfig');
+import nji = require('./NodeJSImplementations');
 
 const context: fsa.IWebContext = {
     stringCache: {},
     HTMLOutputs: {},
-    fileManager: new nodeJSImplementations.NodeJSWebFileManager(),
-    processManager: new nodeJSImplementations.NodeJSProcessManager(),
+    fileManager: new nji.NodeJSWebFileManager(),
+    processManager: new nji.NodeJSProcessManager(),
 };
 const callback: ca.ICallback = (err) => {
 };
-programConfig.programConfig.do(programConfig.programConfig, context, callback);
+pc.programConfig.do(pc.programConfig, context, callback);
 
 
 

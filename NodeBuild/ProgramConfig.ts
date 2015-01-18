@@ -1,9 +1,9 @@
 ﻿/*//#region[mode='cs']
 module tsp.MainConfig{
-    var Is = tsp.Is;
-    var fsa = tsp.FileSystemActions;
-    var ua = tsp.UtilityActions;
-    var domDirectives = tsp.DOMBuildDirectives;
+    const Is = tsp.Is;
+    const fsa = tsp.FileSystemActions;
+    const ua = tsp.UtilityActions;
+    const domDirectives = tsp.DOMBuildDirectives;
 *///#endregion[mode='cs']
 //#region[mode='ss']
 import ca = require('./CommonActions');
@@ -59,16 +59,13 @@ export const programConfig: IProgramConfig = {
     domBuildDirectives: dbd.domBuildConfig,
 
     domProcessor: {
-        putHTMLFileIntoDomTransformGenerator: [
-            i => {
-                return {
-                    do: da.ApplyDOMTransformsOnHTMLFiles,
-                    htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
-                    domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-                }
+        putHTMLFileIntoDomTransformGenerator: i => {
+            return {
+                do: da.ApplyDOMTransformsOnHTMLFiles,
+                htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
+                domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
             }
-        ],
-        
+        }
     },
     exportInMemoryDocumentsToFiles: {
         do: fsa.exportProcessedDocumentsToFiles,

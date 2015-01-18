@@ -44,7 +44,7 @@ export module commonHelperFunctions {
     }
 
     export function retrieveWorkingDirectory(context: IWebContext) {
-        var wfm = context.fileManager;
+        const wfm = context.fileManager;
         return wfm.getWorkingDirectoryPath() + wfm.getSeparator();
     }
 }
@@ -152,11 +152,12 @@ export interface IHTMLFileProcessorAction extends IFileProcessorAction {
 
 function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
     if (action.debug) debugger;
-    var $ = context.fileManager.loadHTML(data);
+    const $ = context.fileManager.loadHTML(data);
     action.state.$ = $;
     if (action.fileSubProcessActions) {
-        for (var i = 0, n = action.fileSubProcessActions.length; i < n; i++) {
-            var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
+        const n = action.fileSubProcessActions.length;
+        for (let i = 0; i < n; i++) {
+            const fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
             fspa.state = {
                 $: action.state.$,
                 filePath: action.state.filePath,
@@ -167,9 +168,9 @@ function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWeb
     if (!context.HTMLOutputs) context.HTMLOutputs = {};
     context.HTMLOutputs[action.state.filePath] = action.state.$;
     if (action.debug) {
-        var $any = <any> action.state.$;
-        var $cheerio = <CheerioStatic> $any;
-        var sOutput = $cheerio.html();
+        const $any = <any> action.state.$;
+        const $cheerio = <CheerioStatic> $any;
+        const sOutput = $cheerio.html();
         debugger;
     }
 }
@@ -230,8 +231,8 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
     }
     const fp = action.fileProcessor;
     if (action.async) {
-        var idx = 0;
-        var fpCallback = (err) => {
+        let idx = 0;
+        const fpCallback = (err) => {
             if (idx < len) {
                 const filePath = selectedFilePaths[idx];
                 idx++;
@@ -249,8 +250,9 @@ export function selectAndProcessFiles(action: ISelectAndProcessFileAction, conte
         }
         fpCallback(null);
     } else {
-        for (var i = 0, n = fs.state.selectedFilePaths.length; i < n; i++) {
-            var filePath = fs.state.selectedFilePaths[i];
+        const n = fs.state.selectedFilePaths.length;
+        for (let i = 0; i < n; i++) {
+            let filePath = fs.state.selectedFilePaths[i];
             if (!fp.state) {
                 fp.state = {
                     filePath: filePath,

@@ -9,7 +9,7 @@ import compressor = require('node-minify');
 export class NodeJSFileManager implements fsa.IFileManager {
 
     readTextFileSync(filePath: string) {
-        var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
+        const data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
         return <string> data;
     }
     readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void) {
@@ -23,7 +23,7 @@ export class NodeJSFileManager implements fsa.IFileManager {
         return fs.readdirSync(dirPath);
     }
     getExecutingScriptFilePath() {
-        var pathOfScript = process.argv[1];
+        const pathOfScript = process.argv[1];
         return pathOfScript;
     }
     getSeparator() {
@@ -40,12 +40,12 @@ export class NodeJSFileManager implements fsa.IFileManager {
 export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebFileManager {
     
     loadHTML(html: string) {
-        var $ = cheerio.load(html);
-        var $any = <any> $;
+        const $ = cheerio.load(html);
+        const $any = <any> $;
         return <JQueryStatic> $any;
     }
     minify(filePath: string, callback: (err: Error, min: string) => void) {
-        var destPath = pa.replaceEndWith(filePath, '.js', '.min.js');
+        const destPath = pa.replaceEndWith(filePath, '.js', '.min.js');
         new compressor.minify({
             type: 'uglifyjs',
             fileIn: filePath,
@@ -58,7 +58,7 @@ export class NodeJSWebFileManager extends NodeJSFileManager implements fsa.IWebF
 
 export class NodeJSProcessManager implements ca.IProcessManager {
     WaitForUserInputAndExit(message: string, testForExit: (chunk: string, key: string) => boolean) {
-        var stdin = process['openStdin']();
+        const stdin = process['openStdin']();
         process.stdin['setRawMode']();
         console.log(message);
         stdin.on('keypress', function (chunk, key) {

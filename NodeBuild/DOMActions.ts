@@ -1,7 +1,7 @@
 ﻿/*//#region[mode='cs'] 
 module tsp.DOMActions{
-    var Is = tsp.Is;
-    var u = tsp.util;
+    const Is = tsp.Is;
+    const u = tsp.util;
 *///#endregion[mode='cs']
 //#region[mode='ss'] 
 import ca = require('./CommonActions');
@@ -134,7 +134,7 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
         };
         if (eA.async) {
             let i = 0;
-            var n = aSelSt.elements.length;
+            const n = aSelSt.elements.length;
             const eACallback = (err) => {
                 if (i < n) {
                     const $elem = aSelSt.$(aSelSt.elements[i]);
@@ -171,7 +171,7 @@ export interface IPutHTMLFileIntoDomTransformAction extends ca.IAction {
 }
 
 export interface IDOMTransformForEachHTMLFileAction<TContainer, TListItem> {
-    putHTMLFileIntoDomTransformGenerator?: [(container: TContainer) => IPutHTMLFileIntoDomTransformAction];
+    putHTMLFileIntoDomTransformGenerator?: (container: TContainer) => IPutHTMLFileIntoDomTransformAction;
 }
 
 export function ApplyDOMTransformsOnHTMLFiles(action: IPutHTMLFileIntoDomTransformAction, context: ca.IContext, callback: ca.ICallback) {
