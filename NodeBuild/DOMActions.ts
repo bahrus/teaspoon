@@ -163,24 +163,24 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
     
 }
 
-export type IPutHTMLFileIntoDomTransform = ca.ISubMergeAction<IDOMTransformAction, fsa.IHTMLFile, IDOMTransformActionState>;
+type ISubMergeHTMLFileIntoDomTransform = ca.ISubMergeAction<IDOMTransformAction, fsa.IHTMLFile, IDOMTransformActionState>;
 
-export interface IPutHTMLFileIntoDomTransorm2Action extends ca.IAction {
+export interface IPutHTMLFileIntoDomTransformAction extends ca.IAction {
     htmlFiles: fsa.IHTMLFile[];
     domTransforms: IDOMTransformAction[];
 }
 
 export interface IDOMTransformForEachHTMLFileAction<TContainer, TListItem> {
-    putHTMLFileIntoDomTransformGenerator?: [(container: TContainer) => IPutHTMLFileIntoDomTransorm2Action];
+    putHTMLFileIntoDomTransformGenerator?: [(container: TContainer) => IPutHTMLFileIntoDomTransformAction];
 }
 
-export function PutHTMLFileIntoDomTransform(action: IPutHTMLFileIntoDomTransorm2Action, context: ca.IContext, callback: ca.ICallback) {
-    var inp: IPutHTMLFileIntoDomTransorm2Action;
-    var outp: IPutHTMLFileIntoDomTransform = {
+export function PutHTMLFileIntoDomTransform(action: IPutHTMLFileIntoDomTransformAction, context: ca.IContext, callback: ca.ICallback) {
+    const sma: ISubMergeHTMLFileIntoDomTransform = {
         srcRefs: action.htmlFiles,
         destRefs: action.domTransforms,
         destinationPropertyGetter: i => i.state,
     };
+    ca.subMerge(sma, context, callback);
 }
 //#endregion
 

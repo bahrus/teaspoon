@@ -60,7 +60,7 @@ export const programConfig: IProgramConfig = {
 
     domProcessor: {
         putHTMLFileIntoDomTransformGenerator: [(i) => {
-            const returnObj: da.IPutHTMLFileIntoDomTransorm2Action = {
+            const returnObj: da.IPutHTMLFileIntoDomTransformAction = {
                 do: da.PutHTMLFileIntoDomTransform,
                 htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
                 domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
