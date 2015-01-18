@@ -60,11 +60,10 @@ export const programConfig: IProgramConfig = {
 
     domProcessor: {
         putHTMLFileIntoDomTransformGenerator: [(i) => {
-            const returnObj: da.IPutHTMLFileIntoDomTransform = {
-                do: ca.subMerge,
-                destRefs: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-                destinationPropertyGetter: i => i.state,
-                srcRefs: i.selectAndReadHTMLFiles.state.htmlFiles,
+            const returnObj: da.IPutHTMLFileIntoDomTransorm2Action = {
+                do: da.PutHTMLFileIntoDomTransform,
+                htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
+                domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
             };
             return returnObj;
 
