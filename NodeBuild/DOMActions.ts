@@ -163,12 +163,11 @@ export function DOMTransform(action: IDOMTransformAction, context: fsa.IWebConte
     
 }
 
-export type ISubmergeHTMLFileIntoDomTransformActionState = ca.ISubMergeAction<IDOMTransformAction, fsa.IHTMLFile, IDOMTransformActionState>;
+export type IPutHTMLFileIntoDomTransform = ca.ISubMergeAction<IDOMTransformAction, fsa.IHTMLFile, IDOMTransformActionState>;
 
 
-export interface IMergeAndDoForEachHTMLFileAction<TContainer, TListItem> {
-    forEach?: (container: TContainer) => TListItem[];
-    submergeActionGenerator?: [(container: TContainer) => ISubmergeHTMLFileIntoDomTransformActionState];
+export interface IDOMTransformForEachHTMLFileAction<TContainer, TListItem> {
+    putHTMLFileIntoDomTransformGenerator?: [(container: TContainer) => IPutHTMLFileIntoDomTransform];
 }
 //#endregion
 

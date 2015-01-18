@@ -23,7 +23,7 @@ interface IProgramConfig extends ca.ITypedActionList<IProgramConfig> {
     //domProcessor?: dbd.domBuildDirectives;
     domBuildDirectives?: dbd.IDOMBuildDirectives;
     //domProcesor?: ca.IDoForEachAction<IProgramConfig, fsa.IHTMLFile>;
-    domProcessor?: da.IMergeAndDoForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile>;
+    domProcessor?: da.IDOMTransformForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile>;
     //mergeHTMLFileIntoRemoveDirective?: submergeHTMLFileIntoDomTransformActionState;
     //mergeHTMLFileIntoJSSCobDirective?: submergeHTMLFileIntoDomTransformActionState; 
 }
@@ -57,24 +57,19 @@ export const programConfig: IProgramConfig = {
         //#endregion
     },
     domBuildDirectives: dbd.domBuildConfig,
-    
+
     domProcessor: {
-        forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-        //submergeActionGenerator: i => [
-        //],
-        //submergeActionGenerator: i => [],
-        //subActionsGenerator: i => [
-        //    htmlFile => {
-        //        const directive = i.domBuildDirectives.removeBuildDirective;
-        //        directive.state.$ = htmlFile.$;
-        //        return directive;
-        //    },
-        //    htmlFile => {
-        //        const directive = i.domBuildDirectives.makeJSClobDirective;
-        //        directive.state.$ = htmlFile.$;
-        //        return directive;
-        //    },
-        //],
+        putHTMLFileIntoDomTransformGenerator: [(i) => {
+            const returnObj: da.IPutHTMLFileIntoDomTransform = {
+                do: ca.subMerge,
+                destRefs: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
+                destinationPropertyGetter: i => i.state,
+                srcRefs: i.selectAndReadHTMLFiles.state.htmlFiles,
+            };
+            return returnObj;
+
+        }],
+        
     },
     exportInMemoryDocumentsToFiles: {
         do: fsa.exportProcessedDocumentsToFiles,
@@ -96,19 +91,6 @@ export const programConfig: IProgramConfig = {
     async: true,
 };
 
-type SubmergeGetter = (ipg: IProgramConfig) => da.ISubmergeHTMLFileIntoDomTransformActionState;
 
-var mergeAction: da.IMergeAndDoForEachHTMLFileAction<IProgramConfig, fsa.IHTMLFile> = {
-    forEach: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-    submergeActionGenerator: [(ipg) => {
-        const returnObj: da.ISubmergeHTMLFileIntoDomTransformActionState = {
-            destRefs: [ipg.domBuildDirectives.removeBuildDirective, ipg.domBuildDirectives.makeJSClobDirective],
-            destinationPropertyGetter: i => i.state,
-            srcRefs: ipg.selectAndReadHTMLFiles.state.htmlFiles,
-        };
-        return returnObj;
-    }],
-};
-programConfig.domProcessor = mergeAction;
 
 
