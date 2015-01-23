@@ -47,6 +47,7 @@
     <TypeScriptCompile Include="FileSystemActions.ts" />
     <TypeScriptCompile Include="lib.es6.d.ts" />
     <TypeScriptCompile Include="ParserActions.ts" />
+    <TypeScriptCompile Include="ParserConfig.ts" />
     <TypeScriptCompile Include="ProgramConfig.ts" />
     <TypeScriptCompile Include="NodeJSImplementations.ts" />
     <TypeScriptCompile Include="Scripts\typings\cheerio\cheerio.d.ts" />

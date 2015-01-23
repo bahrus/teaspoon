@@ -2,7 +2,7 @@
 import path = require('path');
 import ca = require('./CommonActions');
 import fsa = require('./FileSystemActions');
-import cheerio = require('cheerio');
+var cheerio = require('cheerio');
 import pa = require('./ParserActions');
 import compressor = require('node-minify');
 

@@ -43,6 +43,10 @@ export module commonHelperFunctions {
         return pa.endsWith(s, '.js') && !pa.endsWith(s, '.min.js');
     }
 
+    export function testForTsFileName(s: string) {
+        return pa.endsWith(s, '.ts');
+    }
+
     export function retrieveWorkingDirectory(context: IWebContext) {
         const wfm = context.fileManager;
         return wfm.getWorkingDirectoryPath() + wfm.getSeparator();
@@ -215,8 +219,8 @@ export function minifyJSFile(action: IFileProcessorAction, context: IWebContext,
 
 //#region File Select and Process
 export interface ISelectAndProcessFileAction extends IWebAction {
-    fileSelector: IFileSelectorAction
-    fileProcessor: IFileProcessorAction;
+    fileSelector?: IFileSelectorAction
+    fileProcessor?: IFileProcessorAction;
 }
 
 export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: ca.ICallback) {
