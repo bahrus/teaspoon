@@ -1,7 +1,8 @@
-﻿import ca = require('./CommonActions');
-import fsa = require('./FileSystemActions');
-import pc = require('./ProgramConfig');
-import nji = require('./NodeJSImplementations');
+﻿///<reference path='ProgramConfig.ts'/>
+//import ca = require('./CommonActions');
+//import fsa = require('./FileSystemActions');
+require('./ProgramConfig');
+//import nji = require('./NodeJSImplementations');
 
 const context: fsa.IWebContext = {
     stringCache: {},
@@ -11,6 +12,7 @@ const context: fsa.IWebContext = {
 };
 const callback: ca.ICallback = (err) => {
 };
+var pc = tsp.ProgramConfig;
 pc.programConfig.do(pc.programConfig, context, callback);
 
 
