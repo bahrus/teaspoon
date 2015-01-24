@@ -2,9 +2,12 @@
     export var I12 = 'hello';
 }
 
-exports.testModule = myModule;
 
-declare module "testModule" {
-    export = myModule;
+if (typeof (global) !== 'undefined') {
+    global['myModule'] = myModule;
 }
+
+//declare module "testModule" {
+//    export = myModule;
+//}
 
