@@ -3,10 +3,7 @@
 }
 module tsp.TypeScriptEntities {
     //export interface IOpenStatement extends IStatementNode { }
-    //export interface IEntity {
-    //    name: string;
-    //    JSDoc: JSDocComment;
-    //}
+    
 
     //export interface IIdentifier extends IEntity {
     //    type: string;
@@ -26,14 +23,21 @@ module tsp.TypeScriptEntities {
     class OpenComment extends OpenTypeScriptStatement { }
     class JSDocComment extends OpenComment { }
 
-    //export class InterfaceDeclaration extends OpenBraceConfigStatement implements IEntity {
-    //    JSDoc: JSDocComment;
-    //    constructor(public name: string) {
-    //        super();
-    //    }
-    //    extends: string[];
-    //    fields: InterfaceFieldDefinition[];
-    //}
+    export interface IEntity {
+        name: string;
+        JSDoc: JSDocComment;
+    }
+
+    export class InterfaceFieldDefinition extends TypeScriptSingleLineStatement { }
+
+    export class InterfaceDeclaration extends OpenBraceConfigStatement implements IEntity {
+        JSDoc: JSDocComment;
+        constructor(public name: string) {
+            super();
+        }
+        extends: string[];
+        fields: InterfaceFieldDefinition[];
+    }
     //export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
     //    JSDoc: JSDocComment;
     //    constructor(public name: string) {
@@ -95,7 +99,7 @@ module tsp.TypeScriptEntities {
     //export class SingleLineComment extends TypeScriptSingleLineStatement { }
     //export class ArrowFunctionListItem extends TypeScriptSingleLineStatement { }
     //export class ArrowFunctionField extends TypeScriptSingleLineStatement { }
-    //export class InterfaceFieldDefinition extends TypeScriptSingleLineStatement { }
+    
 
     //export type TopLevelStatement = RequireStatement | TypeAlias | StringConst | SingleLineComment | EmptyStatement
     //| OpenComment | JSDocComment;
