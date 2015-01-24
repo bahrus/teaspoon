@@ -1,5 +1,8 @@
-﻿module tsp.CommonActions {
-    var versionKey = 'version';
+﻿if (typeof (global) !== 'undefined') {
+    require('./Refs');
+}
+module tsp.CommonActions {
+    export var versionKey = 'version';
 }
 
 if (typeof (global) !== 'undefined') {

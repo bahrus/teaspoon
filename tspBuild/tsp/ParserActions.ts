@@ -1,4 +1,8 @@
-﻿module tsp.ParserActions {
+﻿if (typeof (global) !== 'undefined') {
+    require('./Refs');
+}
+
+module tsp.ParserActions {
     //#region Helper functions
     export function endsWith(str: string, suffix: string) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
