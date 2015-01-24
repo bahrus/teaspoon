@@ -21,7 +21,7 @@ module tsp.TypeScriptEntities {
 
     export class OpenBraceConfigStatement extends OpenTypeScriptStatement { }
 
-    //class TypeScriptSingleLineStatement { }
+    class TypeScriptSingleLineStatement { }
 
     //export class InterfaceDeclaration extends OpenBraceConfigStatement implements IEntity {
     //    JSDoc: JSDocComment;
