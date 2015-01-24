@@ -104,14 +104,24 @@ module tsp.ParserActions {
 
     }
 
-    class Statement {
+    export interface IStatement {
         lineNo: number;
         parent: OpenStatement;
     }
 
-    export class SingleLineStatement extends Statement { }
+    class Statement implements IStatement {
+        lineNo: number;
+        parent: IOpenStatement;
+    }
 
-    export class OpenStatement extends Statement {
+    //class SingleLineStatement extends Statement { }
+
+    export interface IOpenStatement extends IStatement {
+        children: IStatement[];
+        maxNoOfChildren: number;
+    }
+
+    class OpenStatement extends Statement {
         children: Statement[];
         maxNoOfChildren: number;
     }

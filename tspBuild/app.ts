@@ -1,6 +1,5 @@
 ﻿if (typeof (global) !== 'undefined') {
     require('./tsp/Refs');
-    var _ = <_.LoDashStatic> require('lodash');
 }
 var ca = tsp.CommonActions;
 var pa = tsp.ParserActions;
