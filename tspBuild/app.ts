@@ -3,5 +3,5 @@
 }
 var ca = tsp.CommonActions;
 var pa = tsp.ParserActions;
-console.log(pa.replaceEndWith( ca.versionKey, 'n', 'x'));
+console.log(pa.replaceEndWith(ca.versionKey, 'n', 'x'));
 console.log('iah');
