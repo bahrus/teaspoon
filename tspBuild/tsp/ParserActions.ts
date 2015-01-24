@@ -109,9 +109,9 @@ module tsp.ParserActions {
         parent: OpenStatement;
     }
 
-    class SingleLineStatement extends Statement { }
+    export class SingleLineStatement extends Statement { }
 
-    class OpenStatement extends Statement {
+    export class OpenStatement extends Statement {
         children: Statement[];
         maxNoOfChildren: number;
     }

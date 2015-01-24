@@ -42,6 +42,7 @@
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="tsp\CommonActions.ts" />
     <TypeScriptCompile Include="tsp\ParserActions.ts" />
+    <TypeScriptCompile Include="tsp\TypeScriptEntities.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\typings\lodash\" />
