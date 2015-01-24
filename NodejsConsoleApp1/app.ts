@@ -1,7 +1,7 @@
 ﻿///<reference path='testModule.ts'/>
 
 debugger;
-if (typeof(window)==='undefined') {
+if (typeof(global)!=='undefined') {
     var testModule = require('./testModule');
     global['myModule'] = testModule['testModule'];
 }
