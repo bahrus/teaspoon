@@ -33,6 +33,32 @@ module tsp.CommonActions {
         if (callback) callback(null);
     }
 
+    //#region Message Action
+    export interface IMessageState extends IActionState {
+        dynamicMessage?: string;
+    }
+
+    export interface IMessageAction extends IAction {
+        message?: string;
+        messageGenerator?: (IMessageAction) => string;
+        state?: IMessageState;
+    }
+
+    export function logToConsole(messageAction: IMessageAction, context: IContext, callback: ICallback) {
+        var mA = messageAction;
+        mA.state = {
+            dynamicMessage: mA.message ? mA.message : '',
+        };
+        var mS = mA.state;
+        if (mA.messageGenerator) {
+            var genMessage = mA.messageGenerator(mA);
+            genMessage = (mS.dynamicMessage ? (mS.dynamicMessage + ' ') : '') + genMessage;
+            mS.dynamicMessage = genMessage;
+        }
+        console.log(mS.dynamicMessage);
+    }
+
+    //#endregion
 }
 
 if (typeof (global) !== 'undefined') {
