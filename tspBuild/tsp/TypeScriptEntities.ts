@@ -23,6 +23,9 @@ module tsp.TypeScriptEntities {
 
     class TypeScriptSingleLineStatement { }
 
+    class OpenComment extends OpenTypeScriptStatement { }
+    class JSDocComment extends OpenComment { }
+
     //export class InterfaceDeclaration extends OpenBraceConfigStatement implements IEntity {
     //    JSDoc: JSDocComment;
     //    constructor(public name: string) {
@@ -68,8 +71,7 @@ module tsp.TypeScriptEntities {
     //}
     //export class ReturnBlock { }
 
-    //export interface OpenComment extends OpenTypeScriptStatement { }
-    //export interface JSDocComment extends OpenComment { }
+    
 
     //export class OpenBracketConfigStatement extends OpenTypeScriptStatement { }
     //export class ListDeclaration extends OpenBraceConfigStatement { }
