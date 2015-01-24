@@ -1,7 +1,11 @@
 ﻿///<reference path='testModule.ts'/>
 
-var testModule = require('./testModule');
-global['myModule'] = testModule['testModule'];
+debugger;
+if (typeof(window)==='undefined') {
+    var testModule = require('./testModule');
+    global['myModule'] = testModule['testModule'];
+}
+
 for (var key in testModule) {
     console.log('testModule.' + key + ' = ' + testModule[key]);
 }
