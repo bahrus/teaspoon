@@ -37,12 +37,14 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="lib.es6.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\lodash\lodash.d.ts" />
     <TypeScriptCompile Include="tsp\Refs.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="tsp\CommonActions.ts" />
     <TypeScriptCompile Include="tsp\ParserActions.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Scripts\typings\lodash\" />
     <Folder Include="tsp\" />
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\typings\" />
