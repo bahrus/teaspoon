@@ -1,0 +1,10 @@
+{
+  "name": "tspBuild",
+  "version": "0.0.0",
+  "description": "tspBuild",
+  "main": "app.js",
+  "author": {
+    "name": "Bruce",
+    "email": ""
+  }
+}
