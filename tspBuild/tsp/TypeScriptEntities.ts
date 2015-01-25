@@ -65,22 +65,22 @@ module tsp.TypeScriptEntities {
     export class TypeAlias extends TypeScriptSingleLineStatement {
         pattern = 'type QName = RHS;'
     }
-    //export class ModuleAlias extends TypeScriptSingleLineStatement { }
-    //export class StringConst extends TypeScriptSingleLineStatement { }
-    //export class StringFieldInitializer extends TypeScriptSingleLineStatement { }
-    //export class NumberConst extends TypeScriptSingleLineStatement { }
-    //export class NumberFieldInitializer extends TypeScriptSingleLineStatement { }
-    //export class BooleanConst extends SingleLineComment { }
-    //export class BooleanFieldInitializer extends TypeScriptSingleLineStatement { }
-    //export class RequireStatement extends TypeScriptSingleLineStatement { }
-    //export class EmptyStatement extends TypeScriptSingleLineStatement { }
-    //export class SingleLineComment extends TypeScriptSingleLineStatement { }
-    //export class ArrowFunctionListItem extends TypeScriptSingleLineStatement { }
-    //export class ArrowFunctionField extends TypeScriptSingleLineStatement { }
+    export class ModuleAlias extends TypeScriptSingleLineStatement { }
+    export class StringConst extends TypeScriptSingleLineStatement { }
+    export class StringFieldInitializer extends TypeScriptSingleLineStatement { }
+    export class NumberConst extends TypeScriptSingleLineStatement { }
+    export class NumberFieldInitializer extends TypeScriptSingleLineStatement { }
+    export class SingleLineComment extends TypeScriptSingleLineStatement { }
+    export class BooleanConst extends TypeScriptSingleLineStatement { }
+    export class BooleanFieldInitializer extends TypeScriptSingleLineStatement { }
+    export class RequireStatement extends TypeScriptSingleLineStatement { }
+    export class EmptyStatement extends TypeScriptSingleLineStatement { }
+    export class ArrowFunctionListItem extends TypeScriptSingleLineStatement { }
+    export class ArrowFunctionField extends TypeScriptSingleLineStatement { }
     
 
-    //export type TopLevelStatement = RequireStatement | TypeAlias | StringConst | SingleLineComment | EmptyStatement
-    //| OpenComment | JSDocComment;
+    export type TopLevelStatement = RequireStatement | TypeAlias | StringConst | SingleLineComment | EmptyStatement
+    | OpenComment | JSDocComment;
 
     //export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
     //    JSDoc: JSDocComment;
