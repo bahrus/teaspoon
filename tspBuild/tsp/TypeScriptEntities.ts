@@ -82,25 +82,25 @@ module tsp.TypeScriptEntities {
     export type TopLevelStatement = RequireStatement | TypeAlias | StringConst | SingleLineComment | EmptyStatement
     | OpenComment | JSDocComment;
 
-    //export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
-    //    JSDoc: JSDocComment;
-    //    constructor(public name: string) {
-    //        super();
-    //    }
-    //    members: TopLevelStatement[];
-    //}
+    export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
+        JSDoc: JSDocComment;
+        constructor(public name: string) {
+            super();
+        }
+        members: TopLevelStatement[];
+    }
 
-    //export type InterfaceInstanceFieldValue = StringFieldInitializer | NumberFieldInitializer | BooleanFieldInitializer |
-    //InterfaceInstanceFieldOpenDeclaration | LambdaFieldOpenExpression | ArrowFunctionField;
+    export type InterfaceInstanceFieldValue = StringFieldInitializer | NumberFieldInitializer | BooleanFieldInitializer |
+    InterfaceInstanceFieldOpenDeclaration | LambdaFieldOpenExpression | ArrowFunctionField;
 
-    //export class ConstInterfaceInstanceOpenDeclaration extends OpenBraceConfigStatement {
-    //    constructor(public name: string) {
-    //        super();
-    //    }
-    //    type: string;
+    export class ConstInterfaceInstanceOpenDeclaration extends OpenBraceConfigStatement {
+        constructor(public name: string) {
+            super();
+        }
+        type: string;
 
-    //    fields: InterfaceInstanceFieldValue[];
-    //}
+        fields: InterfaceInstanceFieldValue[];
+    }
 
 }
 
