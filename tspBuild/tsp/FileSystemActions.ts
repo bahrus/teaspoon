@@ -89,7 +89,21 @@ module tsp.FileSystemActions {
     }
 //#endregion
 
+    //#region Wait for User Input
+    export interface IWaitForUserInput extends CommonActions.IAction {
+    }
 
+    export function waitForUserInput(action: IWaitForUserInput, context: IWebContext, callback: CommonActions.ICallback) {
+        if (action.debug) debugger;
+        if (context.processManager) {
+            var test = (chunk: string, key: any) => {
+                return key && key.ctrl && key.name == 'c';
+            }
+            context.processManager.WaitForUserInputAndExit('Press ctrl c to exit', test);
+        }
+        ca.endAction(action, callback);
+    }
+//#endregion
 
     //#region File Selection
     export interface IRootDirectoryRetriever {
@@ -122,6 +136,91 @@ module tsp.FileSystemActions {
         action.state.selectedFilePaths = files;
     }
 //#endregion
+
+    //#region File Processing
+
+    export interface IFileProcessorActionState extends CommonActions.IActionState {
+        filePath: string;
+    }
+
+    export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, CommonActions.IActionState {
+        $: JQueryStatic
+    }
+    export interface IFileProcessorAction extends IWebAction {
+        state?: IFileProcessorActionState;
+        fileSubProcessActions?: IWebAction[];
+
+
+    }
+
+    //#region HTML File Processing
+
+    export interface IHTMLFileProcessorAction extends IFileProcessorAction {
+        state?: IHTMLFileProcessorActionState;
+    }
+
+    function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
+        if (action.debug) debugger;
+        var $ = context.fileManager.loadHTML(data);
+        action.state.$ = $;
+        if (action.fileSubProcessActions) {
+            var n = action.fileSubProcessActions.length;
+            for (var i = 0; i < n; i++) {
+                var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
+                fspa.state = {
+                    $: action.state.$,
+                    filePath: action.state.filePath,
+                };
+                fspa.do(fspa, context);
+            }
+        }
+        if (!context.HTMLOutputs) context.HTMLOutputs = {};
+        context.HTMLOutputs[action.state.filePath] = action.state.$;
+        if (action.debug) {
+            var $any = <any> action.state.$;
+            //var $cheerio = <CheerioStatic> $any;
+            //var sOutput = $cheerio.html();
+            debugger;
+        }
+    }
+
+    export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+        var wfm = context.fileManager;
+        console.log('processing ' + action.state.filePath);
+        if (callback) {
+            wfm.readTextFileAsync(action.state.filePath,(err, data) => {
+                processHTMLFileSubRules(action, context, data);
+                callback(err);
+            });
+        } else {
+            var data = wfm.readTextFileSync(action.state.filePath);
+            processHTMLFileSubRules(action, context, data);
+            ca.endAction(action, callback);
+        }
+
+    }
+    //#endregion
+
+    //#region JS File Processing
+    export function minifyJSFile(action: IFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+        console.log('Uglifying ' + action.state.filePath);
+        var filePath = action.state.filePath;
+        context.fileManager.minify(filePath,(err, min) => {
+            if (err) {
+                console.log('Error uglifying ' + filePath);
+            } else {
+                console.log('Uglified ' + filePath);
+            }
+            if (!callback) {
+                throw "Unable to minify JS files synchronously";
+            }
+            ca.endAction(action, callback);
+        });
+
+    }
+//#endregion
+
+    //#endregion
 }
 
 if (typeof (global) !== 'undefined') {
