@@ -178,8 +178,8 @@ module tsp.FileSystemActions {
         context.HTMLOutputs[action.state.filePath] = action.state.$;
         if (action.debug) {
             var $any = <any> action.state.$;
-            //var $cheerio = <CheerioStatic> $any;
-            //var sOutput = $cheerio.html();
+            var $cheerio = <CheerioStatic> $any;
+            var sOutput = $cheerio.html();
             debugger;
         }
     }
@@ -295,14 +295,14 @@ module tsp.FileSystemActions {
 //#endregion
 
     //#region Exporting Processed Documeents to Files
-    //export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: ca.ICallback) {
-    //    if (action.debug) debugger;
-    //    for (var filePath in context.HTMLOutputs) {
-    //        const $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
-    //        context.fileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
-    //    }
-    //    ca.endAction(action, callback);
-    //}
+    export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: CommonActions.ICallback) {
+        if (action.debug) debugger;
+        for (var filePath in context.HTMLOutputs) {
+            var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
+            context.fileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
+        }
+        ca.endAction(action, callback);
+    }
     //#endregion
 }
 
