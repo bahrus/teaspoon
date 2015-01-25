@@ -221,6 +221,89 @@ module tsp.FileSystemActions {
 //#endregion
 
     //#endregion
+
+    //#region File Select and Process
+    export interface ISelectAndProcessFileAction extends IWebAction {
+        fileSelector?: IFileSelectorAction
+        fileProcessor?: IFileProcessorAction;
+    }
+
+    export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: CommonActions.ICallback) {
+        if (this.debug) debugger;
+        var fs = action.fileSelector;
+        fs.do(fs, context);
+        var selectedFilePaths = fs.state.selectedFilePaths;
+        var len = selectedFilePaths.length;
+        if (len === 0) {
+            ca.endAction(action, callback);
+            return;
+        }
+        var fp = action.fileProcessor;
+        if (action.async) {
+            var idx = 0;
+            var fpCallback = (err) => {
+                if (idx < len) {
+                    var filePath = selectedFilePaths[idx];
+                    idx++;
+                    if (!fp.state) {
+                        fp.state = {
+                            filePath: filePath,
+                        }
+                    } else {
+                        fp.state.filePath = filePath;
+                    }
+                    fp.do(fp, context, fpCallback);
+                } else {
+                    ca.endAction(action, callback);
+                }
+            }
+            fpCallback(null);
+        } else {
+            var n = fs.state.selectedFilePaths.length;
+            for (var i = 0; i < n; i++) {
+                var filePath = fs.state.selectedFilePaths[i];
+                if (!fp.state) {
+                    fp.state = {
+                        filePath: filePath,
+                    };
+                } else {
+                    fp.state.filePath = filePath;
+                }
+                fp.do(fp, context);
+            }
+            ca.endAction(action, callback);
+        }
+
+
+    }
+
+    export interface IHTMLFile {
+        filePath: string;
+        $: JQueryStatic;
+    }
+
+    interface ISelectAndReadHTLMFilesActionState {
+        htmlFiles?: IHTMLFile[];
+    }
+
+    export interface ISelectAndReadHTMLFilesAction extends IWebAction {
+        fileSelector: IFileSelectorAction;
+        fileProcessor: IFileProcessorAction;
+        state?: ISelectAndReadHTLMFilesActionState;
+    }
+
+//#endregion
+
+    //#region Exporting Processed Documeents to Files
+    //export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: ca.ICallback) {
+    //    if (action.debug) debugger;
+    //    for (var filePath in context.HTMLOutputs) {
+    //        const $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
+    //        context.fileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
+    //    }
+    //    ca.endAction(action, callback);
+    //}
+    //#endregion
 }
 
 if (typeof (global) !== 'undefined') {
