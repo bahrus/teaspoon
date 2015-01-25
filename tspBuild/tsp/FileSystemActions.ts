@@ -294,7 +294,7 @@ module tsp.FileSystemActions {
 
 //#endregion
 
-    //#region Exporting Processed Documeents to Files
+    //#region Exporting Processed Documents to Files
     export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
         for (var filePath in context.HTMLOutputs) {
