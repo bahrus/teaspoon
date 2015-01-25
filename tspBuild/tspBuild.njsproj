@@ -43,6 +43,7 @@
     <TypeScriptCompile Include="tsp\DOMActions.ts" />
     <TypeScriptCompile Include="tsp\DOMBuildDirectives.ts" />
     <TypeScriptCompile Include="tsp\FileSystemActions.ts" />
+    <TypeScriptCompile Include="tsp\NodeJSImplementations.ts" />
     <TypeScriptCompile Include="tsp\Refs.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="tsp\CommonActions.ts" />

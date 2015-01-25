@@ -4,7 +4,7 @@
 }
 
 module tsp.DOMBuildDirectives {
-    if (!tsp.DOMActions) {
+    if (!tsp.DOMActions && typeof(global) !== 'undefined') {
         tsp.DOMActions = global.tsp.DOMActions;
     }
     export interface IDOMBuildDirectives extends CommonActions.ITypedActionList<IDOMBuildDirectives> {
