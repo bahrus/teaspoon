@@ -9,5 +9,5 @@
     require('./FileSystemActions');
     require('./DOMActions');
     require('./DOMBuildDirectives');
-    
+    require('./NodeJSImplementations');
 }
