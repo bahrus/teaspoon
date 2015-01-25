@@ -60,11 +60,11 @@ module tsp.TypeScriptEntities {
 
     export class OpenStringTemplate { }
 
-    //export type OpenConfigStatement = OpenBraceConfigStatement | OpenBracketConfigStatement | OpenStringTemplate;
+    export type OpenConfigStatement = OpenBraceConfigStatement | OpenBracketConfigStatement | OpenStringTemplate;
 
-    //export class TypeAlias extends TypeScriptSingleLineStatement {
-    //    pattern = 'type QName = RHS;'
-    //}
+    export class TypeAlias extends TypeScriptSingleLineStatement {
+        pattern = 'type QName = RHS;'
+    }
     //export class ModuleAlias extends TypeScriptSingleLineStatement { }
     //export class StringConst extends TypeScriptSingleLineStatement { }
     //export class StringFieldInitializer extends TypeScriptSingleLineStatement { }
