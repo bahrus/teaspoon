@@ -38,32 +38,27 @@ module tsp.TypeScriptEntities {
         extends: string[];
         fields: InterfaceFieldDefinition[];
     }
-    //export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
-    //    JSDoc: JSDocComment;
-    //    constructor(public name: string) {
-    //        super();
-    //    }
-    //    members: TopLevelStatement[];
-    //}
-    ////export class OpenConstDeclaration extends OpenBraceConfigStatement {
-    ////    constructor(public name: string) {
-    ////        super();
-    ////    }
-    ////    type: string;
-    ////}
-    //export class LambdaFieldOpenExpression extends OpenBraceConfigStatement {
-    //    constructor(public block: ReturnBlock) {
-    //        super();
+    
+    export class OpenConstDeclaration extends OpenBraceConfigStatement {
+        constructor(public name: string) {
+            super();
+        }
+        type: string;
+    }
+    export class ReturnBlock { }
+    export class LambdaFieldOpenExpression extends OpenBraceConfigStatement {
+        constructor(public block: ReturnBlock) {
+            super();
 
-    //    }
-    //    //static FromOpenStatement(openStatement: OpenStatement) {
-    //    //    if (!openStatement.children || openStatement.children.length != 1) {
-    //    //        throw 'tbd';
-    //    //    }
-    //    //}
-    //    //static IsOpenLambdaExpression(openStatement: OpenStatement) {
-    //    //}
-    //}
+        }
+        //static FromOpenStatement(openStatement: OpenStatement) {
+        //    if (!openStatement.children || openStatement.children.length != 1) {
+        //        throw 'tbd';
+        //    }
+        //}
+        //static IsOpenLambdaExpression(openStatement: OpenStatement) {
+        //}
+    }
     //export class InterfaceInstanceFieldOpenDeclaration extends OpenBraceConfigStatement { }
     //export class ConstInterfaceInstanceOpenDeclaration extends OpenBraceConfigStatement {
     //    constructor(public name: string) {
@@ -73,7 +68,7 @@ module tsp.TypeScriptEntities {
 
     //    fields: InterfaceInstanceFieldValue[];
     //}
-    //export class ReturnBlock { }
+    
 
     
 
@@ -103,6 +98,14 @@ module tsp.TypeScriptEntities {
 
     //export type TopLevelStatement = RequireStatement | TypeAlias | StringConst | SingleLineComment | EmptyStatement
     //| OpenComment | JSDocComment;
+
+    //export class ModuleOpenDeclaration extends OpenBraceConfigStatement implements IEntity {
+    //    JSDoc: JSDocComment;
+    //    constructor(public name: string) {
+    //        super();
+    //    }
+    //    members: TopLevelStatement[];
+    //}
 
     //export type InterfaceInstanceFieldValue = StringFieldInitializer | NumberFieldInitializer | BooleanFieldInitializer |
     //InterfaceInstanceFieldOpenDeclaration | LambdaFieldOpenExpression | ArrowFunctionField;
