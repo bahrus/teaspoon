@@ -178,4 +178,5 @@ if (typeof (global) !== 'undefined') {
     var globalNS = global[guid] || 'tsp';
     if (!global[globalNS]) global[globalNS] = {};
     global[globalNS].DOMActions = tsp.DOMActions;
+    console.log('domactions' + tsp.DOMActions);
 }
