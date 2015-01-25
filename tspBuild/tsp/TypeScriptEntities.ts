@@ -51,31 +51,14 @@ module tsp.TypeScriptEntities {
             super();
 
         }
-        //static FromOpenStatement(openStatement: OpenStatement) {
-        //    if (!openStatement.children || openStatement.children.length != 1) {
-        //        throw 'tbd';
-        //    }
-        //}
-        //static IsOpenLambdaExpression(openStatement: OpenStatement) {
-        //}
+        
     }
-    //export class InterfaceInstanceFieldOpenDeclaration extends OpenBraceConfigStatement { }
-    //export class ConstInterfaceInstanceOpenDeclaration extends OpenBraceConfigStatement {
-    //    constructor(public name: string) {
-    //        super();
-    //    }
-    //    type: string;
-
-    //    fields: InterfaceInstanceFieldValue[];
-    //}
+    export class InterfaceInstanceFieldOpenDeclaration extends OpenBraceConfigStatement { }
     
+    export class OpenBracketConfigStatement extends OpenTypeScriptStatement { }
+    export class ListDeclaration extends OpenBraceConfigStatement { }
 
-    
-
-    //export class OpenBracketConfigStatement extends OpenTypeScriptStatement { }
-    //export class ListDeclaration extends OpenBraceConfigStatement { }
-
-    //export class OpenStringTemplate { }
+    export class OpenStringTemplate { }
 
     //export type OpenConfigStatement = OpenBraceConfigStatement | OpenBracketConfigStatement | OpenStringTemplate;
 
@@ -109,6 +92,15 @@ module tsp.TypeScriptEntities {
 
     //export type InterfaceInstanceFieldValue = StringFieldInitializer | NumberFieldInitializer | BooleanFieldInitializer |
     //InterfaceInstanceFieldOpenDeclaration | LambdaFieldOpenExpression | ArrowFunctionField;
+
+    //export class ConstInterfaceInstanceOpenDeclaration extends OpenBraceConfigStatement {
+    //    constructor(public name: string) {
+    //        super();
+    //    }
+    //    type: string;
+
+    //    fields: InterfaceInstanceFieldValue[];
+    //}
 
 }
 
