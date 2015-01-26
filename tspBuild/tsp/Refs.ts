@@ -10,4 +10,5 @@
     require('./DOMActions');
     require('./DOMBuildDirectives');
     require('./NodeJSImplementations');
+    require('./BuildConfig');
 }

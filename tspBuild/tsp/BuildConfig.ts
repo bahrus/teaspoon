@@ -4,7 +4,15 @@
 
 module tsp.BuildConfig {
 
-    var ca = CommonActions;
+    var ca = tsp.CommonActions;
+    var fsa = tsp.FileSystemActions;
+    var dbd = tsp.DOMBuildDirectives;
+    if (typeof (global) !== 'undefined') {
+        if (!ca) ca = global.tsp.CommonActions;
+        if (!fsa) fsa = global.tsp.FileSystemActions;
+        if (!dbd) dbd = global.tsp.DOMBuildDirectives;
+    }
+    
 
     interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
         cacheVersionLabel?: FileSystemActions.ICacheFileContents;
@@ -25,30 +33,30 @@ module tsp.BuildConfig {
     export var programConfig: IProgramConfig = {
         do: ca.doSequenceOfTypedActions,
         cacheVersionLabel: {
-            do: FileSystemActions.cacheTextFile,
+            do: fsa.cacheTextFile,
             fileReaderAction: {
-                do: FileSystemActions.readTextFile,
-                rootDirectoryRetriever: FileSystemActions.commonHelperFunctions.retrieveWorkingDirectory,
+                do: fsa.readTextFile,
+                rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
                 relativeFilePath: 'Version.txt',
             },
             cacheKey: versionKey
         },
         minifyJSFiles: {
             //#region minify JS Files
-            do: FileSystemActions.selectAndProcessFiles,
+            do: fsa.selectAndProcessFiles,
             fileSelector: {
-                do: FileSystemActions.selectFiles,
-                fileTest: FileSystemActions.commonHelperFunctions.testForNonMinifiedJSFileName,
-                rootDirectoryRetriever: FileSystemActions.commonHelperFunctions.retrieveWorkingDirectory,
+                do: fsa.selectFiles,
+                fileTest: fsa.commonHelperFunctions.testForNonMinifiedJSFileName,
+                rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
             },
             fileProcessor: {
-                do: FileSystemActions.minifyJSFile,
+                do: fsa.minifyJSFile,
                 async: true,
             },
             async: true,
             //#endregion
         },
-        domBuildDirectives: DOMBuildDirectives.domBuildConfig,
+        domBuildDirectives: dbd.domBuildConfig,
 
         domProcessor: {
             putHTMLFileIntoDomTransformGenerator: i => {
@@ -60,11 +68,11 @@ module tsp.BuildConfig {
             }
         },
         exportInMemoryDocumentsToFiles: {
-            do: FileSystemActions.exportProcessedDocumentsToFiles,
+            do: fsa.exportProcessedDocumentsToFiles,
             outputRootDirectoryPath: 'OutputTest',
         },
         waitForUserInput: {
-            do: FileSystemActions.waitForUserInput,
+            do: fsa.waitForUserInput,
         },
         subActionsGenerator: [
             i => i.cacheVersionLabel,
