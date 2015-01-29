@@ -1,9 +1,15 @@
-﻿var fs = require('fs');
+﻿
+var fs = require('fs');
 var path = require('path');
 var compressor = require('node-minify');
 
 module tsp.NodeJSImplementations {
-
+    if (typeof (global) !== 'undefined') {
+        require('./Refs');
+        for (var key in global.tsp) {
+            if (!tsp[key]) tsp[key] = global.tsp[key];
+        }
+    }
     var pa = ParserActions;
 
     export class NodeJSFileManager implements FileSystemActions.IFileManager {

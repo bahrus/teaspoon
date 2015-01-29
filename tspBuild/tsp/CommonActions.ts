@@ -73,6 +73,9 @@ module tsp.CommonActions {
                 if (i < n) {
                     var subAction = action.subActions[i];
                     i++;
+                    if (!subAction) {
+                        console.log(i + 'th action is null');
+                    }
                     subAction.do(subAction, context, seqCallback);
                 } else {
                     endAction(action, callback);

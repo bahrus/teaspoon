@@ -1,10 +1,19 @@
-﻿if (typeof (global) !== 'undefined') {
-    require('./Refs');
-}
+﻿
 
 module tsp.FileSystemActions {
+    if (typeof (global) !== 'undefined') {
+        require('./Refs');
+        for (var key in global.tsp) {
+            if (!tsp[key]) tsp[key] = global.tsp[key];
+        }
+    }
+    //tsp.ParserActions = global.tsp.ParserActions;
     var pa = tsp.ParserActions;
-    var ca = tsp.CommonActions;
+    var ca = tsp.CommonActions; 
+    //if (typeof (global) !== 'undefined') {
+    //    if (!ca) ca = global.tsp.CommonActions;
+    //    if (!pa) pa = global.tsp.ParserActions;
+    //}
     //#region File Management
     export interface IFileManager {
         resolve(...pathSegments: any[]): string;
@@ -288,7 +297,7 @@ module tsp.FileSystemActions {
 
     export interface ISelectAndReadHTMLFilesAction extends IWebAction {
         fileSelector: IFileSelectorAction;
-        fileProcessor: IFileProcessorAction;
+        fileProcessor?: IFileProcessorAction;
         state?: ISelectAndReadHTLMFilesActionState;
     }
 

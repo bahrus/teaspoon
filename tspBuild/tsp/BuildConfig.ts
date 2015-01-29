@@ -1,17 +1,20 @@
-﻿if (typeof (global) !== 'undefined') {
-    require('./Refs');
-}
+﻿
 
 module tsp.BuildConfig {
-
+    if (typeof (global) !== 'undefined') {
+        require('./Refs');
+        for (var key in global.tsp) {
+            if (!tsp[key]) tsp[key] = global.tsp[key];
+        }
+    }
     var ca = tsp.CommonActions;
     var fsa = tsp.FileSystemActions;
     var dbd = tsp.DOMBuildDirectives;
-    if (typeof (global) !== 'undefined') {
-        if (!ca) ca = global.tsp.CommonActions;
-        if (!fsa) fsa = global.tsp.FileSystemActions;
-        if (!dbd) dbd = global.tsp.DOMBuildDirectives;
-    }
+    //if (typeof (global) !== 'undefined') {
+    //    if (!ca) ca = global.tsp.CommonActions;
+    //    if (!fsa) fsa = global.tsp.FileSystemActions;
+    //    if (!dbd) dbd = global.tsp.DOMBuildDirectives;
+    //}
     
 
     interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
@@ -29,7 +32,8 @@ module tsp.BuildConfig {
     }
 
     var versionKey = 'version';
-
+    
+    
     export var programConfig: IProgramConfig = {
         do: ca.doSequenceOfTypedActions,
         cacheVersionLabel: {
@@ -55,6 +59,13 @@ module tsp.BuildConfig {
             },
             async: true,
             //#endregion
+        },
+        selectAndReadHTMLFiles: {
+            do: fsa.selectAndProcessFiles,
+            fileSelector: {
+                do: fsa.selectFiles,
+                fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
+            },
         },
         domBuildDirectives: dbd.domBuildConfig,
 
