@@ -141,6 +141,10 @@ module tsp.CommonActions {
         var dpg = subMergeAction.destinationPropertyGetter;
         var spg = subMergeAction.sourcePropertyGetter;
         var srcRefs = subMergeAction.srcRefs;
+        if (!srcRefs) {
+            endAction(subMergeAction, callback);
+            return;
+        }
         var noOfSrcRefs = srcRefs.length;
         var destRefs = subMergeAction.destRefs;
         var noOfDestRefs = destRefs.length;

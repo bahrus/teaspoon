@@ -11,12 +11,6 @@ module tsp.BuildConfig {
     var fsa = tsp.FileSystemActions;
     var da = tsp.DOMActions;
     var dbd = tsp.DOMBuildDirectives;
-    //if (typeof (global) !== 'undefined') {
-    //    if (!ca) ca = global.tsp.CommonActions;
-    //    if (!fsa) fsa = global.tsp.FileSystemActions;
-    //    if (!dbd) dbd = global.tsp.DOMBuildDirectives;
-    //}
-    
 
     interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
         cacheVersionLabel?: FileSystemActions.ICacheFileContents;
@@ -24,12 +18,8 @@ module tsp.BuildConfig {
         selectAndReadHTMLFiles?: FileSystemActions.ISelectAndReadHTMLFilesAction;
         exportInMemoryDocumentsToFiles?: FileSystemActions.IExportDocumentsToFiles;
         waitForUserInput?: FileSystemActions.IWaitForUserInput;
-        //domProcessor?: DOMBuildDirectives.domBuildDirectives;
         domBuildDirectives?: DOMBuildDirectives.IDOMBuildDirectives;
-        //domProcesor?: ca.IDoForEachAction<IProgramConfig, fsa.IHTMLFile>;
         domProcessor?: DOMActions.IDOMTransformForEachHTMLFileAction<IProgramConfig, FileSystemActions.IHTMLFile>;
-        //mergeHTMLFileIntoRemoveDirective?: submergeHTMLFileIntoDomTransformActionState;
-        //mergeHTMLFileIntoJSSCobDirective?: submergeHTMLFileIntoDomTransformActionState; 
     }
 
     var versionKey = 'version';
@@ -67,6 +57,9 @@ module tsp.BuildConfig {
                 do: fsa.selectFiles,
                 fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
                 rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+            },
+            fileProcessor: {
+                do: fsa.storeHTMLFiles,
             },
         },
         domBuildDirectives: dbd.domBuildConfig,

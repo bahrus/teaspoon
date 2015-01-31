@@ -301,6 +301,10 @@ module tsp.FileSystemActions {
         state?: ISelectAndReadHTLMFilesActionState;
     }
 
+    export function storeHTMLFiles(action: IFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+        console.log('iah');
+    }
+
 //#endregion
 
     //#region Exporting Processed Documents to Files
