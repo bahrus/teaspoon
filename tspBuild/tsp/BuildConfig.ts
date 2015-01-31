@@ -9,6 +9,7 @@ module tsp.BuildConfig {
     }
     var ca = tsp.CommonActions;
     var fsa = tsp.FileSystemActions;
+    var da = tsp.DOMActions;
     var dbd = tsp.DOMBuildDirectives;
     //if (typeof (global) !== 'undefined') {
     //    if (!ca) ca = global.tsp.CommonActions;
@@ -65,11 +66,13 @@ module tsp.BuildConfig {
             fileSelector: {
                 do: fsa.selectFiles,
                 fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
+                rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
             },
         },
         domBuildDirectives: dbd.domBuildConfig,
 
         domProcessor: {
+            do: da.ApplyDOMTransformsOnHTMLFiles,
             putHTMLFileIntoDomTransformGenerator: i => {
                 return {
                     do: DOMActions.ApplyDOMTransformsOnHTMLFiles,

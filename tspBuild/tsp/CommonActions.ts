@@ -76,6 +76,9 @@ module tsp.CommonActions {
                     if (!subAction) {
                         console.log(i + 'th action is null');
                     }
+                    if (!subAction.do) {
+                        console.log(i + 'th action has no do method');
+                    }
                     subAction.do(subAction, context, seqCallback);
                 } else {
                     endAction(action, callback);
