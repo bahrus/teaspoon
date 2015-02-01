@@ -150,10 +150,12 @@ module tsp.FileSystemActions {
 
     export interface IFileProcessorActionState extends CommonActions.IActionState {
         filePath: string;
+
     }
 
     export interface IHTMLFileProcessorActionState extends IFileProcessorActionState, CommonActions.IActionState {
-        $: JQueryStatic
+        //$?: JQueryStatic
+        HTMLFiles?: IHTMLFile[];
     }
     export interface IFileProcessorAction extends IWebAction {
         state?: IFileProcessorActionState;
@@ -168,46 +170,46 @@ module tsp.FileSystemActions {
         state?: IHTMLFileProcessorActionState;
     }
 
-    function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
-        if (action.debug) debugger;
-        var $ = context.fileManager.loadHTML(data);
-        action.state.$ = $;
-        if (action.fileSubProcessActions) {
-            var n = action.fileSubProcessActions.length;
-            for (var i = 0; i < n; i++) {
-                var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
-                fspa.state = {
-                    $: action.state.$,
-                    filePath: action.state.filePath,
-                };
-                fspa.do(fspa, context);
-            }
-        }
-        if (!context.HTMLOutputs) context.HTMLOutputs = {};
-        context.HTMLOutputs[action.state.filePath] = action.state.$;
-        if (action.debug) {
-            var $any = <any> action.state.$;
-            var $cheerio = <CheerioStatic> $any;
-            var sOutput = $cheerio.html();
-            debugger;
-        }
-    }
+    //function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
+    //    if (action.debug) debugger;
+    //    var $ = context.fileManager.loadHTML(data);
+    //    action.state.$ = $;
+    //    if (action.fileSubProcessActions) {
+    //        var n = action.fileSubProcessActions.length;
+    //        for (var i = 0; i < n; i++) {
+    //            var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
+    //            fspa.state = {
+    //                $: action.state.$,
+    //                filePath: action.state.filePath,
+    //            };
+    //            fspa.do(fspa, context);
+    //        }
+    //    }
+    //    if (!context.HTMLOutputs) context.HTMLOutputs = {};
+    //    context.HTMLOutputs[action.state.filePath] = action.state.$;
+    //    if (action.debug) {
+    //        var $any = <any> action.state.$;
+    //        var $cheerio = <CheerioStatic> $any;
+    //        var sOutput = $cheerio.html();
+    //        debugger;
+    //    }
+    //}
 
-    export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
-        var wfm = context.fileManager;
-        console.log('processing ' + action.state.filePath);
-        if (callback) {
-            wfm.readTextFileAsync(action.state.filePath,(err, data) => {
-                processHTMLFileSubRules(action, context, data);
-                callback(err);
-            });
-        } else {
-            var data = wfm.readTextFileSync(action.state.filePath);
-            processHTMLFileSubRules(action, context, data);
-            ca.endAction(action, callback);
-        }
+    //export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+    //    var wfm = context.fileManager;
+    //    console.log('processing ' + action.state.filePath);
+    //    if (callback) {
+    //        wfm.readTextFileAsync(action.state.filePath,(err, data) => {
+    //            processHTMLFileSubRules(action, context, data);
+    //            callback(err);
+    //        });
+    //    } else {
+    //        var data = wfm.readTextFileSync(action.state.filePath);
+    //        processHTMLFileSubRules(action, context, data);
+    //        ca.endAction(action, callback);
+    //    }
 
-    }
+    //}
     //#endregion
 
     //#region JS File Processing
@@ -260,6 +262,7 @@ module tsp.FileSystemActions {
                         }
                     } else {
                         fp.state.filePath = filePath;
+                        
                     }
                     fp.do(fp, context, fpCallback);
                 } else {
@@ -287,7 +290,7 @@ module tsp.FileSystemActions {
     }
 
     export interface IHTMLFile {
-        filePath: string;
+        filePath?: string;
         $: JQueryStatic;
     }
 
@@ -295,14 +298,24 @@ module tsp.FileSystemActions {
         htmlFiles?: IHTMLFile[];
     }
 
+    
+
     export interface ISelectAndReadHTMLFilesAction extends IWebAction {
         fileSelector: IFileSelectorAction;
-        fileProcessor?: IFileProcessorAction;
+        fileProcessor?: IHTMLFileProcessorAction;
         state?: ISelectAndReadHTLMFilesActionState;
     }
 
-    export function storeHTMLFiles(action: IFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
-        console.log('iah');
+    export function storeHTMLFiles(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+        var fm = context.fileManager;
+        var contents = fm.readTextFileSync(action.state.filePath);
+        //action.state.$ = fm.loadHTML(contents);
+        if (!action.state.HTMLFiles) action.state.HTMLFiles = [];
+        action.state.HTMLFiles.push({
+            $: fm.loadHTML(contents),
+            filePath: action.state.filePath,
+        });
+        ca.endAction(action, callback);
     }
 
 //#endregion

@@ -16,7 +16,8 @@ module tsp.DOMActions {
         uglify(pathOfReferencingFile: string, relativeURL: string): string;
     }
 
-    interface IDOMState extends FileSystemActions.IHTMLFileProcessorActionState {
+    interface IDOMState  {
+        htmlFile: FileSystemActions.IHTMLFile;
     }
 
     export interface IHTMLFileBuildAction extends FileSystemActions.ISelectAndProcessFileAction {
@@ -43,13 +44,13 @@ module tsp.DOMActions {
     export function addToJSClob(action: IDOMElementBuildAction, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
         var state = action.state;
         var src = action.state.element.attr('src');
-        var referringDir = context.fileManager.resolve(state.filePath, '..', src);
+        var referringDir = context.fileManager.resolve(state.htmlFile.filePath, '..', src);
         if (!context.JSOutputs) context.JSOutputs = {};
         var jsOutputs = context.JSOutputs;
-        if (!jsOutputs[referringDir]) jsOutputs[state.filePath] = [];
+        if (!jsOutputs[referringDir]) jsOutputs[state.htmlFile.filePath] = [];
         var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
         var minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
-        jsOutputs[state.filePath].push(minifiedContent);
+        jsOutputs[state.htmlFile.filePath].push(minifiedContent);
         action.state.element.remove();
         ca.endAction(action, callback);
     }
@@ -77,7 +78,8 @@ module tsp.DOMActions {
         if (aS.relativeTo) {
             aS.elements = aS.relativeTo.find(action.cssSelector);
         } else {
-            aS.elements = aS.$(action.cssSelector);
+            //aS.elements = aS.$(action.cssSelector);
+            aS.elements = aS.htmlFile.$(action.cssSelector);
         }
         ca.endAction(action, callback);
     }
@@ -104,8 +106,7 @@ module tsp.DOMActions {
         var aSel = action.selector;
         if (!aSel.state) {
             aSel.state = {
-                $: action.state.$,
-                filePath: action.state.filePath,
+                htmlFile: action.state.htmlFile,
             };
         }
         var aSelSt = aSel.state;
@@ -120,15 +121,14 @@ module tsp.DOMActions {
             eA.state = {
                 element: null,
                 DOMTransform: action,
-                $: aSelSt.$,
-                filePath: aSelSt.filePath,
+                htmlFile: aSelSt.htmlFile,
             };
             if (eA.async) {
                 var i = 0;
                 var n = aSelSt.elements.length;
                 var eACallback = (err) => {
                     if (i < n) {
-                        var $elem = aSelSt.$(aSelSt.elements[i]);
+                        var $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
                         i++;
                         eA.state.element = $elem;
                         eA.do(eA, context, eACallback);
@@ -140,7 +140,7 @@ module tsp.DOMActions {
             } else {
                 var n = aSelSt.elements.length
                 for (var i = 0; i < n; i++) {
-                    var $elem = aSelSt.$(aSelSt.elements[i]);
+                    var $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
                     eA.state.element = $elem;
                     eA.do(eA, context);
                 }
