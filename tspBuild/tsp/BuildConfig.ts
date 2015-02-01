@@ -16,10 +16,11 @@ module tsp.BuildConfig {
         cacheVersionLabel?: FileSystemActions.ICacheFileContents;
         minifyJSFiles?: FileSystemActions.ISelectAndProcessFileAction;
         selectAndReadHTMLFiles?: FileSystemActions.ISelectAndReadHTMLFilesAction;
-        exportInMemoryDocumentsToFiles?: FileSystemActions.IExportDocumentsToFiles;
         waitForUserInput?: FileSystemActions.IWaitForUserInput;
         domBuildDirectives?: DOMBuildDirectives.IDOMBuildDirectives;
         domProcessor?: DOMActions.IDOMTransformForEachHTMLFileAction<IProgramConfig, FileSystemActions.IHTMLFile>;
+        exportInMemoryDocumentsToFiles?: FileSystemActions.IExportDocumentsToFiles;
+
     }
 
     var versionKey = 'version';

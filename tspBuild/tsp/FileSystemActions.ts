@@ -308,13 +308,16 @@ module tsp.FileSystemActions {
 
     export function storeHTMLFiles(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
         var fm = context.fileManager;
-        var contents = fm.readTextFileSync(action.state.filePath);
+        var filePath = action.state.filePath;
+        var contents = fm.readTextFileSync(filePath);
         //action.state.$ = fm.loadHTML(contents);
         if (!action.state.HTMLFiles) action.state.HTMLFiles = [];
+        var $ = fm.loadHTML(contents);
         action.state.HTMLFiles.push({
-            $: fm.loadHTML(contents),
-            filePath: action.state.filePath,
+            $: $,
+            filePath: filePath,
         });
+        context.HTMLOutputs[filePath] = $;
         ca.endAction(action, callback);
     }
 

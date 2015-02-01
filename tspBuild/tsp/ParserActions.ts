@@ -1,9 +1,13 @@
-﻿if (typeof (global) !== 'undefined') {
-    require('./Refs');
-}
+﻿'use strict';
 
 module tsp.ParserActions {
-    var ca = tsp.CommonActions
+    if (typeof (global) !== 'undefined') {
+        require('./Refs');
+        for (var key in global.tsp) {
+            if (!tsp[key]) tsp[key] = global.tsp[key];
+        }
+    }
+    var ca = tsp.CommonActions;
     //#region Helper functions
     export function endsWith(str: string, suffix: string) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
