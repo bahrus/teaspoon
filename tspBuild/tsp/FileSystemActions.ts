@@ -91,7 +91,6 @@ module tsp.FileSystemActions {
         fileReaderAction: ITextFileReaderAction;
     }
     export function cacheTextFile(action: ICacheFileContents, context: IWebContext, callback: CommonActions.ICallback) {
-        debugger;
         action.fileReaderAction.do(action.fileReaderAction, context);
         context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
         ca.endAction(action, callback);
@@ -241,7 +240,7 @@ module tsp.FileSystemActions {
     }
 
     export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: CommonActions.ICallback) {
-        if (this.debug) debugger;
+        if (action.debug) debugger;
         var fs = action.fileSelector;
         fs.do(fs, context);
         var selectedFilePaths = fs.state.selectedFilePaths;
@@ -308,6 +307,7 @@ module tsp.FileSystemActions {
     }
 
     export function storeHTMLFiles(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
+        if (action.debug) debugger;
         var fm = context.fileManager;
         var filePath = action.state.filePath;
         var contents = fm.readTextFileSync(filePath);

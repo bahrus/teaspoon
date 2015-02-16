@@ -54,6 +54,7 @@ module tsp.BuildConfig {
         },
         selectAndReadHTMLFiles: {
             do: fsa.selectAndProcessFiles,
+            //debug: true,
             fileSelector: {
                 do: fsa.selectFiles,
                 fileTest: fsa.commonHelperFunctions.testForHtmlFileName,
@@ -61,6 +62,7 @@ module tsp.BuildConfig {
             },
             fileProcessor: {
                 do: fsa.storeHTMLFiles,
+                //debug: true,
             },
         },
         domBuildDirectives: dbd.domBuildConfig,
@@ -91,7 +93,7 @@ module tsp.BuildConfig {
             i => i.selectAndReadHTMLFiles,
             i => {
                 debugger;
-                i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.state.htmlFiles;
+                i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.fileProcessor.state.HTMLFiles;
                 i.domProcessor.domTransforms = [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective];
                 return i.domProcessor;
             },

@@ -100,21 +100,25 @@ module tsp.CommonActions {
 
     export function doSequenceOfTypedActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
         var t = <T> <any> action;
-        var actionList: IActionList = {
-            do: doSequenceOfActions,
-            subActions: _.map(action.subActionsGenerator, sag => sag(t)),
-            async: action.async,
-        };
-        if (action.async) {
-            var myCallback: ICallback = err => {
-                endAction(action, callback);
-            };
-            doSequenceOfActions(actionList, context, myCallback);
-        } else {
-            doSequenceOfActions(actionList, context, callback);
+        if (!action.subActionsGenerator || action.subActionsGenerator.length === 0) {
             endAction(action, callback);
+            return;
         }
-
+        var subActionGenerator = action.subActionsGenerator[0];
+        var subAction = subActionGenerator(t);
+        if (subAction.async) {
+            var seqCallback: ICallback = (err) => {
+                action.subActionsGenerator = <[(t: T) => IAction]> _.rest(action.subActionsGenerator);
+                doSequenceOfTypedActions(action, context, callback);
+            };
+            subAction.do(subAction, context, seqCallback); 
+        } else {
+            subAction.do(subAction, context, null);
+            action.subActionsGenerator = <[(t: T) => IAction]> _.rest(action.subActionsGenerator);
+            doSequenceOfTypedActions(action, context, callback);
+        } 
+        
+        
     }
 
     export interface IMergeAction<T> extends IAction {
