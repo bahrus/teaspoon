@@ -91,6 +91,7 @@ module tsp.FileSystemActions {
         fileReaderAction: ITextFileReaderAction;
     }
     export function cacheTextFile(action: ICacheFileContents, context: IWebContext, callback: CommonActions.ICallback) {
+        debugger;
         action.fileReaderAction.do(action.fileReaderAction, context);
         context.stringCache[action.cacheKey] = action.fileReaderAction.state.content;
         ca.endAction(action, callback);

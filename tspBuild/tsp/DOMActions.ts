@@ -156,22 +156,23 @@ module tsp.DOMActions {
 
     type ISubMergeHTMLFileIntoDomTransform = CommonActions.ISubMergeAction<IDOMTransformAction, FileSystemActions.IHTMLFile, IDOMTransformActionState>;
 
-    export interface IPutHTMLFileIntoDomTransformAction extends CommonActions.IAction {
-        htmlFiles: FileSystemActions.IHTMLFile[];
-        domTransforms: IDOMTransformAction[];
-    }
+    //export interface IPutHTMLFileIntoDomTransformAction extends CommonActions.IAction {
+    //    htmlFiles: FileSystemActions.IHTMLFile[];
+    //    domTransforms: IDOMTransformAction[];
+    //}
 
     export interface IDOMTransformForEachHTMLFileAction<TContainer, TListItem> {
-        putHTMLFileIntoDomTransformGenerator?: (container: TContainer) => IPutHTMLFileIntoDomTransformAction;
+        //htmlFilesGenerator?: (container: TContainer) => FileSystemActions.IHTMLFile[];
+        //domTransformsGenerator?: (container: TContainer) => IDOMTransformAction[];
+        //putHTMLFileIntoDomTransformGenerator?: (container: TContainer) => IPutHTMLFileIntoDomTransformAction;
+        htmlFiles?: FileSystemActions.IHTMLFile[];
+        domTransforms?: IDOMTransformAction[];
     }
 
-    export function ApplyDOMTransformsOnHTMLFiles(action: IPutHTMLFileIntoDomTransformAction, context: CommonActions.IContext, callback: CommonActions.ICallback) {
-        var sma: ISubMergeHTMLFileIntoDomTransform = {
-            srcRefs: action.htmlFiles,
-            destRefs: action.domTransforms,
-            destinationPropertyGetter: i => i.state,
-        };
-        ca.subMerge(sma, context, callback);
+    export function ApplyDOMTransformsOnHTMLFiles<TContainer, TListItem>(action: IDOMTransformForEachHTMLFileAction<TContainer, TListItem>, context: CommonActions.IContext, callback: CommonActions.ICallback) {
+        var test1 = action.htmlFiles;
+        var test2 = action.domTransforms;
+        debugger;
     }
 //#endregion
 }

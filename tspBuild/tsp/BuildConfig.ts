@@ -67,13 +67,16 @@ module tsp.BuildConfig {
 
         domProcessor: {
             do: da.ApplyDOMTransformsOnHTMLFiles,
-            putHTMLFileIntoDomTransformGenerator: i => {
-                return {
-                    do: DOMActions.ApplyDOMTransformsOnHTMLFiles,
-                    htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
-                    domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-                }
-            }
+            //htmlFilesGenerator: i => i.selectAndReadHTMLFiles.state.htmlFiles,
+            //domTransformsGenerator: i => [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
+
+            //putHTMLFileIntoDomTransformGenerator: i => {
+            //    return {
+            //        //do: DOMActions.ApplyDOMTransformsOnHTMLFile,
+            //        htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
+            //        domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
+            //    }
+            //}
         },
         exportInMemoryDocumentsToFiles: {
             do: fsa.exportProcessedDocumentsToFiles,
@@ -86,7 +89,13 @@ module tsp.BuildConfig {
             i => i.cacheVersionLabel,
             i => i.minifyJSFiles,
             i => i.selectAndReadHTMLFiles,
-            i => i.domProcessor,
+            i => {
+                debugger;
+                i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.state.htmlFiles;
+                i.domProcessor.domTransforms = [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective];
+                return i.domProcessor;
+            },
+            //i => i.domProcessor,
             i => i.exportInMemoryDocumentsToFiles,
             i => i.waitForUserInput
         ],
