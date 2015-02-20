@@ -169,10 +169,20 @@ module tsp.DOMActions {
         domTransforms?: IDOMTransformAction[];
     }
 
-    export function ApplyDOMTransformsOnHTMLFiles<TContainer, TListItem>(action: IDOMTransformForEachHTMLFileAction<TContainer, TListItem>, context: CommonActions.IContext, callback: CommonActions.ICallback) {
-        var test1 = action.htmlFiles;
-        var test2 = action.domTransforms;
-        debugger;
+    export function ApplyDOMTransformsOnHTMLFiles<TContainer, TListItem>(action: IDOMTransformForEachHTMLFileAction<TContainer, TListItem>, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
+        var htmlFiles = action.htmlFiles;
+        var domTransforms = action.domTransforms;
+        for (var i = 0, n = htmlFiles.length; i < n; i++) {
+            var htmlFile = htmlFiles[i];
+            for (var j = 0, m = domTransforms.length; j < m; j++) {
+                var domTransform = domTransforms[j];
+                domTransform.state = {
+                    htmlFile: htmlFile,
+                };
+               
+                domTransform.do(domTransform, context, null);
+            }
+        }
     }
 //#endregion
 }

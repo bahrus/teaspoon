@@ -92,7 +92,6 @@ module tsp.BuildConfig {
             i => i.minifyJSFiles,
             i => i.selectAndReadHTMLFiles,
             i => {
-                debugger;
                 i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.fileProcessor.state.HTMLFiles;
                 i.domProcessor.domTransforms = [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective];
                 return i.domProcessor;

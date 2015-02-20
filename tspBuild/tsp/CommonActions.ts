@@ -65,34 +65,35 @@ module tsp.CommonActions {
         subActions?: IAction[];
     }
 
-    export function doSequenceOfActions(action: IActionList, context: IContext, callback: ICallback) {
-        if (action.async) {
-            var i = 0;
-            var n = action.subActions.length;
-            var seqCallback: ICallback = (err) => {
-                if (i < n) {
-                    var subAction = action.subActions[i];
-                    i++;
-                    if (!subAction) {
-                        console.log(i + 'th action is null');
-                    }
-                    if (!subAction.do) {
-                        console.log(i + 'th action has no do method');
-                    }
-                    subAction.do(subAction, context, seqCallback);
-                } else {
-                    endAction(action, callback);
-                }
-            };
-            seqCallback(null);
-        } else {
-            for (var i = 0, n = action.subActions.length; i < n; i++) {
-                var subAction = action.subActions[i];
-                subAction.do(subAction, context);
-            }
-            endAction(action, callback);
-        }
-    }
+    //export function doSequenceOfActions(action: IActionList, context: IContext, callback: ICallback) {
+    // TODO:  use _.rest
+    //    if (action.async) {
+    //        var i = 0;
+    //        var n = action.subActions.length;
+    //        var seqCallback: ICallback = (err) => {
+    //            if (i < n) {
+    //                var subAction = action.subActions[i];
+    //                i++;
+    //                if (!subAction) {
+    //                    console.log(i + 'th action is null');
+    //                }
+    //                if (!subAction.do) {
+    //                    console.log(i + 'th action has no do method');
+    //                }
+    //                subAction.do(subAction, context, seqCallback);
+    //            } else {
+    //                endAction(action, callback);
+    //            }
+    //        };
+    //        seqCallback(null);
+    //    } else {
+    //        for (var i = 0, n = action.subActions.length; i < n; i++) {
+    //            var subAction = action.subActions[i];
+    //            subAction.do(subAction, context);
+    //        }
+    //        endAction(action, callback);
+    //    }
+    //}
     export interface ITypedActionList<T> extends IAction {
         configOneLiners?: [(t: T) => void];
         subActionsGenerator?: [(t: T) => IAction];
