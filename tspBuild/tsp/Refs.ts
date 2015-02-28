@@ -7,17 +7,17 @@
     var globalNS = global[guid] || 'tsp';
     if (!global.refs) {
         global.refs = {
-            obj: Object,
+            //obj: Object,
             set moduleTarget(obj) {
                 if (!global[globalNS]) global[globalNS] = {};
                 for (var key in global.tsp) {
                     if (!obj[key]) obj[key] = global[globalNS][key];
                 }
-                this.obj = obj;
+                //this.obj = obj;
             },
-            get moduleTarget() {
-                return this.obj;
-            },
+            //get moduleTarget() {
+            //    return this.obj;
+            //},
             set nameTBD(arr) {
                 global[globalNS][arr[0]] = arr[1];
             }
