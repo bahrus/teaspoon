@@ -1,12 +1,10 @@
 ﻿
 
 module tsp.FileSystemActions {
-    if (typeof (global) !== 'undefined') {
+    try {
         require('./Refs');
-        for (var key in global.tsp) {
-            if (!tsp[key]) tsp[key] = global.tsp[key];
-        }
-    }
+        global.refs.moduleTarget = tsp;
+    } finally { }
     //tsp.ParserActions = global.tsp.ParserActions;
     var pa = tsp.ParserActions;
     var ca = tsp.CommonActions; 

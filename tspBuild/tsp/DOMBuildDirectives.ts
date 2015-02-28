@@ -1,12 +1,6 @@
-﻿//if (typeof (global) !== 'undefined') {
-//    require('./Refs');
-    
-//}
+﻿
 
 module tsp.DOMBuildDirectives {
-    //if (!tsp.DOMActions && typeof(global) !== 'undefined') {
-    //    tsp.DOMActions = global.tsp.DOMActions;
-    //}
     try {
         require('./Refs');
         global.refs.moduleTarget = tsp;

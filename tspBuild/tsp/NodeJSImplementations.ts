@@ -4,12 +4,10 @@ var path = require('path');
 var compressor = require('node-minify');
 
 module tsp.NodeJSImplementations {
-    if (typeof (global) !== 'undefined') {
+    try {
         require('./Refs');
-        for (var key in global.tsp) {
-            if (!tsp[key]) tsp[key] = global.tsp[key];
-        }
-    }
+        global.refs.moduleTarget = tsp;
+    } finally { }
     var pa = ParserActions;
 
     export class NodeJSFileManager implements FileSystemActions.IFileManager {
