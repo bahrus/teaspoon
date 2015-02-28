@@ -1,8 +1,6 @@
-﻿///<reference path='testModule.ts'/>
-
-debugger;
-require('./testModule');
+﻿debugger;
+if(typeof(global) !== 'undefined') require('./testModule');
 
 
-console.log(myModule.I12);
+console.log(tsp.myModule.I12);
 console.log('iah');
