@@ -1,4 +1,4 @@
-﻿
+﻿///<reference path='../Scripts/typings/node/node.d.ts'/>
 var fs = require('fs');
 var path = require('path');
 var compressor = require('node-minify');
@@ -40,6 +40,9 @@ module tsp.NodeJSImplementations {
         }
         getWorkingDirectoryPath() {
             return process.cwd();
+        }
+        doesFilePathExist(sPath: string) {
+            return fs.exists(sPath);
         }
     }
 

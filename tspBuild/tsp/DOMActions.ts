@@ -49,6 +49,11 @@ module tsp.DOMActions {
         var jsOutputs = context.JSOutputs;
         if (!jsOutputs[referringDir]) jsOutputs[state.htmlFile.filePath] = [];
         var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
+        if (!context.fileManager.doesFilePathExist(minifiedVersionFilePath)) {
+            console.log('minified filepath ' + minifiedVersionFilePath + ' does not exist.');
+            ca.endAction(action, callback);
+            return;
+        }
         var minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
         jsOutputs[state.htmlFile.filePath].push(minifiedContent);
         action.state.element.remove();

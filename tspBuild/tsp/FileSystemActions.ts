@@ -24,6 +24,7 @@ module tsp.FileSystemActions {
         getExecutingScriptFilePath: () => string;
         getWorkingDirectoryPath: () => string;
         writeTextFileSync(filePath: string, content: string): void;
+        doesFilePathExist: (filePath: string) => boolean;
     }
     export interface IWebFileManager extends IFileManager {
 
