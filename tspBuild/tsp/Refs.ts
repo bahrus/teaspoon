@@ -3,18 +3,20 @@
     global._ = _;
     var cheerio = require('cheerio');
     global.cheerio = cheerio;
-    global.setProps = {
-        obj: Object,
-        set configureProps(obj) {
-            for (var key in global.tsp) {
-                if (!obj[key]) obj[key] = global.tsp[key];
+    if (!global.refs) {
+        global.refs = {
+            obj: Object,
+            set moduleTarget(obj) {
+                for (var key in global.tsp) {
+                    if (!obj[key]) obj[key] = global.tsp[key];
+                }
+                this.obj = obj;
+            },
+            get moduleTarget() {
+                return this.obj;
             }
-            this.obj = obj;
-        },
-        get configureProps() {
-            return this.obj;
-        }
-    };
+        };
+    }
     require('./CommonActions');
     require('./ParserActions');
     require('./TypeScriptEntities');

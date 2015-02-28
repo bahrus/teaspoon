@@ -2,8 +2,7 @@
 module tsp.BuildConfig {
     if (typeof (global) !== 'undefined') {
         require('./Refs');
-        console.log(global.setProps);
-        global.setProps.configureProps = tsp;
+        global.refs.moduleTarget = tsp;
         //for (var key in global.tsp) {
         //    if (!tsp[key]) tsp[key] = global.tsp[key];
         //}
