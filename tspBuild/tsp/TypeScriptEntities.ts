@@ -1,7 +1,9 @@
-﻿if (typeof (global) !== 'undefined') {
-    require('./Refs');
-}
+﻿
 module tsp.TypeScriptEntities {
+    try {
+        require('./Refs');
+        global.refs.moduleTarget = tsp;
+    } finally { }
     //export interface IOpenStatement extends IStatementNode { }
     
 
