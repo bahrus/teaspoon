@@ -1,12 +1,9 @@
 ﻿
 module tsp.BuildConfig {
-    if (typeof (global) !== 'undefined') {
+    try {
         require('./Refs');
         global.refs.moduleTarget = tsp;
-        //for (var key in global.tsp) {
-        //    if (!tsp[key]) tsp[key] = global.tsp[key];
-        //}
-    }
+    } finally { }
     var ca = tsp.CommonActions;
     var fsa = tsp.FileSystemActions;
     var da = tsp.DOMActions;

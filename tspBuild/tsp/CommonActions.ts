@@ -1,7 +1,10 @@
-﻿if (typeof (global) !== 'undefined') {
-    require('./Refs');
-}
-module tsp.CommonActions {
+﻿module tsp.CommonActions {
+    try {
+        require('./Refs');
+        global.refs.moduleTarget = tsp;
+    } finally { }
+
+
     export var versionKey = 'version';
 
     export interface IProcessManager {

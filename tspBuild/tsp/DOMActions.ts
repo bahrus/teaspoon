@@ -1,12 +1,9 @@
 ﻿
-
 module tsp.DOMActions {
-    if (typeof (global) !== 'undefined') {
+    try {
         require('./Refs');
-        for (var key in global.tsp) {
-            if (!tsp[key]) tsp[key] = global.tsp[key];
-        }
-    }
+        global.refs.moduleTarget = tsp;
+    } finally { }
     var fsa = FileSystemActions;
     var ca = CommonActions;
     var pa = ParserActions;
