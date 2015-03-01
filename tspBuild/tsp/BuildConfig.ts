@@ -9,7 +9,7 @@ module tsp.BuildConfig {
     var da = tsp.DOMActions;
     var dbd = tsp.DOMBuildDirectives;
 
-    interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
+    export interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
         cacheVersionLabel?: FileSystemActions.ICacheFileContents;
         minifyJSFiles?: FileSystemActions.ISelectAndProcessFileAction;
         selectAndReadHTMLFiles?: FileSystemActions.ISelectAndReadHTMLFilesAction;
@@ -66,16 +66,6 @@ module tsp.BuildConfig {
 
         domProcessor: {
             do: da.ApplyDOMTransformsOnHTMLFiles,
-            //htmlFilesGenerator: i => i.selectAndReadHTMLFiles.state.htmlFiles,
-            //domTransformsGenerator: i => [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-
-            //putHTMLFileIntoDomTransformGenerator: i => {
-            //    return {
-            //        //do: DOMActions.ApplyDOMTransformsOnHTMLFile,
-            //        htmlFiles: i.selectAndReadHTMLFiles.state.htmlFiles,
-            //        domTransforms: [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective],
-            //    }
-            //}
         },
         exportInMemoryDocumentsToFiles: {
             do: fsa.exportProcessedDocumentsToFiles,
