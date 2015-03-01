@@ -115,7 +115,7 @@ Examples of **valid** InactiveScript:
 5)  **Valid:** lambda expression inside interface value declaration
 
 
-     <!-- language: lang-js -->
+<!-- language: lang-js -->
      export var programConfig: IProgramConfig = {
 
      }
