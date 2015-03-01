@@ -99,29 +99,31 @@ Examples of **valid** InactiveScript:
 
 4)  **Valid:** const interface value declaration, with a sub property which itself is an interface value declaration:
 
-     export const programConfig: IProgramConfig = {
-         do: ca.doSequenceOfTypedActions,
-         cacheVersionLabel: {
-             do: fsa.cacheTextFile,
-             fileReaderAction: {
-                 do: fsa.readTextFile,
-                 rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
-                 relativeFilePath: 'Version.txt',
-             },
-             cacheKey: versionKey
-         },
-         ...
-     }
+```typescript
+export const programConfig: IProgramConfig = {
+    do: ca.doSequenceOfTypedActions,
+    cacheVersionLabel: {
+        do: fsa.cacheTextFile,
+        fileReaderAction: {
+            do: fsa.readTextFile,
+            rootDirectoryRetriever: fsa.commonHelperFunctions.retrieveWorkingDirectory,
+            relativeFilePath: 'Version.txt',
+        },
+        cacheKey: versionKey
+    },
+    ...
+}
+```
 5)  **Valid:** lambda expression inside interface value declaration
 
 
 ```javascript
 
-     export var programConfig: IProgramConfig = {
+     export const programConfig: IProgramConfig = {
 
      }
 
-
+```
 
 
 
