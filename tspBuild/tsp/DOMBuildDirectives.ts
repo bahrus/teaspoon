@@ -11,7 +11,7 @@ module tsp.DOMBuildDirectives {
         container?: FileSystemActions.ISelectAndProcessFileAction;
     }
 
-    export var domBuildConfig: IDOMBuildDirectives = {
+    export const domBuildConfig: IDOMBuildDirectives = {
         removeBuildDirective: {
             do: DOMActions.DOMTransform,
             selector: {

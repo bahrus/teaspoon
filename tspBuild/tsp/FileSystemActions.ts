@@ -6,8 +6,8 @@ module tsp.FileSystemActions {
         global.refs.moduleTarget = tsp;
     } finally { }
     //tsp.ParserActions = global.tsp.ParserActions;
-    var pa = tsp.ParserActions;
-    var ca = tsp.CommonActions; 
+    const pa = tsp.ParserActions;
+    const ca = tsp.CommonActions; 
     //if (typeof (global) !== 'undefined') {
     //    if (!ca) ca = global.tsp.CommonActions;
     //    if (!pa) pa = global.tsp.ParserActions;
@@ -61,7 +61,7 @@ module tsp.FileSystemActions {
         }
 
         export function retrieveWorkingDirectory(context: IWebContext) {
-            var wfm = context.fileManager;
+            const wfm = context.fileManager;
             return wfm.getWorkingDirectoryPath() + wfm.getSeparator();
         }
     }
@@ -78,9 +78,9 @@ module tsp.FileSystemActions {
     }
 
     export function readTextFile(action: ITextFileReaderAction, context: IWebContext) {
-        var rootdirectory = action.rootDirectoryRetriever(context);
-        var wfm = context.fileManager;
-        var filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
+        const rootdirectory = action.rootDirectoryRetriever(context);
+        const wfm = context.fileManager;
+        const filePath = wfm.resolve(rootdirectory, action.relativeFilePath);
         action.state = {
             content: wfm.readTextFileSync(filePath),
         };
@@ -104,7 +104,7 @@ module tsp.FileSystemActions {
     export function waitForUserInput(action: IWaitForUserInput, context: IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
         if (context.processManager) {
-            var test = (chunk: string, key: any) => {
+            const test = (chunk: string, key: any) => {
                 return key && key.ctrl && key.name == 'c';
             }
             context.processManager.WaitForUserInputAndExit('Press ctrl c to exit', test);
@@ -138,7 +138,7 @@ module tsp.FileSystemActions {
                 rootDirectory: action.rootDirectoryRetriever(context),
             };
         }
-        var files = context.fileManager.listDirectorySync(action.state.rootDirectory);
+        let files = context.fileManager.listDirectorySync(action.state.rootDirectory);
         if (action.fileTest) files = files.filter(action.fileTest);
         files = files.map(s => action.state.rootDirectory + s);
         action.state.selectedFilePaths = files;
@@ -171,12 +171,12 @@ module tsp.FileSystemActions {
 
     //function processHTMLFileSubRules(action: IHTMLFileProcessorAction, context: IWebContext, data: string) {
     //    if (action.debug) debugger;
-    //    var $ = context.fileManager.loadHTML(data);
+    //    const $ = context.fileManager.loadHTML(data);
     //    action.state.$ = $;
     //    if (action.fileSubProcessActions) {
-    //        var n = action.fileSubProcessActions.length;
-    //        for (var i = 0; i < n; i++) {
-    //            var fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
+    //        const n = action.fileSubProcessActions.length;
+    //        for (const i = 0; i < n; i++) {
+    //            const fspa = <IHTMLFileProcessorAction> action.fileSubProcessActions[i];
     //            fspa.state = {
     //                $: action.state.$,
     //                filePath: action.state.filePath,
@@ -187,15 +187,15 @@ module tsp.FileSystemActions {
     //    if (!context.HTMLOutputs) context.HTMLOutputs = {};
     //    context.HTMLOutputs[action.state.filePath] = action.state.$;
     //    if (action.debug) {
-    //        var $any = <any> action.state.$;
-    //        var $cheerio = <CheerioStatic> $any;
-    //        var sOutput = $cheerio.html();
+    //        const $any = <any> action.state.$;
+    //        const $cheerio = <CheerioStatic> $any;
+    //        const sOutput = $cheerio.html();
     //        debugger;
     //    }
     //}
 
     //export function processHTMLFile(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
-    //    var wfm = context.fileManager;
+    //    const wfm = context.fileManager;
     //    console.log('processing ' + action.state.filePath);
     //    if (callback) {
     //        wfm.readTextFileAsync(action.state.filePath,(err, data) => {
@@ -203,7 +203,7 @@ module tsp.FileSystemActions {
     //            callback(err);
     //        });
     //    } else {
-    //        var data = wfm.readTextFileSync(action.state.filePath);
+    //        const data = wfm.readTextFileSync(action.state.filePath);
     //        processHTMLFileSubRules(action, context, data);
     //        ca.endAction(action, callback);
     //    }
@@ -214,7 +214,7 @@ module tsp.FileSystemActions {
     //#region JS File Processing
     export function minifyJSFile(action: IFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
         console.log('Uglifying ' + action.state.filePath);
-        var filePath = action.state.filePath;
+        const filePath = action.state.filePath;
         context.fileManager.minify(filePath,(err, min) => {
             if (err) {
                 console.log('Error uglifying ' + filePath);
@@ -240,20 +240,20 @@ module tsp.FileSystemActions {
 
     export function selectAndProcessFiles(action: ISelectAndProcessFileAction, context: IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
-        var fs = action.fileSelector;
+        const fs = action.fileSelector;
         fs.do(fs, context);
-        var selectedFilePaths = fs.state.selectedFilePaths;
-        var len = selectedFilePaths.length;
+        const selectedFilePaths = fs.state.selectedFilePaths;
+        const len = selectedFilePaths.length;
         if (len === 0) {
             ca.endAction(action, callback);
             return;
         }
-        var fp = action.fileProcessor;
+        const fp = action.fileProcessor;
         if (action.async) {
-            var idx = 0;
-            var fpCallback = (err) => {
+            let idx = 0;
+            const fpCallback = (err) => {
                 if (idx < len) {
-                    var filePath = selectedFilePaths[idx];
+                    const filePath = selectedFilePaths[idx];
                     idx++;
                     if (!fp.state) {
                         fp.state = {
@@ -270,9 +270,9 @@ module tsp.FileSystemActions {
             }
             fpCallback(null);
         } else {
-            var n = fs.state.selectedFilePaths.length;
-            for (var i = 0; i < n; i++) {
-                var filePath = fs.state.selectedFilePaths[i];
+            const n = fs.state.selectedFilePaths.length;
+            for (let i = 0; i < n; i++) {
+                const filePath = fs.state.selectedFilePaths[i];
                 if (!fp.state) {
                     fp.state = {
                         filePath: filePath,
@@ -307,12 +307,12 @@ module tsp.FileSystemActions {
 
     export function storeHTMLFiles(action: IHTMLFileProcessorAction, context: IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
-        var fm = context.fileManager;
-        var filePath = action.state.filePath;
-        var contents = fm.readTextFileSync(filePath);
+        const fm = context.fileManager;
+        const filePath = action.state.filePath;
+        const contents = fm.readTextFileSync(filePath);
         //action.state.$ = fm.loadHTML(contents);
         if (!action.state.HTMLFiles) action.state.HTMLFiles = [];
-        var $ = fm.loadHTML(contents);
+        const $ = fm.loadHTML(contents);
         action.state.HTMLFiles.push({
             $: $,
             filePath: filePath,
@@ -326,8 +326,8 @@ module tsp.FileSystemActions {
     //#region Exporting Processed Documents to Files
     export function exportProcessedDocumentsToFiles(action: IExportDocumentsToFiles, context: IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
-        for (var filePath in context.HTMLOutputs) {
-            var $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
+        for (const filePath in context.HTMLOutputs) {
+            const $ = <CheerioStatic><any> context.HTMLOutputs[filePath];
             context.fileManager.writeTextFileSync((<string>filePath).replace('.html', '.temp.html'), $.html());
         }
         ca.endAction(action, callback);
