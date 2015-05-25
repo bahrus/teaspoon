@@ -4,10 +4,10 @@ module tsp.BuildConfig {
         require('./Refs');
         global.refs.moduleTarget = tsp;
     } finally { }
-    var ca = tsp.CommonActions;
-    var fsa = tsp.FileSystemActions;
-    var da = tsp.DOMActions;
-    var dbd = tsp.DOMBuildDirectives;
+    const ca = tsp.CommonActions;
+    const fsa = tsp.FileSystemActions;
+    const da = tsp.DOMActions;
+    const dbd = tsp.DOMBuildDirectives;
 
     export interface IProgramConfig extends CommonActions.ITypedActionList<IProgramConfig> {
         cacheVersionLabel?: FileSystemActions.ICacheFileContents;
@@ -20,10 +20,10 @@ module tsp.BuildConfig {
 
     }
 
-    var versionKey = 'version';
+    const versionKey = 'version';
     
     
-    export var programConfig: IProgramConfig = {
+    export const programConfig: IProgramConfig = {
         do: ca.doSequenceOfTypedActions,
         cacheVersionLabel: {
             do: fsa.cacheTextFile,

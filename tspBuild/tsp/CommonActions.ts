@@ -5,7 +5,7 @@
     } finally { }
 
 
-    export var versionKey = 'version';
+    export const versionKey = 'version';
 
     export interface IProcessManager {
         WaitForUserInputAndExit(message: string, testForExit: (chunk: string, key: any) => boolean);
@@ -48,13 +48,13 @@
     }
 
     export function logToConsole(messageAction: IMessageAction, context: IContext, callback: ICallback) {
-        var mA = messageAction;
+        const mA = messageAction;
         mA.state = {
             dynamicMessage: mA.message ? mA.message : '',
         };
-        var mS = mA.state;
+        const mS = mA.state;
         if (mA.messageGenerator) {
-            var genMessage = mA.messageGenerator(mA);
+            let genMessage = mA.messageGenerator(mA);
             genMessage = (mS.dynamicMessage ? (mS.dynamicMessage + ' ') : '') + genMessage;
             mS.dynamicMessage = genMessage;
         }
@@ -71,11 +71,11 @@
     //export function doSequenceOfActions(action: IActionList, context: IContext, callback: ICallback) {
     // TODO:  use _.rest
     //    if (action.async) {
-    //        var i = 0;
-    //        var n = action.subActions.length;
-    //        var seqCallback: ICallback = (err) => {
+    //        const i = 0;
+    //        const n = action.subActions.length;
+    //        const seqCallback: ICallback = (err) => {
     //            if (i < n) {
-    //                var subAction = action.subActions[i];
+    //                const subAction = action.subActions[i];
     //                i++;
     //                if (!subAction) {
     //                    console.log(i + 'th action is null');
@@ -90,8 +90,8 @@
     //        };
     //        seqCallback(null);
     //    } else {
-    //        for (var i = 0, n = action.subActions.length; i < n; i++) {
-    //            var subAction = action.subActions[i];
+    //        for (const i = 0, n = action.subActions.length; i < n; i++) {
+    //            const subAction = action.subActions[i];
     //            subAction.do(subAction, context);
     //        }
     //        endAction(action, callback);
@@ -103,15 +103,15 @@
     }
 
     export function doSequenceOfTypedActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
-        var t = <T> <any> action;
+        const t = <T> <any> action;
         if (!action.subActionsGenerator || action.subActionsGenerator.length === 0) {
             endAction(action, callback);
             return;
         }
-        var subActionGenerator = action.subActionsGenerator[0];
-        var subAction = subActionGenerator(t);
+        const subActionGenerator = action.subActionsGenerator[0];
+        const subAction = subActionGenerator(t);
         if (subAction.async) {
-            var seqCallback: ICallback = (err) => {
+            const seqCallback: ICallback = (err) => {
                 action.subActionsGenerator = <[(t: T) => IAction]> _.rest(action.subActionsGenerator);
                 doSequenceOfTypedActions(action, context, callback);
             };
@@ -131,9 +131,9 @@
     }
 
     export function merge<T>(mergeAction: IMergeAction<T>, context: IContext, callback: ICallback) {
-        var n = mergeAction.srcRefs.length;
-        for (var i = 0; i < n; i++) {
-            var srcRef = mergeAction.srcRefs[i];
+        const n = mergeAction.srcRefs.length;
+        for (let i = 0; i < n; i++) {
+            const srcRef = mergeAction.srcRefs[i];
             _.merge(srcRef, mergeAction.destRef);
         }
     }
@@ -146,23 +146,23 @@
     }
 
     export function subMerge<TDestAction extends IAction, TSrc, TProp>(subMergeAction: ISubMergeAction<TDestAction, TSrc, TProp>, context: IContext, callback: ICallback) {
-        var dpg = subMergeAction.destinationPropertyGetter;
-        var spg = subMergeAction.sourcePropertyGetter;
-        var srcRefs = subMergeAction.srcRefs;
+        const dpg = subMergeAction.destinationPropertyGetter;
+        const spg = subMergeAction.sourcePropertyGetter;
+        const srcRefs = subMergeAction.srcRefs;
         if (!srcRefs) {
             endAction(subMergeAction, callback);
             return;
         }
-        var noOfSrcRefs = srcRefs.length;
-        var destRefs = subMergeAction.destRefs;
-        var noOfDestRefs = destRefs.length;
-        //var destProp = dpg(dr);
-        for (var i = 0; i < noOfSrcRefs; i++) {
-            var srcRef = srcRefs[i];
-            var srcProp = spg(srcRef);
-            for (var j = 0; j < noOfDestRefs; j++) {
-                var destRef = destRefs[j];
-                var destProp = dpg(destRef);
+        const noOfSrcRefs = srcRefs.length;
+        const destRefs = subMergeAction.destRefs;
+        const noOfDestRefs = destRefs.length;
+        //const destProp = dpg(dr);
+        for (let i = 0; i < noOfSrcRefs; i++) {
+            const srcRef = srcRefs[i];
+            const srcProp = spg(srcRef);
+            for (let j = 0; j < noOfDestRefs; j++) {
+                const destRef = destRefs[j];
+                const destProp = dpg(destRef);
                 _.merge(srcProp, destProp);
                 destRef.do(destRef, context, callback);
             }
