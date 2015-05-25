@@ -5,7 +5,7 @@ module tsp.ParserActions {
         require('./Refs');
         global.refs.moduleTarget = tsp;
     } finally { }
-    var ca = tsp.CommonActions;
+    const ca = tsp.CommonActions;
     //#region Helper functions
     export function endsWith(str: string, suffix: string) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -21,7 +21,7 @@ module tsp.ParserActions {
     }
 
     export function replaceEndWith(str: string, suffix: string, replaceText: string) {
-        var iPosOfEnd = str.indexOf(suffix, str.length - suffix.length);
+        const iPosOfEnd = str.indexOf(suffix, str.length - suffix.length);
         if (iPosOfEnd === -1) return str;
         return str.substr(0, iPosOfEnd) + replaceText;
     }

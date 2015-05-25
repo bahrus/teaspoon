@@ -1,19 +1,19 @@
 ﻿///<reference path='../Scripts/typings/node/node.d.ts'/>
-var fs = require('fs');
-var path = require('path');
-var compressor = require('node-minify');
+const fs = require('fs');
+const path = require('path');
+const compressor = require('node-minify');
 
 module tsp.NodeJSImplementations {
     try {
         require('./Refs');
         global.refs.moduleTarget = tsp;
     } finally { }
-    var pa = ParserActions;
+    const pa = ParserActions;
 
     export class NodeJSFileManager implements FileSystemActions.IFileManager {
 
         readTextFileSync(filePath: string) {
-            var data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
+            const data = <any> fs.readFileSync(filePath, { encoding: 'utf8' });
             return <string> data;
         }
         readTextFileAsync(filePath: string, callback: (err: Error, data: string) => void) {
@@ -27,7 +27,7 @@ module tsp.NodeJSImplementations {
             return fs.readdirSync(dirPath);
         }
         getExecutingScriptFilePath() {
-            var pathOfScript = process.argv[1];
+            const pathOfScript = process.argv[1];
             return pathOfScript;
         }
         getSeparator() {
@@ -47,12 +47,12 @@ module tsp.NodeJSImplementations {
     export class NodeJSWebFileManager extends NodeJSFileManager implements FileSystemActions.IWebFileManager {
 
         loadHTML(html: string) {
-            var $ = cheerio.load(html);
-            var $any = <any> $;
+            const $ = cheerio.load(html);
+            const $any = <any> $;
             return <JQueryStatic> $any;
         }
         minify(filePath: string, callback: (err: Error, min: string) => void) {
-            var destPath = pa.replaceEndWith(filePath, '.js', '.min.js');
+            const destPath = pa.replaceEndWith(filePath, '.js', '.min.js');
             new compressor.minify({
                 type: 'uglifyjs',
                 fileIn: filePath,
@@ -65,7 +65,7 @@ module tsp.NodeJSImplementations {
 
     export class NodeJSProcessManager implements CommonActions.IProcessManager {
         WaitForUserInputAndExit(message: string, testForExit: (chunk: string, key: string) => boolean) {
-            var stdin = process['openStdin']();
+            const stdin = process['openStdin']();
             process.stdin['setRawMode']();
             console.log(message);
             stdin.on('keypress', function (chunk, key) {
