@@ -4,9 +4,9 @@ module tsp.DOMActions {
         require('./Refs');
         global.refs.moduleTarget = tsp;
     } finally { }
-    var fsa = FileSystemActions;
-    var ca = CommonActions;
-    var pa = ParserActions;
+    const fsa = FileSystemActions;
+    const ca = CommonActions;
+    const pa = ParserActions;
 
     //#region DOM Actions
     export interface IUglify {
@@ -39,19 +39,19 @@ module tsp.DOMActions {
     }
 
     export function addToJSClob(action: IDOMElementBuildAction, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
-        var state = action.state;
-        var src = action.state.element.attr('src');
-        var referringDir = context.fileManager.resolve(state.htmlFile.filePath, '..', src);
+        const state = action.state;
+        const src = action.state.element.attr('src');
+        const referringDir = context.fileManager.resolve(state.htmlFile.filePath, '..', src);
         if (!context.JSOutputs) context.JSOutputs = {};
-        var jsOutputs = context.JSOutputs;
+        const jsOutputs = context.JSOutputs;
         if (!jsOutputs[referringDir]) jsOutputs[state.htmlFile.filePath] = [];
-        var minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
+        const minifiedVersionFilePath = pa.replaceEndWith(referringDir, '.js', '.min.js');
         if (!context.fileManager.doesFilePathExist(minifiedVersionFilePath)) {
             console.log('minified filepath ' + minifiedVersionFilePath + ' does not exist.');
             ca.endAction(action, callback);
             return;
         }
-        var minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
+        const minifiedContent = context.fileManager.readTextFileSync(minifiedVersionFilePath);
         jsOutputs[state.htmlFile.filePath].push(minifiedContent);
         action.state.element.remove();
         ca.endAction(action, callback);
@@ -76,7 +76,7 @@ module tsp.DOMActions {
 
     export function selectElements(action: IDOMElementCSSSelector, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
         if (action.debug) debugger;
-        var aS = action.state;
+        const aS = action.state;
         if (aS.relativeTo) {
             aS.elements = aS.relativeTo.find(action.cssSelector);
         } else {
@@ -100,24 +100,24 @@ module tsp.DOMActions {
     }
 
     export function DOMTransform(action: IDOMTransformAction, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
-        var elements: JQuery;
-        var p: IDOMTransformAction;
+        let elements: JQuery;
+        let p: IDOMTransformAction;
         if (action.state) {
             p = action.state.parent;
         }
-        var aSel = action.selector;
+        const aSel = action.selector;
         if (!aSel.state) {
             aSel.state = {
                 htmlFile: action.state.htmlFile,
             };
         }
-        var aSelSt = aSel.state;
+        const aSelSt = aSel.state;
         aSelSt.treeNode = action;
         if (p && p.elementAction) {
             aSelSt.relativeTo = p.elementAction.state.element;
         }
         aSel.do(aSel, context);
-        var eA = action.elementAction;
+        const eA = action.elementAction;
         if (eA) {
             //#region element Action
             eA.state = {
@@ -126,11 +126,11 @@ module tsp.DOMActions {
                 htmlFile: aSelSt.htmlFile,
             };
             if (eA.async) {
-                var i = 0;
-                var n = aSelSt.elements.length;
-                var eACallback = (err) => {
+                let i = 0;
+                const n = aSelSt.elements.length;
+                const eACallback = (err) => {
                     if (i < n) {
-                        var $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
+                        const $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
                         i++;
                         eA.state.element = $elem;
                         eA.do(eA, context, eACallback);
@@ -140,9 +140,9 @@ module tsp.DOMActions {
                 };
                 eACallback(null);
             } else {
-                var n = aSelSt.elements.length
-                for (var i = 0; i < n; i++) {
-                    var $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
+                const n = aSelSt.elements.length
+                for (let i = 0; i < n; i++) {
+                    const $elem = aSelSt.htmlFile.$(aSelSt.elements[i]);
                     eA.state.element = $elem;
                     eA.do(eA, context);
                 }
@@ -172,12 +172,12 @@ module tsp.DOMActions {
     }
 
     export function ApplyDOMTransformsOnHTMLFiles<TContainer, TListItem>(action: IDOMTransformForEachHTMLFileAction<TContainer, TListItem>, context: FileSystemActions.IWebContext, callback: CommonActions.ICallback) {
-        var htmlFiles = action.htmlFiles;
-        var domTransforms = action.domTransforms;
-        for (var i = 0, n = htmlFiles.length; i < n; i++) {
-            var htmlFile = htmlFiles[i];
-            for (var j = 0, m = domTransforms.length; j < m; j++) {
-                var domTransform = domTransforms[j];
+        const htmlFiles = action.htmlFiles;
+        const domTransforms = action.domTransforms;
+        for (let i = 0, n = htmlFiles.length; i < n; i++) {
+            const htmlFile = htmlFiles[i];
+            for (let j = 0, m = domTransforms.length; j < m; j++) {
+                const domTransform = domTransforms[j];
                 domTransform.state = {
                     htmlFile: htmlFile,
                 };
