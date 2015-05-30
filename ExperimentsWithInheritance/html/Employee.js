@@ -14,26 +14,31 @@ function ID(value) {
     return function (target, propName, propDescriptor) {
         var symbolPropName = $value;
         propDescriptor.get = function () {
-            return this['$s'][symbolPropName];
+            var lu = this['__tsp'];
+            if (!lu)
+                return null;
+            return lu[symbolPropName];
         };
         propDescriptor.set = function (val) {
-            this['$s'][symbolPropName] = val;
+            var lu = this['__tsp'];
+            if (!lu) {
+                lu = [];
+                this['__tsp'] = lu;
+            }
+            lu[symbolPropName] = val;
         };
     };
 }
 var Employee = (function () {
     function Employee() {
     }
-    Object.defineProperty(Employee.prototype, "$s", {
-        get: function () {
-            if (!this._strings)
-                this._strings = {};
-            return this._strings;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Employee.prototype, "Name", {
+        //	private _strings : {[key: string] : string}; //TODO:  make key a symbol
+        //	
+        //	public get $s(){
+        //		if(!this._strings) this._strings = {};
+        //		return this._strings;
+        //	}
         get: function () { return null; },
         set: function (v) { },
         enumerable: true,

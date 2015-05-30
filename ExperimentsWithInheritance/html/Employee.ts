@@ -11,47 +11,43 @@ function ID(value: string){
 	return (target: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 		var symbolPropName = $value;
 		propDescriptor.get = function(){
-			return this['$s'][symbolPropName];
+			const lu = this['__tsp'];
+			if(!lu) return null;
+			return lu[symbolPropName];
 		}
 		propDescriptor.set = function(val){
-			this['$s'][symbolPropName] = val;
+			let lu = this['__tsp'];
+			if(!lu){
+				lu = [];
+				this['__tsp'] = lu;
+			}
+			lu[symbolPropName] = val;
 		}
 	}
 }
 
-class Employee implements IHasStrings{
-	constructor(){}
+class Employee{
+	
 	public static $Name = '$Name';
-	
-	private _strings : {[key: string] : string}; //TODO:  make key a symbol
-	
-	public get $s(){
-		if(!this._strings) this._strings = {};
-		return this._strings;
-	}
-	
 	@ID(Employee.$Name)
 	public get Name() : string{return null;} 
 	public set Name(v: string){}
 	
 }
 
-function MetaData(value: any) {
+function MetaData(value: {[key: string] : Object}) {
   return function (target: Function) {
       //debugger;
   }
 }
 
-class EmployeeView implements IHasStrings{
-//	@MetaData({
-//		[Employee.$Name] : {
-//			
-//		}
-//	})
-	public get $s(){return null;} 
-	
-	
-}
+@MetaData({
+	[Employee.$Name] : {
+		
+	}
+})
+class EmployeeView extends Employee{}
+
 const person1 = new Employee();
 const person2 = new Employee();
 //person1.$s[<string><any> Employee.$Name] = 'Bruce'
