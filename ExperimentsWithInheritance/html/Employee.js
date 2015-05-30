@@ -13,10 +13,11 @@ function ID(value) {
     //	}
     return function (target, propName, propDescriptor) {
         var symbolPropName = $value;
-        propDescriptor['get'] = function () {
-            debugger;
+        propDescriptor.get = function () {
             return this['$s'][symbolPropName];
-            //return 'iah';
+        };
+        propDescriptor.set = function (val) {
+            this['$s'][symbolPropName] = val;
         };
     };
 }
@@ -33,10 +34,8 @@ var Employee = (function () {
         configurable: true
     });
     Object.defineProperty(Employee.prototype, "Name", {
-        get: function () {
-            debugger;
-            return null;
-        },
+        get: function () { return null; },
+        set: function (v) { },
         enumerable: true,
         configurable: true
     });
@@ -67,11 +66,10 @@ var EmployeeView = (function () {
     });
     return EmployeeView;
 })();
-debugger;
 var person1 = new Employee();
 var person2 = new Employee();
-person1.$s[Employee.$Name] = 'Bruce';
+//person1.$s[<string><any> Employee.$Name] = 'Bruce'
+person1.Name = 'Bruce';
 console.log(person1.Name);
 //console.log(person2['Name_']);
-debugger;
 //# sourceMappingURL=Employee.js.map

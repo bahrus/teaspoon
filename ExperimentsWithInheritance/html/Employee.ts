@@ -10,10 +10,11 @@ function ID(value: string){
 //	}
 	return (target: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 		var symbolPropName = $value;
-		propDescriptor['get'] = function(){
-			debugger;
+		propDescriptor.get = function(){
 			return this['$s'][symbolPropName];
-	        //return 'iah';
+		}
+		propDescriptor.set = function(val){
+			this['$s'][symbolPropName] = val;
 		}
 	}
 }
@@ -30,10 +31,9 @@ class Employee implements IHasStrings{
 	}
 	
 	@ID(Employee.$Name)
-	public get Name() : string{
-		 debugger;
-		 return null;
-    }
+	public get Name() : string{return null;} 
+	public set Name(v: string){}
+	
 }
 
 function MetaData(value: any) {
@@ -52,12 +52,11 @@ class EmployeeView implements IHasStrings{
 	
 	
 }
-debugger;
 const person1 = new Employee();
 const person2 = new Employee();
-person1.$s[<string><any> Employee.$Name] = 'Bruce'
+//person1.$s[<string><any> Employee.$Name] = 'Bruce'
+person1.Name = 'Bruce';
 console.log(person1.Name);
 //console.log(person2['Name_']);
-debugger;
 
 
