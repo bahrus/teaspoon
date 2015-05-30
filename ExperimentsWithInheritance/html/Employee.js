@@ -11,35 +11,13 @@ function ID(value) {
     //	return function(target: Function, propName: string){
     //		debugger;
     //	}
-    return function (target, propName, obj) {
+    return function (target, propName, propDescriptor) {
         var symbolPropName = $value;
-        debugger;
-        //		delete target[propName];
-        //var p = Object.getPrototypeOf(obj);
-        //console.log(target['get'].toString());
-        console.log(target['__lookupGetter__']('Name').toString());
-        //		target['__defineGetter__'](propName, () =>{
-        //			debugger;
-        //	        return this._strings[symbolPropName];
-        //		});
-        //		Object.defineProperty(target, propName, {
-        //			__proto__: null,
-        //	        get: function () {
-        //				debugger;
-        //	            return this._strings[symbolPropName];
-        //	        },
-        //	        enumerable: true,
-        //	        configurable: true
-        //	    });
-        //		Object.getOwnPropertyDescriptor(target, 'Name').get = () =>{
-        //			debugger;
-        //	        return this._strings[symbolPropName];
-        //		};
-        obj['get'] = function () {
+        propDescriptor['get'] = function () {
             debugger;
-            return 'iah';
+            return this['$s'][symbolPropName];
+            //return 'iah';
         };
-        console.log(Object.getOwnPropertyDescriptor(target, 'Name').get.toString());
     };
 }
 var Employee = (function () {
