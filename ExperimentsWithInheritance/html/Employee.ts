@@ -3,6 +3,7 @@ function ID(value: string){
 	const $value = value;
 	return (target: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 		const symbolPropName = $value;
+		Reflect.defineMetadata('tsp_id', symbolPropName, target, propName);
 		propDescriptor.get = function(){
 			const lu = this['__tsp'];
 			if(!lu) return null;
@@ -15,6 +16,17 @@ function ID(value: string){
 				this['__tsp'] = lu;
 			}
 			lu[symbolPropName] = val;
+		}
+	}
+}
+
+function describe(obj: any){
+	for(let memberName in obj){
+		console.log('member name = ' + memberName);
+		let keys = Reflect.getMetadataKeys(obj, memberName);
+		for(let i = 0, n = keys.length; i < n; i++){
+			const metaKey = keys[i];
+			console.log('     key = ' + metaKey + ' value = ' + Reflect.getMetadata(metaKey, obj, memberName));
 		}
 	}
 }
@@ -67,6 +79,7 @@ const evNameMeta = Reflect.getMetadata(Employee.$Name, ev.constructor);
 console.log(evNameMeta);
 
 const person1 = new Employee();
+describe(person1);
 const person2 = new Employee();
 //person1.$s[<string><any> Employee.$Name] = 'Bruce'
 person1.Name = 'Bruce';
