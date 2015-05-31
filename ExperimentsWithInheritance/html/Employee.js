@@ -12,16 +12,23 @@ if (typeof __decorate !== "function") __decorate = function (decorators, target,
         case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
     }
 };
-function ID(value) {
-    var $value = value;
+var tsp_propIDLookup = 'tsp_propIDLookup';
+function ID(propID) {
+    //const $value = value;
     return function (target, propName, propDescriptor) {
-        var symbolPropName = $value;
-        Reflect.defineMetadata('tsp_id', symbolPropName, target, propName);
+        //const symbolPropName = value;
+        Reflect.defineMetadata('tsp_id', propID, target, propName);
+        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, target);
+        if (!propIDLookup) {
+            propIDLookup = {};
+            Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, target);
+        }
+        propIDLookup[propID] = propName;
         propDescriptor.get = function () {
             var lu = this['__tsp'];
             if (!lu)
                 return null;
-            return lu[symbolPropName];
+            return lu[propID];
         };
         propDescriptor.set = function (val) {
             var lu = this['__tsp'];
@@ -29,7 +36,7 @@ function ID(value) {
                 lu = [];
                 this['__tsp'] = lu;
             }
-            lu[symbolPropName] = val;
+            lu[propID] = val;
         };
     };
 }
@@ -42,6 +49,21 @@ function describe(obj) {
             console.log('     key = ' + metaKey + ' value = ' + Reflect.getMetadata(metaKey, obj, memberName));
         }
     }
+}
+function MetaData(category, value) {
+    //const $value = value;
+    return function (target) {
+        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, target);
+        for (var propKey in value) {
+            var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
+            var categoryObj = Reflect.getMetadata(category, target, propName);
+            if (!categoryObj) {
+                categoryObj = {};
+                Reflect.defineMetadata(category, categoryObj, target, propName);
+            }
+            categoryObj[category] = value[propKey];
+        }
+    };
 }
 var Employee = (function () {
     function Employee() {
@@ -59,18 +81,6 @@ var Employee = (function () {
         ], Employee.prototype, "Name", Object.getOwnPropertyDescriptor(Employee.prototype, "Name")));
     return Employee;
 })();
-function MetaData(category, value) {
-    var $value = value;
-    return function (target) {
-        for (var propKey in $value) {
-            var categoryObj = Reflect.getMetadata(propKey, target);
-            if (!categoryObj)
-                categoryObj = {};
-            categoryObj[category] = $value[propKey];
-            Reflect.defineMetadata(propKey, categoryObj, target);
-        }
-    };
-}
 var ColumnDef = 'ColumnDef';
 var ValidationDef = 'ValidationDef';
 var EmployeeView = (function (_super) {
@@ -80,7 +90,7 @@ var EmployeeView = (function (_super) {
     }
     EmployeeView = __decorate([
         MetaData(ColumnDef, (_a = {},
-            _a[Employee.$Name] = {
+            _a['Name'] = {
                 width: 100
             },
             _a
@@ -96,9 +106,14 @@ var EmployeeView = (function (_super) {
     var _a, _b;
 })(Employee);
 var ev = new EmployeeView();
-var evNameMeta = Reflect.getMetadata(Employee.$Name, ev.constructor);
-console.log(evNameMeta);
+var evPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, ev);
+console.log('evPropIDLookup = ');
+console.log(evPropIDLookup);
+describe(ev);
 var person1 = new Employee();
+var emPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, person1);
+console.log('emPropIDLookup = ');
+console.log(emPropIDLookup);
 describe(person1);
 var person2 = new Employee();
 //person1.$s[<string><any> Employee.$Name] = 'Bruce'
