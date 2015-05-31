@@ -1,15 +1,8 @@
 
-interface IHasStrings{
-	$s : {[key: string] : string}; //TODO:  make key a symbol
-}
-
 function ID(value: string){
 	const $value = value;
-//	return function(target: Function, propName: string){
-//		debugger;
-//	}
 	return (target: Function, propName: string, propDescriptor: PropertyDescriptor) => {
-		var symbolPropName = $value;
+		const symbolPropName = $value;
 		propDescriptor.get = function(){
 			const lu = this['__tsp'];
 			if(!lu) return null;
@@ -27,7 +20,6 @@ function ID(value: string){
 }
 
 class Employee{
-	
 	public static $Name = '$Name';
 	@ID(Employee.$Name)
 	public get Name() : string{return null;} 
@@ -35,18 +27,44 @@ class Employee{
 	
 }
 
-function MetaData(value: {[key: string] : Object}) {
-  return function (target: Function) {
-      //debugger;
-  }
+function MetaData<T>(category: string, value: {[key: string] : T}) {
+	const $value = value;
+	return function (target: Function) {
+		for(var propKey in $value){
+			let categoryObj = Reflect.getMetadata(propKey, target);
+			if(!categoryObj) categoryObj = {};
+			categoryObj[category] = $value[propKey];
+			Reflect.defineMetadata(propKey, categoryObj, target);
+		}
+	}
 }
 
-@MetaData({
+const ColumnDef = 'ColumnDef';
+
+interface IColumnDef{
+	width?: number;
+}
+
+const ValidationDef = 'ValidationDef';
+interface IValidationDef{
+	maxLength?: number;
+}
+
+@MetaData<IColumnDef>(ColumnDef, {
 	[Employee.$Name] : {
-		
+		width: 100
+	}
+})
+@MetaData<IValidationDef>(ValidationDef, {
+	[Employee.$Name] : {
+		maxLength: 10
 	}
 })
 class EmployeeView extends Employee{}
+
+var ev = new EmployeeView();
+const evNameMeta = Reflect.getMetadata(Employee.$Name, ev.constructor);
+console.log(evNameMeta);
 
 const person1 = new Employee();
 const person2 = new Employee();
