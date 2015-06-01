@@ -53,15 +53,20 @@ function describe(obj) {
 function MetaData(category, value) {
     //const $value = value;
     return function (target) {
-        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, target);
+        var targetObj = new target();
+        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, targetObj);
+        var props1 = Object.getOwnPropertyNames(target);
+        var props2 = Object.getOwnPropertyNames(targetObj);
+        debugger;
         for (var propKey in value) {
             var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
             var categoryObj = Reflect.getMetadata(category, target, propName);
             if (!categoryObj) {
                 categoryObj = {};
-                Reflect.defineMetadata(category, categoryObj, target, propName);
             }
             categoryObj[category] = value[propKey];
+            //Reflect.defineMetadata(category, categoryObj, targetObj, propName);
+            Reflect.defineMetadata(category, categoryObj, Object.getPrototypeOf(targetObj), propName);
         }
     };
 }

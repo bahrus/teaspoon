@@ -41,16 +41,20 @@ function describe(obj: any){
 function MetaData<T>(category: string, value: {[key: string] : T}) {
 	//const $value = value;
 	return function (target: Function) {
-		const propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, target);
+		const targetObj = new (<any>target)();
+		const propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, targetObj);
+		let props1 = Object.getOwnPropertyNames(target);
+		let props2 = Object.getOwnPropertyNames(targetObj);
+		debugger;
 		for(var propKey in value){
 			const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
 			let categoryObj = Reflect.getMetadata(category, target, propName);
 			if(!categoryObj) {
 				categoryObj = {};
-				Reflect.defineMetadata(category, categoryObj, target, propName);
 			}
 			categoryObj[category] = value[propKey];
-			
+			//Reflect.defineMetadata(category, categoryObj, targetObj, propName);
+			Reflect.defineMetadata(category, categoryObj, Object.getPrototypeOf(targetObj), propName);
 		}
 	}
 }
