@@ -15,13 +15,13 @@ if (typeof __decorate !== "function") __decorate = function (decorators, target,
 var tsp_propIDLookup = 'tsp_propIDLookup';
 function ID(propID) {
     //const $value = value;
-    return function (target, propName, propDescriptor) {
+    return function (classPrototype, propName, propDescriptor) {
         //const symbolPropName = value;
-        Reflect.defineMetadata('tsp_id', propID, target, propName);
-        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, target);
+        Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
+        var propIDLookup = Reflect.getMetadata(tsp_propIDLookup, classPrototype);
         if (!propIDLookup) {
             propIDLookup = {};
-            Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, target);
+            Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
         }
         propIDLookup[propID] = propName;
         propDescriptor.get = function () {
@@ -46,7 +46,8 @@ function describe(obj) {
         var keys = Reflect.getMetadataKeys(obj, memberName);
         for (var i = 0, n = keys.length; i < n; i++) {
             var metaKey = keys[i];
-            console.log('     key = ' + metaKey + ' value = ' + Reflect.getMetadata(metaKey, obj, memberName));
+            console.log('     key = ' + metaKey + ' value = ...');
+            console.log(Reflect.getMetadata(metaKey, obj, memberName));
         }
     }
 }
@@ -60,7 +61,7 @@ function MetaData(category, value) {
         //debugger;
         for (var propKey in value) {
             var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-            var categoryObj = Reflect.getMetadata(category, target, propName);
+            var categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
             if (!categoryObj) {
                 categoryObj = {};
             }
@@ -72,21 +73,21 @@ function MetaData(category, value) {
 var Employee = (function () {
     function Employee() {
     }
-    Object.defineProperty(Employee.prototype, "Name", {
+    Object.defineProperty(Employee.prototype, "Surname", {
         get: function () { return null; },
         set: function (v) { },
         enumerable: true,
         configurable: true
     });
-    Employee.$Name = '$Name';
-    Object.defineProperty(Employee.prototype, "Name",
+    Employee.Surname = '$Surname';
+    Object.defineProperty(Employee.prototype, "Surname",
         __decorate([
-            ID(Employee.$Name)
-        ], Employee.prototype, "Name", Object.getOwnPropertyDescriptor(Employee.prototype, "Name")));
+            ID(Employee.Surname)
+        ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
     return Employee;
 })();
 var ColumnDef = 'ColumnDef';
-var ValidationDef = 'ValidationDef';
+var Constraints = 'Constraints';
 var EmployeeView = (function (_super) {
     __extends(EmployeeView, _super);
     function EmployeeView() {
@@ -94,13 +95,13 @@ var EmployeeView = (function (_super) {
     }
     EmployeeView = __decorate([
         MetaData(ColumnDef, (_a = {},
-            _a['Name'] = {
+            _a[Employee.Surname] = {
                 width: 100
             },
             _a
         )),
-        MetaData(ValidationDef, (_b = {},
-            _b[Employee.$Name] = {
+        MetaData(Constraints, (_b = {},
+            _b[Employee.Surname] = {
                 maxLength: 10
             },
             _b
@@ -121,7 +122,7 @@ console.log(emPropIDLookup);
 describe(person1);
 var person2 = new Employee();
 //person1.$s[<string><any> Employee.$Name] = 'Bruce'
-person1.Name = 'Bruce';
-console.log(person1.Name);
+person1.Surname = 'Bruce';
+console.log(person1.Surname);
 //console.log(person2['Name_']);
 //# sourceMappingURL=Employee.js.map

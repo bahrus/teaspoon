@@ -2,13 +2,13 @@ const tsp_propIDLookup = 'tsp_propIDLookup';
 
 function ID(propID: string){
 	//const $value = value;
-	return (target: Function, propName: string, propDescriptor: PropertyDescriptor) => {
+	return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 		//const symbolPropName = value;
-		Reflect.defineMetadata('tsp_id', propID, target, propName);
-		let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, target);
+		Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
+		let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
 		if(!propIDLookup){
 			propIDLookup = {};
-			Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, target);
+			Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
 		}
 		propIDLookup[propID] = propName;
 		propDescriptor.get = function(){
@@ -33,7 +33,8 @@ function describe(obj: any){
 		let keys = Reflect.getMetadataKeys(obj, memberName);
 		for(let i = 0, n = keys.length; i < n; i++){
 			const metaKey = keys[i];
-			console.log('     key = ' + metaKey + ' value = ' + Reflect.getMetadata(metaKey, obj, memberName));
+			console.log('     key = ' + metaKey + ' value = ...');
+			console.log(Reflect.getMetadata(metaKey, obj, memberName));
 		}
 	}
 }
@@ -49,7 +50,7 @@ function MetaData<T>(category: string, value: {[key: string] : T}) {
 		//debugger;
 		for(var propKey in value){
 			const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-			let categoryObj = Reflect.getMetadata(category, target, propName);
+			let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
 			if(!categoryObj) {
 				categoryObj = {};
 			}
@@ -60,33 +61,33 @@ function MetaData<T>(category: string, value: {[key: string] : T}) {
 }
 
 class Employee{
-	public static $Name = '$Name';
-	@ID(Employee.$Name)
-	public get Name() : string{return null;} 
-	public set Name(v: string){}
+	
+	public static Surname = '$Surname';
+	@ID(Employee.Surname)
+	public get Surname() : string{return null;} 
+	public set Surname(v: string){}
 	
 }
 
 
 
 const ColumnDef = 'ColumnDef';
-
 interface IColumnDef{
 	width?: number;
 }
 
-const ValidationDef = 'ValidationDef';
-interface IValidationDef{
+const Constraints = 'Constraints';
+interface IConstraints{
 	maxLength?: number;
 }
 
 @MetaData<IColumnDef>(ColumnDef, {
-	['Name'] : {
+	[Employee.Surname] : {
 		width: 100
 	}
 })
-@MetaData<IValidationDef>(ValidationDef, {
-	[Employee.$Name] : {
+@MetaData<IConstraints>(Constraints, {
+	[Employee.Surname] : {
 		maxLength: 10
 	}
 })
@@ -109,8 +110,8 @@ console.log(emPropIDLookup);
 describe(person1);
 const person2 = new Employee();
 //person1.$s[<string><any> Employee.$Name] = 'Bruce'
-person1.Name = 'Bruce';
-console.log(person1.Name);
+person1.Surname = 'Bruce';
+console.log(person1.Surname);
 //console.log(person2['Name_']);
 
 
