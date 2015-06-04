@@ -95,13 +95,13 @@ var Employee = (function () {
         configurable: true
     });
     Employee.Surname = '$Surname';
-    Employee.MidleName = '$MiddleName';
+    Employee.MiddleName = '$MiddleName';
     Object.defineProperty(Employee.prototype, "Surname",
         __decorate([
             ID(Employee.Surname)
         ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
     __decorate([
-        FID(Employee.MidleName)
+        FID(Employee.MiddleName)
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
@@ -117,6 +117,9 @@ var EmployeeView = (function (_super) {
             _a[Employee.Surname] = {
                 width: 100
             },
+            _a[Employee.MiddleName] = {
+                width: 200
+            },
             _a
         )),
         MetaData(Constraints, (_b = {},
@@ -130,6 +133,7 @@ var EmployeeView = (function (_super) {
     var _a, _b;
 })(Employee);
 var ev = new EmployeeView();
+ev.MiddleName = 'myMiddleName';
 var evPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, ev);
 console.log('evPropIDLookup = ');
 console.log(evPropIDLookup);

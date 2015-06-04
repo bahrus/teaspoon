@@ -81,8 +81,8 @@ class Employee{
 		this._firstName = val;
 	}
 	
-	public static MidleName = '$MiddleName';
-	@FID(Employee.MidleName)
+	public static MiddleName = '$MiddleName';
+	@FID(Employee.MiddleName)
 	public MiddleName : string;
 }
 
@@ -101,6 +101,9 @@ interface IConstraints{
 @MetaData<IColumnDef>(ColumnDef, {
 	[Employee.Surname] : {
 		width: 100
+	},
+	[Employee.MiddleName] : {
+		width: 200
 	}
 })
 @MetaData<IConstraints>(Constraints, {
@@ -108,9 +111,11 @@ interface IConstraints{
 		maxLength: 10
 	}
 })
+
 class EmployeeView extends Employee{}
 
 var ev = new EmployeeView();
+ev.MiddleName = 'myMiddleName';
 const evPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, ev);
 
 console.log('evPropIDLookup = ');
