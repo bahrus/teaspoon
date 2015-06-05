@@ -34,6 +34,9 @@ function FID(fieldID: string){
 			Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
 		}
 		propIDLookup[fieldID] = fieldName;
+		const getter = function(){
+			
+		}
 	}
 }
 
@@ -47,6 +50,10 @@ function describe(obj: any){
 			console.log(Reflect.getMetadata(metaKey, obj, memberName));
 		}
 	}
+}
+
+function describe2(classPrototype: any){
+	debugger;
 }
 
 function MetaData<T>(category: string, value: {[key: string] : T}) {
@@ -86,7 +93,7 @@ class Employee{
 	public MiddleName : string;
 }
 
-
+describe2(Employee.prototype);
 
 const ColumnDef = 'ColumnDef';
 interface IColumnDef{
@@ -133,8 +140,13 @@ for(let i = 0; i < uBound; i++){
 	ev1.FirstName = 'name_' + i;
 }
 const t3 = new Date();
+for(let i = 0; i < uBound; i++){
+	ev1.MiddleName = 'name_' + i;
+}
+const t4 = new Date();
 console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
 console.log('static property ' + (t3.getTime() - t2.getTime()));
+console.log('static field ' + (t4.getTime() - t3.getTime()));
 describe(ev);
 
 const person1 = new Employee();

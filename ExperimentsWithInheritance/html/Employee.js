@@ -60,6 +60,9 @@ function describe(obj) {
         }
     }
 }
+function describe2(classPrototype) {
+    debugger;
+}
 function MetaData(category, value) {
     return function (target) {
         var targetPrototype = target.prototype;
@@ -105,6 +108,7 @@ var Employee = (function () {
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
+describe2(Employee.prototype);
 var ColumnDef = 'ColumnDef';
 var Constraints = 'Constraints';
 var EmployeeView = (function (_super) {
@@ -148,8 +152,13 @@ for (var i = 0; i < uBound; i++) {
     ev1.FirstName = 'name_' + i;
 }
 var t3 = new Date();
+for (var i = 0; i < uBound; i++) {
+    ev1.MiddleName = 'name_' + i;
+}
+var t4 = new Date();
 console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
 console.log('static property ' + (t3.getTime() - t2.getTime()));
+console.log('static field ' + (t4.getTime() - t3.getTime()));
 describe(ev);
 var person1 = new Employee();
 var emPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, person1);
