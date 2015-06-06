@@ -1,81 +1,8 @@
-const tsp_propIDLookup = 'tsp_propIDLookup';
-
-function ID(propID: string){
-	return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
-		//Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
-		let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
-		if(!propIDLookup){
-			propIDLookup = {};
-			Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
-		}
-		propIDLookup[propID] = propName;
-		propDescriptor.get = function(){
-			const lu = this['__tsp'];
-			if(!lu) return null;
-			return lu[propID];
-		}
-		propDescriptor.set = function(val){
-			let lu = this['__tsp'];
-			if(!lu){
-				lu = [];
-				this['__tsp'] = lu;
-			}
-			lu[propID] = val;
-		}
-	}
-}
-
-function FID(fieldID: string){
-	return (classPrototype: Function, fieldName: string) =>{
-		//debugger;
-		let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
-		if(!propIDLookup){
-			propIDLookup = {};
-			Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
-		}
-		propIDLookup[fieldID] = fieldName;
-		const getter = function(){
-			
-		}
-	}
-}
-
-function describe(obj: any){
-	for(let memberName in obj){
-		console.log('member name = ' + memberName);
-		let keys = Reflect.getMetadataKeys(obj, memberName);
-		for(let i = 0, n = keys.length; i < n; i++){
-			const metaKey = keys[i];
-			console.log('     key = ' + metaKey + ' value = ...');
-			console.log(Reflect.getMetadata(metaKey, obj, memberName));
-		}
-	}
-}
-
-function describe2(classPrototype: any){
-	debugger;
-}
-
-function MetaData<T>(category: string, value: {[key: string] : T}) {
-	return function (target: Function) {
-		const targetPrototype = target.prototype;
-		const propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, targetPrototype);
-		for(var propKey in value){
-			const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-			let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-			if(!categoryObj) {
-				categoryObj = {};
-			}
-			categoryObj[category] = value[propKey];
-			Reflect.defineMetadata(category, categoryObj, targetPrototype, propName);
-		}
-	}
-}
-
+///<reference path='@op.ts'/>
 class Employee{
 	
-	public static Surname = '$Surname';
-	@ID(Employee.Surname)
+	public static Surname = 'Surname';
+	@op.setID(Employee.Surname)
 	public get Surname() : string{return null;} 
 	public set Surname(v: string){}
 	
@@ -88,12 +15,12 @@ class Employee{
 		this._firstName = val;
 	}
 	
-	public static MiddleName = '$MiddleName';
-	@FID(Employee.MiddleName)
+	public static MiddleName = 'MiddleName';
+	@op.toProp(Employee.MiddleName)
 	public MiddleName : string;
 }
 
-describe2(Employee.prototype);
+op.describe2(Employee.prototype);
 
 const ColumnDef = 'ColumnDef';
 interface IColumnDef{
@@ -105,7 +32,7 @@ interface IConstraints{
 	maxLength?: number;
 }
 
-@MetaData<IColumnDef>(ColumnDef, {
+@op.MetaData<IColumnDef>(ColumnDef, {
 	[Employee.Surname] : {
 		width: 100
 	},
@@ -113,7 +40,7 @@ interface IConstraints{
 		width: 200
 	}
 })
-@MetaData<IConstraints>(Constraints, {
+@op.MetaData<IConstraints>(Constraints, {
 	[Employee.Surname] : {
 		maxLength: 10
 	}
@@ -123,7 +50,7 @@ class EmployeeView extends Employee{}
 
 var ev = new EmployeeView();
 ev.MiddleName = 'myMiddleName';
-const evPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, ev);
+const evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
 
 console.log('evPropIDLookup = ');
 console.log(evPropIDLookup);
@@ -147,15 +74,15 @@ const t4 = new Date();
 console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
 console.log('static property ' + (t3.getTime() - t2.getTime()));
 console.log('static field ' + (t4.getTime() - t3.getTime()));
-describe(ev);
+op.describe(ev);
 
 const person1 = new Employee();
 
-const emPropIDLookup = Reflect.getMetadata(tsp_propIDLookup, person1);
+const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
 console.log('emPropIDLookup = ');
 console.log(emPropIDLookup);
 
-describe(person1);
+op.describe(person1);
 const person2 = new Employee();
 
 person1.Surname = 'Bruce';
