@@ -38,7 +38,6 @@ module op{
 	}
 	
 	export function toProp(fieldID: string, propInfo?: IPropInfo){
-		debugger;
 		return (classPrototype: Function, fieldName: string) =>{
 			//debugger;
 			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
@@ -84,27 +83,30 @@ module op{
 	}
 	
 	export interface IPropInfo extends IType{
-		
+		propertyDescriptor ?: any;
 	}
 	
 	export function describe2(classPrototype: any){
 		let name : string = classPrototype.constructor.toString().substring(9);
 		const iPosOfOpenParen = name.indexOf('(');
 		name = name.substr(0, iPosOfOpenParen);
-		var reflectionTree : IType = {
+		var returnType : IType = {
 			name: name,
 		};
 		debugger;
 		for(const memberKey in classPrototype){
-			const member = classPrototype[memberKey]; 
-			if(typeof member === 'object'){
-				if(!reflectionTree.Props) reflectionTree.Props = [];
-				reflectionTree.Props.push({
+			
+			const propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+			if(propertyDescriptor){
+				if(!returnType.Props) returnType.Props = [];
+				const propInfo : IPropInfo = {
 					name: memberKey,
-				});
+					propertyDescriptor : propertyDescriptor,
+				}
+				returnType.Props.push(propInfo);
 			}
 		}
-		return reflectionTree;
+		return returnType;
 	}
 	
 	export function MetaData<T>(category: string, value: {[key: string] : T}) {

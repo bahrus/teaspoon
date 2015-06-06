@@ -37,7 +37,6 @@ var op;
     op.setID = setID;
     function toProp(fieldID, propInfo) {
         var _this = this;
-        debugger;
         return function (classPrototype, fieldName) {
             //debugger;
             var propIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, classPrototype);
@@ -78,21 +77,23 @@ var op;
         var name = classPrototype.constructor.toString().substring(9);
         var iPosOfOpenParen = name.indexOf('(');
         name = name.substr(0, iPosOfOpenParen);
-        var reflectionTree = {
+        var returnType = {
             name: name,
         };
         debugger;
         for (var memberKey in classPrototype) {
-            var member = classPrototype[memberKey];
-            if (typeof member === 'object') {
-                if (!reflectionTree.Props)
-                    reflectionTree.Props = [];
-                reflectionTree.Props.push({
+            var propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+            if (propertyDescriptor) {
+                if (!returnType.Props)
+                    returnType.Props = [];
+                var propInfo_1 = {
                     name: memberKey,
-                });
+                    propertyDescriptor: propertyDescriptor,
+                };
+                returnType.Props.push(propInfo_1);
             }
         }
-        return reflectionTree;
+        return returnType;
     }
     op.describe2 = describe2;
     function MetaData(category, value) {
