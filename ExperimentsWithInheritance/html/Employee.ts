@@ -16,11 +16,14 @@ class Employee{
 	}
 	
 	public static MiddleName = 'MiddleName';
-	@op.toProp(Employee.MiddleName)
+	@op.toProp(Employee.MiddleName, {
+		type : String
+	})
 	public MiddleName : string;
 }
 
-op.describe2(Employee.prototype);
+console.log('describe2 => ');
+console.log(op.describe2(Employee.prototype));
 
 const ColumnDef = 'ColumnDef';
 interface IColumnDef{
@@ -57,23 +60,23 @@ console.log(evPropIDLookup);
 
 const ev1 = new EmployeeView();
 
-const uBound = 1000000;
-const t1 = new Date();
-for(let i = 0; i < uBound; i++){
-	ev1.Surname = 'name_' + i;
-}
-const t2 = new Date();
-for(let i = 0; i < uBound; i++){
-	ev1.FirstName = 'name_' + i;
-}
-const t3 = new Date();
-for(let i = 0; i < uBound; i++){
-	ev1.MiddleName = 'name_' + i;
-}
-const t4 = new Date();
-console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
-console.log('static property ' + (t3.getTime() - t2.getTime()));
-console.log('static field ' + (t4.getTime() - t3.getTime()));
+// const uBound = 1000000;
+// const t1 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.Surname = 'name_' + i;
+// }
+// const t2 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.FirstName = 'name_' + i;
+// }
+// const t3 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.MiddleName = 'name_' + i;
+// }
+// const t4 = new Date();
+// console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
+// console.log('static property ' + (t3.getTime() - t2.getTime()));
+// console.log('static field ' + (t4.getTime() - t3.getTime()));
 op.describe(ev);
 
 const person1 = new Employee();

@@ -2,6 +2,26 @@
 
 module op{
 	export const tsp_propIDLookup = 'tsp_propIDLookup';
+	export const propInfo = 'propInfo';
+	
+	export const getter = function(ID: string){
+		return function(){
+			const lu = this['__tsp'];
+			if(!lu) return null;
+			return lu[ID];
+		}
+	}
+	
+	export const setter = function(ID: string){
+		return function(val){
+			let lu = this['__tsp'];
+			if(!lu){
+				lu = [];
+				this['__tsp'] = lu;
+			}
+			lu[ID] = val;
+		}
+	}
 	
 	export function setID(propID: string){
 		return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
@@ -12,23 +32,13 @@ module op{
 				Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
 			}
 			propIDLookup[propID] = propName;
-			propDescriptor.get = function(){
-				const lu = this['__tsp'];
-				if(!lu) return null;
-				return lu[propID];
-			}
-			propDescriptor.set = function(val){
-				let lu = this['__tsp'];
-				if(!lu){
-					lu = [];
-					this['__tsp'] = lu;
-				}
-				lu[propID] = val;
-			}
+			propDescriptor.get = getter(propID);
+			propDescriptor.set = setter(propID);
 		}
 	}
 	
-	export function toProp(fieldID: string){
+	export function toProp(fieldID: string, propInfo?: IPropInfo){
+		debugger;
 		return (classPrototype: Function, fieldName: string) =>{
 			//debugger;
 			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
@@ -37,29 +47,21 @@ module op{
 				Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
 			}
 			propIDLookup[fieldID] = fieldName;
-			const getter = function(){
-				const lu = this['__tsp'];
-				if(!lu) return null;
-				return lu[fieldID];
-			}
-			const setter = function(val){
-				let lu = this['__tsp'];
-				if(!lu){
-					lu = [];
-					this['__tsp'] = lu;
-				}
-				lu[fieldID] = val;
-			}
+			
 			//from http://blog.wolksoftware.com/decorators-metadata-reflection-in-typescript-from-novice-to-expert-part-ii
 			if (delete this[fieldName]) {
 			    // Create new property with getter and setter
 			    Object.defineProperty(classPrototype, fieldName, {
-			      get: getter,
-			      set: setter,
+			      get: getter(fieldID),
+			      set: setter(fieldID),
 			      enumerable: true,
 			      configurable: true
 			    });
 	  		}
+		  if(propInfo){
+			  Reflect.defineMetadata('propInfo', propInfo, classPrototype, fieldName);
+		  }
+			
 		}
 	}
 	
@@ -75,8 +77,34 @@ module op{
 		}
 	}
 	
+	export interface IType{
+		Props?: IPropInfo[];
+		name?: string;
+		type?: Function;
+	}
+	
+	export interface IPropInfo extends IType{
+		
+	}
+	
 	export function describe2(classPrototype: any){
+		let name : string = classPrototype.constructor.toString().substring(9);
+		const iPosOfOpenParen = name.indexOf('(');
+		name = name.substr(0, iPosOfOpenParen);
+		var reflectionTree : IType = {
+			name: name,
+		};
 		debugger;
+		for(const memberKey in classPrototype){
+			const member = classPrototype[memberKey]; 
+			if(typeof member === 'object'){
+				if(!reflectionTree.Props) reflectionTree.Props = [];
+				reflectionTree.Props.push({
+					name: memberKey,
+				});
+			}
+		}
+		return reflectionTree;
 	}
 	
 	export function MetaData<T>(category: string, value: {[key: string] : T}) {

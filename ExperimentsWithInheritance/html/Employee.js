@@ -39,11 +39,14 @@ var Employee = (function () {
             op.setID(Employee.Surname)
         ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
     __decorate([
-        bind.toProp(Employee.MiddleName)
+        op.toProp(Employee.MiddleName, {
+            type: String
+        })
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
-bind.describe2(Employee.prototype);
+console.log('describe2 => ');
+console.log(op.describe2(Employee.prototype));
 var ColumnDef = 'ColumnDef';
 var Constraints = 'Constraints';
 var EmployeeView = (function (_super) {
@@ -52,7 +55,7 @@ var EmployeeView = (function (_super) {
         _super.apply(this, arguments);
     }
     EmployeeView = __decorate([
-        bind.MetaData(ColumnDef, (_a = {},
+        op.MetaData(ColumnDef, (_a = {},
             _a[Employee.Surname] = {
                 width: 100
             },
@@ -61,7 +64,7 @@ var EmployeeView = (function (_super) {
             },
             _a
         )),
-        bind.MetaData(Constraints, (_b = {},
+        op.MetaData(Constraints, (_b = {},
             _b[Employee.Surname] = {
                 maxLength: 10
             },
@@ -73,33 +76,33 @@ var EmployeeView = (function (_super) {
 })(Employee);
 var ev = new EmployeeView();
 ev.MiddleName = 'myMiddleName';
-var evPropIDLookup = Reflect.getMetadata(bind.tsp_propIDLookup, ev);
+var evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
 console.log('evPropIDLookup = ');
 console.log(evPropIDLookup);
 var ev1 = new EmployeeView();
-var uBound = 1000000;
-var t1 = new Date();
-for (var i = 0; i < uBound; i++) {
-    ev1.Surname = 'name_' + i;
-}
-var t2 = new Date();
-for (var i = 0; i < uBound; i++) {
-    ev1.FirstName = 'name_' + i;
-}
-var t3 = new Date();
-for (var i = 0; i < uBound; i++) {
-    ev1.MiddleName = 'name_' + i;
-}
-var t4 = new Date();
-console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
-console.log('static property ' + (t3.getTime() - t2.getTime()));
-console.log('static field ' + (t4.getTime() - t3.getTime()));
-bind.describe(ev);
+// const uBound = 1000000;
+// const t1 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.Surname = 'name_' + i;
+// }
+// const t2 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.FirstName = 'name_' + i;
+// }
+// const t3 = new Date();
+// for(let i = 0; i < uBound; i++){
+// 	ev1.MiddleName = 'name_' + i;
+// }
+// const t4 = new Date();
+// console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
+// console.log('static property ' + (t3.getTime() - t2.getTime()));
+// console.log('static field ' + (t4.getTime() - t3.getTime()));
+op.describe(ev);
 var person1 = new Employee();
-var emPropIDLookup = Reflect.getMetadata(bind.tsp_propIDLookup, person1);
+var emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
 console.log('emPropIDLookup = ');
 console.log(emPropIDLookup);
-bind.describe(person1);
+op.describe(person1);
 var person2 = new Employee();
 person1.Surname = 'Bruce';
 console.log(person1.Surname);
