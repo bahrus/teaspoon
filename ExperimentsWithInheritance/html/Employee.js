@@ -43,15 +43,13 @@ var Employee = (function () {
             __metadata('design:type', String)
         ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
     __decorate([
-        op.toProp(Employee.MiddleName, {
-            type: String
-        }), 
+        op.toProp(Employee.MiddleName), 
         __metadata('design:type', String)
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
 console.log('reflect Employee => ');
-console.log(op.reflect(Employee.prototype));
+console.log(op.reflect(Employee, true));
 var ColumnDef = 'ColumnDef';
 var Constraints = 'Constraints';
 var EmployeeView = (function (_super) {
@@ -81,7 +79,7 @@ var EmployeeView = (function (_super) {
     var _a, _b;
 })(Employee);
 console.log('reflect on EmployeeView =>');
-console.log(op.reflect(EmployeeView.prototype));
+console.log(op.reflect(EmployeeView, true));
 var ev = new EmployeeView();
 ev.MiddleName = 'myMiddleName';
 //const evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);

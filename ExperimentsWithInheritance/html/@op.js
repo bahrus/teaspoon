@@ -35,7 +35,7 @@ var op;
         };
     }
     op.setID = setID;
-    function toProp(fieldID, propInfo) {
+    function toProp(fieldID) {
         var _this = this;
         return function (classPrototype, fieldName) {
             //debugger;
@@ -55,9 +55,6 @@ var op;
                     configurable: true
                 });
             }
-            if (propInfo) {
-                Reflect.defineMetadata('propInfo', propInfo, classPrototype, fieldName);
-            }
         };
     }
     op.toProp = toProp;
@@ -73,15 +70,29 @@ var op;
         }
     }
     op.describe = describe;
-    function reflect(classPrototype) {
+    function reflect(classRef, inherit) {
+        var classPrototype = classRef.prototype;
+        return reflectPrototype(classPrototype, inherit);
+    }
+    op.reflect = reflect;
+    function getPropertyDescriptor(classPrototype, memberKey) {
+        while (classPrototype) {
+            var propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+            if (propertyDescriptor)
+                return propertyDescriptor;
+            classPrototype = classPrototype.__proto__;
+        }
+        return null;
+    }
+    function reflectPrototype(classPrototype, inherit) {
         var name = classPrototype.constructor.toString().substring(9);
         var iPosOfOpenParen = name.indexOf('(');
         name = name.substr(0, iPosOfOpenParen);
         var returnType = {
-            name: name,
+            name: name
         };
         for (var memberKey in classPrototype) {
-            var propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+            var propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
             if (propertyDescriptor) {
                 if (!returnType.Props)
                     returnType.Props = [];
@@ -100,9 +111,14 @@ var op;
                 }
             }
         }
+        if (inherit) {
+            var inheritedPrototype = classPrototype.__proto__;
+            if (inheritedPrototype) {
+                returnType.inheritedType = reflectPrototype(inheritedPrototype, inherit);
+            }
+        }
         return returnType;
     }
-    op.reflect = reflect;
     function MetaData(category, value) {
         return function (target) {
             var targetPrototype = target.prototype;

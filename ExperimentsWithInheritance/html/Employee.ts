@@ -16,14 +16,12 @@ class Employee{
 	}
 	
 	public static MiddleName = 'MiddleName';
-	@op.toProp(Employee.MiddleName, {
-		type : String
-	})
+	@op.toProp(Employee.MiddleName)
 	public MiddleName : string;
 }
 
 console.log('reflect Employee => ');
-console.log(op.reflect(Employee.prototype));
+console.log(op.reflect(Employee, true));
 
 const ColumnDef = 'ColumnDef';
 interface IColumnDef{
@@ -51,7 +49,7 @@ interface IConstraints{
 class EmployeeView extends Employee{}
 
 console.log('reflect on EmployeeView =>');
-console.log(op.reflect(EmployeeView.prototype));
+console.log(op.reflect(EmployeeView, true));
 
 var ev = new EmployeeView();
 ev.MiddleName = 'myMiddleName';

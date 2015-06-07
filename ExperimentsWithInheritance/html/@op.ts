@@ -37,7 +37,7 @@ module op{
 		}
 	}
 	
-	export function toProp(fieldID: string, propInfo?: IPropInfo){
+	export function toProp(fieldID: string){
 		return (classPrototype: Function, fieldName: string) =>{
 			//debugger;
 			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
@@ -57,10 +57,6 @@ module op{
 			      configurable: true
 			    });
 	  		}
-		  if(propInfo){
-			  Reflect.defineMetadata('propInfo', propInfo, classPrototype, fieldName);
-		  }
-			
 		}
 	}
 	
@@ -80,7 +76,7 @@ module op{
 		Props?: IPropInfo[];
 		name?: string;
 		type?: Function;
-		
+		inheritedType?: IType;
 	}
 	
 	export interface IPropInfo extends IType{
@@ -88,15 +84,30 @@ module op{
 		metadata?: {[key: string] : any;};
 	}
 	
-	export function reflect(classPrototype: any){
+	export function reflect(classRef : Function, inherit? : boolean){
+		const classPrototype = classRef.prototype;
+		return reflectPrototype(classPrototype, inherit);
+	}
+	
+	function getPropertyDescriptor(classPrototype: any, memberKey: string){
+		while(classPrototype){
+			const propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+			if(propertyDescriptor) return propertyDescriptor;
+			classPrototype = classPrototype.__proto__;
+		}
+		return null;
+		
+	}
+	
+	function reflectPrototype(classPrototype: any, inherit?: boolean){
 		let name : string = classPrototype.constructor.toString().substring(9);
 		const iPosOfOpenParen = name.indexOf('(');
 		name = name.substr(0, iPosOfOpenParen);
-		var returnType : IType = {
-			name: name,
-		};
+		const returnType : IType = {
+			name: name
+		}
 		for(const memberKey in classPrototype){
-			const propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
+			const propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
 			if(propertyDescriptor){
 				if(!returnType.Props) returnType.Props = [];
 				const propInfo : IPropInfo = {
@@ -111,6 +122,13 @@ module op{
 					//debugger;
 					propInfo.metadata[metaKey] = Reflect.getOwnMetadata(metaKey, classPrototype, memberKey);
 				}
+			}
+			
+		}
+		if(inherit){
+			const inheritedPrototype = classPrototype.__proto__;
+			if(inheritedPrototype){
+				returnType.inheritedType = reflectPrototype(inheritedPrototype, inherit);
 			}
 		}
 		return returnType;
