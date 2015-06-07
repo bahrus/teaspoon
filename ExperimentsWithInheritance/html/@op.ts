@@ -1,8 +1,41 @@
 ///<reference path='../node_modules/reflect-metadata/reflect-metadata.d.ts'/>
+if (!Object['assign']) {
+	//from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+  Object.defineProperty(Object, 'assign', {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(target, firstSource) {
+      'use strict';
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert first argument to object');
+      }
+
+      var to = Object(target);
+      for (var i = 1; i < arguments.length; i++) {
+        var nextSource = arguments[i];
+        if (nextSource === undefined || nextSource === null) {
+          continue;
+        }
+        nextSource = Object(nextSource);
+
+        var keysArray = Object.keys(Object(nextSource));
+        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+          var nextKey = keysArray[nextIndex];
+          var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+          if (desc !== undefined && desc.enumerable) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+      return to;
+    }
+  });
+}
 
 module op{
-	export const tsp_propIDLookup = 'tsp_propIDLookup';
-	export const propInfo = 'propInfo';
+	export const $propIDLookup = 'propIDLookup';
+	//export const propInfo = 'propInfo';
 	
 	export const getter = function(ID: string){
 		return function(){
@@ -26,10 +59,10 @@ module op{
 	export function setID(propID: string){
 		return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 			//Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
-			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
+			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
 			if(!propIDLookup){
 				propIDLookup = {};
-				Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
+				Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
 			}
 			propIDLookup[propID] = propName;
 			propDescriptor.get = getter(propID);
@@ -40,10 +73,10 @@ module op{
 	export function toProp(fieldID: string){
 		return (classPrototype: Function, fieldName: string) =>{
 			//debugger;
-			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, classPrototype);
+			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
 			if(!propIDLookup){
 				propIDLookup = {};
-				Reflect.defineMetadata(tsp_propIDLookup, propIDLookup, classPrototype);
+				Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
 			}
 			propIDLookup[fieldID] = fieldName;
 			
@@ -115,12 +148,13 @@ module op{
 					propertyDescriptor : propertyDescriptor,
 				}
 				returnType.Props.push(propInfo);
-				const metaDataKeys = Reflect.getOwnMetadataKeys(classPrototype, memberKey);
+				
+				const metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
 				for(let i = 0, n = metaDataKeys.length; i < n; i++){
 					const metaKey = metaDataKeys[i];
 					if(!propInfo.metadata) propInfo.metadata = {};
 					//debugger;
-					propInfo.metadata[metaKey] = Reflect.getOwnMetadata(metaKey, classPrototype, memberKey);
+					propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
 				}
 			}
 			
@@ -131,7 +165,7 @@ module op{
 	export function MetaData<T>(value: {[key: string] : T}) {
 		return function (target: Function) {
 			const targetPrototype = target.prototype;
-			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, targetPrototype);
+			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
 			let category : string;
 			for(var propKey in value){
 				const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
@@ -142,13 +176,17 @@ module op{
 						break;
 					}
 				}
-				// let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+				//let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
 				// if(!categoryObj) {
 				// 	categoryObj = {};
 				// }
 				//TODO:  merge
-				const categoryObj = propVal[category];
-				Reflect.defineMetadata(category, categoryObj, targetPrototype, propName);
+				const newCategoryObj = propVal[category];
+				const prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+				if(prevCategoryObj){
+					Object['assign'](newCategoryObj, prevCategoryObj);
+				}
+				Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
 			}
 		}
 	}
