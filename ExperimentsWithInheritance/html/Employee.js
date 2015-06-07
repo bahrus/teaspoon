@@ -1,3 +1,5 @@
+///<reference path='../node_modules/reflect-metadata/reflect-metadata.d.ts'/>
+///<reference path='@op.ts'/>
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,7 +17,6 @@ if (typeof __decorate !== "function") __decorate = function (decorators, target,
 if (typeof __metadata !== "function") __metadata = function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-///<reference path='@op.ts'/>
 var Examples;
 (function (Examples) {
     var Employee = (function () {
@@ -45,7 +46,12 @@ var Examples;
                 __metadata('design:type', String)
             ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
         __decorate([
-            op.toProp(Employee.MiddleName), 
+            op.toProp(Employee.MiddleName),
+            op.mergeMeta({
+                ColumnDef: {
+                    hide: true,
+                }
+            }), 
             __metadata('design:type', String)
         ], Employee.prototype, "MiddleName");
         return Employee;

@@ -1,4 +1,5 @@
 ///<reference path='../node_modules/reflect-metadata/reflect-metadata.d.ts'/>
+
 if (!Object['assign']) {
 	//from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
   Object.defineProperty(Object, 'assign', {
@@ -93,6 +94,12 @@ module op{
 		}
 	}
 	
+	export function mergeMeta<T>(data: T){
+		return (classPrototype: Function, fieldName: string) =>{
+			
+		}
+	}
+	
 	export function describe(obj: any){
 		for(let memberName in obj){
 			console.log('member name = ' + memberName);
@@ -166,27 +173,26 @@ module op{
 		return function (target: Function) {
 			const targetPrototype = target.prototype;
 			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
-			let category : string;
+			//let category : string;
 			for(var propKey in value){
 				const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
 				const propVal = value[propKey];
-				if(!category){
-					for(const propValKey in propVal){
-						category = propValKey;
-						break;
+				
+				for(const propValKey in propVal){
+					const category = propValKey;
+					//TODO:  merge
+					const newCategoryObj = propVal[category];
+					const prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+					if(prevCategoryObj){
+						Object['assign'](newCategoryObj, prevCategoryObj);
 					}
+					Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
 				}
 				//let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
 				// if(!categoryObj) {
 				// 	categoryObj = {};
 				// }
-				//TODO:  merge
-				const newCategoryObj = propVal[category];
-				const prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-				if(prevCategoryObj){
-					Object['assign'](newCategoryObj, prevCategoryObj);
-				}
-				Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
+				
 			}
 		}
 	}

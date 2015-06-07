@@ -89,6 +89,11 @@ var op;
         };
     }
     op.toProp = toProp;
+    function mergeMeta(data) {
+        return function (classPrototype, fieldName) {
+        };
+    }
+    op.mergeMeta = mergeMeta;
     function describe(obj) {
         for (var memberName in obj) {
             console.log('member name = ' + memberName);
@@ -148,27 +153,20 @@ var op;
         return function (target) {
             var targetPrototype = target.prototype;
             var propIDLookup = Reflect.getMetadata(op.$propIDLookup, targetPrototype);
-            var category;
+            //let category : string;
             for (var propKey in value) {
                 var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
                 var propVal = value[propKey];
-                if (!category) {
-                    for (var propValKey in propVal) {
-                        category = propValKey;
-                        break;
+                for (var propValKey in propVal) {
+                    var category = propValKey;
+                    //TODO:  merge
+                    var newCategoryObj = propVal[category];
+                    var prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+                    if (prevCategoryObj) {
+                        Object['assign'](newCategoryObj, prevCategoryObj);
                     }
+                    Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
                 }
-                //let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-                // if(!categoryObj) {
-                // 	categoryObj = {};
-                // }
-                //TODO:  merge
-                var newCategoryObj = propVal[category];
-                var prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-                if (prevCategoryObj) {
-                    Object['assign'](newCategoryObj, prevCategoryObj);
-                }
-                Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
             }
         };
     }

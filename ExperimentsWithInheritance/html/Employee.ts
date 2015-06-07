@@ -1,4 +1,6 @@
+///<reference path='../node_modules/reflect-metadata/reflect-metadata.d.ts'/>
 ///<reference path='@op.ts'/>
+
 module Examples{
 	export class Employee{
 		
@@ -18,6 +20,11 @@ module Examples{
 		
 		public static MiddleName = 'MiddleName';
 		@op.toProp(Employee.MiddleName)
+		@op.mergeMeta<IColumnDefCategory>({
+			ColumnDef: {
+				hide: true,
+			}
+		})
 		public MiddleName : string;
 	}
 	
@@ -27,6 +34,7 @@ module Examples{
 	const ColumnDef = 'ColumnDef';
 	interface IColumnDef{
 		width?: number;
+		hide?: boolean;
 	}
 	
 	interface IColumnDefCategory{
