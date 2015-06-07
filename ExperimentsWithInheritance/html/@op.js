@@ -73,7 +73,7 @@ var op;
         }
     }
     op.describe = describe;
-    function describe2(classPrototype) {
+    function reflect(classPrototype) {
         var name = classPrototype.constructor.toString().substring(9);
         var iPosOfOpenParen = name.indexOf('(');
         name = name.substr(0, iPosOfOpenParen);
@@ -102,7 +102,7 @@ var op;
         }
         return returnType;
     }
-    op.describe2 = describe2;
+    op.reflect = reflect;
     function MetaData(category, value) {
         return function (target) {
             var targetPrototype = target.prototype;

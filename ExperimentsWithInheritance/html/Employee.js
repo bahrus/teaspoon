@@ -50,8 +50,8 @@ var Employee = (function () {
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
-console.log('describe2 => ');
-console.log(op.describe2(Employee.prototype));
+console.log('reflect Employee => ');
+console.log(op.reflect(Employee.prototype));
 var ColumnDef = 'ColumnDef';
 var Constraints = 'Constraints';
 var EmployeeView = (function (_super) {
@@ -80,11 +80,13 @@ var EmployeeView = (function (_super) {
     return EmployeeView;
     var _a, _b;
 })(Employee);
+console.log('reflect on EmployeeView =>');
+console.log(op.reflect(EmployeeView.prototype));
 var ev = new EmployeeView();
 ev.MiddleName = 'myMiddleName';
-var evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
-console.log('evPropIDLookup = ');
-console.log(evPropIDLookup);
+//const evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
+//console.log('evPropIDLookup = ');
+//console.log(evPropIDLookup);
 var ev1 = new EmployeeView();
 // const uBound = 1000000;
 // const t1 = new Date();
@@ -103,13 +105,13 @@ var ev1 = new EmployeeView();
 // console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
 // console.log('static property ' + (t3.getTime() - t2.getTime()));
 // console.log('static field ' + (t4.getTime() - t3.getTime()));
-op.describe(ev);
+//op.describe(ev);
 var person1 = new Employee();
-var emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
-console.log('emPropIDLookup = ');
-console.log(emPropIDLookup);
-op.describe(person1);
-var person2 = new Employee();
+//const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
+//console.log('emPropIDLookup = ');
+//console.log(emPropIDLookup);
+//op.describe(person1);
+//const person2 = new Employee();
 person1.Surname = 'Bruce';
 console.log(person1.Surname);
 //# sourceMappingURL=Employee.js.map

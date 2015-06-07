@@ -88,7 +88,7 @@ module op{
 		metadata?: {[key: string] : any;};
 	}
 	
-	export function describe2(classPrototype: any){
+	export function reflect(classPrototype: any){
 		let name : string = classPrototype.constructor.toString().substring(9);
 		const iPosOfOpenParen = name.indexOf('(');
 		name = name.substr(0, iPosOfOpenParen);
