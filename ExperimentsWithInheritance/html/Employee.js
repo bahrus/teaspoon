@@ -12,6 +12,9 @@ if (typeof __decorate !== "function") __decorate = function (decorators, target,
         case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
     }
 };
+if (typeof __metadata !== "function") __metadata = function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 ///<reference path='@op.ts'/>
 var Employee = (function () {
     function Employee() {
@@ -36,12 +39,14 @@ var Employee = (function () {
     Employee.MiddleName = 'MiddleName';
     Object.defineProperty(Employee.prototype, "Surname",
         __decorate([
-            op.setID(Employee.Surname)
+            op.setID(Employee.Surname), 
+            __metadata('design:type', String)
         ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
     __decorate([
         op.toProp(Employee.MiddleName, {
             type: String
-        })
+        }), 
+        __metadata('design:type', String)
     ], Employee.prototype, "MiddleName");
     return Employee;
 })();
@@ -69,7 +74,8 @@ var EmployeeView = (function (_super) {
                 maxLength: 10
             },
             _b
-        ))
+        )), 
+        __metadata('design:paramtypes', [])
     ], EmployeeView);
     return EmployeeView;
     var _a, _b;

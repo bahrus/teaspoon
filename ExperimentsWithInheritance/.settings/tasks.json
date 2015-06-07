@@ -23,7 +23,7 @@
 	},
 	"isShellCommand": true,
 	// args is the HelloWorld program to compile.
-	"args": [],
+	"args": ["--emitDecoratorMetadata"],
 	
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.

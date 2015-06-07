@@ -80,10 +80,12 @@ module op{
 		Props?: IPropInfo[];
 		name?: string;
 		type?: Function;
+		
 	}
 	
 	export interface IPropInfo extends IType{
 		propertyDescriptor ?: any;
+		metadata?: {[key: string] : any;};
 	}
 	
 	export function describe2(classPrototype: any){
@@ -93,9 +95,7 @@ module op{
 		var returnType : IType = {
 			name: name,
 		};
-		debugger;
 		for(const memberKey in classPrototype){
-			
 			const propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
 			if(propertyDescriptor){
 				if(!returnType.Props) returnType.Props = [];
@@ -104,6 +104,13 @@ module op{
 					propertyDescriptor : propertyDescriptor,
 				}
 				returnType.Props.push(propInfo);
+				const metaDataKeys = Reflect.getOwnMetadataKeys(classPrototype, memberKey);
+				for(let i = 0, n = metaDataKeys.length; i < n; i++){
+					const metaKey = metaDataKeys[i];
+					if(!propInfo.metadata) propInfo.metadata = {};
+					//debugger;
+					propInfo.metadata[metaKey] = Reflect.getOwnMetadata(metaKey, classPrototype, memberKey);
+				}
 			}
 		}
 		return returnType;

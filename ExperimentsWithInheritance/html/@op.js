@@ -80,7 +80,6 @@ var op;
         var returnType = {
             name: name,
         };
-        debugger;
         for (var memberKey in classPrototype) {
             var propertyDescriptor = Object.getOwnPropertyDescriptor(classPrototype, memberKey);
             if (propertyDescriptor) {
@@ -91,6 +90,14 @@ var op;
                     propertyDescriptor: propertyDescriptor,
                 };
                 returnType.Props.push(propInfo_1);
+                var metaDataKeys = Reflect.getOwnMetadataKeys(classPrototype, memberKey);
+                for (var i = 0, n = metaDataKeys.length; i < n; i++) {
+                    var metaKey = metaDataKeys[i];
+                    if (!propInfo_1.metadata)
+                        propInfo_1.metadata = {};
+                    //debugger;
+                    propInfo_1.metadata[metaKey] = Reflect.getOwnMetadata(metaKey, classPrototype, memberKey);
+                }
             }
         }
         return returnType;
