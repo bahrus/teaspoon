@@ -57,7 +57,7 @@ module op{
 		}
 	}
 	
-	export function setID(propID: string){
+	export function setMemberKey(propID: string){
 		return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
 			//Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
 			let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
@@ -115,9 +115,14 @@ module op{
 	
 	export interface IType{
 		Props?: IPropInfo[];
-		name?: string;
-		type?: Function;
-		inheritedType?: IType;
+		name: string;
+		//type?: Function;
+		//inheritedType?: IType;
+	}
+	
+	export interface IComplexPropLinker{
+		memberKey: string;
+		classRef: Function;
 	}
 	
 	export interface IPropInfo extends IType{

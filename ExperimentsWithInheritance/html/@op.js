@@ -52,7 +52,7 @@ var op;
             lu[ID] = val;
         };
     };
-    function setID(propID) {
+    function setMemberKey(propID) {
         return function (classPrototype, propName, propDescriptor) {
             //Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
             var propIDLookup = Reflect.getMetadata(op.$propIDLookup, classPrototype);
@@ -65,7 +65,7 @@ var op;
             propDescriptor.set = op.setter(propID);
         };
     }
-    op.setID = setID;
+    op.setMemberKey = setMemberKey;
     function toProp(fieldID) {
         var _this = this;
         return function (classPrototype, fieldName) {

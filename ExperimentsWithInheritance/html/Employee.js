@@ -58,7 +58,7 @@ var Examples;
         Employee.HomeAddress = 'HomeAddress';
         Object.defineProperty(Employee.prototype, "Surname",
             __decorate([
-                op.setID(Employee.Surname), 
+                op.setMemberKey(Employee.Surname), 
                 __metadata('design:type', String)
             ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
         __decorate([

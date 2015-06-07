@@ -18,7 +18,7 @@ module Examples{
 	export class Employee{
 		
 		public static Surname = 'Surname';
-		@op.setID(Employee.Surname)
+		@op.setMemberKey(Employee.Surname)
 		public get Surname() : string{return null;} 
 		public set Surname(v: string){}
 		
@@ -66,6 +66,8 @@ module Examples{
 	interface IConstraintCategory{
 		Constraints : IConstraints; //TODO:  Replace "Contraints" with Symbol?
 	}
+	
+	
 	
 	@op.MetaData<IColumnDefCategory>({
 		[Employee.Surname] : {
