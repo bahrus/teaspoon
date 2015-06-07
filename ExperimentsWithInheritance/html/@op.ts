@@ -84,9 +84,9 @@ module op{
 		metadata?: {[key: string] : any;};
 	}
 	
-	export function reflect(classRef : Function, inherit? : boolean){
+	export function reflect(classRef : Function){
 		const classPrototype = classRef.prototype;
-		return reflectPrototype(classPrototype, inherit);
+		return reflectPrototype(classPrototype);
 	}
 	
 	function getPropertyDescriptor(classPrototype: any, memberKey: string){
@@ -99,7 +99,7 @@ module op{
 		
 	}
 	
-	function reflectPrototype(classPrototype: any, inherit?: boolean){
+	function reflectPrototype(classPrototype: any){
 		let name : string = classPrototype.constructor.toString().substring(9);
 		const iPosOfOpenParen = name.indexOf('(');
 		name = name.substr(0, iPosOfOpenParen);
@@ -125,26 +125,29 @@ module op{
 			}
 			
 		}
-		if(inherit){
-			const inheritedPrototype = classPrototype.__proto__;
-			if(inheritedPrototype){
-				returnType.inheritedType = reflectPrototype(inheritedPrototype, inherit);
-			}
-		}
 		return returnType;
 	}
 	
-	export function MetaData<T>(category: string, value: {[key: string] : T}) {
+	export function MetaData<T>(value: {[key: string] : T}) {
 		return function (target: Function) {
 			const targetPrototype = target.prototype;
 			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata(tsp_propIDLookup, targetPrototype);
+			let category : string;
 			for(var propKey in value){
 				const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-				let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-				if(!categoryObj) {
-					categoryObj = {};
+				const propVal = value[propKey];
+				if(!category){
+					for(const propValKey in propVal){
+						category = propValKey;
+						break;
+					}
 				}
-				categoryObj[category] = value[propKey];
+				// let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+				// if(!categoryObj) {
+				// 	categoryObj = {};
+				// }
+				//TODO:  merge
+				const categoryObj = propVal[category];
 				Reflect.defineMetadata(category, categoryObj, targetPrototype, propName);
 			}
 		}

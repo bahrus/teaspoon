@@ -16,100 +16,111 @@ if (typeof __metadata !== "function") __metadata = function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 ///<reference path='@op.ts'/>
-var Employee = (function () {
-    function Employee() {
-    }
-    Object.defineProperty(Employee.prototype, "Surname", {
-        get: function () { return null; },
-        set: function (v) { },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Employee.prototype, "FirstName", {
-        get: function () {
-            return this._firstName;
-        },
-        set: function (val) {
-            this._firstName = val;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Employee.Surname = 'Surname';
-    Employee.MiddleName = 'MiddleName';
-    Object.defineProperty(Employee.prototype, "Surname",
+var Examples;
+(function (Examples) {
+    var Employee = (function () {
+        function Employee() {
+        }
+        Object.defineProperty(Employee.prototype, "Surname", {
+            get: function () { return null; },
+            set: function (v) { },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Employee.prototype, "FirstName", {
+            get: function () {
+                return this._firstName;
+            },
+            set: function (val) {
+                this._firstName = val;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Employee.Surname = 'Surname';
+        Employee.MiddleName = 'MiddleName';
+        Object.defineProperty(Employee.prototype, "Surname",
+            __decorate([
+                op.setID(Employee.Surname), 
+                __metadata('design:type', String)
+            ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
         __decorate([
-            op.setID(Employee.Surname), 
+            op.toProp(Employee.MiddleName), 
             __metadata('design:type', String)
-        ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
-    __decorate([
-        op.toProp(Employee.MiddleName), 
-        __metadata('design:type', String)
-    ], Employee.prototype, "MiddleName");
-    return Employee;
-})();
-console.log('reflect Employee => ');
-console.log(op.reflect(Employee, true));
-var ColumnDef = 'ColumnDef';
-var Constraints = 'Constraints';
-var EmployeeView = (function (_super) {
-    __extends(EmployeeView, _super);
-    function EmployeeView() {
-        _super.apply(this, arguments);
-    }
-    EmployeeView = __decorate([
-        op.MetaData(ColumnDef, (_a = {},
-            _a[Employee.Surname] = {
-                width: 100
-            },
-            _a[Employee.MiddleName] = {
-                width: 200
-            },
-            _a
-        )),
-        op.MetaData(Constraints, (_b = {},
-            _b[Employee.Surname] = {
-                maxLength: 10
-            },
-            _b
-        )), 
-        __metadata('design:paramtypes', [])
-    ], EmployeeView);
-    return EmployeeView;
-    var _a, _b;
-})(Employee);
-console.log('reflect on EmployeeView =>');
-console.log(op.reflect(EmployeeView, true));
-var ev = new EmployeeView();
-ev.MiddleName = 'myMiddleName';
-//const evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
-//console.log('evPropIDLookup = ');
-//console.log(evPropIDLookup);
-var ev1 = new EmployeeView();
-// const uBound = 1000000;
-// const t1 = new Date();
-// for(let i = 0; i < uBound; i++){
-// 	ev1.Surname = 'name_' + i;
-// }
-// const t2 = new Date();
-// for(let i = 0; i < uBound; i++){
-// 	ev1.FirstName = 'name_' + i;
-// }
-// const t3 = new Date();
-// for(let i = 0; i < uBound; i++){
-// 	ev1.MiddleName = 'name_' + i;
-// }
-// const t4 = new Date();
-// console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
-// console.log('static property ' + (t3.getTime() - t2.getTime()));
-// console.log('static field ' + (t4.getTime() - t3.getTime()));
-//op.describe(ev);
-var person1 = new Employee();
-//const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
-//console.log('emPropIDLookup = ');
-//console.log(emPropIDLookup);
-//op.describe(person1);
-//const person2 = new Employee();
-person1.Surname = 'Bruce';
-console.log(person1.Surname);
+        ], Employee.prototype, "MiddleName");
+        return Employee;
+    })();
+    Examples.Employee = Employee;
+    console.log('reflect Employee => ');
+    console.log(op.reflect(Employee));
+    var ColumnDef = 'ColumnDef';
+    var Constraints = 'Constraints';
+    var EmployeeView = (function (_super) {
+        __extends(EmployeeView, _super);
+        function EmployeeView() {
+            _super.apply(this, arguments);
+        }
+        EmployeeView = __decorate([
+            op.MetaData((_a = {},
+                _a[Employee.Surname] = {
+                    ColumnDef: {
+                        width: 100
+                    }
+                },
+                _a[Employee.MiddleName] = {
+                    ColumnDef: {
+                        width: 200
+                    }
+                },
+                _a
+            )),
+            op.MetaData((_b = {},
+                _b[Employee.MiddleName] = {
+                    Constraints: {
+                        maxLength: 10
+                    }
+                },
+                _b
+            )), 
+            __metadata('design:paramtypes', [])
+        ], EmployeeView);
+        return EmployeeView;
+        var _a, _b;
+    })(Employee);
+    console.log('reflect on EmployeeView =>');
+    console.log(op.reflect(EmployeeView));
+    var ev = new EmployeeView();
+    ev.MiddleName = 'myMiddleName';
+    //const evPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, ev);
+    //console.log('evPropIDLookup = ');
+    //console.log(evPropIDLookup);
+    var ev1 = new EmployeeView();
+    // const uBound = 1000000;
+    // const t1 = new Date();
+    // for(let i = 0; i < uBound; i++){
+    // 	ev1.Surname = 'name_' + i;
+    // }
+    // const t2 = new Date();
+    // for(let i = 0; i < uBound; i++){
+    // 	ev1.FirstName = 'name_' + i;
+    // }
+    // const t3 = new Date();
+    // for(let i = 0; i < uBound; i++){
+    // 	ev1.MiddleName = 'name_' + i;
+    // }
+    // const t4 = new Date();
+    // console.log('dynamic property: ' + (t2.getTime() - t1.getTime()));
+    // console.log('static property ' + (t3.getTime() - t2.getTime()));
+    // console.log('static field ' + (t4.getTime() - t3.getTime()));
+    //op.describe(ev);
+    var person1 = new Employee();
+    //const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
+    //console.log('emPropIDLookup = ');
+    //console.log(emPropIDLookup);
+    //op.describe(person1);
+    //const person2 = new Employee();
+    person1.Surname = 'Bruce';
+    console.log(person1.Surname);
+})(Examples || (Examples = {}));
+console.log(op.reflect(Examples.Employee));
 //# sourceMappingURL=Employee.js.map

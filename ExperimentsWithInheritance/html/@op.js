@@ -70,9 +70,9 @@ var op;
         }
     }
     op.describe = describe;
-    function reflect(classRef, inherit) {
+    function reflect(classRef) {
         var classPrototype = classRef.prototype;
-        return reflectPrototype(classPrototype, inherit);
+        return reflectPrototype(classPrototype);
     }
     op.reflect = reflect;
     function getPropertyDescriptor(classPrototype, memberKey) {
@@ -84,7 +84,7 @@ var op;
         }
         return null;
     }
-    function reflectPrototype(classPrototype, inherit) {
+    function reflectPrototype(classPrototype) {
         var name = classPrototype.constructor.toString().substring(9);
         var iPosOfOpenParen = name.indexOf('(');
         name = name.substr(0, iPosOfOpenParen);
@@ -111,25 +111,28 @@ var op;
                 }
             }
         }
-        if (inherit) {
-            var inheritedPrototype = classPrototype.__proto__;
-            if (inheritedPrototype) {
-                returnType.inheritedType = reflectPrototype(inheritedPrototype, inherit);
-            }
-        }
         return returnType;
     }
-    function MetaData(category, value) {
+    function MetaData(value) {
         return function (target) {
             var targetPrototype = target.prototype;
             var propIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, targetPrototype);
+            var category;
             for (var propKey in value) {
                 var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-                var categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-                if (!categoryObj) {
-                    categoryObj = {};
+                var propVal = value[propKey];
+                if (!category) {
+                    for (var propValKey in propVal) {
+                        category = propValKey;
+                        break;
+                    }
                 }
-                categoryObj[category] = value[propKey];
+                // let categoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+                // if(!categoryObj) {
+                // 	categoryObj = {};
+                // }
+                //TODO:  merge
+                var categoryObj = propVal[category];
                 Reflect.defineMetadata(category, categoryObj, targetPrototype, propName);
             }
         };
