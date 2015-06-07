@@ -19,6 +19,21 @@ if (typeof __metadata !== "function") __metadata = function (k, v) {
 };
 var Examples;
 (function (Examples) {
+    var Address = (function () {
+        function Address() {
+        }
+        Address.Street = 'Street';
+        Address.ZipCode = 'ZipCode';
+        __decorate([
+            op.toProp(Address.Street), 
+            __metadata('design:type', String)
+        ], Address.prototype, "Street");
+        __decorate([
+            op.toProp(Address.ZipCode), 
+            __metadata('design:type', String)
+        ], Address.prototype, "ZipCode");
+        return Address;
+    })();
     var Employee = (function () {
         function Employee() {
         }
@@ -40,6 +55,7 @@ var Examples;
         });
         Employee.Surname = 'Surname';
         Employee.MiddleName = 'MiddleName';
+        Employee.HomeAddress = 'HomeAddress';
         Object.defineProperty(Employee.prototype, "Surname",
             __decorate([
                 op.setID(Employee.Surname), 
@@ -54,6 +70,10 @@ var Examples;
             }), 
             __metadata('design:type', String)
         ], Employee.prototype, "MiddleName");
+        __decorate([
+            op.toProp(Employee.HomeAddress), 
+            __metadata('design:type', Address)
+        ], Employee.prototype, "HomeAddress");
         return Employee;
     })();
     Examples.Employee = Employee;
@@ -128,5 +148,4 @@ var Examples;
     person1.Surname = 'Bruce';
     console.log(person1.Surname);
 })(Examples || (Examples = {}));
-console.log(op.reflect(Examples.Employee));
 //# sourceMappingURL=Employee.js.map

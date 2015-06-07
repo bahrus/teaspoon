@@ -2,6 +2,19 @@
 ///<reference path='@op.ts'/>
 
 module Examples{
+	
+	class Address{
+		
+		public static Street = 'Street';
+		@op.toProp(Address.Street)
+		public Street : string;
+		
+		public static ZipCode = 'ZipCode';
+		@op.toProp(Address.ZipCode)
+		public ZipCode: string;
+	}
+	
+	
 	export class Employee{
 		
 		public static Surname = 'Surname';
@@ -26,6 +39,10 @@ module Examples{
 			}
 		})
 		public MiddleName : string;
+		
+		public static HomeAddress = 'HomeAddress';
+		@op.toProp(Employee.HomeAddress)
+		public HomeAddress : Address
 	}
 	
 	console.log('reflect Employee => ');
@@ -115,6 +132,4 @@ module Examples{
 	person1.Surname = 'Bruce';
 	console.log(person1.Surname);
 }
-
-console.log(op.reflect(Examples.Employee));
 
