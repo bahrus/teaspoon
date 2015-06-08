@@ -108,7 +108,7 @@ var op;
         }
     }
     op.describe = describe;
-    function reflect(classRef) {
+    function reflect(classRef, recursive) {
         var classPrototype = classRef.prototype;
         return reflectPrototype(classPrototype);
     }
@@ -132,20 +132,33 @@ var op;
         for (var memberKey in classPrototype) {
             var propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
             if (propertyDescriptor) {
-                if (!returnType.Props)
-                    returnType.Props = [];
-                var propInfo = {
-                    name: memberKey,
-                    propertyDescriptor: propertyDescriptor,
-                };
-                returnType.Props.push(propInfo);
-                var metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
-                for (var i = 0, n = metaDataKeys.length; i < n; i++) {
-                    var metaKey = metaDataKeys[i];
-                    if (!propInfo.metadata)
-                        propInfo.metadata = {};
-                    //debugger;
-                    propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+                if (propertyDescriptor.value) {
+                    //#region method
+                    if (!returnType.methods)
+                        returnType.methods = [];
+                    var methodInfo = {
+                        name: memberKey,
+                        propertyDescriptor: propertyDescriptor,
+                    };
+                    returnType.methods.push(methodInfo);
+                }
+                else if (propertyDescriptor.get || propertyDescriptor.set) {
+                    //#region property
+                    if (!returnType.properties)
+                        returnType.properties = [];
+                    var propInfo = {
+                        name: memberKey,
+                        propertyDescriptor: propertyDescriptor,
+                    };
+                    returnType.properties.push(propInfo);
+                    var metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
+                    for (var i = 0, n = metaDataKeys.length; i < n; i++) {
+                        var metaKey = metaDataKeys[i];
+                        if (!propInfo.metadata)
+                            propInfo.metadata = {};
+                        //debugger;
+                        propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+                    }
                 }
             }
         }

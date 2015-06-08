@@ -22,6 +22,11 @@ var Examples;
     var Address = (function () {
         function Address() {
         }
+        Address.New = function (address) {
+            var addressImpl = new Address();
+            Object['assign'](addressImpl, address);
+            return addressImpl;
+        };
         Address.Street = 'Street';
         Address.ZipCode = 'ZipCode';
         __decorate([
@@ -37,6 +42,11 @@ var Examples;
     var Employee = (function () {
         function Employee() {
         }
+        Employee.New = function (employee) {
+            var employeeImpl = new Employee();
+            Object['assign'](employeeImpl, employee);
+            return employeeImpl;
+        };
         Object.defineProperty(Employee.prototype, "Surname", {
             get: function () { return null; },
             set: function (v) { },
@@ -53,6 +63,8 @@ var Examples;
             enumerable: true,
             configurable: true
         });
+        Employee.prototype.DriveHome = function () {
+        };
         Employee.Surname = 'Surname';
         Employee.MiddleName = 'MiddleName';
         Employee.HomeAddress = 'HomeAddress';
@@ -139,7 +151,15 @@ var Examples;
     // console.log('static property ' + (t3.getTime() - t2.getTime()));
     // console.log('static field ' + (t4.getTime() - t3.getTime()));
     //op.describe(ev);
-    var person1 = new Employee();
+    var person1 = Employee.New({
+        FirstName: 'Bruce',
+        MiddleName: 'B',
+        Surname: 'Anderson',
+        HomeAddress: Address.New({
+            Street: '1600 Pennsylvania Ave',
+            ZipCode: '90210'
+        }),
+    });
     //const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
     //console.log('emPropIDLookup = ');
     //console.log(emPropIDLookup);

@@ -3,7 +3,18 @@
 
 module Examples{
 	
-	class Address{
+	interface IAddressStruct{
+		Street?: string;
+		ZipCode?: string;
+	}
+	
+	class Address implements IAddressStruct{
+		
+		public static New(address: IAddressStruct){
+			const addressImpl = new Address();
+			Object['assign'](addressImpl, address);
+			return addressImpl;
+		}
 		
 		public static Street = 'Street';
 		@op.toProp(Address.Street)
@@ -11,11 +22,24 @@ module Examples{
 		
 		public static ZipCode = 'ZipCode';
 		@op.toProp(Address.ZipCode)
-		public ZipCode: string;
+		public ZipCode : string;
+	}
+	
+	interface IEmployeeStruct{
+		Surname?: string;
+		FirstName?: string;
+		MiddleName?: string;
+		HomeAddress?:  IAddressStruct;
 	}
 	
 	
-	export class Employee{
+	export class Employee implements IEmployeeStruct{
+		
+		public static New(employee: IEmployeeStruct){
+			const employeeImpl = new Employee();
+			Object['assign'](employeeImpl, employee);
+			return employeeImpl;
+		}
 		
 		public static Surname = 'Surname';
 		@op.setMemberKey(Employee.Surname)
@@ -42,7 +66,11 @@ module Examples{
 		
 		public static HomeAddress = 'HomeAddress';
 		@op.toProp(Employee.HomeAddress)
-		public HomeAddress : Address
+		public HomeAddress : Address;
+		
+		public DriveHome() : void {
+			
+		}
 	}
 	
 	console.log('reflect Employee => ');
@@ -89,6 +117,7 @@ module Examples{
 			
 		}
 	})
+	
 	class EmployeeView extends Employee{}
 	
 	console.log('reflect on EmployeeView =>');
@@ -122,7 +151,15 @@ module Examples{
 	// console.log('static field ' + (t4.getTime() - t3.getTime()));
 	//op.describe(ev);
 	
-	const person1 = new Employee();
+	const person1 = Employee.New({
+		FirstName: 'Bruce',
+		MiddleName: 'B',
+		Surname: 'Anderson',
+		HomeAddress: Address.New({
+			Street: '1600 Pennsylvania Ave',
+			ZipCode: '90210'	
+		}),
+	});
 	
 	//const emPropIDLookup = Reflect.getMetadata(op.tsp_propIDLookup, person1);
 	//console.log('emPropIDLookup = ');

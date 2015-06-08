@@ -113,24 +113,32 @@ module op{
 		}
 	}
 	
-	export interface IType{
-		Props?: IPropInfo[];
+	export interface IReflectionEntity{
 		name: string;
+	}
+	
+	export interface IType extends IReflectionEntity{
+		properties?: IPropInfo[];
+		methods?: IMethodInfo[];
 		//type?: Function;
 		//inheritedType?: IType;
 	}
 	
-	export interface IComplexPropLinker{
-		memberKey: string;
-		classRef: Function;
-	}
-	
-	export interface IPropInfo extends IType{
+	export interface IMemberInfo extends IReflectionEntity{
 		propertyDescriptor ?: any;
 		metadata?: {[key: string] : any;};
+		isPublic?: boolean;
 	}
 	
-	export function reflect(classRef : Function){
+	export interface IPropInfo extends IMemberInfo {
+		propertyType?:  IType;
+	}
+	
+	export interface IMethodInfo extends IMemberInfo {
+		returnType?: IType;
+	}
+	
+	export function reflect(classRef : Function, recursive?: boolean){
 		const classPrototype = classRef.prototype;
 		return reflectPrototype(classPrototype);
 	}
@@ -155,19 +163,32 @@ module op{
 		for(const memberKey in classPrototype){
 			const propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
 			if(propertyDescriptor){
-				if(!returnType.Props) returnType.Props = [];
-				const propInfo : IPropInfo = {
-					name: memberKey,
-					propertyDescriptor : propertyDescriptor,
-				}
-				returnType.Props.push(propInfo);
-				
-				const metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
-				for(let i = 0, n = metaDataKeys.length; i < n; i++){
-					const metaKey = metaDataKeys[i];
-					if(!propInfo.metadata) propInfo.metadata = {};
-					//debugger;
-					propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+				if(propertyDescriptor.value){
+					//#region method
+					if(!returnType.methods) returnType.methods = [];
+					const methodInfo: IMethodInfo = {
+						name: memberKey,
+						propertyDescriptor : propertyDescriptor,
+					};
+					returnType.methods.push(methodInfo);
+					//#endregion
+				}else if(propertyDescriptor.get || propertyDescriptor.set){
+					//#region property
+					if(!returnType.properties) returnType.properties = [];
+					const propInfo : IPropInfo = {
+						name: memberKey,
+						propertyDescriptor : propertyDescriptor,
+					};
+					returnType.properties.push(propInfo);
+					
+					const metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
+					for(let i = 0, n = metaDataKeys.length; i < n; i++){
+						const metaKey = metaDataKeys[i];
+						if(!propInfo.metadata) propInfo.metadata = {};
+						//debugger;
+						propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+					}
+					//#endregion
 				}
 			}
 			
@@ -200,4 +221,11 @@ module op{
 			}
 		}
 	}
+	
+	export interface IComplexPropLinker{
+		memberKey: string;
+		classRef: Function;
+	}
+	
+	//export function mergeClassProp()
 }
