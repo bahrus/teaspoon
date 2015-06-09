@@ -35,8 +35,6 @@ if (!Object['assign']) {
 }
 
 module op{
-	//export const $propIDLookup = 'propIDLookup';
-	//export const propInfo = 'propInfo';
 	
 	export const getter = function(ID: string){
 		return function(){
@@ -60,13 +58,6 @@ module op{
 	
 	export function initProp(){
 		return (classPrototype: Function, propName: string, propDescriptor: PropertyDescriptor) => {
-			//Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
-			// let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
-			// if(!propIDLookup){
-			// 	propIDLookup = {};
-			// 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-			// }
-			// propIDLookup[propID] = propName;
 			propDescriptor.get = getter(propName);
 			propDescriptor.set = setter(propName);
 		}
@@ -75,12 +66,6 @@ module op{
 	export function toProp(){
 		return (classPrototype: Function, fieldName: string) =>{
 			console.log('in toProp');
-			// let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
-			// if(!propIDLookup){
-			// 	propIDLookup = {};
-			// 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-			// }
-			// propIDLookup[fieldID] = fieldName;
 			
 			//from http://blog.wolksoftware.com/decorators-metadata-reflection-in-typescript-from-novice-to-expert-part-ii
 			if (delete this[fieldName]) {
@@ -114,16 +99,6 @@ module op{
 		}
 	}
 	
-	// export function describe(obj: any){
-	// 	for(let memberName in obj){
-	// 		let keys = Reflect.getMetadataKeys(obj, memberName);
-	// 		for(let i = 0, n = keys.length; i < n; i++){
-	// 			const metaKey = keys[i];
-	// 			console.log('     key = ' + metaKey + ' value = ...');
-	// 			console.log(Reflect.getMetadata(metaKey, obj, memberName));
-	// 		}
-	// 	}
-	// }
 	
 	export interface IReflectionEntity{
 		name: string;
@@ -206,38 +181,6 @@ module op{
 		}
 		return returnType;
 	}
+
 	
-	
-	
-	// export function plopIntoProtoPropsMeta<T>(value: {[key: string] : T}) {
-	// 	return function (target: Function) {
-	// 		const targetPrototype = target.prototype;
-	// 		const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
-	// 		//let category : string;
-	// 		for(var propKey in value){
-	// 			const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-	// 			const propVal = value[propKey];
-	// 			plopIntoPropMeta(propVal, targetPrototype, propName);
-	// 		}
-	// 	}
-	// }
-	
-	// export function bulkPlopIntoPropMeta<T>(value: T, props: string[]){
-	// 	return function(target: Function){
-	// 		const targetPrototype = target.prototype;
-	// 		const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
-	// 		for(let i = 0, n = props.length; i < n; i++){
-	// 			const propKey = props[i];
-	// 			const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-	// 			plopIntoPropMeta(value, targetPrototype, propName);
-	// 		}
-	// 	}
-	// }
-	
-	// export interface IComplexPropLinker{
-	// 	memberKey: string;
-	// 	classRef: Function;
-	// }
-	
-	//export function mergeClassProp()
 }

@@ -32,8 +32,6 @@ if (!Object['assign']) {
 }
 var op;
 (function (op) {
-    //export const $propIDLookup = 'propIDLookup';
-    //export const propInfo = 'propInfo';
     op.getter = function (ID) {
         return function () {
             var lu = this['__@op'];
@@ -55,13 +53,6 @@ var op;
     };
     function initProp() {
         return function (classPrototype, propName, propDescriptor) {
-            //Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
-            // let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
-            // if(!propIDLookup){
-            // 	propIDLookup = {};
-            // 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-            // }
-            // propIDLookup[propID] = propName;
             propDescriptor.get = op.getter(propName);
             propDescriptor.set = op.setter(propName);
         };
@@ -71,12 +62,6 @@ var op;
         var _this = this;
         return function (classPrototype, fieldName) {
             console.log('in toProp');
-            // let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
-            // if(!propIDLookup){
-            // 	propIDLookup = {};
-            // 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-            // }
-            // propIDLookup[fieldID] = fieldName;
             //from http://blog.wolksoftware.com/decorators-metadata-reflection-in-typescript-from-novice-to-expert-part-ii
             if (delete _this[fieldName]) {
                 // Create new property with getter and setter
