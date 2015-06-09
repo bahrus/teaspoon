@@ -57,7 +57,7 @@ module Examples{
 		
 		public static MiddleName = 'MiddleName';
 		@op.toProp(Employee.MiddleName)
-		@op.mergeMeta<IColumnDefCategory>({
+		@op.plopIntoMeta<IColumnDefCategory>({
 			ColumnDef: {
 				hide: true,
 			}
@@ -97,7 +97,7 @@ module Examples{
 	
 	
 	
-	@op.MetaData<IColumnDefCategory>({
+	@op.plopIntoProtoPropsMeta<IColumnDefCategory>({
 		[Employee.Surname] : {
 			ColumnDef: {
 				width: 100
@@ -109,7 +109,7 @@ module Examples{
 			}
 		}
 	})
-	@op.MetaData<IConstraintCategory>({
+	@op.plopIntoProtoPropsMeta<IConstraintCategory>({
 		[Employee.MiddleName] : {
 			Constraints: {
 				maxLength: 10

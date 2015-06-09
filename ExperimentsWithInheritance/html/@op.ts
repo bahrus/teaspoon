@@ -94,10 +94,23 @@ module op{
 		}
 	}
 	
-	export function mergeMeta<T>(data: T){
+	function plopIntoPropMeta(propVal: any, targetPrototype: any, propName: string){
+		for(const propValKey in propVal){
+			const category = propValKey;
+			//TODO:  merge
+			const newCategoryObj = propVal[category];
+			const prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+			if(prevCategoryObj){
+				Object['assign'](newCategoryObj, prevCategoryObj);
+			}
+			Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
+		}
+	}
+	
+	export function plopIntoMeta<T>(data: T){
 		return (classPrototype: Function, fieldName: string) =>{
 			console.log('in mergeMeta');
-			mergeObjectIntoMetaForProperty(data, classPrototype, fieldName);
+			plopIntoPropMeta(data, classPrototype, fieldName);
 		}
 	}
 	
@@ -118,7 +131,7 @@ module op{
 	}
 	
 	export interface IType extends IReflectionEntity{
-		properties?: IPropInfo[];
+		properties?: IPropertyInfo[];
 		methods?: IMethodInfo[];
 		//type?: Function;
 		//inheritedType?: IType;
@@ -130,7 +143,7 @@ module op{
 		isPublic?: boolean;
 	}
 	
-	export interface IPropInfo extends IMemberInfo {
+	export interface IPropertyInfo extends IMemberInfo {
 		propertyType?:  IType;
 	}
 	
@@ -140,7 +153,7 @@ module op{
 	
 	export function reflect(classRef : Function, recursive?: boolean){
 		const classPrototype = classRef.prototype;
-		return reflectPrototype(classPrototype);
+		return reflectPrototype(classPrototype, recursive);
 	}
 	
 	function getPropertyDescriptor(classPrototype: any, memberKey: string){
@@ -153,7 +166,7 @@ module op{
 		
 	}
 	
-	function reflectPrototype(classPrototype: any){
+	function reflectPrototype(classPrototype: any, recursive?: boolean){
 		let name : string = classPrototype.constructor.toString().substring(9);
 		const iPosOfOpenParen = name.indexOf('(');
 		name = name.substr(0, iPosOfOpenParen);
@@ -163,31 +176,30 @@ module op{
 		for(const memberKey in classPrototype){
 			const propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
 			if(propertyDescriptor){
+				const memberInfo : IMemberInfo = {
+					name: memberKey,
+					propertyDescriptor : propertyDescriptor,
+				};
+				const metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
+				for(let i = 0, n = metaDataKeys.length; i < n; i++){
+					const metaKey = metaDataKeys[i];
+					if(!memberInfo.metadata) memberInfo.metadata = {};
+					//debugger;
+					memberInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+				}
 				if(propertyDescriptor.value){
 					//#region method
 					if(!returnType.methods) returnType.methods = [];
-					const methodInfo: IMethodInfo = {
-						name: memberKey,
-						propertyDescriptor : propertyDescriptor,
-					};
+					const methodInfo = <IMethodInfo> memberInfo;
 					returnType.methods.push(methodInfo);
 					//#endregion
 				}else if(propertyDescriptor.get || propertyDescriptor.set){
 					//#region property
 					if(!returnType.properties) returnType.properties = [];
-					const propInfo : IPropInfo = {
-						name: memberKey,
-						propertyDescriptor : propertyDescriptor,
-					};
+					const propInfo = <IPropertyInfo> memberInfo;
 					returnType.properties.push(propInfo);
 					
-					const metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
-					for(let i = 0, n = metaDataKeys.length; i < n; i++){
-						const metaKey = metaDataKeys[i];
-						if(!propInfo.metadata) propInfo.metadata = {};
-						//debugger;
-						propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
-					}
+					
 					//#endregion
 				}
 			}
@@ -196,20 +208,9 @@ module op{
 		return returnType;
 	}
 	
-	function mergeObjectIntoMetaForProperty(propVal: any, targetPrototype: any, propName: string){
-		for(const propValKey in propVal){
-			const category = propValKey;
-			//TODO:  merge
-			const newCategoryObj = propVal[category];
-			const prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-			if(prevCategoryObj){
-				Object['assign'](newCategoryObj, prevCategoryObj);
-			}
-			Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
-		}
-	}
 	
-	export function MetaData<T>(value: {[key: string] : T}) {
+	
+	export function plopIntoProtoPropsMeta<T>(value: {[key: string] : T}) {
 		return function (target: Function) {
 			const targetPrototype = target.prototype;
 			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
@@ -217,7 +218,19 @@ module op{
 			for(var propKey in value){
 				const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
 				const propVal = value[propKey];
-				mergeObjectIntoMetaForProperty(propVal, targetPrototype, propName);
+				plopIntoPropMeta(propVal, targetPrototype, propName);
+			}
+		}
+	}
+	
+	export function bulkPlopIntoPropMeta<T>(value: T, props: string[]){
+		return function(target: Function){
+			const targetPrototype = target.prototype;
+			const propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, targetPrototype);
+			for(let i = 0, n = props.length; i < n; i++){
+				const propKey = props[i];
+				const propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
+				plopIntoPropMeta(value, targetPrototype, propName);
 			}
 		}
 	}

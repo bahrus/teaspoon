@@ -75,7 +75,7 @@ var Examples;
             ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
         __decorate([
             op.toProp(Employee.MiddleName),
-            op.mergeMeta({
+            op.plopIntoMeta({
                 ColumnDef: {
                     hide: true,
                 }
@@ -99,7 +99,7 @@ var Examples;
             _super.apply(this, arguments);
         }
         EmployeeView = __decorate([
-            op.MetaData((_a = {},
+            op.plopIntoProtoPropsMeta((_a = {},
                 _a[Employee.Surname] = {
                     ColumnDef: {
                         width: 100
@@ -112,7 +112,7 @@ var Examples;
                 },
                 _a
             )),
-            op.MetaData((_b = {},
+            op.plopIntoProtoPropsMeta((_b = {},
                 _b[Employee.MiddleName] = {
                     Constraints: {
                         maxLength: 10

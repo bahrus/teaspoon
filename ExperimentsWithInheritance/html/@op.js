@@ -89,13 +89,25 @@ var op;
         };
     }
     op.toProp = toProp;
-    function mergeMeta(data) {
+    function plopIntoPropMeta(propVal, targetPrototype, propName) {
+        for (var propValKey in propVal) {
+            var category = propValKey;
+            //TODO:  merge
+            var newCategoryObj = propVal[category];
+            var prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
+            if (prevCategoryObj) {
+                Object['assign'](newCategoryObj, prevCategoryObj);
+            }
+            Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
+        }
+    }
+    function plopIntoMeta(data) {
         return function (classPrototype, fieldName) {
             console.log('in mergeMeta');
-            mergeObjectIntoMetaForProperty(data, classPrototype, fieldName);
+            plopIntoPropMeta(data, classPrototype, fieldName);
         };
     }
-    op.mergeMeta = mergeMeta;
+    op.plopIntoMeta = plopIntoMeta;
     function describe(obj) {
         for (var memberName in obj) {
             console.log('member name = ' + memberName);
@@ -110,7 +122,7 @@ var op;
     op.describe = describe;
     function reflect(classRef, recursive) {
         var classPrototype = classRef.prototype;
-        return reflectPrototype(classPrototype);
+        return reflectPrototype(classPrototype, recursive);
     }
     op.reflect = reflect;
     function getPropertyDescriptor(classPrototype, memberKey) {
@@ -122,7 +134,7 @@ var op;
         }
         return null;
     }
-    function reflectPrototype(classPrototype) {
+    function reflectPrototype(classPrototype, recursive) {
         var name = classPrototype.constructor.toString().substring(9);
         var iPosOfOpenParen = name.indexOf('(');
         name = name.substr(0, iPosOfOpenParen);
@@ -132,51 +144,37 @@ var op;
         for (var memberKey in classPrototype) {
             var propertyDescriptor = getPropertyDescriptor(classPrototype, memberKey);
             if (propertyDescriptor) {
+                var memberInfo = {
+                    name: memberKey,
+                    propertyDescriptor: propertyDescriptor,
+                };
+                var metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
+                for (var i = 0, n = metaDataKeys.length; i < n; i++) {
+                    var metaKey = metaDataKeys[i];
+                    if (!memberInfo.metadata)
+                        memberInfo.metadata = {};
+                    //debugger;
+                    memberInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
+                }
                 if (propertyDescriptor.value) {
                     //#region method
                     if (!returnType.methods)
                         returnType.methods = [];
-                    var methodInfo = {
-                        name: memberKey,
-                        propertyDescriptor: propertyDescriptor,
-                    };
+                    var methodInfo = memberInfo;
                     returnType.methods.push(methodInfo);
                 }
                 else if (propertyDescriptor.get || propertyDescriptor.set) {
                     //#region property
                     if (!returnType.properties)
                         returnType.properties = [];
-                    var propInfo = {
-                        name: memberKey,
-                        propertyDescriptor: propertyDescriptor,
-                    };
+                    var propInfo = memberInfo;
                     returnType.properties.push(propInfo);
-                    var metaDataKeys = Reflect.getMetadataKeys(classPrototype, memberKey);
-                    for (var i = 0, n = metaDataKeys.length; i < n; i++) {
-                        var metaKey = metaDataKeys[i];
-                        if (!propInfo.metadata)
-                            propInfo.metadata = {};
-                        //debugger;
-                        propInfo.metadata[metaKey] = Reflect.getMetadata(metaKey, classPrototype, memberKey);
-                    }
                 }
             }
         }
         return returnType;
     }
-    function mergeObjectIntoMetaForProperty(propVal, targetPrototype, propName) {
-        for (var propValKey in propVal) {
-            var category = propValKey;
-            //TODO:  merge
-            var newCategoryObj = propVal[category];
-            var prevCategoryObj = Reflect.getMetadata(category, targetPrototype, propName);
-            if (prevCategoryObj) {
-                Object['assign'](newCategoryObj, prevCategoryObj);
-            }
-            Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
-        }
-    }
-    function MetaData(value) {
+    function plopIntoProtoPropsMeta(value) {
         return function (target) {
             var targetPrototype = target.prototype;
             var propIDLookup = Reflect.getMetadata(op.$propIDLookup, targetPrototype);
@@ -184,10 +182,22 @@ var op;
             for (var propKey in value) {
                 var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
                 var propVal = value[propKey];
-                mergeObjectIntoMetaForProperty(propVal, targetPrototype, propName);
+                plopIntoPropMeta(propVal, targetPrototype, propName);
             }
         };
     }
-    op.MetaData = MetaData;
+    op.plopIntoProtoPropsMeta = plopIntoProtoPropsMeta;
+    function bulkPlopIntoPropMeta(value, props) {
+        return function (target) {
+            var targetPrototype = target.prototype;
+            var propIDLookup = Reflect.getMetadata(op.$propIDLookup, targetPrototype);
+            for (var i = 0, n = props.length; i < n; i++) {
+                var propKey = props[i];
+                var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
+                plopIntoPropMeta(value, targetPrototype, propName);
+            }
+        };
+    }
+    op.bulkPlopIntoPropMeta = bulkPlopIntoPropMeta;
 })(op || (op = {}));
 //# sourceMappingURL=@op.js.map
