@@ -90,6 +90,13 @@ var Examples;
     console.log(op.reflect(Employee));
     var ColumnDef = 'ColumnDef';
     var Constraints = 'Constraints';
+    var temp = function (fieldName) {
+        return {
+            ColumnDef: {
+                title: fieldName
+            }
+        };
+    };
     var EmployeeView = (function (_super) {
         __extends(EmployeeView, _super);
         function EmployeeView() {
@@ -105,7 +112,8 @@ var Examples;
                 ColumnDef: {
                     width: 200,
                 }
-            }), 
+            }),
+            op.plopperIntoMeta(temp), 
             __metadata('design:type', String)
         ], EmployeeView.prototype, "MiddleName");
         __decorate([

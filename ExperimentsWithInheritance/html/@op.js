@@ -87,6 +87,13 @@ var op;
             Reflect.defineMetadata(category, newCategoryObj, targetPrototype, propName);
         }
     }
+    function plopperIntoMeta(fn) {
+        return function (classPrototype, fieldName) {
+            var data = fn(fieldName);
+            plopIntoPropMeta(data, classPrototype, fieldName);
+        };
+    }
+    op.plopperIntoMeta = plopperIntoMeta;
     function plopIntoMeta(data) {
         return function (classPrototype, fieldName) {
             plopIntoPropMeta(data, classPrototype, fieldName);

@@ -80,6 +80,7 @@ module Examples{
 	interface IColumnDef{
 		width?: number;
 		hide?: boolean;
+		title?: string;
 	}
 	
 	interface IColumnDefCategory{
@@ -96,7 +97,13 @@ module Examples{
 	}
 	
 	
-	
+	const temp: (fieldName: string) => IColumnDefCategory = function(fieldName: string){
+		return {
+			ColumnDef: {
+				title: fieldName
+			}
+		}
+	}
 	
 	class EmployeeView extends Employee implements IEmployeeStruct{
 		@op.plopIntoMeta<IConstraintCategory>({
@@ -109,6 +116,7 @@ module Examples{
 				width: 200,
 			}
 		})
+		@op.plopperIntoMeta<IColumnDefCategory>(temp)
 		MiddleName: string;
 		
 		@op.plopIntoMeta<IColumnDefCategory>({

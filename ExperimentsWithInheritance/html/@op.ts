@@ -93,11 +93,19 @@ module op{
 		}
 	}
 	
+	export function plopperIntoMeta<T>(fn: (fieldName: string) => T){
+		return (classPrototype: Function, fieldName: string) =>{
+			const data = fn(fieldName);
+			plopIntoPropMeta(data, classPrototype, fieldName);
+		}
+	}
+	
 	export function plopIntoMeta<T>(data: T){
 		return (classPrototype: Function, fieldName: string) =>{
 			plopIntoPropMeta(data, classPrototype, fieldName);
 		}
 	}
+	
 	
 	
 	export interface IReflectionEntity{
