@@ -27,14 +27,12 @@ var Examples;
             Object['assign'](addressImpl, address);
             return addressImpl;
         };
-        Address.Street = 'Street';
-        Address.ZipCode = 'ZipCode';
         __decorate([
-            op.toProp(Address.Street), 
+            op.toProp, 
             __metadata('design:type', String)
         ], Address.prototype, "Street");
         __decorate([
-            op.toProp(Address.ZipCode), 
+            op.toProp, 
             __metadata('design:type', String)
         ], Address.prototype, "ZipCode");
         return Address;
@@ -48,6 +46,7 @@ var Examples;
             return employeeImpl;
         };
         Object.defineProperty(Employee.prototype, "Surname", {
+            //public static Surname = 'Surname';
             get: function () { return null; },
             set: function (v) { },
             enumerable: true,
@@ -65,16 +64,14 @@ var Examples;
         });
         Employee.prototype.DriveHome = function () {
         };
-        Employee.Surname = 'Surname';
-        Employee.MiddleName = 'MiddleName';
         Employee.HomeAddress = 'HomeAddress';
         Object.defineProperty(Employee.prototype, "Surname",
             __decorate([
-                op.setMemberKey(Employee.Surname), 
+                op.initProp, 
                 __metadata('design:type', String)
             ], Employee.prototype, "Surname", Object.getOwnPropertyDescriptor(Employee.prototype, "Surname")));
         __decorate([
-            op.toProp(Employee.MiddleName),
+            op.toProp(),
             op.plopIntoMeta({
                 ColumnDef: {
                     hide: true,
@@ -83,7 +80,7 @@ var Examples;
             __metadata('design:type', String)
         ], Employee.prototype, "MiddleName");
         __decorate([
-            op.toProp(Employee.HomeAddress), 
+            op.toProp, 
             __metadata('design:type', Address)
         ], Employee.prototype, "HomeAddress");
         return Employee;
@@ -98,32 +95,28 @@ var Examples;
         function EmployeeView() {
             _super.apply(this, arguments);
         }
-        EmployeeView = __decorate([
-            op.plopIntoProtoPropsMeta((_a = {},
-                _a[Employee.Surname] = {
-                    ColumnDef: {
-                        width: 100
-                    }
-                },
-                _a[Employee.MiddleName] = {
-                    ColumnDef: {
-                        width: 200
-                    }
-                },
-                _a
-            )),
-            op.plopIntoProtoPropsMeta((_b = {},
-                _b[Employee.MiddleName] = {
-                    Constraints: {
-                        maxLength: 10
-                    }
-                },
-                _b
-            )), 
-            __metadata('design:paramtypes', [])
-        ], EmployeeView);
+        __decorate([
+            op.plopIntoMeta({
+                Constraints: {
+                    maxLength: 10
+                }
+            }),
+            op.plopIntoMeta({
+                ColumnDef: {
+                    width: 200,
+                }
+            }), 
+            __metadata('design:type', String)
+        ], EmployeeView.prototype, "MiddleName");
+        __decorate([
+            op.plopIntoMeta({
+                ColumnDef: {
+                    width: 100,
+                }
+            }), 
+            __metadata('design:type', String)
+        ], EmployeeView.prototype, "Surname");
         return EmployeeView;
-        var _a, _b;
     })(Employee);
     console.log('reflect on EmployeeView =>');
     console.log(op.reflect(EmployeeView));
@@ -167,5 +160,6 @@ var Examples;
     //const person2 = new Employee();
     person1.Surname = 'Bruce';
     console.log(person1.Surname);
+    ev1.MiddleName = 'test';
 })(Examples || (Examples = {}));
 //# sourceMappingURL=Employee.js.map

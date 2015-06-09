@@ -16,12 +16,12 @@ module Examples{
 			return addressImpl;
 		}
 		
-		public static Street = 'Street';
-		@op.toProp(Address.Street)
+		//public static Street = 'Street';
+		@op.toProp
 		public Street : string;
 		
-		public static ZipCode = 'ZipCode';
-		@op.toProp(Address.ZipCode)
+		//public static ZipCode = 'ZipCode';
+		@op.toProp
 		public ZipCode : string;
 	}
 	
@@ -41,8 +41,8 @@ module Examples{
 			return employeeImpl;
 		}
 		
-		public static Surname = 'Surname';
-		@op.setMemberKey(Employee.Surname)
+		//public static Surname = 'Surname';
+		@op.initProp
 		public get Surname() : string{return null;} 
 		public set Surname(v: string){}
 		
@@ -55,8 +55,8 @@ module Examples{
 			this._firstName = val;
 		}
 		
-		public static MiddleName = 'MiddleName';
-		@op.toProp(Employee.MiddleName)
+		//public static MiddleName = 'MiddleName';
+		@op.toProp()
 		@op.plopIntoMeta<IColumnDefCategory>({
 			ColumnDef: {
 				hide: true,
@@ -65,7 +65,7 @@ module Examples{
 		public MiddleName : string;
 		
 		public static HomeAddress = 'HomeAddress';
-		@op.toProp(Employee.HomeAddress)
+		@op.toProp
 		public HomeAddress : Address;
 		
 		public DriveHome() : void {
@@ -97,28 +97,27 @@ module Examples{
 	
 	
 	
-	@op.plopIntoProtoPropsMeta<IColumnDefCategory>({
-		[Employee.Surname] : {
-			ColumnDef: {
-				width: 100
-			}
-		},
-		[Employee.MiddleName] : {
-			ColumnDef: {
-				width: 200
-			}
-		}
-	})
-	@op.plopIntoProtoPropsMeta<IConstraintCategory>({
-		[Employee.MiddleName] : {
-			Constraints: {
+	
+	class EmployeeView extends Employee implements IEmployeeStruct{
+		@op.plopIntoMeta<IConstraintCategory>({
+			Constraints:{
 				maxLength: 10
 			}
-			
-		}
-	})
-	
-	class EmployeeView extends Employee{}
+		})
+		@op.plopIntoMeta<IColumnDefCategory>({
+			ColumnDef: {
+				width: 200,
+			}
+		})
+		MiddleName: string;
+		
+		@op.plopIntoMeta<IColumnDefCategory>({
+			ColumnDef: {
+				width: 100,
+			}
+		})
+		Surname: string;
+	}
 	
 	console.log('reflect on EmployeeView =>');
 	console.log(op.reflect(EmployeeView));
@@ -170,5 +169,6 @@ module Examples{
 	
 	person1.Surname = 'Bruce';
 	console.log(person1.Surname);
+	ev1.MiddleName = 'test';
 }
 

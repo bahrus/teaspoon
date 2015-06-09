@@ -32,11 +32,11 @@ if (!Object['assign']) {
 }
 var op;
 (function (op) {
-    op.$propIDLookup = 'propIDLookup';
+    //export const $propIDLookup = 'propIDLookup';
     //export const propInfo = 'propInfo';
     op.getter = function (ID) {
         return function () {
-            var lu = this['__tsp'];
+            var lu = this['__@op'];
             if (!lu)
                 return null;
             return lu[ID];
@@ -44,44 +44,45 @@ var op;
     };
     op.setter = function (ID) {
         return function (val) {
-            var lu = this['__tsp'];
+            console.log('setting ' + ID);
+            var lu = this['__@op'];
             if (!lu) {
                 lu = [];
-                this['__tsp'] = lu;
+                this['__@op'] = lu;
             }
             lu[ID] = val;
         };
     };
-    function setMemberKey(propID) {
+    function initProp() {
         return function (classPrototype, propName, propDescriptor) {
             //Reflect.defineMetadata('tsp_id', propID, classPrototype, propName);
-            var propIDLookup = Reflect.getMetadata(op.$propIDLookup, classPrototype);
-            if (!propIDLookup) {
-                propIDLookup = {};
-                Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-            }
-            propIDLookup[propID] = propName;
-            propDescriptor.get = op.getter(propID);
-            propDescriptor.set = op.setter(propID);
+            // let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
+            // if(!propIDLookup){
+            // 	propIDLookup = {};
+            // 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
+            // }
+            // propIDLookup[propID] = propName;
+            propDescriptor.get = op.getter(propName);
+            propDescriptor.set = op.setter(propName);
         };
     }
-    op.setMemberKey = setMemberKey;
-    function toProp(fieldID) {
+    op.initProp = initProp;
+    function toProp() {
         var _this = this;
         return function (classPrototype, fieldName) {
             console.log('in toProp');
-            var propIDLookup = Reflect.getMetadata(op.$propIDLookup, classPrototype);
-            if (!propIDLookup) {
-                propIDLookup = {};
-                Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
-            }
-            propIDLookup[fieldID] = fieldName;
+            // let propIDLookup = <{[key: string] : string}> Reflect.getMetadata($propIDLookup, classPrototype);
+            // if(!propIDLookup){
+            // 	propIDLookup = {};
+            // 	Reflect.defineMetadata(propIDLookup, propIDLookup, classPrototype);
+            // }
+            // propIDLookup[fieldID] = fieldName;
             //from http://blog.wolksoftware.com/decorators-metadata-reflection-in-typescript-from-novice-to-expert-part-ii
             if (delete _this[fieldName]) {
                 // Create new property with getter and setter
                 Object.defineProperty(classPrototype, fieldName, {
-                    get: op.getter(fieldID),
-                    set: op.setter(fieldID),
+                    get: op.getter(fieldName),
+                    set: op.setter(fieldName),
                     enumerable: true,
                     configurable: true
                 });
@@ -103,23 +104,10 @@ var op;
     }
     function plopIntoMeta(data) {
         return function (classPrototype, fieldName) {
-            console.log('in mergeMeta');
             plopIntoPropMeta(data, classPrototype, fieldName);
         };
     }
     op.plopIntoMeta = plopIntoMeta;
-    function describe(obj) {
-        for (var memberName in obj) {
-            console.log('member name = ' + memberName);
-            var keys = Reflect.getMetadataKeys(obj, memberName);
-            for (var i = 0, n = keys.length; i < n; i++) {
-                var metaKey = keys[i];
-                console.log('     key = ' + metaKey + ' value = ...');
-                console.log(Reflect.getMetadata(metaKey, obj, memberName));
-            }
-        }
-    }
-    op.describe = describe;
     function reflect(classRef, recursive) {
         var classPrototype = classRef.prototype;
         return reflectPrototype(classPrototype, recursive);
@@ -174,30 +162,5 @@ var op;
         }
         return returnType;
     }
-    function plopIntoProtoPropsMeta(value) {
-        return function (target) {
-            var targetPrototype = target.prototype;
-            var propIDLookup = Reflect.getMetadata(op.$propIDLookup, targetPrototype);
-            //let category : string;
-            for (var propKey in value) {
-                var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-                var propVal = value[propKey];
-                plopIntoPropMeta(propVal, targetPrototype, propName);
-            }
-        };
-    }
-    op.plopIntoProtoPropsMeta = plopIntoProtoPropsMeta;
-    function bulkPlopIntoPropMeta(value, props) {
-        return function (target) {
-            var targetPrototype = target.prototype;
-            var propIDLookup = Reflect.getMetadata(op.$propIDLookup, targetPrototype);
-            for (var i = 0, n = props.length; i < n; i++) {
-                var propKey = props[i];
-                var propName = (propIDLookup && propIDLookup[propKey]) ? propIDLookup[propKey] : propKey;
-                plopIntoPropMeta(value, targetPrototype, propName);
-            }
-        };
-    }
-    op.bulkPlopIntoPropMeta = bulkPlopIntoPropMeta;
 })(op || (op = {}));
 //# sourceMappingURL=@op.js.map
