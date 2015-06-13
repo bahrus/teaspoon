@@ -1,0 +1,4 @@
+[package]
+name = "tsInspector"
+version = "0.1.0"
+authors = ["Bruce B. Anderson <anderson.bruce.b@gmail.com>"]
