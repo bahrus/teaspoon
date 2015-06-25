@@ -97,10 +97,10 @@ module Examples{
 	}
 	
 	
-	const temp: (fieldName: string) => IColumnDefCategory = function(fieldName: string){
+	const setTitleToFieldNameUC: (fieldName: string) => IColumnDefCategory = function(fieldName: string){
 		return {
 			ColumnDef: {
-				title: fieldName
+				title: fieldName.toUpperCase(),
 			}
 		}
 	}
@@ -116,7 +116,7 @@ module Examples{
 				width: 200,
 			}
 		})
-		@op.plopperIntoMeta<IColumnDefCategory>(temp)
+		@op.plopperIntoMeta<IColumnDefCategory>(setTitleToFieldNameUC)
 		MiddleName: string;
 		
 		@op.plopIntoMeta<IColumnDefCategory>({

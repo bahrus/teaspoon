@@ -15,3 +15,7 @@ packages/
 /WebEssentials-Settings.json
 /tspBuild/.idea
 logs
+/RustTutorials/HelloWorld/*.exe
+/RustTutorials/HelloWorld/target/debug/.fingerprint/hello_world-854f279bf148ce9d/bin-hello_world
+/RustTutorials/HelloWorld/target/debug/.fingerprint/hello_world-854f279bf148ce9d/dep-bin-hello_world
+/RustTutorials/HelloWorld/target/debug/*.exe

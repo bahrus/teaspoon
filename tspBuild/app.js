@@ -1,4 +1,4 @@
-///<reference path='tsp/NodeJSImplementations.ts'/>
+
 var guid2 = 'i am here';
 if (typeof (global) !== 'undefined') {
     require('./tsp/Refs');

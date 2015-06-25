@@ -90,10 +90,10 @@ var Examples;
     console.log(op.reflect(Employee));
     var ColumnDef = 'ColumnDef';
     var Constraints = 'Constraints';
-    var temp = function (fieldName) {
+    var setTitleToFieldNameUC = function (fieldName) {
         return {
             ColumnDef: {
-                title: fieldName
+                title: fieldName.toUpperCase(),
             }
         };
     };
@@ -113,7 +113,7 @@ var Examples;
                     width: 200,
                 }
             }),
-            op.plopperIntoMeta(temp), 
+            op.plopperIntoMeta(setTitleToFieldNameUC), 
             __metadata('design:type', String)
         ], EmployeeView.prototype, "MiddleName");
         __decorate([

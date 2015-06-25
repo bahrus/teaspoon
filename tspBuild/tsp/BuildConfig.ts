@@ -24,7 +24,20 @@ module tsp.BuildConfig {
     
     
     export const programConfig: IProgramConfig = {
-        do: ca.doSequenceOfTypedActions,
+        do: ca.doSubActions,
+        subActionsGenerator: [
+            i =>  i.cacheVersionLabel,
+            i => i.minifyJSFiles,
+            i => i.selectAndReadHTMLFiles,
+            i => {
+                i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.fileProcessor.state.HTMLFiles;
+                i.domProcessor.domTransforms = [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective];
+                return i.domProcessor;
+            },
+            //i => i.domProcessor,
+            i => i.exportInMemoryDocumentsToFiles,
+            i => i.waitForUserInput
+        ],
         cacheVersionLabel: {
             do: fsa.cacheTextFile,
             fileReaderAction: {
@@ -74,19 +87,7 @@ module tsp.BuildConfig {
         waitForUserInput: {
             do: fsa.waitForUserInput,
         },
-        subActionsGenerator: [
-            i => i.cacheVersionLabel,
-            i => i.minifyJSFiles,
-            i => i.selectAndReadHTMLFiles,
-            i => {
-                i.domProcessor.htmlFiles = i.selectAndReadHTMLFiles.fileProcessor.state.HTMLFiles;
-                i.domProcessor.domTransforms = [i.domBuildDirectives.removeBuildDirective, i.domBuildDirectives.makeJSClobDirective];
-                return i.domProcessor;
-            },
-            //i => i.domProcessor,
-            i => i.exportInMemoryDocumentsToFiles,
-            i => i.waitForUserInput
-        ],
+        
 
 
         async: true,

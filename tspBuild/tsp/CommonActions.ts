@@ -102,7 +102,7 @@
         subActionsGenerator?: [(t: T) => IAction];
     }
 
-    export function doSequenceOfTypedActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
+    export function doSubActions<T>(action: ITypedActionList<T>, context: IContext, callback: ICallback) {
         const t = <T> <any> action;
         if (!action.subActionsGenerator || action.subActionsGenerator.length === 0) {
             endAction(action, callback);
@@ -113,13 +113,13 @@
         if (subAction.async) {
             const seqCallback: ICallback = (err) => {
                 action.subActionsGenerator = <[(t: T) => IAction]> _.rest(action.subActionsGenerator);
-                doSequenceOfTypedActions(action, context, callback);
+                doSubActions(action, context, callback);
             };
             subAction.do(subAction, context, seqCallback); 
         } else {
             subAction.do(subAction, context, null);
             action.subActionsGenerator = <[(t: T) => IAction]> _.rest(action.subActionsGenerator);
-            doSequenceOfTypedActions(action, context, callback);
+            doSubActions(action, context, callback);
         } 
         
         
